@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Contest Platform — Prototype</title>
+<style>
+  :root {
+    --primary: #1A365D;
+    --primary-light: #2D4A7A;
+    --accent: #D4A857;
+    --accent-light: #F6E8C1;
+    --success: #38A169;
+    --success-light: #C6F6D5;
+    --danger: #E53E3E;
+    --danger-light: #FED7D7;
+    --warning: #DD6B20;
+    --warning-light: #FEEBC8;
+    --gray-50: #F7FAFC;
+    --gray-100: #EDF2F7;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E0;
+    --gray-400: #A0AEC0;
+    --gray-500: #718096;
+    --gray-600: #4A5568;
+    --gray-700: #2D3748;
+    --gray-800: #1A202C;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.5;
+  }
+
+  /* === NAVIGATION === */
+  .role-switcher {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--primary);
+    display: flex; align-items: center;
+    padding: 0 24px; height: 56px;
+    box-shadow: var(--shadow-md);
+  }
+  .role-switcher .logo {
+    font-size: 18px; font-weight: 700; color: white;
+    margin-right: 32px; letter-spacing: -0.5px;
+  }
+  .role-switcher .logo span { color: var(--accent); }
+  .role-tabs { display: flex; gap: 4px; }
+  .role-tab {
+    padding: 8px 20px; border-radius: 8px 8px 0 0;
+    background: transparent; color: rgba(255,255,255,0.6);
+    border: none; cursor: pointer; font-size: 14px; font-weight: 500;
+    transition: all 0.2s;
+  }
+  .role-tab:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); }
+  .role-tab.active { background: var(--gray-50); color: var(--primary); }
+
+  /* === LAYOUT === */
+  .app { padding-top: 56px; min-height: 100vh; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  /* === CARDS === */
+  .card {
+    background: white; border-radius: var(--radius);
+    box-shadow: var(--shadow); border: 1px solid var(--gray-200);
+    overflow: hidden; transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: var(--shadow-md); }
+  .card-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--gray-100);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .card-body { padding: 24px; }
+
+  /* === BUTTONS === */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: var(--radius-sm);
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    border: none; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-light); }
+  .btn-accent { background: var(--accent); color: var(--primary); }
+  .btn-accent:hover { background: #c49a4d; }
+  .btn-outline {
+    background: white; color: var(--gray-600);
+    border: 1.5px solid var(--gray-300);
+  }
+  .btn-outline:hover { border-color: var(--gray-400); background: var(--gray-50); }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-danger:hover { background: #c53030; }
+  .btn-success { background: var(--success); color: white; }
+  .btn-success:hover { background: #2f855a; }
+  .btn-sm { padding: 6px 14px; font-size: 13px; }
+  .btn-lg { padding: 14px 28px; font-size: 16px; }
+
+  /* === BADGES === */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 100px;
+    font-size: 12px; font-weight: 600;
+  }
+  .badge-active { background: var(--success-light); color: #276749; }
+  .badge-draft { background: var(--gray-100); color: var(--gray-500); }
+  .badge-done { background: var(--accent-light); color: #744210; }
+  .badge-flagged { background: var(--danger-light); color: #9b2c2c; }
+  .badge-pending { background: var(--warning-light); color: #9c4221; }
+
+  /* === STATS === */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card {
+    background: white; border-radius: var(--radius-sm);
+    padding: 20px; text-align: center;
+    border: 1px solid var(--gray-200);
+  }
+  .stat-value { font-size: 32px; font-weight: 700; color: var(--primary); }
+  .stat-label { font-size: 13px; color: var(--gray-500); margin-top: 4px; }
+
+  /* === TABLE === */
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 12px 16px; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--gray-500); border-bottom: 2px solid var(--gray-200);
+    font-weight: 600; }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--gray-100); font-size: 14px; }
+  tr:hover td { background: var(--gray-50); }
+  tr.highlight td { background: #EBF4FF; font-weight: 600; }
+  tr.highlight { position: relative; }
+  tr.highlight td:first-child::before { content: '▶'; color: var(--primary); margin-right: 4px; }
+
+  /* === WIZARD === */
+  .wizard-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+  .wizard-steps { display: flex; gap: 8px; margin-bottom: 24px; }
+  .wizard-step-dot {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    background: var(--gray-200); color: var(--gray-500);
+    transition: all 0.3s;
+  }
+  .wizard-step-dot.active { background: var(--primary); color: white; }
+  .wizard-step-dot.done { background: var(--success); color: white; }
+  .wizard-step-connector {
+    flex: 0; width: 32px; height: 2px; background: var(--gray-200);
+    align-self: center; transition: background 0.3s;
+  }
+  .wizard-step-connector.done { background: var(--success); }
+  .wizard-content { min-height: 400px; }
+  .wizard-step-panel { display: none; }
+  .wizard-step-panel.active { display: block; }
+
+  .preview-card {
+    background: white; border-radius: var(--radius);
+    border: 2px dashed var(--gray-300);
+    padding: 24px; position: sticky; top: 80px;
+  }
+  .preview-card h4 { font-size: 12px; text-transform: uppercase;
+    color: var(--gray-400); margin-bottom: 16px; letter-spacing: 0.08em; }
+  .preview-inner {
+    background: var(--gray-50); border-radius: var(--radius-sm);
+    padding: 24px; text-align: center;
+  }
+  .preview-inner .trophy { font-size: 48px; margin-bottom: 12px; }
+  .preview-inner h3 { font-size: 18px; color: var(--primary); margin-bottom: 8px; }
+  .preview-inner p { font-size: 13px; color: var(--gray-500); margin-bottom: 4px; }
+  .preview-inner .prize-tag {
+    display: inline-block; margin-top: 12px;
+    padding: 6px 16px; border-radius: 100px;
+    background: var(--accent-light); color: #744210;
+    font-weight: 600; font-size: 14px;
+  }
+
+  /* === FORM ELEMENTS === */
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; font-size: 14px; font-weight: 600;
+    color: var(--gray-700); margin-bottom: 6px;
+  }
+  .form-group .hint { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+  input[type="text"], input[type="number"], input[type="date"], select, textarea {
+    width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-300);
+    border-radius: var(--radius-sm); font-size: 14px; font-family: inherit;
+    transition: border-color 0.15s; background: white;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(26,54,93,0.1);
+  }
+
+  .radio-cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .radio-card {
+    padding: 16px 20px; border: 2px solid var(--gray-200);
+    border-radius: var(--radius-sm); cursor: pointer;
+    transition: all 0.15s; display: flex; align-items: center; gap: 12px;
+  }
+  .radio-card:hover { border-color: var(--gray-300); background: var(--gray-50); }
+  .radio-card.selected { border-color: var(--primary); background: #EBF4FF; }
+  .radio-card .icon { font-size: 24px; }
+  .radio-card .rc-title { font-weight: 600; font-size: 15px; }
+  .radio-card .rc-desc { font-size: 13px; color: var(--gray-500); }
+
+  /* === PRIZE TABLE === */
+  .prize-row {
+    display: grid; grid-template-columns: 50px 1fr 120px; gap: 12px;
+    align-items: center; margin-bottom: 12px;
+  }
+  .prize-medal { font-size: 28px; text-align: center; }
+
+  /* === CONTEST CARDS (client) === */
+  .contest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .contest-card {
+    background: white; border-radius: var(--radius); border: 1px solid var(--gray-200);
+    padding: 24px; transition: all 0.2s; cursor: pointer;
+  }
+  .contest-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .contest-card .cc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .contest-card .cc-icon { font-size: 36px; }
+  .contest-card .cc-title { font-size: 18px; font-weight: 700; color: var(--primary); }
+  .contest-card .cc-desc { font-size: 14px; color: var(--gray-600); margin-bottom: 16px; }
+  .contest-card .cc-meta {
+    display: flex; gap: 16px; font-size: 13px; color: var(--gray-500);
+    padding-top: 16px; border-top: 1px solid var(--gray-100);
+  }
+
+  /* === PROGRESS BAR === */
+  .progress { height: 8px; background: var(--gray-200); border-radius: 100px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 100px; transition: width 0.5s ease; }
+  .progress-bar-primary { background: var(--primary); }
+  .progress-bar-accent { background: var(--accent); }
+  .progress-bar-success { background: var(--success); }
+
+  /* === USER PROGRESS CARD === */
+  .user-progress {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: var(--radius); padding: 28px; color: white; margin-bottom: 24px;
+  }
+  .user-progress .up-position { font-size: 48px; font-weight: 800; }
+  .user-progress .up-total { font-size: 16px; opacity: 0.7; }
+  .user-progress .up-volume { font-size: 24px; font-weight: 600; margin-top: 8px; }
+  .user-progress .up-target { font-size: 14px; opacity: 0.7; margin-top: 4px; margin-bottom: 12px; }
+  .up-progress-wrap { background: rgba(255,255,255,0.2); border-radius: 100px; height: 10px; }
+  .up-progress-fill { height: 100%; background: var(--accent); border-radius: 100px; transition: width 0.5s; }
+  .up-percent { font-size: 13px; opacity: 0.8; margin-top: 6px; text-align: right; }
+
+  /* === ALERT CARD === */
+  .alert-card {
+    background: var(--danger-light); border: 1px solid #feb2b2;
+    border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;
+  }
+  .alert-card .alert-title { font-weight: 700; color: #9b2c2c; margin-bottom: 4px; }
+  .alert-card .alert-desc { font-size: 13px; color: #742a2a; margin-bottom: 12px; }
+  .alert-card .alert-actions { display: flex; gap: 8px; }
+
+  /* === AUDIT TRAIL === */
+  .audit-trail { border-left: 2px solid var(--gray-200); margin-left: 12px; padding-left: 20px; }
+  .audit-item { position: relative; margin-bottom: 16px; }
+  .audit-item::before {
+    content: ''; position: absolute; left: -26px; top: 6px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--gray-300);
+  }
+  .audit-item.alert::before { background: var(--danger); }
+  .audit-time { font-size: 12px; color: var(--gray-400); font-family: 'JetBrains Mono', monospace; }
+  .audit-text { font-size: 14px; color: var(--gray-600); }
+
+  /* === MODAL === */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: white; border-radius: var(--radius); width: 100%; max-width: 520px;
+    box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto;
+  }
+  .modal-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--gray-100);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-header h3 { font-size: 18px; }
+  .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--gray-400); }
+  .modal-body { padding: 24px; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--gray-100); display: flex; gap: 12px; justify-content: flex-end; }
+
+  /* === TABS === */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; }
+  .tab {
+    padding: 8px 16px; border-radius: var(--radius-sm);
+    background: transparent; color: var(--gray-500);
+    border: none; cursor: pointer; font-size: 14px; font-weight: 500;
+  }
+  .tab:hover { background: var(--gray-100); }
+  .tab.active { background: var(--primary); color: white; }
+
+  /* === COMPLETED SECTION === */
+  .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--gray-400); margin: 32px 0 16px; font-weight: 600; }
+
+  .completed-contest {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; background: white; border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200);
+  }
+
+  /* === TOAST === */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 3000;
+    padding: 14px 24px; border-radius: var(--radius-sm);
+    background: var(--gray-800); color: white; font-size: 14px; font-weight: 500;
+    box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .toast.visible { transform: translateY(0); opacity: 1; }
+  .toast.success { background: var(--success); }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .wizard-layout { grid-template-columns: 1fr; }
+    .preview-card { position: static; }
+    .contest-grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ROLE SWITCHER -->
+<nav class="role-switcher">
+  <div class="logo">Contest<span>Hub</span></div>
+  <div class="role-tabs">
+    <button class="role-tab active" onclick="switchRole('ib')">IB Partner</button>
+    <button class="role-tab" onclick="switchRole('client')">Client</button>
+    <button class="role-tab" onclick="switchRole('admin')">Admin</button>
+  </div>
+</nav>
+
+<div class="app">
+
+<!-- ============================================ -->
+<!-- IB PARTNER PANEL -->
+<!-- ============================================ -->
+<div id="panel-ib" class="panel active">
+  <!-- Screen 1.0: My Contests -->
+  <div id="ib-list" class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <h1 style="font-size:24px;">Мои контесты</h1>
+      <button class="btn btn-primary btn-lg" onclick="showIBScreen('ib-wizard')">+ Создать контест</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Всего контестов</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--success)">1</div><div class="stat-label">Активных</div></div>
+      <div class="stat-card"><div class="stat-value">79</div><div class="stat-label">Участников</div></div>
+      <div class="stat-card"><div class="stat-value">$2,400</div><div class="stat-label">Призовой фонд</div></div>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Название</th><th>Тип</th><th>Статус</th><th>Участники</th><th>Период</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="cursor:pointer" onclick="showIBScreen('ib-detail')">
+            <td><strong>Весенний Volume Race</strong></td>
+            <td>Volume Race</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td>47</td>
+            <td>1 — 30 Apr 2026</td>
+            <td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); showIBScreen('ib-detail')">Открыть</button></td>
+          </tr>
+          <tr>
+            <td><strong>Streak Challenge May</strong></td>
+            <td>Trading Streak</td>
+            <td><span class="badge badge-draft">Draft</span></td>
+            <td>—</td>
+            <td>Не задан</td>
+            <td><button class="btn btn-outline btn-sm" onclick="showIBScreen('ib-wizard')">Редактировать</button></td>
+          </tr>
+          <tr>
+            <td><strong>Турнир февраля</strong></td>
+            <td>Top Trader</td>
+            <td><span class="badge badge-done">Completed</span></td>
+            <td>32</td>
+            <td>1 — 28 Feb 2026</td>
+            <td><button class="btn btn-outline btn-sm">Результаты</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Screen 1.1-1.5: Wizard -->
+  <div id="ib-wizard" class="container" style="display:none;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+      <button class="btn btn-outline btn-sm" onclick="showIBScreen('ib-list')">← Назад</button>
+      <h1 style="font-size:24px;">Создать контест</h1>
+    </div>
+
+    <!-- Wizard Steps Indicator -->
+    <div class="wizard-steps">
+      <div class="wizard-step-dot active" id="dot-1">1</div>
+      <div class="wizard-step-connector" id="conn-1"></div>
+      <div class="wizard-step-dot" id="dot-2">2</div>
+      <div class="wizard-step-connector" id="conn-2"></div>
+      <div class="wizard-step-dot" id="dot-3">3</div>
+      <div class="wizard-step-connector" id="conn-3"></div>
+      <div class="wizard-step-dot" id="dot-4">4</div>
+      <div class="wizard-step-connector" id="conn-4"></div>
+      <div class="wizard-step-dot" id="dot-5">5</div>
+    </div>
+
+    <div class="wizard-layout">
+      <div class="wizard-content">
+        <!-- Step 1: Type -->
+        <div class="wizard-step-panel active" id="wiz-step-1">
+          <h2 style="margin-bottom:4px;">Тип контеста</h2>
+          <p style="color:var(--gray-500); margin-bottom:20px;">Выберите формат соревнования</p>
+          <div class="radio-cards">
+            <div class="radio-card selected" onclick="selectType(this, 'volume')">
+              <div class="icon">📊</div>
+              <div><div class="rc-title">Volume Race</div><div class="rc-desc">Кто наторгует больше лотов за период</div></div>
+            </div>
+            <div class="radio-card" onclick="selectType(this, 'streak')">
+              <div class="icon">🔥</div>
+              <div><div class="rc-title">Trading Streak</div><div class="rc-desc">Кто торгует больше дней подряд</div></div>
+            </div>
+            <div class="radio-card" onclick="selectType(this, 'top')">
+              <div class="icon">🏆</div>
+              <div><div class="rc-title">Top Trader</div><div class="rc-desc">Комбинация объёма и частоты</div></div>
+            </div>
+          </div>
+          <div style="margin-top:24px; text-align:right;">
+            <button class="btn btn-primary" onclick="wizardNext()">Далее →</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Period -->
+        <div class="wizard-step-panel" id="wiz-step-2">
+          <h2 style="margin-bottom:4px;">Период проведения</h2>
+          <p style="color:var(--gray-500); margin-bottom:20px;">Укажите даты начала и окончания</p>
+          <div class="form-group">
+            <label>Дата начала</label>
+            <input type="date" value="2026-04-15" onchange="updatePreview()">
+          </div>
+          <div class="form-group">
+            <label>Дата окончания</label>
+            <input type="date" value="2026-05-15" onchange="updatePreview()">
+          </div>
+          <div style="padding:12px 16px; background:var(--accent-light); border-radius:var(--radius-sm); font-size:13px;">
+            💡 <strong>Рекомендация:</strong> оптимальная длительность для Volume Race — 1-4 недели
+          </div>
+          <div style="margin-top:24px; display:flex; justify-content:space-between;">
+            <button class="btn btn-outline" onclick="wizardPrev()">← Назад</button>
+            <button class="btn btn-primary" onclick="wizardNext()">Далее →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Rules -->
+        <div class="wizard-step-panel" id="wiz-step-3">
+          <h2 style="margin-bottom:4px;">Правила контеста</h2>
+          <p style="color:var(--gray-500); margin-bottom:20px;">Настройте условия участия</p>
+          <div class="form-group">
+            <label>Учитываемые инструменты</label>
+            <select><option>Все инструменты</option><option>Только Forex</option><option>Только CFD</option></select>
+          </div>
+          <div class="form-group">
+            <label>Минимальный объём сделки (лот)</label>
+            <input type="number" value="0.1" step="0.01" min="0.01">
+          </div>
+          <div class="form-group">
+            <label>Минимальное время удержания позиции</label>
+            <select><option>5 минут</option><option>10 минут</option><option>15 минут</option><option>30 минут</option></select>
+            <div class="hint">⚠️ Защита от wash trading</div>
+          </div>
+          <div class="form-group">
+            <label>Дополнительные условия (опционально)</label>
+            <textarea rows="3" placeholder="Например: только для клиентов с депозитом от $500"></textarea>
+          </div>
+          <div style="margin-top:24px; display:flex; justify-content:space-between;">
+            <button class="btn btn-outline" onclick="wizardPrev()">← Назад</button>
+            <button class="btn btn-primary" onclick="wizardNext()">Далее →</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Prizes -->
+        <div class="wizard-step-panel" id="wiz-step-4">
+          <h2 style="margin-bottom:4px;">Призовой фонд</h2>
+          <p style="color:var(--gray-500); margin-bottom:20px;">Определите призы для победителей</p>
+          <div class="form-group">
+            <label>Тип приза</label>
+            <select><option>Бонус на торговый счёт</option><option>Денежный приз</option><option>Подарок (описание)</option></select>
+          </div>
+          <div id="prizes-list">
+            <div class="prize-row"><div class="prize-medal">🥇</div><div><label style="font-size:13px;">1 место</label></div><div><input type="text" value="$500" style="text-align:center;"></div></div>
+            <div class="prize-row"><div class="prize-medal">🥈</div><div><label style="font-size:13px;">2 место</label></div><div><input type="text" value="$300" style="text-align:center;"></div></div>
+            <div class="prize-row"><div class="prize-medal">🥉</div><div><label style="font-size:13px;">3 место</label></div><div><input type="text" value="$100" style="text-align:center;"></div></div>
+          </div>
+          <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="addPrize()">+ Добавить место</button>
+          <div style="margin-top:16px; padding:12px 16px; background:var(--accent-light); border-radius:var(--radius-sm);">
+            <strong>Общий призовой фонд: $900</strong>
+          </div>
+          <div style="margin-top:24px; display:flex; justify-content:space-between;">
+            <button class="btn btn-outline" onclick="wizardPrev()">← Назад</button>
+            <button class="btn btn-primary" onclick="wizardNext()">Далее →</button>
+          </div>
+        </div>
+
+        <!-- Step 5: Preview & Confirm -->
+        <div class="wizard-step-panel" id="wiz-step-5">
+          <h2 style="margin-bottom:4px;">Проверьте и запустите</h2>
+          <p style="color:var(--gray-500); margin-bottom:20px;">Убедитесь, что всё верно перед запуском</p>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-body">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Тип</strong><div>Volume Race</div></div>
+                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Период</strong><div>15 Apr — 15 May 2026</div></div>
+                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Инструменты</strong><div>Все инструменты</div></div>
+                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Мин. объём</strong><div>0.1 лот</div></div>
+                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Мин. удержание</strong><div>5 минут</div></div>
+                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Призовой фонд</strong><div>$900</div></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; gap:12px;">
+            <button class="btn btn-outline btn-lg" onclick="wizardPrev()">← Назад</button>
+            <button class="btn btn-outline btn-lg" onclick="showIBScreen('ib-list'); showToast('Черновик сохранён');">💾 Сохранить черновик</button>
+            <button class="btn btn-accent btn-lg" style="flex:1;" onclick="showIBScreen('ib-list'); showToast('Контест запущен!', 'success');">🚀 Запустить контест</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Preview -->
+      <div class="preview-card">
+        <h4>Предпросмотр для клиента</h4>
+        <div class="preview-inner">
+          <div class="trophy">🏆</div>
+          <h3 id="preview-title">Volume Race</h3>
+          <p id="preview-desc">Наторгуйте больше лотов и выиграйте!</p>
+          <p>📅 15 Apr — 15 May 2026</p>
+          <p>👥 0 участников</p>
+          <div class="prize-tag">🎁 Призы: $900</div>
+          <div style="margin-top:16px;">
+            <button class="btn btn-success btn-sm" disabled>Участвую</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 1.6: Contest Detail (IB) -->
+  <div id="ib-detail" class="container" style="display:none;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+      <button class="btn btn-outline btn-sm" onclick="showIBScreen('ib-list')">← Назад</button>
+      <h1 style="font-size:24px;">Весенний Volume Race</h1>
+      <span class="badge badge-active">Active</span>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-bottom:24px; color:var(--gray-500); font-size:14px;">
+      <span>📅 1 — 30 Apr 2026</span>
+      <span>•</span>
+      <span>⏱ Осталось: 20 дней</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value">47</div><div class="stat-label">Участников</div></div>
+      <div class="stat-card"><div class="stat-value">1,234</div><div class="stat-label">Лотов наторговано</div></div>
+      <div class="stat-card"><div class="stat-value">$900</div><div class="stat-label">Призовой фонд</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--success)">+23%</div><div class="stat-label">Рост объёма</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 style="font-size:16px;">Лидерборд</h3><span style="font-size:13px; color:var(--gray-400);">Обновлено: 3 мин назад</span></div>
+      <table>
+        <thead><tr><th>#</th><th>Участник</th><th>Объём (лоты)</th><th>Приз</th></tr></thead>
+        <tbody>
+          <tr><td>🥇</td><td><strong>Client_A****</strong></td><td style="font-family:monospace;">245.3</td><td><span class="badge badge-done">$500</span></td></tr>
+          <tr><td>🥈</td><td><strong>Client_B****</strong></td><td style="font-family:monospace;">198.7</td><td><span class="badge badge-done">$300</span></td></tr>
+          <tr><td>🥉</td><td><strong>Client_C****</strong></td><td style="font-family:monospace;">156.2</td><td><span class="badge badge-done">$100</span></td></tr>
+          <tr><td>4</td><td>Client_D****</td><td style="font-family:monospace;">134.0</td><td>—</td></tr>
+          <tr><td>5</td><td>Client_E****</td><td style="font-family:monospace;">112.8</td><td>—</td></tr>
+          <tr><td>6</td><td>Client_F****</td><td style="font-family:monospace;">98.4</td><td>—</td></tr>
+          <tr><td>7</td><td>Client_G****</td><td style="font-family:monospace;">87.1</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- CLIENT PANEL -->
+<!-- ============================================ -->
+<div id="panel-client" class="panel">
+  <!-- Screen 2.0: Available Contests -->
+  <div id="client-list" class="container">
+    <h1 style="font-size:24px; margin-bottom:24px;">Контесты</h1>
+
+    <div class="contest-grid">
+      <div class="contest-card" onclick="showClientScreen('client-terms')">
+        <div class="cc-header">
+          <div class="cc-icon">🏆</div>
+          <div>
+            <div class="cc-title">Весенний Volume Race</div>
+            <span class="badge badge-active">Active</span>
+          </div>
+        </div>
+        <div class="cc-desc">Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!</div>
+        <div class="cc-meta">
+          <span>📅 1 — 30 Apr</span>
+          <span>👥 47 участников</span>
+          <span>🎁 $900</span>
+          <span>⏱ 20 дней</span>
+        </div>
+      </div>
+
+      <div class="contest-card" onclick="showClientScreen('client-terms')">
+        <div class="cc-header">
+          <div class="cc-icon">🔥</div>
+          <div>
+            <div class="cc-title">Streak Challenge May</div>
+            <span class="badge badge-pending">Starts May 1</span>
+          </div>
+        </div>
+        <div class="cc-desc">Торгуйте каждый день и выиграйте! Кто удержит самый длинный streak — тот победит.</div>
+        <div class="cc-meta">
+          <span>📅 1 — 31 May</span>
+          <span>👥 12 участников</span>
+          <span>🎁 $600</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Завершённые</div>
+    <div class="completed-contest">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <span>✅</span>
+        <div><strong>Турнир февраля</strong><div style="font-size:13px; color:var(--gray-500);">Top Trader • 1-28 Feb 2026</div></div>
+      </div>
+      <div style="font-size:14px; color:var(--gray-500);">Ваше место: <strong style="color:var(--primary);">#7</strong> из 32</div>
+    </div>
+  </div>
+
+  <!-- Screen 2.1: Contest Terms -->
+  <div id="client-terms" class="container" style="display:none; max-width:640px;">
+    <button class="btn btn-outline btn-sm" onclick="showClientScreen('client-list')" style="margin-bottom:20px;">← Контесты</button>
+
+    <div style="text-align:center; margin-bottom:24px;">
+      <div style="font-size:64px;">🏆</div>
+      <h1 style="font-size:28px; color:var(--primary);">Весенний Volume Race</h1>
+      <p style="color:var(--gray-500); margin-top:8px;">Наторгуйте больше лотов и выиграйте до $500!</p>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-body">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:center;">
+          <div><div style="font-size:24px; font-weight:700;">20 дней</div><div style="font-size:13px; color:var(--gray-500);">Осталось</div></div>
+          <div><div style="font-size:24px; font-weight:700;">47</div><div style="font-size:13px; color:var(--gray-500);">Участников</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header"><h3 style="font-size:16px;">📋 Правила</h3></div>
+      <div class="card-body" style="font-size:14px;">
+        <ul style="padding-left:20px; display:flex; flex-direction:column; gap:8px;">
+          <li>Учитываются все инструменты</li>
+          <li>Минимальный объём сделки: 0.1 лот</li>
+          <li>Минимальное время удержания: 5 минут</li>
+          <li>Позиция определяется суммарным объёмом в лотах</li>
+          <li>Период: 1 — 30 апреля 2026</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-header"><h3 style="font-size:16px;">🎁 Призы</h3></div>
+      <div class="card-body">
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:20px;">🥇 1 место</span><strong style="font-size:18px; color:var(--accent);">$500 бонус</strong></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:20px;">🥈 2 место</span><strong style="font-size:18px; color:var(--gray-500);">$300 бонус</strong></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:20px;">🥉 3 место</span><strong style="font-size:18px; color:var(--gray-500);">$100 бонус</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px;">
+      <button class="btn btn-success btn-lg" style="flex:1;" onclick="showClientScreen('client-board'); showToast('Вы участвуете!', 'success');">✅ Участвую</button>
+      <button class="btn btn-outline btn-lg" onclick="showClientScreen('client-list')">Не сейчас</button>
+    </div>
+    <p style="font-size:12px; color:var(--gray-400); text-align:center; margin-top:12px;">
+      Нажимая "Участвую", вы соглашаетесь с правилами контеста и условиями участия.
+    </p>
+  </div>
+
+  <!-- Screen 2.2: Leaderboard (Client) -->
+  <div id="client-board" class="container" style="display:none; max-width:640px;">
+    <button class="btn btn-outline btn-sm" onclick="showClientScreen('client-list')" style="margin-bottom:20px;">← Контесты</button>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h1 style="font-size:24px;">Весенний Volume Race</h1>
+      <span style="font-size:14px; color:var(--gray-500);">⏱ 20 дней</span>
+    </div>
+
+    <!-- User Progress Card -->
+    <div class="user-progress">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div class="up-position">#12</div>
+          <div class="up-total">из 47 участников • Top 25%</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="up-volume">67.4 лот</div>
+          <div class="up-target">До 🥉 3 места: ещё 88.8 лот</div>
+        </div>
+      </div>
+      <div class="up-progress-wrap"><div class="up-progress-fill" style="width:43%;"></div></div>
+      <div class="up-percent">43% до призовой зоны</div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3 style="font-size:16px;">Лидерборд</h3><span style="font-size:13px; color:var(--gray-400);">Обновлено: 2 мин назад</span></div>
+      <table>
+        <thead><tr><th>#</th><th>Участник</th><th>Объём</th><th>Приз</th></tr></thead>
+        <tbody>
+          <tr><td>🥇</td><td><strong>A****</strong></td><td style="font-family:monospace;">245.3</td><td><span class="badge badge-done">$500</span></td></tr>
+          <tr><td>🥈</td><td><strong>B****</strong></td><td style="font-family:monospace;">198.7</td><td><span class="badge badge-done">$300</span></td></tr>
+          <tr><td>🥉</td><td><strong>C****</strong></td><td style="font-family:monospace;">156.2</td><td><span class="badge badge-done">$100</span></td></tr>
+          <tr><td colspan="4" style="text-align:center; color:var(--gray-400); font-size:13px;">• • •</td></tr>
+          <tr><td>10</td><td>J****</td><td style="font-family:monospace;">89.1</td><td>—</td></tr>
+          <tr><td>11</td><td>K****</td><td style="font-family:monospace;">74.2</td><td>—</td></tr>
+          <tr class="highlight"><td>12</td><td>★ ВЫ</td><td style="font-family:monospace;">67.4</td><td>—</td></tr>
+          <tr><td>13</td><td>M****</td><td style="font-family:monospace;">61.0</td><td>—</td></tr>
+          <tr><td>14</td><td>N****</td><td style="font-family:monospace;">55.3</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- ADMIN PANEL -->
+<!-- ============================================ -->
+<div id="panel-admin" class="panel">
+  <!-- Screen 3.0: Admin Dashboard -->
+  <div id="admin-dashboard" class="container">
+    <h1 style="font-size:24px; margin-bottom:24px;">Admin Panel — Contests</h1>
+
+    <div class="stats">
+      <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Active</div></div>
+      <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Pending</div></div>
+      <div class="stat-card"><div class="stat-value" style="color:var(--danger);">1</div><div class="stat-label">Flagged</div></div>
+      <div class="stat-card"><div class="stat-value">45</div><div class="stat-label">Completed</div></div>
+    </div>
+
+    <!-- Alert -->
+    <div style="margin-bottom:24px;">
+      <h3 style="font-size:14px; text-transform:uppercase; letter-spacing:0.08em; color:var(--danger); margin-bottom:12px;">⚠ Требует внимания</h3>
+      <div class="alert-card">
+        <div class="alert-title">IB Partner_X — "Mega Contest"</div>
+        <div class="alert-desc">Client_Z: 200 лотов за 1 час, средняя позиция 2 мин — возможный wash trading</div>
+        <div class="alert-actions">
+          <button class="btn btn-danger btn-sm" onclick="showAdminScreen('admin-detail')">Посмотреть</button>
+          <button class="btn btn-outline btn-sm">Игнорировать</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3 style="font-size:16px;">Все контесты</h3>
+        <div class="tabs" style="margin-bottom:0;">
+          <button class="tab active">Все</button>
+          <button class="tab">Active</button>
+          <button class="tab">Pending</button>
+          <button class="tab">Flagged</button>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Контест</th><th>IB Partner</th><th>Статус</th><th>Участники</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Volume Race Apr</strong></td><td>Partner_A</td>
+            <td><span class="badge badge-active">Active</span></td><td>47</td>
+            <td><button class="btn btn-outline btn-sm" onclick="showAdminScreen('admin-detail')">Детали</button></td>
+          </tr>
+          <tr>
+            <td><strong>Streak May</strong></td><td>Partner_A</td>
+            <td><span class="badge badge-pending">Pending</span></td><td>0</td>
+            <td><button class="btn btn-outline btn-sm">Детали</button></td>
+          </tr>
+          <tr style="background:var(--danger-light);">
+            <td><strong>Mega Contest</strong></td><td>Partner_X</td>
+            <td><span class="badge badge-flagged">⚠ Flagged</span></td><td>23</td>
+            <td><button class="btn btn-danger btn-sm" onclick="showAdminScreen('admin-detail')">Проверить</button></td>
+          </tr>
+          <tr>
+            <td><strong>Top Trader Q1</strong></td><td>Partner_B</td>
+            <td><span class="badge badge-done">Done</span></td><td>32</td>
+            <td><button class="btn btn-outline btn-sm">Детали</button></td>
+          </tr>
+          <tr>
+            <td><strong>Spring Challenge</strong></td><td>Partner_C</td>
+            <td><span class="badge badge-active">Active</span></td><td>18</td>
+            <td><button class="btn btn-outline btn-sm">Детали</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Screen 3.1: Admin Contest Detail -->
+  <div id="admin-detail" class="container" style="display:none;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+      <button class="btn btn-outline btn-sm" onclick="showAdminScreen('admin-dashboard')">← Dashboard</button>
+      <h1 style="font-size:24px;">Mega Contest</h1>
+      <span class="badge badge-flagged">⚠ Flagged</span>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-bottom:24px; color:var(--gray-500); font-size:14px;">
+      <span>IB: <strong>Partner_X</strong></span>
+      <span>•</span>
+      <span>Volume Race</span>
+      <span>•</span>
+      <span>1 — 30 Apr 2026</span>
+      <span>•</span>
+      <span>Призы: $1,700</span>
+    </div>
+
+    <!-- Alert Detail -->
+    <div class="alert-card" style="margin-bottom:24px;">
+      <div class="alert-title">🔴 Подозрительная активность: Client_Z</div>
+      <div class="alert-desc">
+        200 лотов за 1 час • средняя позиция: 2 мин • 45 встречных сделок (buy+sell одновременно) • паттерн: возможный wash trading
+      </div>
+      <div class="alert-actions">
+        <button class="btn btn-danger btn-sm" onclick="showToast('Client_Z дисквалифицирован. Лидерборд пересчитан.', 'success')">Дисквалифицировать</button>
+        <button class="btn btn-outline btn-sm" onclick="showToast('Алерт отклонён')">Ложное срабатывание</button>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+      <!-- Leaderboard -->
+      <div class="card">
+        <div class="card-header"><h3 style="font-size:16px;">Лидерборд (полный)</h3></div>
+        <table>
+          <thead><tr><th>#</th><th>Клиент</th><th>Объём</th><th>Сделки</th><th>Ср. удерж.</th></tr></thead>
+          <tbody>
+            <tr style="background:var(--danger-light);"><td>1</td><td><strong>Client_Z ⚠</strong></td><td style="font-family:monospace;">312.5</td><td>89</td><td style="color:var(--danger);">2 мин</td></tr>
+            <tr><td>2</td><td>Client_A</td><td style="font-family:monospace;">187.3</td><td>42</td><td>47 мин</td></tr>
+            <tr><td>3</td><td>Client_B</td><td style="font-family:monospace;">145.8</td><td>35</td><td>1.2 ч</td></tr>
+            <tr><td>4</td><td>Client_C</td><td style="font-family:monospace;">112.0</td><td>28</td><td>35 мин</td></tr>
+            <tr><td>5</td><td>Client_D</td><td style="font-family:monospace;">98.4</td><td>24</td><td>52 мин</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Actions + Audit -->
+      <div>
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header"><h3 style="font-size:16px;">Действия</h3></div>
+          <div class="card-body" style="display:flex; flex-direction:column; gap:8px;">
+            <button class="btn btn-outline" onclick="showToast('Контест приостановлен')">⏸ Приостановить контест</button>
+            <button class="btn btn-danger" onclick="showToast('Контест отменён')">❌ Отменить контест</button>
+            <button class="btn btn-outline">📝 Добавить заметку</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3 style="font-size:16px;">Audit Trail</h3></div>
+          <div class="card-body">
+            <div class="audit-trail">
+              <div class="audit-item alert">
+                <div class="audit-time">18 Apr 11:45</div>
+                <div class="audit-text">⚠ Alert: Client_Z flagged — wash trading pattern</div>
+              </div>
+              <div class="audit-item">
+                <div class="audit-time">15 Apr 09:00</div>
+                <div class="audit-text">Contest started</div>
+              </div>
+              <div class="audit-item">
+                <div class="audit-time">10 Apr 14:33</div>
+                <div class="audit-text">Auto-approved (standard rules)</div>
+              </div>
+              <div class="audit-item">
+                <div class="audit-time">10 Apr 14:32</div>
+                <div class="audit-text">Contest created by Partner_X</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // === Role Switching ===
+  function switchRole(role) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + role).classList.add('active');
+    event.target.classList.add('active');
+
+    // Reset to main screens
+    if (role === 'ib') showIBScreen('ib-list');
+    if (role === 'client') showClientScreen('client-list');
+    if (role === 'admin') showAdminScreen('admin-dashboard');
+  }
+
+  // === Screen Navigation ===
+  function showIBScreen(id) {
+    document.querySelectorAll('#panel-ib .container').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+    if (id === 'ib-wizard') { currentStep = 1; updateWizardUI(); }
+    window.scrollTo(0, 0);
+  }
+
+  function showClientScreen(id) {
+    document.querySelectorAll('#panel-client .container').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  function showAdminScreen(id) {
+    document.querySelectorAll('#panel-admin .container').forEach(s => s.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  // === Wizard ===
+  let currentStep = 1;
+  const totalSteps = 5;
+
+  function wizardNext() {
+    if (currentStep < totalSteps) { currentStep++; updateWizardUI(); }
+  }
+  function wizardPrev() {
+    if (currentStep > 1) { currentStep--; updateWizardUI(); }
+  }
+
+  function updateWizardUI() {
+    // Update dots
+    for (let i = 1; i <= totalSteps; i++) {
+      const dot = document.getElementById('dot-' + i);
+      dot.classList.remove('active', 'done');
+      if (i < currentStep) dot.classList.add('done');
+      if (i === currentStep) dot.classList.add('active');
+      if (i < currentStep) dot.innerHTML = '✓';
+      else dot.innerHTML = i;
+    }
+    // Update connectors
+    for (let i = 1; i < totalSteps; i++) {
+      const conn = document.getElementById('conn-' + i);
+      conn.classList.toggle('done', i < currentStep);
+    }
+    // Update panels
+    document.querySelectorAll('.wizard-step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('wiz-step-' + currentStep).classList.add('active');
+  }
+
+  // === Contest Type Selection ===
+  function selectType(el, type) {
+    document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    const titles = { volume: 'Volume Race', streak: 'Trading Streak', top: 'Top Trader' };
+    const descs = {
+      volume: 'Наторгуйте больше лотов и выиграйте!',
+      streak: 'Торгуйте каждый день и покажите свою дисциплину!',
+      top: 'Покажите лучшую комбинацию объёма и стабильности!'
+    };
+    document.getElementById('preview-title').textContent = titles[type];
+    document.getElementById('preview-desc').textContent = descs[type];
+  }
+
+  // === Add Prize ===
+  let prizeCount = 3;
+  function addPrize() {
+    prizeCount++;
+    const row = document.createElement('div');
+    row.className = 'prize-row';
+    row.innerHTML = '<div class="prize-medal">' + prizeCount + '</div><div><label style="font-size:13px;">' + prizeCount + ' место</label></div><div><input type="text" value="$50" style="text-align:center;"></div>';
+    document.getElementById('prizes-list').appendChild(row);
+  }
+
+  // === Toast ===
+  function showToast(msg, type) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.className = 'toast' + (type === 'success' ? ' success' : '');
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 3000);
+  }
+</script>
+
+</body>
+</html>
