@@ -4,156 +4,300 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IB Contest Platform — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  @font-face { font-family: 'Sprig Sans'; src: url('fonts/FAIRE-SprigSans-Light.otf') format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Sprig Sans'; src: url('fonts/FAIRE-SprigSans-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Sprig Sans'; src: url('fonts/FAIRE-SprigSans-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Sprig Sans'; src: url('fonts/FAIRE-SprigSans-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+</style>
 <style>
   :root {
-    --primary: #1A365D;
-    --primary-light: #2D4A7A;
-    --accent: #D4A857;
-    --accent-light: #F6E8C1;
-    --success: #38A169;
-    --success-light: #C6F6D5;
-    --danger: #E53E3E;
-    --danger-light: #FED7D7;
-    --warning: #DD6B20;
-    --warning-light: #FEEBC8;
-    --gray-50: #F7FAFC;
-    --gray-100: #EDF2F7;
-    --gray-200: #E2E8F0;
-    --gray-300: #CBD5E0;
-    --gray-400: #A0AEC0;
-    --gray-500: #718096;
-    --gray-600: #4A5568;
-    --gray-700: #2D3748;
-    --gray-800: #1A202C;
-    --radius: 12px;
-    --radius-sm: 8px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+    --primary: #1945ff;
+    --primary-hover: #1538d0;
+    --primary-light: #eef1ff;
+
+    --text-primary: #161616;
+    --text-secondary: #525252;
+    --text-muted: #6f6f6f;
+    --text-tertiary: #9A9FA5;
+    --text-placeholder: #b0b0b0;
+
+    --bg: #ffffff;
+    --bg-page: #f7f7f8;
+    --bg-hover: #fafafa;
+    --bg-selected: #eef1ff;
+    --row-hover: #F5F7FA;
+
+    --border: #e6e6e6;
+    --border-input: #d9d9d9;
+
+    --success: #17882c;
+    --success-text: #31865b;
+    --success-bg: #e9f5ee;
+    --danger: #e72d2d;
+    --danger-bg: #fef2f2;
+    --danger-text: #b91c1c;
+    --warning: #d18119;
+    --warning-bg: #fef4e5;
+
+    --radius-sm: 6px;
+    --radius-btn: 8px;
+    --radius-md: 12px;
+    --radius-card: 16px;
+    --radius-chip: 20px;
+
+    --shadow-card: 0 4px 16px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 8px 40px rgba(0,0,0,0.18);
+    --shadow-modal: 0 20px 60px rgba(0,0,0,0.2);
+
+    /* Typography — DS Adaptive / Desktop */
+    --font-display: 'Sprig Sans', 'Inter', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--gray-50);
-    color: var(--gray-800);
-    line-height: 1.5;
+    font-family: var(--font-body);
+    background: var(--bg-page);
+    color: var(--text-primary);
+    line-height: 1.43;
+    font-size: 14px;
+  }
+
+  /* Heading 01: Sprig Sans Bold 32/40 */
+  h1 {
+    font-family: var(--font-display);
+    font-size: 32px; font-weight: 700; line-height: 40px;
+    letter-spacing: -0.2px;
+  }
+  /* Heading 02: Sprig Sans Bold 24/32 */
+  h2 {
+    font-family: var(--font-display);
+    font-size: 24px; font-weight: 700; line-height: 32px;
+    letter-spacing: -0.2px;
+  }
+  /* Heading 03: Inter SemiBold 20/24 */
+  h3 {
+    font-family: var(--font-body);
+    font-size: 20px; font-weight: 600; line-height: 24px;
+    letter-spacing: -0.2px;
+  }
+  /* Heading 04: Inter SemiBold 16/20 */
+  h4 {
+    font-family: var(--font-body);
+    font-size: 16px; font-weight: 600; line-height: 20px;
   }
 
   /* === NAVIGATION === */
-  .role-switcher {
+  .topnav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    background: var(--primary);
+    background: var(--bg);
     display: flex; align-items: center;
-    padding: 0 24px; height: 56px;
-    box-shadow: var(--shadow-md);
+    padding: 0 32px; height: 56px;
+    border-bottom: 1px solid var(--border);
   }
-  .role-switcher .logo {
-    font-size: 18px; font-weight: 700; color: white;
-    margin-right: 32px; letter-spacing: -0.5px;
+  .logo {
+    width: 32px; height: 32px; background: var(--primary);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; margin-right: 24px; flex-shrink: 0;
   }
-  .role-switcher .logo span { color: var(--accent); }
-  .role-tabs { display: flex; gap: 4px; }
-  .role-tab {
-    padding: 8px 20px; border-radius: 8px 8px 0 0;
-    background: transparent; color: rgba(255,255,255,0.6);
-    border: none; cursor: pointer; font-size: 14px; font-weight: 500;
-    transition: all 0.2s;
+  .logo svg { width: 18px; height: 18px; fill: #fff; }
+  .nav-links { display: flex; gap: 0; }
+  .nav-link {
+    padding: 6px 16px; border-radius: var(--radius-btn);
+    font-size: 14px; color: var(--text-secondary);
+    cursor: pointer; white-space: nowrap; font-weight: 500;
+    border: none; background: transparent;
+    transition: all 0.15s;
   }
-  .role-tab:hover { color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.08); }
-  .role-tab.active { background: var(--gray-50); color: var(--primary); }
+  .nav-link:hover { background: #f5f5f5; }
+  .nav-link.active { background: #1e1e1e; color: #fff; font-weight: 500; }
 
   /* === LAYOUT === */
   .app { padding-top: 56px; min-height: 100vh; }
   .panel { display: none; }
   .panel.active { display: block; }
-  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+  .container {
+    max-width: 1216px; margin: 32px auto; padding: 32px;
+    background: var(--bg); border-radius: var(--radius-card);
+    border: 1px solid var(--border);
+  }
+  .table-scroll {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    border: 1px solid #dddedf; border-radius: 12px; overflow: hidden;
+  }
+  .card .table-scroll { border: none; border-radius: 0; }
+  .stats + .table-scroll { margin-top: 24px; }
+  .page-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-header h1 { font-size: 28px; }
+
+  /* === MAIN CARD (DS pattern) === */
+  .main-card {
+    overflow: hidden;
+  }
 
   /* === CARDS === */
   .card {
-    background: white; border-radius: var(--radius);
-    box-shadow: var(--shadow); border: 1px solid var(--gray-200);
+    background: var(--bg); border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card); border: 1px solid var(--border);
     overflow: hidden; transition: box-shadow 0.2s;
   }
   .card:hover { box-shadow: var(--shadow-md); }
   .card-header {
-    padding: 20px 24px; border-bottom: 1px solid var(--gray-100);
+    padding: 16px 24px; border-bottom: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
   }
   .card-body { padding: 24px; }
 
-  /* === BUTTONS === */
+  /* === BUTTONS (DS: Components/Button) === */
   .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 20px; border-radius: var(--radius-sm);
-    font-size: 14px; font-weight: 600; cursor: pointer;
-    border: none; transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: var(--radius-btn);
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    border: 1px solid transparent; transition: all 0.15s;
+    font-family: inherit; white-space: nowrap;
   }
-  .btn-primary { background: var(--primary); color: white; }
-  .btn-primary:hover { background: var(--primary-light); }
-  .btn-accent { background: var(--accent); color: var(--primary); }
-  .btn-accent:hover { background: #c49a4d; }
-  .btn-outline {
-    background: white; color: var(--gray-600);
-    border: 1.5px solid var(--gray-300);
-  }
-  .btn-outline:hover { border-color: var(--gray-400); background: var(--gray-50); }
-  .btn-danger { background: var(--danger); color: white; }
-  .btn-danger:hover { background: #c53030; }
-  .btn-success { background: var(--success); color: white; }
-  .btn-success:hover { background: #2f855a; }
-  .btn-sm { padding: 6px 14px; font-size: 13px; }
-  .btn-lg { padding: 14px 28px; font-size: 16px; }
+  .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+  .btn-secondary { background: #fff; color: var(--text-primary); border-color: #e0e0e0; }
+  .btn-secondary:hover { background: var(--bg-page); }
+  .btn-success { background: var(--success); color: #fff; border-color: var(--success); }
+  .btn-success:hover { background: #136e24; border-color: #136e24; }
+  .btn-danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+  .btn-danger:hover { background: #c52020; border-color: #c52020; }
+  .btn-outline { background: transparent; color: var(--text-primary); border-color: #e0e0e0; }
+  .btn-outline:hover { background: var(--bg-page); }
+  .btn-ghost { background: transparent; border: none; color: var(--text-secondary); padding: 4px 8px; }
+  .btn-ghost:hover { color: var(--text-primary); background: var(--bg-page); }
+  .btn-sm { padding: 6px 16px; font-size: 13px; }
 
-  /* === BADGES === */
-  .badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    padding: 4px 10px; border-radius: 100px;
-    font-size: 12px; font-weight: 600;
+  .icon-btn {
+    width: 32px; height: 32px; padding: 0;
+    border-radius: var(--radius-btn); border: 1px solid #e0e0e0;
+    background: var(--bg); display: inline-flex; align-items: center;
+    justify-content: center; cursor: pointer; transition: all 0.15s;
   }
-  .badge-active { background: var(--success-light); color: #276749; }
-  .badge-draft { background: var(--gray-100); color: var(--gray-500); }
-  .badge-done { background: var(--accent-light); color: #744210; }
-  .badge-flagged { background: var(--danger-light); color: #9b2c2c; }
-  .badge-pending { background: var(--warning-light); color: #9c4221; }
+  .icon-btn:hover { background: var(--bg-page); }
+  .icon-btn-sm { width: 28px; height: 28px; padding: 0; border-radius: 6px; border: 1px solid #e0e0e0; background: var(--bg); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; color: var(--text-secondary); }
+  .icon-btn-sm:hover { background: var(--bg-page); color: var(--text-primary); border-color: var(--text-tertiary); }
+  .icon-btn-sm svg { width: 14px; height: 14px; }
+  .btn-block {
+    width: 100%; padding: 14px; background: var(--primary); color: #fff;
+    border: none; border-radius: var(--radius-md); font-size: 14px;
+    font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .btn-block:hover { background: var(--primary-hover); }
 
-  /* === STATS === */
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  /* === BADGES/TAGS === */
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 500; white-space: nowrap;
+  }
+  .tag-active { color: var(--success-text); background: var(--success-bg); }
+  .tag-draft { color: var(--text-secondary); background: #f0f0f0; }
+  .tag-done { color: var(--primary); background: var(--primary-light); }
+  .tag-flagged { color: var(--danger-text); background: var(--danger-bg); }
+  .tag-pending { color: var(--warning); background: var(--warning-bg); }
+
+  /* === STATS (inside main-card) === */
+  .stats {
+    display: flex; padding: 20px 24px;
+  }
   .stat-card {
-    background: white; border-radius: var(--radius-sm);
-    padding: 20px; text-align: center;
-    border: 1px solid var(--gray-200);
+    flex: 1; padding: 0 16px; text-align: center;
   }
-  .stat-value { font-size: 32px; font-weight: 700; color: var(--primary); }
-  .stat-label { font-size: 13px; color: var(--gray-500); margin-top: 4px; }
+  .stat-card:not(:last-child) { border-right: 1px solid var(--border); }
+  .stat-card:first-child { padding-left: 0; }
+  .stat-card:last-child { padding-right: 0; }
+  .stat-value { font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: 32px; color: var(--text-primary); }
+  .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .stat-trend {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 600; margin-top: 4px;
+  }
+  .stat-trend.up { color: var(--success); }
+  .stat-trend.down { color: var(--danger); }
+  .stat-trend.neutral { color: var(--text-placeholder); }
 
   /* === TABLE === */
   table { width: 100%; border-collapse: collapse; }
-  th { text-align: left; padding: 12px 16px; font-size: 12px; text-transform: uppercase;
-    letter-spacing: 0.05em; color: var(--gray-500); border-bottom: 2px solid var(--gray-200);
-    font-weight: 600; }
-  td { padding: 14px 16px; border-bottom: 1px solid var(--gray-100); font-size: 14px; }
-  tr:hover td { background: var(--gray-50); }
-  tr.highlight td { background: #EBF4FF; font-weight: 600; }
+  th {
+    text-align: left; padding: 16px; font-size: 12px;
+    color: #525252; border-bottom: 1px solid #dddedf;
+    font-weight: 400; white-space: nowrap;
+    letter-spacing: 0.15px;
+    background: var(--bg);
+  }
+  th .th-sub { font-size: 10px; color: #6f6f6f; font-weight: 400; margin-top: 2px; }
+  td { padding: 16px; border-bottom: 1px solid #dddedf; font-size: 14px; color: #161616; vertical-align: middle; }
+  td .td-sub { font-size: 12px; color: #6f6f6f; margin-top: 2px; }
+  tbody tr:last-child td { border-bottom: none; }
+  tr { transition: background .1s; }
+  tbody tr:hover td { background: var(--row-hover); }
+  tbody td:last-child .btn, tbody td:last-child .icon-btn-sm { opacity: 0; transition: opacity .15s ease; }
+  tbody tr:hover td:last-child .btn, tbody tr:hover td:last-child .icon-btn-sm { opacity: 1; }
+  tr.highlight td { background: var(--bg-selected); font-weight: 600; }
   tr.highlight { position: relative; }
-  tr.highlight td:first-child::before { content: '▶'; color: var(--primary); margin-right: 4px; }
+  tr.highlight td:first-child {
+    border-left: 3px solid var(--primary);
+    padding-left: 13px;
+  }
+  @keyframes highlightPulse {
+    0%, 100% { background: var(--bg-selected); }
+    50% { background: #dde3ff; }
+  }
+  tr.highlight td { animation: highlightPulse 2.5s ease-in-out 1; }
+
+  /* === CHIPS === */
+  .chips-group { display: flex; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border: 1px solid #e0e0e0;
+    border-radius: var(--radius-chip); font-size: 13px; font-weight: 500;
+    cursor: pointer; background: var(--bg); white-space: nowrap;
+    color: var(--text-secondary); transition: all 0.15s;
+  }
+  .chip:hover { background: var(--bg-page); }
+  .chip.active {
+    background: var(--text-primary); color: #fff;
+    border-color: var(--text-primary);
+  }
+
+  /* === TABS (DS: inside main-card) === */
+  .tabs { display: flex; gap: 0; padding: 0 24px; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 16px 20px; font-size: 14px; color: var(--text-secondary);
+    cursor: pointer; border-bottom: 2px solid transparent;
+    font-weight: 500; position: relative; bottom: -1px;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .tab:hover { color: var(--text-primary); }
+  .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
 
   /* === WIZARD === */
   .wizard-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
-  .wizard-steps { display: flex; gap: 8px; margin-bottom: 24px; }
-  .wizard-step-dot {
-    width: 40px; height: 40px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 700;
-    background: var(--gray-200); color: var(--gray-500);
-    transition: all 0.3s;
+  .wizard-steps {
+    display: flex; align-items: center; gap: 16px;
+    padding: 4px; margin-bottom: 32px;
   }
-  .wizard-step-dot.active { background: var(--primary); color: white; }
-  .wizard-step-dot.done { background: var(--success); color: white; }
+  .wizard-step-dot {
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted);
+    transition: all 0.3s; flex-shrink: 0;
+  }
+  .wizard-step-dot svg { width: 24px; height: 24px; }
+  .wizard-step-dot.active { color: var(--primary); }
+  .wizard-step-dot.done { color: var(--text-muted); }
   .wizard-step-connector {
-    flex: 0; width: 32px; height: 2px; background: var(--gray-200);
-    align-self: center; transition: background 0.3s;
+    flex: 1; height: 1px; background: var(--border-input, #dddedf);
+    transition: background 0.3s; min-width: 16px;
   }
   .wizard-step-connector.done { background: var(--success); }
   .wizard-content { min-height: 400px; }
@@ -161,54 +305,129 @@
   .wizard-step-panel.active { display: block; }
 
   .preview-card {
-    background: white; border-radius: var(--radius);
-    border: 2px dashed var(--gray-300);
+    background: var(--bg); border-radius: var(--radius-card);
+    border: 1.5px dashed var(--border-input);
     padding: 24px; position: sticky; top: 80px;
   }
-  .preview-card h4 { font-size: 12px; text-transform: uppercase;
-    color: var(--gray-400); margin-bottom: 16px; letter-spacing: 0.08em; }
+  .preview-card h4 {
+    font-size: 12px; text-transform: uppercase;
+    color: var(--text-placeholder); margin-bottom: 16px; letter-spacing: 0.08em;
+  }
   .preview-inner {
-    background: var(--gray-50); border-radius: var(--radius-sm);
+    background: var(--bg-page); border-radius: var(--radius-md);
     padding: 24px; text-align: center;
   }
   .preview-inner .trophy { font-size: 48px; margin-bottom: 12px; }
-  .preview-inner h3 { font-size: 18px; color: var(--primary); margin-bottom: 8px; }
-  .preview-inner p { font-size: 13px; color: var(--gray-500); margin-bottom: 4px; }
+  .preview-inner h3 { font-family: var(--font-display); font-size: 18px; line-height: 24px; color: var(--text-primary); margin-bottom: 8px; }
+  .preview-inner p { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
   .preview-inner .prize-tag {
     display: inline-block; margin-top: 12px;
-    padding: 6px 16px; border-radius: 100px;
-    background: var(--accent-light); color: #744210;
+    padding: 6px 16px; border-radius: var(--radius);
+    background: var(--primary-light); color: var(--primary);
     font-weight: 600; font-size: 14px;
   }
+
+  /* === CALENDAR === */
+  .cal-input-wrap { position: relative; }
+  .cal-input {
+    width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0;
+    border-radius: var(--radius-btn); font-size: 14px; font-family: inherit;
+    background: var(--bg); color: var(--text-primary); cursor: pointer;
+    outline: none; transition: border-color 0.15s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cal-input:hover { border-color: var(--text-tertiary); }
+  .cal-input:focus, .cal-input.open { border-color: var(--primary); }
+  .cal-input svg { color: var(--text-muted); flex-shrink: 0; }
+  .cal-dropdown {
+    position: absolute; top: calc(100% + 6px); left: 0; z-index: 100;
+    width: 288px; background: var(--bg); border: 1px solid #c6c6c6;
+    border-radius: 12px; padding-top: 12px;
+    box-shadow: 0px 16px 24px 0px rgba(0,0,0,0.08), 0px 2px 16px 0px rgba(0,0,0,0.06);
+    display: none;
+  }
+  .cal-dropdown.visible { display: block; }
+  .cal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px 12px;
+  }
+  .cal-header-title {
+    font-size: 14px; font-weight: 600; color: var(--text-primary);
+  }
+  .cal-nav {
+    width: 28px; height: 28px; border: none; background: none;
+    border-radius: 8px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    color: var(--text-secondary); transition: background 0.15s;
+  }
+  .cal-nav:hover { background: var(--bg-page); }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    padding: 0 16px; gap: 0;
+  }
+  .cal-dow {
+    font-size: 12px; font-weight: 600; color: var(--text-tertiary);
+    text-align: center; padding: 0 0 8px; user-select: none;
+  }
+  .cal-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 500; color: var(--text-primary);
+    border-radius: 50%; cursor: pointer; transition: all 0.12s;
+    border: none; background: none; padding: 0;
+    font-family: inherit;
+  }
+  .cal-day:hover { background: var(--bg-page); }
+  .cal-day.today { font-weight: 700; color: var(--primary); }
+  .cal-day.selected {
+    background: var(--primary); color: #fff; font-weight: 600;
+  }
+  .cal-day.other-month { color: var(--text-placeholder); }
+  .cal-day.empty { cursor: default; }
+  .cal-footer {
+    display: flex; gap: 12px; padding: 12px 16px 16px;
+  }
+  .cal-footer-btn {
+    flex: 1; height: 40px; border: none; background: none;
+    border-radius: 12px; font-size: 14px; font-weight: 600;
+    color: var(--text-primary); cursor: pointer;
+    font-family: inherit; transition: background 0.15s;
+  }
+  .cal-footer-btn:hover { background: var(--bg-page); }
 
   /* === FORM ELEMENTS === */
   .form-group { margin-bottom: 20px; }
   .form-group label {
-    display: block; font-size: 14px; font-weight: 600;
-    color: var(--gray-700); margin-bottom: 6px;
+    display: block; font-size: 12px; font-weight: 600;
+    color: var(--text-muted); margin-bottom: 6px;
   }
-  .form-group .hint { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+  .form-group .hint { font-size: 12px; color: var(--text-placeholder); margin-top: 4px; }
   input[type="text"], input[type="number"], input[type="date"], select, textarea {
-    width: 100%; padding: 10px 14px; border: 1.5px solid var(--gray-300);
-    border-radius: var(--radius-sm); font-size: 14px; font-family: inherit;
-    transition: border-color 0.15s; background: white;
+    width: 100%; padding: 10px 14px; border: 1px solid #e0e0e0;
+    border-radius: var(--radius-btn); font-size: 14px; font-family: inherit;
+    transition: border-color 0.15s; background: var(--bg); color: var(--text-primary);
+    outline: none;
   }
   input:focus, select:focus, textarea:focus {
-    outline: none; border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(26,54,93,0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(25, 69, 255, .12);
+  }
+  select {
+    cursor: pointer; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
   }
 
   .radio-cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
   .radio-card {
-    padding: 16px 20px; border: 2px solid var(--gray-200);
-    border-radius: var(--radius-sm); cursor: pointer;
+    padding: 16px 20px; border: 1px solid #e0e0e0;
+    border-radius: var(--radius-btn); cursor: pointer;
     transition: all 0.15s; display: flex; align-items: center; gap: 12px;
   }
-  .radio-card:hover { border-color: var(--gray-300); background: var(--gray-50); }
-  .radio-card.selected { border-color: var(--primary); background: #EBF4FF; }
+  .radio-card:hover { border-color: #999; background: var(--bg-hover); }
+  .radio-card.selected { border-color: var(--primary); background: var(--bg-selected); }
   .radio-card .icon { font-size: 24px; }
-  .radio-card .rc-title { font-weight: 600; font-size: 15px; }
-  .radio-card .rc-desc { font-size: 13px; color: var(--gray-500); }
+  .radio-card .rc-title { font-weight: 600; font-size: 14px; line-height: 20px; }
+  .radio-card .rc-desc { font-size: 14px; line-height: 20px; color: var(--text-muted); }
 
   /* === PRIZE TABLE === */
   .prize-row {
@@ -220,129 +439,351 @@
   /* === CONTEST CARDS (client) === */
   .contest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
   .contest-card {
-    background: white; border-radius: var(--radius); border: 1px solid var(--gray-200);
+    background: var(--bg); border-radius: var(--radius-card); border: 1px solid var(--border);
     padding: 24px; transition: all 0.2s; cursor: pointer;
   }
   .contest-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
   .contest-card .cc-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-  .contest-card .cc-icon { font-size: 36px; }
-  .contest-card .cc-title { font-size: 18px; font-weight: 700; color: var(--primary); }
-  .contest-card .cc-desc { font-size: 14px; color: var(--gray-600); margin-bottom: 16px; }
+  .contest-card .cc-icon { width: 40px; height: 40px; flex-shrink: 0; }
+  .contest-card .cc-title { font-family: var(--font-display); font-size: 18px; font-weight: 700; line-height: 24px; color: var(--text-primary); }
+
+  /* === ICONS === */
+  .icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; vertical-align: middle; }
+  .icon svg { display: block; }
+  .icon-xs { width: 14px; height: 14px; }
+  .icon-sm { width: 16px; height: 16px; }
+  .icon-md { width: 20px; height: 20px; }
+  .icon-lg { width: 24px; height: 24px; }
+  .icon-xl { width: 36px; height: 36px; }
+  .icon-xxl { width: 48px; height: 48px; }
+  .icon-circle {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .icon-circle-primary { background: var(--primary-light); color: var(--primary); }
+  .icon-circle-success { background: var(--success-bg); color: var(--success); }
+  .icon-circle-warning { background: var(--warning-bg); color: var(--warning); }
+  .icon-circle-danger { background: var(--danger-bg); color: var(--danger); }
+
+  .medal { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-size: 13px; font-weight: 600; background: #f0f1f3; color: var(--text-secondary); border: 1px solid #e2e4e8; }
+  .medal-1 { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
+  .medal-2 { background: #E5E7EB; color: #4B5563; border-color: #D1D5DB; }
+  .medal-3 { background: #FED7AA; color: #9A3412; border-color: #FDBA74; }
+
+  .table-title {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 16px 12px;
+  }
+  .table-title h4 { margin: 0; }
+  .table-title .meta { font-size: 13px; color: var(--text-placeholder); }
+  .contest-card .cc-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
   .contest-card .cc-meta {
-    display: flex; gap: 16px; font-size: 13px; color: var(--gray-500);
-    padding-top: 16px; border-top: 1px solid var(--gray-100);
+    display: flex; gap: 16px; font-size: 13px; color: var(--text-muted);
+    padding-top: 16px; border-top: 1px solid #f2f2f2;
   }
 
   /* === PROGRESS BAR === */
-  .progress { height: 8px; background: var(--gray-200); border-radius: 100px; overflow: hidden; }
+  .progress { height: 8px; background: #e0e0e0; border-radius: 100px; overflow: hidden; }
   .progress-bar { height: 100%; border-radius: 100px; transition: width 0.5s ease; }
   .progress-bar-primary { background: var(--primary); }
-  .progress-bar-accent { background: var(--accent); }
   .progress-bar-success { background: var(--success); }
+
+  .progress-mini { height: 3px; background: #e8e8e8; border-radius: 2px; width: 100%; margin-top: 6px; overflow: hidden; }
+  .progress-mini .bar { height: 100%; border-radius: 2px; transition: width 0.5s ease; background: var(--primary); }
+  .progress-mini .bar.warning { background: var(--warning); }
+
+  .type-cell { display: flex; align-items: center; gap: 8px; }
+  .type-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .type-icon.volume { background: var(--primary-light); color: var(--primary); }
+  .type-icon.streak { background: var(--warning-bg); color: var(--warning); }
+  .type-icon.top { background: var(--success-bg); color: var(--success); }
 
   /* === USER PROGRESS CARD === */
   .user-progress {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    border-radius: var(--radius); padding: 28px; color: white; margin-bottom: 24px;
+    background: var(--primary);
+    border-radius: var(--radius-card); padding: 28px; color: #fff; margin-bottom: 24px;
   }
-  .user-progress .up-position { font-size: 48px; font-weight: 800; }
+  .user-progress .up-position { font-family: var(--font-display); font-size: 48px; font-weight: 700; line-height: 1; }
   .user-progress .up-total { font-size: 16px; opacity: 0.7; }
-  .user-progress .up-volume { font-size: 24px; font-weight: 600; margin-top: 8px; }
+  .user-progress .up-volume { font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: 32px; margin-top: 8px; }
   .user-progress .up-target { font-size: 14px; opacity: 0.7; margin-top: 4px; margin-bottom: 12px; }
   .up-progress-wrap { background: rgba(255,255,255,0.2); border-radius: 100px; height: 10px; }
-  .up-progress-fill { height: 100%; background: var(--accent); border-radius: 100px; transition: width 0.5s; }
+  .up-progress-fill { height: 100%; background: #fff; border-radius: 100px; transition: width 0.5s; }
   .up-percent { font-size: 13px; opacity: 0.8; margin-top: 6px; text-align: right; }
 
   /* === ALERT CARD === */
   .alert-card {
-    background: var(--danger-light); border: 1px solid #feb2b2;
-    border-radius: var(--radius-sm); padding: 16px 20px; margin-bottom: 12px;
+    background: var(--danger-bg); border: 1px solid #fca5a5;
+    border-radius: var(--radius-btn); padding: 16px 20px; margin-bottom: 12px;
   }
-  .alert-card .alert-title { font-weight: 700; color: #9b2c2c; margin-bottom: 4px; }
-  .alert-card .alert-desc { font-size: 13px; color: #742a2a; margin-bottom: 12px; }
+  .alert-card .alert-title { font-weight: 700; color: var(--danger-text); margin-bottom: 4px; }
+  .alert-card .alert-desc { font-size: 13px; color: #991b1b; margin-bottom: 12px; }
   .alert-card .alert-actions { display: flex; gap: 8px; }
 
   /* === AUDIT TRAIL === */
-  .audit-trail { border-left: 2px solid var(--gray-200); margin-left: 12px; padding-left: 20px; }
+  .audit-trail { border-left: 2px solid var(--border); margin-left: 12px; padding-left: 20px; }
   .audit-item { position: relative; margin-bottom: 16px; }
   .audit-item::before {
     content: ''; position: absolute; left: -26px; top: 6px;
     width: 10px; height: 10px; border-radius: 50%;
-    background: var(--gray-300);
+    background: var(--border-input);
   }
   .audit-item.alert::before { background: var(--danger); }
-  .audit-time { font-size: 12px; color: var(--gray-400); font-family: 'JetBrains Mono', monospace; }
-  .audit-text { font-size: 14px; color: var(--gray-600); }
+  .audit-time { font-size: 12px; line-height: 16px; color: var(--text-placeholder); font-variant-numeric: tabular-nums; }
+  .audit-text { font-size: 14px; line-height: 20px; color: var(--text-secondary); }
 
   /* === MODAL === */
   .modal-overlay {
     display: none; position: fixed; inset: 0; z-index: 2000;
-    background: rgba(0,0,0,0.5); align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.35); align-items: center; justify-content: center;
     padding: 24px;
   }
   .modal-overlay.visible { display: flex; }
   .modal {
-    background: white; border-radius: var(--radius); width: 100%; max-width: 520px;
-    box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto;
+    background: var(--bg); border-radius: var(--radius-card); width: 100%; max-width: 520px;
+    box-shadow: var(--shadow-modal); max-height: 90vh; overflow-y: auto;
   }
   .modal-header {
-    padding: 20px 24px; border-bottom: 1px solid var(--gray-100);
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
   }
-  .modal-header h3 { font-size: 18px; }
-  .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--gray-400); }
-  .modal-body { padding: 24px; }
-  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--gray-100); display: flex; gap: 12px; justify-content: flex-end; }
-
-  /* === TABS === */
-  .tabs { display: flex; gap: 4px; margin-bottom: 24px; }
-  .tab {
-    padding: 8px 16px; border-radius: var(--radius-sm);
-    background: transparent; color: var(--gray-500);
-    border: none; cursor: pointer; font-size: 14px; font-weight: 500;
+  .modal-header h3 { font-size: 20px; }
+  .modal-close {
+    background: none; border: none; font-size: 22px; cursor: pointer;
+    color: var(--text-secondary); line-height: 1;
   }
-  .tab:hover { background: var(--gray-100); }
-  .tab.active { background: var(--primary); color: white; }
+  .modal-close:hover { color: var(--text-primary); }
+  .modal-body { padding: 24px; }
+  .modal-footer {
+    padding: 16px 24px; border-top: 1px solid var(--border);
+    display: flex; gap: 12px; justify-content: flex-end;
+  }
 
-  /* === COMPLETED SECTION === */
-  .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--gray-400); margin: 32px 0 16px; font-weight: 600; }
+  /* === BREADCRUMB === */
+  .breadcrumb {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--text-muted); margin-bottom: 16px;
+  }
+  .breadcrumb a {
+    color: var(--text-muted); text-decoration: none; cursor: pointer;
+    transition: color .15s;
+  }
+  .breadcrumb a:hover { color: var(--primary); }
+  .breadcrumb .sep { color: var(--border-input); user-select: none; }
+  .breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+
+  /* === SECTION TITLE === */
+  .section-title {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-placeholder); margin: 32px 0 16px; font-weight: 600;
+  }
 
   .completed-contest {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px; background: white; border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200);
+    padding: 14px 20px; background: var(--bg); border-radius: var(--radius);
+    border: 1px solid var(--border);
   }
 
-  /* === TOAST === */
+  /* === TOAST (DS: Notification component) === */
   .toast {
-    position: fixed; bottom: 24px; right: 24px; z-index: 3000;
-    padding: 14px 24px; border-radius: var(--radius-sm);
-    background: var(--gray-800); color: white; font-size: 14px; font-weight: 500;
-    box-shadow: var(--shadow-lg); transform: translateY(100px); opacity: 0;
-    transition: all 0.3s ease;
+    position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-100px);
+    z-index: 3000;
+    padding: 16px; border-radius: 16px;
+    background: var(--danger-bg); color: var(--text-primary);
+    font-size: 14px; font-weight: 600;
+    box-shadow: 0px 16px 24px 0px rgba(0,0,0,0.1), 0px 2px 30px 0px rgba(0,0,0,0.08), 0px 8px 10px 0px rgba(0,0,0,0.14);
+    opacity: 0; transition: all 0.3s ease;
+    display: flex; align-items: center; gap: 16px;
+    white-space: nowrap;
   }
-  .toast.visible { transform: translateY(0); opacity: 1; }
-  .toast.success { background: var(--success); }
+  .toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast.success { background: var(--success-bg); }
+
+  /* === EMPTY STATE === */
+  .empty-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 64px 24px; text-align: center;
+  }
+  .empty-state .empty-icon {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--primary-light); color: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .empty-state h3 { font-family: var(--font-display); font-size: 20px; line-height: 24px; color: var(--text-primary); margin-bottom: 8px; }
+  .empty-state p { font-size: 14px; color: var(--text-muted); max-width: 360px; margin-bottom: 24px; }
+
+  /* === INFO BOX === */
+  .info-box {
+    padding: 12px 16px; background: var(--primary-light);
+    border-radius: var(--radius-md); font-size: 13px; color: var(--text-primary);
+  }
+
+  /* === SCREEN TRANSITIONS === */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .screen.entering { animation: fadeInUp 0.25s ease-out forwards; }
 
   /* === RESPONSIVE === */
-  @media (max-width: 768px) {
+
+  /* 1024–1279: 32px gap to viewport, tables scroll */
+  @media (max-width: 1279px) {
+    .container { max-width: none; margin: 32px; }
+    .table-scroll { overflow-x: auto; }
+  }
+
+  /* 644–1023: 24px gap to viewport */
+  @media (max-width: 1023px) {
+    .container { margin: 24px; padding: 24px; }
     .wizard-layout { grid-template-columns: 1fr; }
     .preview-card { position: static; }
     .contest-grid { grid-template-columns: 1fr; }
-    .stats { grid-template-columns: repeat(2, 1fr); }
+    .stats { flex-wrap: wrap; padding: 16px; }
+    .stat-card { flex: 1 1 40%; min-width: 120px; }
+  }
+
+  /* ≤643: mobile */
+  @media (max-width: 643px) {
+    .container { margin: 16px; padding: 16px; border-radius: var(--radius-md); }
+    .stats { flex-direction: column !important; flex-wrap: nowrap; padding: 16px; }
+    .stat-card { flex: none; padding: 8px 0; }
+    .stat-card:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .stat-card:first-child { padding-left: 0; }
+    .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    tbody td:last-child .btn, tbody td:last-child .icon-btn-sm { opacity: 1; }
   }
 </style>
 </head>
 <body>
 
-<!-- ROLE SWITCHER -->
-<nav class="role-switcher">
-  <div class="logo">Contest<span>Hub</span></div>
-  <div class="role-tabs">
-    <button class="role-tab active" onclick="switchRole('ib')">IB Partner</button>
-    <button class="role-tab" onclick="switchRole('client')">Client</button>
-    <button class="role-tab" onclick="switchRole('admin')">Admin</button>
+<!-- SVG Icon Sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none;">
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3h12v6a6 6 0 01-12 0V3zM12 15v3M8 21h8M10 18h4"/>
+  </symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 3v18h18M7 16V10M12 16V6M17 16v-4"/>
+  </symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22c4.418 0 7-2.686 7-7.5 0-3.5-2-6-3.5-7.5-.317-.317-.758.091-.633.503C15.28 9 14.5 10 13 10c0-3.5-2.5-6-5-8 0 3-1 5.5-3 8-1.5 1.875-2 4.063-2 5.5C3 19.314 5.582 22 10 22h2z"/>
+  </symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/>
+  </symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+  </symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 010-5C9 3 12 6 12 8M16.5 8a2.5 2.5 0 000-5C15 3 12 6 12 8"/>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+  </symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/>
+  </symbol>
+  <symbol id="i-check-circle-filled" viewBox="0 0 24 24" fill="none">
+    <path d="M10.7396 15.7695L17.0416 9.46739L16.4752 8.90099C16.1173 8.54301 15.5369 8.54301 15.1789 8.90099L10.7396 13.3403L8.82108 11.4218C8.4631 11.0638 7.8827 11.0638 7.52472 11.4218L6.95831 11.9882L10.7396 15.7695Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M21.1666 11.9997C21.1666 17.0623 17.0626 21.1663 12 21.1663C6.93737 21.1663 2.83331 17.0623 2.83331 11.9997C2.83331 6.93706 6.93737 2.83301 12 2.83301C17.0626 2.83301 21.1666 6.93706 21.1666 11.9997ZM19.3333 11.9997C19.3333 16.0498 16.0501 19.333 12 19.333C7.94989 19.333 4.66665 16.0498 4.66665 11.9997C4.66665 7.94959 7.94989 4.66634 12 4.66634C16.0501 4.66634 19.3333 7.94959 19.3333 11.9997Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/>
+  </symbol>
+  <symbol id="i-alert-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+  </symbol>
+  <symbol id="i-alert-circle-filled" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 8v4M12 16h.01" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-info-filled" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M12 16v-4M12 8h.01" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2z"/>
+  </symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>
+  </symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09zM12 15l-3-3M22 2l-7.5 7.5"/><path d="M15 12l2.3 2.3a1 1 0 010 1.4l-3 3a1 1 0 01-1.4 0L9 15M12 9l-2.3-2.3a1 1 0 010-1.4l3-3a1 1 0 011.4 0L18 6"/>
+  </symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>
+  </symbol>
+  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/>
+  </symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+  </symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>
+  </symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 5v14M5 12h14"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+  </symbol>
+  <symbol id="i-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>
+  </symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+    <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+  </symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+  </symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18l6-6-6-6"/>
+  </symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+  </symbol>
+  <symbol id="i-digit-1" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+    <text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">1</text>
+  </symbol>
+  <symbol id="i-digit-2" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+    <text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">2</text>
+  </symbol>
+  <symbol id="i-digit-3" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+    <text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">3</text>
+  </symbol>
+  <symbol id="i-digit-4" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+    <text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">4</text>
+  </symbol>
+  <symbol id="i-digit-5" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
+    <text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">5</text>
+  </symbol>
+</svg>
+
+<!-- NAVIGATION -->
+<nav class="topnav">
+  <div class="logo"><svg viewBox="0 0 24 24"><path d="M7 17l5-5-5-5M12 17l5-5-5-5"/></svg></div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="switchRole('ib')">IB Partner</button>
+    <button class="nav-link" onclick="switchRole('client')">Client</button>
+    <button class="nav-link" onclick="switchRole('admin')">Admin</button>
   </div>
 </nav>
 
@@ -352,21 +793,22 @@
 <!-- IB PARTNER PANEL -->
 <!-- ============================================ -->
 <div id="panel-ib" class="panel active">
+  <div class="container">
   <!-- Screen 1.0: My Contests -->
-  <div id="ib-list" class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
-      <h1 style="font-size:24px;">Мои контесты</h1>
-      <button class="btn btn-primary btn-lg" onclick="showIBScreen('ib-wizard')">+ Создать контест</button>
+  <div id="ib-list" class="screen">
+    <div class="page-header">
+      <h1>Мои контесты</h1>
+      <button class="btn btn-primary" onclick="showIBScreen('ib-wizard')"><span class="icon icon-sm"><svg><use href="#i-plus"/></svg></span> Создать контест</button>
     </div>
 
-    <div class="stats">
-      <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Всего контестов</div></div>
-      <div class="stat-card"><div class="stat-value" style="color:var(--success)">1</div><div class="stat-label">Активных</div></div>
-      <div class="stat-card"><div class="stat-value">79</div><div class="stat-label">Участников</div></div>
-      <div class="stat-card"><div class="stat-value">$2,400</div><div class="stat-label">Призовой фонд</div></div>
-    </div>
-
-    <div class="card">
+    <div class="main-card">
+      <div class="stats">
+        <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Всего контестов</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--success)">1</div><div class="stat-label">Активных</div></div>
+        <div class="stat-card"><div class="stat-value">79</div><div class="stat-label">Участников</div></div>
+        <div class="stat-card"><div class="stat-value">$2,400</div><div class="stat-label">Призовой фонд</div></div>
+      </div>
+      <div class="table-scroll">
       <table>
         <thead>
           <tr>
@@ -376,103 +818,128 @@
         <tbody>
           <tr style="cursor:pointer" onclick="showIBScreen('ib-detail')">
             <td><strong>Весенний Volume Race</strong></td>
-            <td>Volume Race</td>
-            <td><span class="badge badge-active">Active</span></td>
+            <td><div class="type-cell"><span class="type-icon volume"><svg width="14" height="14"><use href="#i-chart"/></svg></span> Volume Race</div></td>
+            <td><span class="tag tag-active">Active</span></td>
             <td>47</td>
-            <td>1 — 30 Apr 2026</td>
-            <td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation(); showIBScreen('ib-detail')">Открыть</button></td>
+            <td>
+              <div>1 — 30 Apr 2026</div>
+              <div class="progress-mini"><div class="bar" style="width:33%"></div></div>
+            </td>
+            <td style="text-align:right;"><div style="display:inline-flex;gap:4px;"><button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showIBScreen('ib-detail')"><svg width="14" height="14"><use href="#i-chart"/></svg> Статистика</button><button class="icon-btn-sm" onclick="event.stopPropagation(); showToast('Ссылка скопирована!', 'success')" title="Поделиться ссылкой"><svg><use href="#i-link"/></svg></button></div></td>
           </tr>
-          <tr>
+          <tr style="cursor:pointer" onclick="showIBScreen('ib-wizard')">
             <td><strong>Streak Challenge May</strong></td>
-            <td>Trading Streak</td>
-            <td><span class="badge badge-draft">Draft</span></td>
+            <td><div class="type-cell"><span class="type-icon streak"><svg width="14" height="14"><use href="#i-flame"/></svg></span> Trading Streak</div></td>
+            <td><span class="tag tag-draft">Draft</span></td>
             <td>—</td>
             <td>Не задан</td>
-            <td><button class="btn btn-outline btn-sm" onclick="showIBScreen('ib-wizard')">Редактировать</button></td>
+            <td style="text-align:right;"><div style="display:inline-flex;gap:4px;"><button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showIBScreen('ib-wizard')"><svg width="14" height="14"><use href="#i-edit"/></svg> Редактировать</button></div></td>
           </tr>
-          <tr>
+          <tr style="cursor:pointer" onclick="showIBScreen('ib-detail')">
             <td><strong>Турнир февраля</strong></td>
-            <td>Top Trader</td>
-            <td><span class="badge badge-done">Completed</span></td>
+            <td><div class="type-cell"><span class="type-icon top"><svg width="14" height="14"><use href="#i-trophy"/></svg></span> Top Trader</div></td>
+            <td><span class="tag tag-done">Completed</span></td>
             <td>32</td>
             <td>1 — 28 Feb 2026</td>
-            <td><button class="btn btn-outline btn-sm">Результаты</button></td>
+            <td style="text-align:right;"><div style="display:inline-flex;gap:4px;"><button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showIBScreen('ib-detail')"><svg width="14" height="14"><use href="#i-eye"/></svg> Результаты</button><button class="icon-btn-sm" onclick="event.stopPropagation(); showToast('Ссылка скопирована!', 'success')" title="Поделиться ссылкой"><svg><use href="#i-link"/></svg></button></div></td>
           </tr>
         </tbody>
       </table>
+      </div>
+    </div>
+
+    <!-- Empty State (hidden; toggle via JS to demo) -->
+    <div class="main-card" id="ib-empty-state" style="display:none;">
+      <div class="empty-state">
+        <div class="empty-icon"><svg width="32" height="32"><use href="#i-trophy"/></svg></div>
+        <h3>Пока нет контестов</h3>
+        <p>Создайте первый контест для ваших клиентов и начните увеличивать торговые объёмы</p>
+        <button class="btn btn-primary" onclick="showIBScreen('ib-wizard')"><span class="icon icon-sm"><svg><use href="#i-plus"/></svg></span> Создать контест</button>
+      </div>
     </div>
   </div>
 
   <!-- Screen 1.1-1.5: Wizard -->
-  <div id="ib-wizard" class="container" style="display:none;">
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
-      <button class="btn btn-outline btn-sm" onclick="showIBScreen('ib-list')">← Назад</button>
-      <h1 style="font-size:24px;">Создать контест</h1>
-    </div>
-
-    <!-- Wizard Steps Indicator -->
-    <div class="wizard-steps">
-      <div class="wizard-step-dot active" id="dot-1">1</div>
-      <div class="wizard-step-connector" id="conn-1"></div>
-      <div class="wizard-step-dot" id="dot-2">2</div>
-      <div class="wizard-step-connector" id="conn-2"></div>
-      <div class="wizard-step-dot" id="dot-3">3</div>
-      <div class="wizard-step-connector" id="conn-3"></div>
-      <div class="wizard-step-dot" id="dot-4">4</div>
-      <div class="wizard-step-connector" id="conn-4"></div>
-      <div class="wizard-step-dot" id="dot-5">5</div>
+  <div id="ib-wizard" class="screen" style="display:none;">
+    <div class="breadcrumb">
+      <a onclick="showIBScreen('ib-list')">Мои контесты</a>
+      <span class="sep">/</span>
+      <span class="current">Создание контеста</span>
     </div>
 
     <div class="wizard-layout">
       <div class="wizard-content">
+        <div class="wizard-steps">
+          <div class="wizard-step-dot active" id="dot-1"><svg><use href="#i-digit-1"/></svg></div>
+          <div class="wizard-step-connector" id="conn-1"></div>
+          <div class="wizard-step-dot" id="dot-2"><svg><use href="#i-digit-2"/></svg></div>
+          <div class="wizard-step-connector" id="conn-2"></div>
+          <div class="wizard-step-dot" id="dot-3"><svg><use href="#i-digit-3"/></svg></div>
+          <div class="wizard-step-connector" id="conn-3"></div>
+          <div class="wizard-step-dot" id="dot-4"><svg><use href="#i-digit-4"/></svg></div>
+          <div class="wizard-step-connector" id="conn-4"></div>
+          <div class="wizard-step-dot" id="dot-5"><svg><use href="#i-digit-5"/></svg></div>
+        </div>
         <!-- Step 1: Type -->
         <div class="wizard-step-panel active" id="wiz-step-1">
-          <h2 style="margin-bottom:4px;">Тип контеста</h2>
-          <p style="color:var(--gray-500); margin-bottom:20px;">Выберите формат соревнования</p>
+          <h3 style="margin-bottom:4px;">Тип контеста</h3>
+          <p style="color:var(--text-muted); margin-bottom:20px;">Выберите формат соревнования</p>
           <div class="radio-cards">
             <div class="radio-card selected" onclick="selectType(this, 'volume')">
-              <div class="icon">📊</div>
+              <div class="icon-circle icon-circle-primary"><svg width="20" height="20"><use href="#i-chart"/></svg></div>
               <div><div class="rc-title">Volume Race</div><div class="rc-desc">Кто наторгует больше лотов за период</div></div>
             </div>
             <div class="radio-card" onclick="selectType(this, 'streak')">
-              <div class="icon">🔥</div>
+              <div class="icon-circle icon-circle-warning"><svg width="20" height="20"><use href="#i-flame"/></svg></div>
               <div><div class="rc-title">Trading Streak</div><div class="rc-desc">Кто торгует больше дней подряд</div></div>
             </div>
             <div class="radio-card" onclick="selectType(this, 'top')">
-              <div class="icon">🏆</div>
+              <div class="icon-circle icon-circle-success"><svg width="20" height="20"><use href="#i-trophy"/></svg></div>
               <div><div class="rc-title">Top Trader</div><div class="rc-desc">Комбинация объёма и частоты</div></div>
             </div>
           </div>
           <div style="margin-top:24px; text-align:right;">
-            <button class="btn btn-primary" onclick="wizardNext()">Далее →</button>
+            <button class="btn btn-primary" onclick="wizardNext()">Далее <svg width="14" height="14"><use href="#i-chevron-right"/></svg></button>
           </div>
         </div>
 
         <!-- Step 2: Period -->
         <div class="wizard-step-panel" id="wiz-step-2">
-          <h2 style="margin-bottom:4px;">Период проведения</h2>
-          <p style="color:var(--gray-500); margin-bottom:20px;">Укажите даты начала и окончания</p>
+          <h3 style="margin-bottom:4px;">Период проведения</h3>
+          <p style="color:var(--text-muted); margin-bottom:20px;">Укажите даты начала и окончания</p>
           <div class="form-group">
             <label>Дата начала</label>
-            <input type="date" value="2026-04-15" onchange="updatePreview()">
+            <div class="cal-input-wrap" id="cal-start-wrap">
+              <div class="cal-input" id="cal-start-trigger" tabindex="0" onclick="toggleCalendar('start')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+                <span id="cal-start-label">15 апр 2026</span>
+              </div>
+              <div class="cal-dropdown" id="cal-start-dropdown"></div>
+            </div>
           </div>
           <div class="form-group">
             <label>Дата окончания</label>
-            <input type="date" value="2026-05-15" onchange="updatePreview()">
+            <div class="cal-input-wrap" id="cal-end-wrap">
+              <div class="cal-input" id="cal-end-trigger" tabindex="0" onclick="toggleCalendar('end')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+                <span id="cal-end-label">15 мая 2026</span>
+              </div>
+              <div class="cal-dropdown" id="cal-end-dropdown"></div>
+            </div>
           </div>
-          <div style="padding:12px 16px; background:var(--accent-light); border-radius:var(--radius-sm); font-size:13px;">
-            💡 <strong>Рекомендация:</strong> оптимальная длительность для Volume Race — 1-4 недели
+          <div class="info-box">
+            <span class="icon icon-sm" style="color:var(--primary);margin-right:4px;"><svg><use href="#i-lightbulb"/></svg></span> <strong>Рекомендация:</strong> оптимальная длительность для Volume Race — 1-4 недели
           </div>
           <div style="margin-top:24px; display:flex; justify-content:space-between;">
-            <button class="btn btn-outline" onclick="wizardPrev()">← Назад</button>
-            <button class="btn btn-primary" onclick="wizardNext()">Далее →</button>
+            <button class="btn btn-secondary" onclick="wizardPrev()"><svg width="14" height="14"><use href="#i-arrow-left"/></svg> Назад</button>
+            <button class="btn btn-primary" onclick="wizardNext()">Далее <svg width="14" height="14"><use href="#i-chevron-right"/></svg></button>
           </div>
         </div>
 
         <!-- Step 3: Rules -->
         <div class="wizard-step-panel" id="wiz-step-3">
-          <h2 style="margin-bottom:4px;">Правила контеста</h2>
-          <p style="color:var(--gray-500); margin-bottom:20px;">Настройте условия участия</p>
+          <h3 style="margin-bottom:4px;">Правила контеста</h3>
+          <p style="color:var(--text-muted); margin-bottom:20px;">Настройте условия участия</p>
           <div class="form-group">
             <label>Учитываемые инструменты</label>
             <select><option>Все инструменты</option><option>Только Forex</option><option>Только CFD</option></select>
@@ -484,61 +951,61 @@
           <div class="form-group">
             <label>Минимальное время удержания позиции</label>
             <select><option>5 минут</option><option>10 минут</option><option>15 минут</option><option>30 минут</option></select>
-            <div class="hint">⚠️ Защита от wash trading</div>
+            <div class="hint"><span class="icon icon-xs" style="color:var(--warning);"><svg><use href="#i-alert-triangle"/></svg></span> Защита от wash trading</div>
           </div>
           <div class="form-group">
             <label>Дополнительные условия (опционально)</label>
             <textarea rows="3" placeholder="Например: только для клиентов с депозитом от $500"></textarea>
           </div>
           <div style="margin-top:24px; display:flex; justify-content:space-between;">
-            <button class="btn btn-outline" onclick="wizardPrev()">← Назад</button>
-            <button class="btn btn-primary" onclick="wizardNext()">Далее →</button>
+            <button class="btn btn-secondary" onclick="wizardPrev()"><svg width="14" height="14"><use href="#i-arrow-left"/></svg> Назад</button>
+            <button class="btn btn-primary" onclick="wizardNext()">Далее <svg width="14" height="14"><use href="#i-chevron-right"/></svg></button>
           </div>
         </div>
 
         <!-- Step 4: Prizes -->
         <div class="wizard-step-panel" id="wiz-step-4">
-          <h2 style="margin-bottom:4px;">Призовой фонд</h2>
-          <p style="color:var(--gray-500); margin-bottom:20px;">Определите призы для победителей</p>
+          <h3 style="margin-bottom:4px;">Призовой фонд</h3>
+          <p style="color:var(--text-muted); margin-bottom:20px;">Определите призы для победителей</p>
           <div class="form-group">
             <label>Тип приза</label>
             <select><option>Бонус на торговый счёт</option><option>Денежный приз</option><option>Подарок (описание)</option></select>
           </div>
           <div id="prizes-list">
-            <div class="prize-row"><div class="prize-medal">🥇</div><div><label style="font-size:13px;">1 место</label></div><div><input type="text" value="$500" style="text-align:center;"></div></div>
-            <div class="prize-row"><div class="prize-medal">🥈</div><div><label style="font-size:13px;">2 место</label></div><div><input type="text" value="$300" style="text-align:center;"></div></div>
-            <div class="prize-row"><div class="prize-medal">🥉</div><div><label style="font-size:13px;">3 место</label></div><div><input type="text" value="$100" style="text-align:center;"></div></div>
+            <div class="prize-row"><div class="prize-medal"><span class="medal medal-1">1</span></div><div><label style="font-size:13px;">1 место</label></div><div><input type="text" value="$500" style="text-align:center;"></div></div>
+            <div class="prize-row"><div class="prize-medal"><span class="medal medal-2">2</span></div><div><label style="font-size:13px;">2 место</label></div><div><input type="text" value="$300" style="text-align:center;"></div></div>
+            <div class="prize-row"><div class="prize-medal"><span class="medal medal-3">3</span></div><div><label style="font-size:13px;">3 место</label></div><div><input type="text" value="$100" style="text-align:center;"></div></div>
           </div>
-          <button class="btn btn-outline btn-sm" style="margin-top:8px;" onclick="addPrize()">+ Добавить место</button>
-          <div style="margin-top:16px; padding:12px 16px; background:var(--accent-light); border-radius:var(--radius-sm);">
+          <button class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="addPrize()"><svg width="14" height="14"><use href="#i-plus"/></svg> Добавить место</button>
+          <div class="info-box" style="margin-top:16px;">
             <strong>Общий призовой фонд: $900</strong>
           </div>
           <div style="margin-top:24px; display:flex; justify-content:space-between;">
-            <button class="btn btn-outline" onclick="wizardPrev()">← Назад</button>
-            <button class="btn btn-primary" onclick="wizardNext()">Далее →</button>
+            <button class="btn btn-secondary" onclick="wizardPrev()"><svg width="14" height="14"><use href="#i-arrow-left"/></svg> Назад</button>
+            <button class="btn btn-primary" onclick="wizardNext()">Далее <svg width="14" height="14"><use href="#i-chevron-right"/></svg></button>
           </div>
         </div>
 
         <!-- Step 5: Preview & Confirm -->
         <div class="wizard-step-panel" id="wiz-step-5">
-          <h2 style="margin-bottom:4px;">Проверьте и запустите</h2>
-          <p style="color:var(--gray-500); margin-bottom:20px;">Убедитесь, что всё верно перед запуском</p>
+          <h3 style="margin-bottom:4px;">Проверьте и запустите</h3>
+          <p style="color:var(--text-muted); margin-bottom:20px;">Убедитесь, что всё верно перед запуском</p>
           <div class="card" style="margin-bottom:16px;">
             <div class="card-body">
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Тип</strong><div>Volume Race</div></div>
-                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Период</strong><div>15 Apr — 15 May 2026</div></div>
-                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Инструменты</strong><div>Все инструменты</div></div>
-                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Мин. объём</strong><div>0.1 лот</div></div>
-                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Мин. удержание</strong><div>5 минут</div></div>
-                <div><strong style="color:var(--gray-500); font-size:12px; text-transform:uppercase;">Призовой фонд</strong><div>$900</div></div>
+                <div><strong style="color:var(--text-muted); font-size:12px; text-transform:uppercase;">Тип</strong><div>Volume Race</div></div>
+                <div><strong style="color:var(--text-muted); font-size:12px; text-transform:uppercase;">Период</strong><div>15 Apr — 15 May 2026</div></div>
+                <div><strong style="color:var(--text-muted); font-size:12px; text-transform:uppercase;">Инструменты</strong><div>Все инструменты</div></div>
+                <div><strong style="color:var(--text-muted); font-size:12px; text-transform:uppercase;">Мин. объём</strong><div>0.1 лот</div></div>
+                <div><strong style="color:var(--text-muted); font-size:12px; text-transform:uppercase;">Мин. удержание</strong><div>5 минут</div></div>
+                <div><strong style="color:var(--text-muted); font-size:12px; text-transform:uppercase;">Призовой фонд</strong><div>$900</div></div>
               </div>
             </div>
           </div>
           <div style="display:flex; gap:12px;">
-            <button class="btn btn-outline btn-lg" onclick="wizardPrev()">← Назад</button>
-            <button class="btn btn-outline btn-lg" onclick="showIBScreen('ib-list'); showToast('Черновик сохранён');">💾 Сохранить черновик</button>
-            <button class="btn btn-accent btn-lg" style="flex:1;" onclick="showIBScreen('ib-list'); showToast('Контест запущен!', 'success');">🚀 Запустить контест</button>
+            <button class="btn btn-secondary" onclick="wizardPrev()"><svg width="14" height="14"><use href="#i-arrow-left"/></svg> Назад</button>
+            <button class="btn btn-secondary" onclick="showIBScreen('ib-list'); showToast('Черновик сохранён');"><svg width="14" height="14"><use href="#i-save"/></svg> Сохранить черновик</button>
+            <button class="btn btn-primary" style="flex:1;" onclick="showIBScreen('ib-list'); showToast('Контест запущен!', 'success');"><span class="icon icon-sm" style="color:#fff;"><svg><use href="#i-rocket"/></svg></span> Запустить контест</button>
           </div>
         </div>
       </div>
@@ -547,12 +1014,12 @@
       <div class="preview-card">
         <h4>Предпросмотр для клиента</h4>
         <div class="preview-inner">
-          <div class="trophy">🏆</div>
+          <div style="margin-bottom:12px;"><span class="icon-circle icon-circle-primary" style="width:48px;height:48px;"><svg width="24" height="24"><use href="#i-trophy"/></svg></span></div>
           <h3 id="preview-title">Volume Race</h3>
           <p id="preview-desc">Наторгуйте больше лотов и выиграйте!</p>
-          <p>📅 15 Apr — 15 May 2026</p>
-          <p>👥 0 участников</p>
-          <div class="prize-tag">🎁 Призы: $900</div>
+          <p><span class="icon icon-xs" style="color:var(--text-muted);"><svg><use href="#i-calendar"/></svg></span> 15 Apr — 15 May 2026</p>
+          <p><span class="icon icon-xs" style="color:var(--text-muted);"><svg><use href="#i-users"/></svg></span> 0 участников</p>
+          <div class="prize-tag"><span class="icon icon-xs"><svg><use href="#i-gift"/></svg></span> Призы: $900</div>
           <div style="margin-top:16px;">
             <button class="btn btn-success btn-sm" disabled>Участвую</button>
           </div>
@@ -562,83 +1029,112 @@
   </div>
 
   <!-- Screen 1.6: Contest Detail (IB) -->
-  <div id="ib-detail" class="container" style="display:none;">
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
-      <button class="btn btn-outline btn-sm" onclick="showIBScreen('ib-list')">← Назад</button>
-      <h1 style="font-size:24px;">Весенний Volume Race</h1>
-      <span class="badge badge-active">Active</span>
+  <div id="ib-detail" class="screen" style="display:none;">
+    <div class="breadcrumb">
+      <a onclick="showIBScreen('ib-list')">Мои контесты</a>
+      <span class="sep">/</span>
+      <span class="current">Детали контеста</span>
+    </div>
+    <div class="page-header">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <h1>Весенний Volume Race</h1>
+        <span class="tag tag-active">Active</span>
+      </div>
     </div>
 
-    <div style="display:flex; gap:8px; margin-bottom:24px; color:var(--gray-500); font-size:14px;">
-      <span>📅 1 — 30 Apr 2026</span>
-      <span>•</span>
-      <span>⏱ Осталось: 20 дней</span>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <div style="display:flex; gap:8px; color:var(--text-muted); font-size:14px; align-items:center;">
+        <span class="icon icon-sm"><svg><use href="#i-calendar"/></svg></span><span>1 — 30 Apr 2026</span>
+        <span>•</span>
+        <span class="icon icon-sm"><svg><use href="#i-clock"/></svg></span><span>Осталось: 20 дней</span>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Ссылка скопирована!', 'success')"><svg width="14" height="14"><use href="#i-link"/></svg> Поделиться</button>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Контест приостановлен')"><svg width="14" height="14"><use href="#i-pause"/></svg> Приостановить</button>
+        <button class="btn btn-secondary btn-sm"><svg width="14" height="14"><use href="#i-download"/></svg> Экспорт</button>
+      </div>
     </div>
 
-    <div class="stats">
-      <div class="stat-card"><div class="stat-value">47</div><div class="stat-label">Участников</div></div>
-      <div class="stat-card"><div class="stat-value">1,234</div><div class="stat-label">Лотов наторговано</div></div>
-      <div class="stat-card"><div class="stat-value">$900</div><div class="stat-label">Призовой фонд</div></div>
-      <div class="stat-card"><div class="stat-value" style="color:var(--success)">+23%</div><div class="stat-label">Рост объёма</div></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><h3 style="font-size:16px;">Лидерборд</h3><span style="font-size:13px; color:var(--gray-400);">Обновлено: 3 мин назад</span></div>
+    <div class="main-card">
+      <div class="stats">
+        <div class="stat-card"><div class="stat-value">47</div><div class="stat-label">Участников</div></div>
+        <div class="stat-card"><div class="stat-value">1,234</div><div class="stat-label">Лотов наторговано</div></div>
+        <div class="stat-card"><div class="stat-value">$900</div><div class="stat-label">Призовой фонд</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--success)">+23%</div><div class="stat-label">Рост объёма</div></div>
+      </div>
+      <div class="table-scroll">
+      <div class="table-title"><h4>Лидерборд</h4><span class="meta">Обновлено: 3 мин назад</span></div>
       <table>
-        <thead><tr><th>#</th><th>Участник</th><th>Объём (лоты)</th><th>Приз</th></tr></thead>
+        <thead><tr><th>Место</th><th>Участник</th><th>Объём (лоты)</th><th>Приз</th></tr></thead>
         <tbody>
-          <tr><td>🥇</td><td><strong>Client_A****</strong></td><td style="font-family:monospace;">245.3</td><td><span class="badge badge-done">$500</span></td></tr>
-          <tr><td>🥈</td><td><strong>Client_B****</strong></td><td style="font-family:monospace;">198.7</td><td><span class="badge badge-done">$300</span></td></tr>
-          <tr><td>🥉</td><td><strong>Client_C****</strong></td><td style="font-family:monospace;">156.2</td><td><span class="badge badge-done">$100</span></td></tr>
-          <tr><td>4</td><td>Client_D****</td><td style="font-family:monospace;">134.0</td><td>—</td></tr>
-          <tr><td>5</td><td>Client_E****</td><td style="font-family:monospace;">112.8</td><td>—</td></tr>
-          <tr><td>6</td><td>Client_F****</td><td style="font-family:monospace;">98.4</td><td>—</td></tr>
-          <tr><td>7</td><td>Client_G****</td><td style="font-family:monospace;">87.1</td><td>—</td></tr>
+          <tr><td><span class="medal medal-1">1</span></td><td><strong>Client_A****</strong></td><td style="font-variant-numeric:tabular-nums;">245.3</td><td><span class="tag tag-done">$500</span></td></tr>
+          <tr><td><span class="medal medal-2">2</span></td><td><strong>Client_B****</strong></td><td style="font-variant-numeric:tabular-nums;">198.7</td><td><span class="tag tag-done">$300</span></td></tr>
+          <tr><td><span class="medal medal-3">3</span></td><td><strong>Client_C****</strong></td><td style="font-variant-numeric:tabular-nums;">156.2</td><td><span class="tag tag-done">$100</span></td></tr>
+          <tr><td><span class="medal">4</span></td><td>Client_D****</td><td style="font-variant-numeric:tabular-nums;">134.0</td><td>—</td></tr>
+          <tr><td><span class="medal">5</span></td><td>Client_E****</td><td style="font-variant-numeric:tabular-nums;">112.8</td><td>—</td></tr>
+          <tr><td><span class="medal">6</span></td><td>Client_F****</td><td style="font-variant-numeric:tabular-nums;">98.4</td><td>—</td></tr>
+          <tr><td><span class="medal">7</span></td><td>Client_G****</td><td style="font-variant-numeric:tabular-nums;">87.1</td><td>—</td></tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
+  </div><!-- /container -->
 </div>
 
 <!-- ============================================ -->
 <!-- CLIENT PANEL -->
 <!-- ============================================ -->
 <div id="panel-client" class="panel">
+  <div class="container">
   <!-- Screen 2.0: Available Contests -->
-  <div id="client-list" class="container">
-    <h1 style="font-size:24px; margin-bottom:24px;">Контесты</h1>
+  <div id="client-list" class="screen">
+    <h1 style="margin-bottom:24px;">Контесты</h1>
 
     <div class="contest-grid">
       <div class="contest-card" onclick="showClientScreen('client-terms')">
         <div class="cc-header">
-          <div class="cc-icon">🏆</div>
+          <div class="cc-icon icon-circle icon-circle-primary"><svg width="20" height="20"><use href="#i-trophy"/></svg></div>
           <div>
             <div class="cc-title">Весенний Volume Race</div>
-            <span class="badge badge-active">Active</span>
+            <span class="tag tag-active">Active</span>
           </div>
         </div>
         <div class="cc-desc">Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!</div>
         <div class="cc-meta">
-          <span>📅 1 — 30 Apr</span>
-          <span>👥 47 участников</span>
-          <span>🎁 $900</span>
-          <span>⏱ 20 дней</span>
+          <span><svg width="14" height="14" style="vertical-align:-2px;margin-right:2px;"><use href="#i-calendar"/></svg> 1 — 30 Apr</span>
+          <span><svg width="14" height="14" style="vertical-align:-2px;margin-right:2px;"><use href="#i-users"/></svg> 47 участников</span>
+          <span><svg width="14" height="14" style="vertical-align:-2px;margin-right:2px;"><use href="#i-gift"/></svg> $900</span>
+          <span><svg width="14" height="14" style="vertical-align:-2px;margin-right:2px;"><use href="#i-clock"/></svg> 20 дней</span>
+        </div>
+        <div style="margin-top:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:4px;">
+            <span>Прошло 10 из 30 дней</span>
+            <span style="font-weight:600; color:var(--primary);">33%</span>
+          </div>
+          <div class="progress-mini"><div class="bar" style="width:33%"></div></div>
         </div>
       </div>
 
       <div class="contest-card" onclick="showClientScreen('client-terms')">
         <div class="cc-header">
-          <div class="cc-icon">🔥</div>
+          <div class="cc-icon icon-circle icon-circle-warning"><svg width="20" height="20"><use href="#i-flame"/></svg></div>
           <div>
             <div class="cc-title">Streak Challenge May</div>
-            <span class="badge badge-pending">Starts May 1</span>
+            <span class="tag tag-pending">Starts May 1</span>
           </div>
         </div>
         <div class="cc-desc">Торгуйте каждый день и выиграйте! Кто удержит самый длинный streak — тот победит.</div>
         <div class="cc-meta">
-          <span>📅 1 — 31 May</span>
-          <span>👥 12 участников</span>
-          <span>🎁 $600</span>
+          <span><svg width="14" height="14" style="vertical-align:-2px;margin-right:2px;"><use href="#i-calendar"/></svg> 1 — 31 May</span>
+          <span><svg width="14" height="14" style="vertical-align:-2px;margin-right:2px;"><use href="#i-users"/></svg> 12 участников</span>
+          <span><svg width="14" height="14" style="vertical-align:-2px;margin-right:2px;"><use href="#i-gift"/></svg> $600</span>
+        </div>
+        <div style="margin-top:12px;">
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-bottom:4px;">
+            <span>Начнётся через 21 день</span>
+          </div>
+          <div class="progress-mini"><div class="bar" style="width:0%"></div></div>
         </div>
       </div>
     </div>
@@ -646,34 +1142,38 @@
     <div class="section-title">Завершённые</div>
     <div class="completed-contest">
       <div style="display:flex; align-items:center; gap:12px;">
-        <span>✅</span>
-        <div><strong>Турнир февраля</strong><div style="font-size:13px; color:var(--gray-500);">Top Trader • 1-28 Feb 2026</div></div>
+        <span class="icon icon-md" style="color:var(--success);"><svg><use href="#i-check-circle"/></svg></span>
+        <div><strong>Турнир февраля</strong><div style="font-size:13px; color:var(--text-muted);">Top Trader • 1-28 Feb 2026</div></div>
       </div>
-      <div style="font-size:14px; color:var(--gray-500);">Ваше место: <strong style="color:var(--primary);">#7</strong> из 32</div>
+      <div style="font-size:14px; color:var(--text-muted);">Ваше место: <strong style="color:var(--primary);">#7</strong> из 32</div>
     </div>
   </div>
 
   <!-- Screen 2.1: Contest Terms -->
-  <div id="client-terms" class="container" style="display:none; max-width:640px;">
-    <button class="btn btn-outline btn-sm" onclick="showClientScreen('client-list')" style="margin-bottom:20px;">← Контесты</button>
+  <div id="client-terms" class="screen" style="display:none;">
+    <div class="breadcrumb">
+      <a onclick="showClientScreen('client-list')">Контесты</a>
+      <span class="sep">/</span>
+      <span class="current">Детали контеста</span>
+    </div>
 
     <div style="text-align:center; margin-bottom:24px;">
-      <div style="font-size:64px;">🏆</div>
-      <h1 style="font-size:28px; color:var(--primary);">Весенний Volume Race</h1>
-      <p style="color:var(--gray-500); margin-top:8px;">Наторгуйте больше лотов и выиграйте до $500!</p>
+      <div style="margin-bottom:8px;"><span class="icon-circle icon-circle-primary" style="width:64px;height:64px;"><svg width="32" height="32"><use href="#i-trophy"/></svg></span></div>
+      <h1>Весенний Volume Race</h1>
+      <p style="color:var(--text-muted); margin-top:8px;">Наторгуйте больше лотов и выиграйте до $500!</p>
     </div>
 
     <div class="card" style="margin-bottom:16px;">
       <div class="card-body">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:center;">
-          <div><div style="font-size:24px; font-weight:700;">20 дней</div><div style="font-size:13px; color:var(--gray-500);">Осталось</div></div>
-          <div><div style="font-size:24px; font-weight:700;">47</div><div style="font-size:13px; color:var(--gray-500);">Участников</div></div>
+          <div><div style="font-size:24px; font-weight:700;">20 дней</div><div style="font-size:13px; color:var(--text-muted);">Осталось</div></div>
+          <div><div style="font-size:24px; font-weight:700;">47</div><div style="font-size:13px; color:var(--text-muted);">Участников</div></div>
         </div>
       </div>
     </div>
 
     <div class="card" style="margin-bottom:16px;">
-      <div class="card-header"><h3 style="font-size:16px;">📋 Правила</h3></div>
+      <div class="card-header"><h4><span class="icon icon-sm" style="margin-right:4px;"><svg><use href="#i-clipboard"/></svg></span> Правила</h4></div>
       <div class="card-body" style="font-size:14px;">
         <ul style="padding-left:20px; display:flex; flex-direction:column; gap:8px;">
           <li>Учитываются все инструменты</li>
@@ -686,35 +1186,38 @@
     </div>
 
     <div class="card" style="margin-bottom:24px;">
-      <div class="card-header"><h3 style="font-size:16px;">🎁 Призы</h3></div>
+      <div class="card-header"><h4><span class="icon icon-sm" style="margin-right:4px;"><svg><use href="#i-gift"/></svg></span> Призы</h4></div>
       <div class="card-body">
         <div style="display:flex; flex-direction:column; gap:12px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:20px;">🥇 1 место</span><strong style="font-size:18px; color:var(--accent);">$500 бонус</strong></div>
-          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:20px;">🥈 2 место</span><strong style="font-size:18px; color:var(--gray-500);">$300 бонус</strong></div>
-          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:20px;">🥉 3 место</span><strong style="font-size:18px; color:var(--gray-500);">$100 бонус</strong></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="display:flex;align-items:center;gap:8px;"><span class="medal medal-1">1</span> 1 место</span><strong style="font-size:18px; color:var(--primary);">$500 бонус</strong></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="display:flex;align-items:center;gap:8px;"><span class="medal medal-2">2</span> 2 место</span><strong style="font-size:18px; color:var(--text-secondary);">$300 бонус</strong></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;"><span style="display:flex;align-items:center;gap:8px;"><span class="medal medal-3">3</span> 3 место</span><strong style="font-size:18px; color:var(--text-secondary);">$100 бонус</strong></div>
         </div>
       </div>
     </div>
 
     <div style="display:flex; gap:12px;">
-      <button class="btn btn-success btn-lg" style="flex:1;" onclick="showClientScreen('client-board'); showToast('Вы участвуете!', 'success');">✅ Участвую</button>
-      <button class="btn btn-outline btn-lg" onclick="showClientScreen('client-list')">Не сейчас</button>
+      <button class="btn btn-success" style="flex:1;" onclick="showClientScreen('client-board'); showToast('Вы участвуете!', 'success');"><span class="icon icon-sm" style="color:#fff;"><svg><use href="#i-check-circle"/></svg></span> Участвую</button>
+      <button class="btn btn-secondary" onclick="showClientScreen('client-list')">Не сейчас</button>
     </div>
-    <p style="font-size:12px; color:var(--gray-400); text-align:center; margin-top:12px;">
+    <p style="font-size:12px; color:var(--text-placeholder); text-align:center; margin-top:12px;">
       Нажимая "Участвую", вы соглашаетесь с правилами контеста и условиями участия.
     </p>
   </div>
 
   <!-- Screen 2.2: Leaderboard (Client) -->
-  <div id="client-board" class="container" style="display:none; max-width:640px;">
-    <button class="btn btn-outline btn-sm" onclick="showClientScreen('client-list')" style="margin-bottom:20px;">← Контесты</button>
-
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h1 style="font-size:24px;">Весенний Volume Race</h1>
-      <span style="font-size:14px; color:var(--gray-500);">⏱ 20 дней</span>
+  <div id="client-board" class="screen" style="display:none;">
+    <div class="breadcrumb">
+      <a onclick="showClientScreen('client-list')">Контесты</a>
+      <span class="sep">/</span>
+      <span class="current">Лидерборд</span>
     </div>
 
-    <!-- User Progress Card -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h1>Весенний Volume Race</h1>
+      <span style="font-size:14px; color:var(--text-muted); display:flex; align-items:center; gap:4px;"><span class="icon icon-sm"><svg><use href="#i-clock"/></svg></span> 20 дней</span>
+    </div>
+
     <div class="user-progress">
       <div style="display:flex; justify-content:space-between; align-items:flex-start;">
         <div>
@@ -723,7 +1226,7 @@
         </div>
         <div style="text-align:right;">
           <div class="up-volume">67.4 лот</div>
-          <div class="up-target">До 🥉 3 места: ещё 88.8 лот</div>
+          <div class="up-target">До 3 места: ещё 88.8 лот</div>
         </div>
       </div>
       <div class="up-progress-wrap"><div class="up-progress-fill" style="width:43%;"></div></div>
@@ -731,105 +1234,127 @@
     </div>
 
     <div class="card">
-      <div class="card-header"><h3 style="font-size:16px;">Лидерборд</h3><span style="font-size:13px; color:var(--gray-400);">Обновлено: 2 мин назад</span></div>
+      <div class="table-scroll">
+      <div class="table-title"><h4>Лидерборд</h4><span class="meta">Обновлено: 2 мин назад</span></div>
       <table>
-        <thead><tr><th>#</th><th>Участник</th><th>Объём</th><th>Приз</th></tr></thead>
+        <thead><tr><th>Место</th><th>Участник</th><th>Объём</th><th>Приз</th></tr></thead>
         <tbody>
-          <tr><td>🥇</td><td><strong>A****</strong></td><td style="font-family:monospace;">245.3</td><td><span class="badge badge-done">$500</span></td></tr>
-          <tr><td>🥈</td><td><strong>B****</strong></td><td style="font-family:monospace;">198.7</td><td><span class="badge badge-done">$300</span></td></tr>
-          <tr><td>🥉</td><td><strong>C****</strong></td><td style="font-family:monospace;">156.2</td><td><span class="badge badge-done">$100</span></td></tr>
-          <tr><td colspan="4" style="text-align:center; color:var(--gray-400); font-size:13px;">• • •</td></tr>
-          <tr><td>10</td><td>J****</td><td style="font-family:monospace;">89.1</td><td>—</td></tr>
-          <tr><td>11</td><td>K****</td><td style="font-family:monospace;">74.2</td><td>—</td></tr>
-          <tr class="highlight"><td>12</td><td>★ ВЫ</td><td style="font-family:monospace;">67.4</td><td>—</td></tr>
-          <tr><td>13</td><td>M****</td><td style="font-family:monospace;">61.0</td><td>—</td></tr>
-          <tr><td>14</td><td>N****</td><td style="font-family:monospace;">55.3</td><td>—</td></tr>
+          <tr><td><span class="medal medal-1">1</span></td><td><strong>A****</strong></td><td style="font-variant-numeric:tabular-nums;">245.3</td><td><span class="tag tag-done">$500</span></td></tr>
+          <tr><td><span class="medal medal-2">2</span></td><td><strong>B****</strong></td><td style="font-variant-numeric:tabular-nums;">198.7</td><td><span class="tag tag-done">$300</span></td></tr>
+          <tr><td><span class="medal medal-3">3</span></td><td><strong>C****</strong></td><td style="font-variant-numeric:tabular-nums;">156.2</td><td><span class="tag tag-done">$100</span></td></tr>
+          <tr><td colspan="4" style="text-align:center; color:var(--text-placeholder); font-size:13px;">• • •</td></tr>
+          <tr><td><span class="medal">10</span></td><td>J****</td><td style="font-variant-numeric:tabular-nums;">89.1</td><td>—</td></tr>
+          <tr><td><span class="medal">11</span></td><td>K****</td><td style="font-variant-numeric:tabular-nums;">74.2</td><td>—</td></tr>
+          <tr class="highlight"><td><span class="medal" style="background:var(--primary-light);color:var(--primary);">12</span></td><td><span class="icon icon-xs" style="color:var(--primary);margin-right:2px;"><svg><use href="#i-star"/></svg></span> ВЫ</td><td style="font-variant-numeric:tabular-nums;">67.4</td><td>—</td></tr>
+          <tr><td><span class="medal">13</span></td><td>M****</td><td style="font-variant-numeric:tabular-nums;">61.0</td><td>—</td></tr>
+          <tr><td><span class="medal">14</span></td><td>N****</td><td style="font-variant-numeric:tabular-nums;">55.3</td><td>—</td></tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
+  </div><!-- /container -->
 </div>
 
 <!-- ============================================ -->
 <!-- ADMIN PANEL -->
 <!-- ============================================ -->
 <div id="panel-admin" class="panel">
+  <div class="container">
   <!-- Screen 3.0: Admin Dashboard -->
-  <div id="admin-dashboard" class="container">
-    <h1 style="font-size:24px; margin-bottom:24px;">Admin Panel — Contests</h1>
-
-    <div class="stats">
-      <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Active</div></div>
-      <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Pending</div></div>
-      <div class="stat-card"><div class="stat-value" style="color:var(--danger);">1</div><div class="stat-label">Flagged</div></div>
-      <div class="stat-card"><div class="stat-value">45</div><div class="stat-label">Completed</div></div>
+  <div id="admin-dashboard" class="screen">
+    <div class="page-header">
+      <h1>Admin Panel — Contests</h1>
     </div>
 
-    <!-- Alert -->
     <div style="margin-bottom:24px;">
-      <h3 style="font-size:14px; text-transform:uppercase; letter-spacing:0.08em; color:var(--danger); margin-bottom:12px;">⚠ Требует внимания</h3>
+      <div class="section-label" style="color:var(--danger); margin-bottom:12px; display:flex; align-items:center; gap:6px;"><span class="icon icon-sm"><svg><use href="#i-alert-triangle"/></svg></span> Требует внимания</div>
       <div class="alert-card">
         <div class="alert-title">IB Partner_X — "Mega Contest"</div>
         <div class="alert-desc">Client_Z: 200 лотов за 1 час, средняя позиция 2 мин — возможный wash trading</div>
         <div class="alert-actions">
           <button class="btn btn-danger btn-sm" onclick="showAdminScreen('admin-detail')">Посмотреть</button>
-          <button class="btn btn-outline btn-sm">Игнорировать</button>
+          <button class="btn btn-secondary btn-sm">Игнорировать</button>
         </div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <h3 style="font-size:16px;">Все контесты</h3>
-        <div class="tabs" style="margin-bottom:0;">
-          <button class="tab active">Все</button>
-          <button class="tab">Active</button>
-          <button class="tab">Pending</button>
-          <button class="tab">Flagged</button>
+    <div class="main-card">
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value">12</div><div class="stat-label">Active</div>
+          <div class="stat-trend up"><svg width="12" height="12"><use href="#i-trending-up"/></svg> +3 за неделю</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">3</div><div class="stat-label">Pending</div>
+          <div class="stat-trend neutral">без изменений</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--danger);">1</div><div class="stat-label">Flagged</div>
+          <div class="stat-trend down"><svg width="12" height="12"><use href="#i-trending-down"/></svg> +1 новый</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">45</div><div class="stat-label">Completed</div>
+          <div class="stat-trend up"><svg width="12" height="12"><use href="#i-trending-up"/></svg> +5 за месяц</div>
         </div>
       </div>
+      <div class="card-header">
+        <h4>Все контесты</h4>
+        <div class="chips-group">
+          <div class="chip active">Все</div>
+          <div class="chip">Active</div>
+          <div class="chip">Pending</div>
+          <div class="chip">Flagged</div>
+        </div>
+      </div>
+      <div class="table-scroll">
       <table>
         <thead><tr><th>Контест</th><th>IB Partner</th><th>Статус</th><th>Участники</th><th></th></tr></thead>
         <tbody>
-          <tr>
+          <tr style="cursor:pointer" onclick="showAdminScreen('admin-detail')">
             <td><strong>Volume Race Apr</strong></td><td>Partner_A</td>
-            <td><span class="badge badge-active">Active</span></td><td>47</td>
-            <td><button class="btn btn-outline btn-sm" onclick="showAdminScreen('admin-detail')">Детали</button></td>
+            <td><span class="tag tag-active">Active</span></td><td>47</td>
+            <td style="text-align:right;"><div style="display:inline-flex;gap:4px;"><button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showAdminScreen('admin-detail')"><svg width="14" height="14"><use href="#i-chart"/></svg> Статистика</button></div></td>
           </tr>
-          <tr>
+          <tr style="cursor:pointer" onclick="showAdminScreen('admin-detail')">
             <td><strong>Streak May</strong></td><td>Partner_A</td>
-            <td><span class="badge badge-pending">Pending</span></td><td>0</td>
-            <td><button class="btn btn-outline btn-sm">Детали</button></td>
+            <td><span class="tag tag-pending">Pending</span></td><td>0</td>
+            <td style="text-align:right;"><div style="display:inline-flex;gap:4px;"><button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showAdminScreen('admin-detail')"><svg width="14" height="14"><use href="#i-eye"/></svg> Обзор</button></div></td>
           </tr>
-          <tr style="background:var(--danger-light);">
+          <tr style="background:var(--danger-bg); cursor:pointer" onclick="showAdminScreen('admin-detail')">
             <td><strong>Mega Contest</strong></td><td>Partner_X</td>
-            <td><span class="badge badge-flagged">⚠ Flagged</span></td><td>23</td>
-            <td><button class="btn btn-danger btn-sm" onclick="showAdminScreen('admin-detail')">Проверить</button></td>
+            <td><span class="tag tag-flagged"><span class="icon icon-xs"><svg><use href="#i-alert-triangle"/></svg></span> Flagged</span></td><td>23</td>
+            <td style="text-align:right;"><div style="display:inline-flex;gap:4px;"><button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); showAdminScreen('admin-detail')">Проверить</button></div></td>
           </tr>
-          <tr>
+          <tr style="cursor:pointer" onclick="showAdminScreen('admin-detail')">
             <td><strong>Top Trader Q1</strong></td><td>Partner_B</td>
-            <td><span class="badge badge-done">Done</span></td><td>32</td>
-            <td><button class="btn btn-outline btn-sm">Детали</button></td>
+            <td><span class="tag tag-done">Done</span></td><td>32</td>
+            <td style="text-align:right;"><div style="display:inline-flex;gap:4px;"><button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showAdminScreen('admin-detail')"><svg width="14" height="14"><use href="#i-eye"/></svg> Результаты</button></div></td>
           </tr>
-          <tr>
+          <tr style="cursor:pointer" onclick="showAdminScreen('admin-detail')">
             <td><strong>Spring Challenge</strong></td><td>Partner_C</td>
-            <td><span class="badge badge-active">Active</span></td><td>18</td>
-            <td><button class="btn btn-outline btn-sm">Детали</button></td>
+            <td><span class="tag tag-active">Active</span></td><td>18</td>
+            <td style="text-align:right;"><div style="display:inline-flex;gap:4px;"><button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); showAdminScreen('admin-detail')"><svg width="14" height="14"><use href="#i-chart"/></svg> Статистика</button></div></td>
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   </div>
 
   <!-- Screen 3.1: Admin Contest Detail -->
-  <div id="admin-detail" class="container" style="display:none;">
+  <div id="admin-detail" class="screen" style="display:none;">
+    <div class="breadcrumb">
+      <a onclick="showAdminScreen('admin-dashboard')">Dashboard</a>
+      <span class="sep">/</span>
+      <span class="current">Детали контеста</span>
+    </div>
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
-      <button class="btn btn-outline btn-sm" onclick="showAdminScreen('admin-dashboard')">← Dashboard</button>
-      <h1 style="font-size:24px;">Mega Contest</h1>
-      <span class="badge badge-flagged">⚠ Flagged</span>
+      <h1>Mega Contest</h1>
+      <span class="tag tag-flagged"><span class="icon icon-xs"><svg><use href="#i-alert-triangle"/></svg></span> Flagged</span>
     </div>
 
-    <div style="display:flex; gap:8px; margin-bottom:24px; color:var(--gray-500); font-size:14px;">
+    <div style="display:flex; gap:8px; margin-bottom:24px; color:var(--text-muted); font-size:14px;">
       <span>IB: <strong>Partner_X</strong></span>
       <span>•</span>
       <span>Volume Race</span>
@@ -839,52 +1364,51 @@
       <span>Призы: $1,700</span>
     </div>
 
-    <!-- Alert Detail -->
     <div class="alert-card" style="margin-bottom:24px;">
-      <div class="alert-title">🔴 Подозрительная активность: Client_Z</div>
+      <div class="alert-title"><span class="icon icon-sm" style="color:var(--danger);"><svg><use href="#i-alert-circle"/></svg></span> Подозрительная активность: Client_Z</div>
       <div class="alert-desc">
         200 лотов за 1 час • средняя позиция: 2 мин • 45 встречных сделок (buy+sell одновременно) • паттерн: возможный wash trading
       </div>
       <div class="alert-actions">
         <button class="btn btn-danger btn-sm" onclick="showToast('Client_Z дисквалифицирован. Лидерборд пересчитан.', 'success')">Дисквалифицировать</button>
-        <button class="btn btn-outline btn-sm" onclick="showToast('Алерт отклонён')">Ложное срабатывание</button>
+        <button class="btn btn-secondary btn-sm" onclick="showToast('Алерт отклонён')">Ложное срабатывание</button>
       </div>
     </div>
 
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
-      <!-- Leaderboard -->
       <div class="card">
-        <div class="card-header"><h3 style="font-size:16px;">Лидерборд (полный)</h3></div>
+        <div class="table-scroll">
+        <div class="table-title"><h4>Лидерборд (полный)</h4></div>
         <table>
-          <thead><tr><th>#</th><th>Клиент</th><th>Объём</th><th>Сделки</th><th>Ср. удерж.</th></tr></thead>
+          <thead><tr><th>Место</th><th>Клиент</th><th>Объём</th><th>Сделки</th><th>Ср. удерж.</th></tr></thead>
           <tbody>
-            <tr style="background:var(--danger-light);"><td>1</td><td><strong>Client_Z ⚠</strong></td><td style="font-family:monospace;">312.5</td><td>89</td><td style="color:var(--danger);">2 мин</td></tr>
-            <tr><td>2</td><td>Client_A</td><td style="font-family:monospace;">187.3</td><td>42</td><td>47 мин</td></tr>
-            <tr><td>3</td><td>Client_B</td><td style="font-family:monospace;">145.8</td><td>35</td><td>1.2 ч</td></tr>
-            <tr><td>4</td><td>Client_C</td><td style="font-family:monospace;">112.0</td><td>28</td><td>35 мин</td></tr>
-            <tr><td>5</td><td>Client_D</td><td style="font-family:monospace;">98.4</td><td>24</td><td>52 мин</td></tr>
+            <tr style="background:var(--danger-bg);"><td><span class="medal medal-1">1</span></td><td><strong>Client_Z ⚠</strong></td><td style="font-variant-numeric:tabular-nums;">312.5</td><td>89</td><td style="color:var(--danger);">2 мин</td></tr>
+            <tr><td><span class="medal medal-2">2</span></td><td>Client_A</td><td style="font-variant-numeric:tabular-nums;">187.3</td><td>42</td><td>47 мин</td></tr>
+            <tr><td><span class="medal medal-3">3</span></td><td>Client_B</td><td style="font-variant-numeric:tabular-nums;">145.8</td><td>35</td><td>1.2 ч</td></tr>
+            <tr><td><span class="medal">4</span></td><td>Client_C</td><td style="font-variant-numeric:tabular-nums;">112.0</td><td>28</td><td>35 мин</td></tr>
+            <tr><td><span class="medal">5</span></td><td>Client_D</td><td style="font-variant-numeric:tabular-nums;">98.4</td><td>24</td><td>52 мин</td></tr>
           </tbody>
         </table>
+        </div>
       </div>
 
-      <!-- Actions + Audit -->
       <div>
         <div class="card" style="margin-bottom:20px;">
-          <div class="card-header"><h3 style="font-size:16px;">Действия</h3></div>
+          <div class="card-header"><h4>Действия</h4></div>
           <div class="card-body" style="display:flex; flex-direction:column; gap:8px;">
-            <button class="btn btn-outline" onclick="showToast('Контест приостановлен')">⏸ Приостановить контест</button>
-            <button class="btn btn-danger" onclick="showToast('Контест отменён')">❌ Отменить контест</button>
-            <button class="btn btn-outline">📝 Добавить заметку</button>
+            <button class="btn btn-secondary" onclick="showToast('Контест приостановлен')"><svg width="16" height="16"><use href="#i-pause"/></svg> Приостановить контест</button>
+            <button class="btn btn-danger" onclick="showToast('Контест отменён')"><svg width="16" height="16" style="stroke:#fff;"><use href="#i-x-circle"/></svg> Отменить контест</button>
+            <button class="btn btn-secondary"><svg width="16" height="16"><use href="#i-edit"/></svg> Добавить заметку</button>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-header"><h3 style="font-size:16px;">Audit Trail</h3></div>
+          <div class="card-header"><h4>Audit Trail</h4></div>
           <div class="card-body">
             <div class="audit-trail">
               <div class="audit-item alert">
                 <div class="audit-time">18 Apr 11:45</div>
-                <div class="audit-text">⚠ Alert: Client_Z flagged — wash trading pattern</div>
+                <div class="audit-text"><span class="icon icon-xs" style="color:var(--danger);"><svg><use href="#i-alert-triangle"/></svg></span> Alert: Client_Z flagged — wash trading pattern</div>
               </div>
               <div class="audit-item">
                 <div class="audit-time">15 Apr 09:00</div>
@@ -904,6 +1428,7 @@
       </div>
     </div>
   </div>
+  </div><!-- /container -->
 </div>
 
 </div><!-- /app -->
@@ -912,40 +1437,50 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // === Role Switching ===
   function switchRole(role) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-link').forEach(t => t.classList.remove('active'));
     document.getElementById('panel-' + role).classList.add('active');
     event.target.classList.add('active');
-
-    // Reset to main screens
     if (role === 'ib') showIBScreen('ib-list');
     if (role === 'client') showClientScreen('client-list');
     if (role === 'admin') showAdminScreen('admin-dashboard');
   }
 
-  // === Screen Navigation ===
+  // Set initial active nav link
+  document.querySelector('.nav-link').classList.add('active');
+
+  function animateIn(el) {
+    el.classList.remove('entering');
+    void el.offsetWidth;
+    el.classList.add('entering');
+  }
+
   function showIBScreen(id) {
-    document.querySelectorAll('#panel-ib .container').forEach(s => s.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
+    document.querySelectorAll('#panel-ib .screen').forEach(s => s.style.display = 'none');
+    const el = document.getElementById(id);
+    el.style.display = 'block';
+    animateIn(el);
     if (id === 'ib-wizard') { currentStep = 1; updateWizardUI(); }
     window.scrollTo(0, 0);
   }
 
   function showClientScreen(id) {
-    document.querySelectorAll('#panel-client .container').forEach(s => s.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
+    document.querySelectorAll('#panel-client .screen').forEach(s => s.style.display = 'none');
+    const el = document.getElementById(id);
+    el.style.display = 'block';
+    animateIn(el);
     window.scrollTo(0, 0);
   }
 
   function showAdminScreen(id) {
-    document.querySelectorAll('#panel-admin .container').forEach(s => s.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
+    document.querySelectorAll('#panel-admin .screen').forEach(s => s.style.display = 'none');
+    const el = document.getElementById(id);
+    el.style.display = 'block';
+    animateIn(el);
     window.scrollTo(0, 0);
   }
 
-  // === Wizard ===
   let currentStep = 1;
   const totalSteps = 5;
 
@@ -957,26 +1492,23 @@
   }
 
   function updateWizardUI() {
-    // Update dots
+    const checkSvg = '<svg viewBox="0 0 24 24" fill="none"><path d="M10.7396 15.7695L17.0416 9.46739L16.4752 8.90099C16.1173 8.54301 15.5369 8.54301 15.1789 8.90099L10.7396 13.3403L8.82108 11.4218C8.4631 11.0638 7.8827 11.0638 7.52472 11.4218L6.95831 11.9882L10.7396 15.7695Z" fill="#31865B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M21.1666 11.9997C21.1666 17.0623 17.0626 21.1663 12 21.1663C6.93737 21.1663 2.83331 17.0623 2.83331 11.9997C2.83331 6.93706 6.93737 2.83301 12 2.83301C17.0626 2.83301 21.1666 6.93706 21.1666 11.9997ZM19.3333 11.9997C19.3333 16.0498 16.0501 19.333 12 19.333C7.94989 19.333 4.66665 16.0501 4.66665 11.9997C4.66665 7.94959 7.94989 4.66634 12 4.66634C16.0501 4.66634 19.3333 7.94959 19.3333 11.9997Z" fill="#31865B"/></svg>';
     for (let i = 1; i <= totalSteps; i++) {
       const dot = document.getElementById('dot-' + i);
+      const digitSvg = '<svg><use href="#i-digit-' + i + '"/></svg>';
       dot.classList.remove('active', 'done');
-      if (i < currentStep) dot.classList.add('done');
-      if (i === currentStep) dot.classList.add('active');
-      if (i < currentStep) dot.innerHTML = '✓';
-      else dot.innerHTML = i;
+      if (i < currentStep) { dot.classList.add('done'); dot.innerHTML = checkSvg; }
+      else if (i === currentStep) { dot.classList.add('active'); dot.innerHTML = digitSvg; }
+      else { dot.innerHTML = digitSvg; }
     }
-    // Update connectors
     for (let i = 1; i < totalSteps; i++) {
       const conn = document.getElementById('conn-' + i);
       conn.classList.toggle('done', i < currentStep);
     }
-    // Update panels
     document.querySelectorAll('.wizard-step-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('wiz-step-' + currentStep).classList.add('active');
   }
 
-  // === Contest Type Selection ===
   function selectType(el, type) {
     document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
@@ -990,7 +1522,6 @@
     document.getElementById('preview-desc').textContent = descs[type];
   }
 
-  // === Add Prize ===
   let prizeCount = 3;
   function addPrize() {
     prizeCount++;
@@ -1000,14 +1531,119 @@
     document.getElementById('prizes-list').appendChild(row);
   }
 
-  // === Toast ===
+  const toastIcons = {
+    success: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M10.7396 15.77L17.0416 9.46788L16.4752 8.90148C16.1173 8.5435 15.5369 8.5435 15.1789 8.90148L10.7396 13.3408L8.82108 11.4223C8.4631 11.0643 7.8827 11.0643 7.52472 11.4223L6.95831 11.9887L10.7396 15.77Z" fill="#31865B"/><path fill-rule="evenodd" clip-rule="evenodd" d="M21.1666 12C21.1666 17.0626 17.0626 21.1666 12 21.1666C6.93737 21.1666 2.83331 17.0626 2.83331 12C2.83331 6.93737 6.93737 2.83331 12 2.83331C17.0626 2.83331 21.1666 6.93737 21.1666 12ZM19.3333 12C19.3333 16.0501 16.0501 19.3333 12 19.3333C7.94989 19.3333 4.66665 16.0501 4.66665 12C4.66665 7.94989 7.94989 4.66665 12 4.66665C16.0501 4.66665 19.3333 7.94989 19.3333 12Z" fill="#31865B"/></svg>',
+    error: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><circle cx="12" cy="12" r="9.17" stroke="#e72d2d" stroke-width="1.83"/><path d="M12 8v4M12 16h.01" stroke="#e72d2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  };
   function showToast(msg, type) {
     const toast = document.getElementById('toast');
-    toast.textContent = msg;
+    const icon = type === 'success' ? toastIcons.success : toastIcons.error;
+    toast.innerHTML = icon + '<span>' + msg + '</span>';
     toast.className = 'toast' + (type === 'success' ? ' success' : '');
     toast.classList.add('visible');
-    setTimeout(() => toast.classList.remove('visible'), 3000);
+    setTimeout(() => toast.classList.remove('visible'), 4000);
   }
+
+  /* === CALENDAR === */
+  const calMonths = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const calMonthsShort = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+  const calDow = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+  const calState = {
+    start: { selected: new Date(2026, 3, 15), viewYear: 2026, viewMonth: 3 },
+    end:   { selected: new Date(2026, 4, 15), viewYear: 2026, viewMonth: 4 }
+  };
+  let openCalendar = null;
+
+  function formatCalDate(d) {
+    return d.getDate() + ' ' + calMonthsShort[d.getMonth()] + ' ' + d.getFullYear();
+  }
+
+  function toggleCalendar(which) {
+    if (openCalendar === which) { closeCalendar(); return; }
+    closeCalendar();
+    openCalendar = which;
+    document.getElementById('cal-' + which + '-trigger').classList.add('open');
+    renderCalendar(which);
+    document.getElementById('cal-' + which + '-dropdown').classList.add('visible');
+  }
+
+  function closeCalendar() {
+    if (!openCalendar) return;
+    document.getElementById('cal-' + openCalendar + '-trigger').classList.remove('open');
+    document.getElementById('cal-' + openCalendar + '-dropdown').classList.remove('visible');
+    openCalendar = null;
+  }
+
+  function renderCalendar(which) {
+    const s = calState[which];
+    const dd = document.getElementById('cal-' + which + '-dropdown');
+    const today = new Date(); today.setHours(0,0,0,0);
+    const firstDay = new Date(s.viewYear, s.viewMonth, 1);
+    let startDow = firstDay.getDay();
+    startDow = startDow === 0 ? 6 : startDow - 1;
+    const daysInMonth = new Date(s.viewYear, s.viewMonth + 1, 0).getDate();
+
+    let html = '<div class="cal-header">';
+    html += '<button class="cal-nav" onclick="event.stopPropagation(); calNav(\'' + which + '\', -1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>';
+    html += '<span class="cal-header-title">' + calMonths[s.viewMonth] + ' ' + s.viewYear + '</span>';
+    html += '<button class="cal-nav" onclick="event.stopPropagation(); calNav(\'' + which + '\', 1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>';
+    html += '</div>';
+
+    html += '<div class="cal-grid">';
+    for (let d = 0; d < 7; d++) html += '<div class="cal-dow">' + calDow[d] + '</div>';
+    for (let i = 0; i < startDow; i++) html += '<div class="cal-day empty"></div>';
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dt = new Date(s.viewYear, s.viewMonth, d);
+      let cls = 'cal-day';
+      if (dt.getTime() === today.getTime()) cls += ' today';
+      if (s.selected && dt.getTime() === s.selected.getTime()) cls += ' selected';
+      html += '<button class="' + cls + '" onclick="event.stopPropagation(); calSelect(\'' + which + '\', ' + d + ')">' + d + '</button>';
+    }
+    html += '</div>';
+
+    html += '<div class="cal-footer">';
+    html += '<button class="cal-footer-btn" onclick="event.stopPropagation(); calClear(\'' + which + '\')">Сбросить</button>';
+    html += '<button class="cal-footer-btn" onclick="event.stopPropagation(); calToday(\'' + which + '\')">Сегодня</button>';
+    html += '</div>';
+
+    dd.innerHTML = html;
+  }
+
+  function calNav(which, dir) {
+    const s = calState[which];
+    s.viewMonth += dir;
+    if (s.viewMonth > 11) { s.viewMonth = 0; s.viewYear++; }
+    if (s.viewMonth < 0) { s.viewMonth = 11; s.viewYear--; }
+    renderCalendar(which);
+  }
+
+  function calSelect(which, day) {
+    const s = calState[which];
+    s.selected = new Date(s.viewYear, s.viewMonth, day);
+    document.getElementById('cal-' + which + '-label').textContent = formatCalDate(s.selected);
+    closeCalendar();
+  }
+
+  function calClear(which) {
+    calState[which].selected = null;
+    document.getElementById('cal-' + which + '-label').textContent = 'Выберите дату';
+    closeCalendar();
+  }
+
+  function calToday(which) {
+    const t = new Date(); t.setHours(0,0,0,0);
+    const s = calState[which];
+    s.selected = t;
+    s.viewYear = t.getFullYear();
+    s.viewMonth = t.getMonth();
+    document.getElementById('cal-' + which + '-label').textContent = formatCalDate(t);
+    closeCalendar();
+  }
+
+  document.addEventListener('click', function(e) {
+    if (openCalendar && !e.target.closest('.cal-input-wrap')) closeCalendar();
+  });
 </script>
 
 </body>
