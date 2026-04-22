@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IB Contest Platform — React Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- DS TOKENS (RIG v2.51.0)                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<style>
+  @font-face { font-family: 'Sprig Sans'; src: url('../artifacts/fonts/FAIRE-SprigSans-Light.otf') format('opentype'); font-weight: 300; }
+  @font-face { font-family: 'Sprig Sans'; src: url('../artifacts/fonts/FAIRE-SprigSans-Regular.otf') format('opentype'); font-weight: 400; }
+  @font-face { font-family: 'Sprig Sans'; src: url('../artifacts/fonts/FAIRE-SprigSans-Medium.otf') format('opentype'); font-weight: 500; }
+  @font-face { font-family: 'Sprig Sans'; src: url('../artifacts/fonts/FAIRE-SprigSans-Bold.otf') format('opentype'); font-weight: 700; }
+
+  :root {
+    /* DS Colors — Brand1 / Light */
+    --ds-primary: #1843f8;
+    --ds-primary-hover: #1538d0;
+    --ds-primary-content: #eef1ff;
+    --ds-on-primary: #ffffff;
+    --ds-secondary: #fff6fa;
+
+    --ds-text-primary: #0a0a0a;
+    --ds-text-secondary: #525252;
+    --ds-text-muted: #6f6f6f;
+    --ds-text-tertiary: #9A9FA5;
+    --ds-text-placeholder: #b0b0b0;
+
+    --ds-bg: #ffffff;
+    --ds-bg-page: #f7f7f8;
+    --ds-bg-hover: #fafafa;
+    --ds-bg-selected: #eef1ff;
+    --ds-row-hover: #F5F7FA;
+
+    --ds-border: #e6e6e6;
+    --ds-border-input: #d9d9d9;
+
+    --ds-positive: #17882c;
+    --ds-positive-text: #31865b;
+    --ds-positive-bg: #e9f5ee;
+    --ds-negative: #e72d2d;
+    --ds-negative-bg: #fef2f2;
+    --ds-negative-text: #b91c1c;
+    --ds-warning: #d18119;
+    --ds-warning-bg: #fef4e5;
+    --ds-neutral-bg: #f0f0f0;
+    --ds-grow: #7c3aed;
+    --ds-grow-bg: #ede9fe;
+
+    /* DS Radii */
+    --ds-radius-xs: 4px;
+    --ds-radius-sm: 6px;
+    --ds-radius-md: 8px;
+    --ds-radius-lg: 12px;
+    --ds-radius-xl: 16px;
+    --ds-radius-pill: 20px;
+    --ds-radius-full: 9999px;
+
+    /* DS Shadows */
+    --ds-shadow-card: 0 4px 16px rgba(0,0,0,0.08);
+    --ds-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --ds-shadow-lg: 0 8px 40px rgba(0,0,0,0.18);
+    --ds-shadow-modal: 0 20px 60px rgba(0,0,0,0.2);
+    --ds-shadow-dropdown: 0px 16px 24px rgba(0,0,0,0.08), 0px 2px 16px rgba(0,0,0,0.06);
+
+    /* DS Typography */
+    --ds-font-display: 'Sprig Sans', 'Inter', sans-serif;
+    --ds-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--ds-font-body);
+    background: var(--ds-bg-page);
+    color: var(--ds-text-primary);
+    line-height: 1.43;
+    font-size: 14px;
+  }
+
+  /* DS Typography Tokens (RIG v2.51.0) */
+  .ds-heading-01, .rig-typography-heading03 { font-family: var(--ds-font-display); font-size: 32px; font-weight: 700; line-height: 40px; letter-spacing: -0.32px; color: var(--ds-text-primary); }
+  .ds-heading-02, .rig-typography-heading04 { font-family: var(--ds-font-display); font-size: 24px; font-weight: 700; line-height: 32px; letter-spacing: -0.24px; color: var(--ds-text-primary); }
+  .ds-heading-03, .rig-typography-title01 { font-family: var(--ds-font-body); font-size: 20px; font-weight: 600; line-height: 28px; letter-spacing: -0.1px; color: var(--ds-text-primary); }
+  .ds-heading-04, .rig-typography-title02 { font-family: var(--ds-font-body); font-size: 16px; font-weight: 600; line-height: 24px; color: var(--ds-text-primary); }
+  .ds-body, .rig-typography-body01 { font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px; }
+  .ds-body-extra, .rig-typography-body-extra { font-family: var(--ds-font-body); font-size: 16px; font-weight: 400; line-height: 24px; }
+  .ds-caption { font-family: var(--ds-font-body); font-size: 12px; font-weight: 400; line-height: 16px; }
+
+  /* ── DS Button (sizes m=48, s=36 — matches RIG Storybook) ── */
+  .ds-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    border-radius: var(--ds-radius-lg); font-weight: 500; cursor: pointer;
+    border: 1px solid transparent; transition: all 0.15s;
+    font-family: inherit; white-space: nowrap; text-decoration: none;
+    font-size: 14px; line-height: 20px; letter-spacing: 0;
+  }
+  .ds-btn--m  { padding: 0 20px; height: 48px; }
+  .ds-btn--s  { padding: 0 16px; height: 36px; font-size: 13px; }
+
+  .ds-btn--primary { background: var(--ds-primary); color: var(--ds-on-primary); border-color: var(--ds-primary); }
+  .ds-btn--primary:hover:not(:disabled) { background: var(--ds-primary-hover); border-color: var(--ds-primary-hover); }
+  .ds-btn--secondary { background: #262626; color: #ffffff; border-color: #262626; }
+  .ds-btn--secondary:hover:not(:disabled) { background: #404040; border-color: #404040; }
+  .ds-btn--tertiary { background: transparent; border-color: transparent; color: var(--ds-text-secondary); }
+  .ds-btn--tertiary:hover:not(:disabled) { color: var(--ds-text-primary); background: var(--ds-bg-page); }
+  .ds-btn--text { background: transparent; border-color: transparent; color: var(--ds-primary); padding: 0; height: auto; }
+  .ds-btn--text:hover:not(:disabled) { text-decoration: underline; }
+  .ds-btn--positive { background: var(--ds-positive); color: #fff; border-color: var(--ds-positive); }
+  .ds-btn--positive:hover:not(:disabled) { background: #136e24; border-color: #136e24; }
+  .ds-btn--negative { background: var(--ds-negative); color: #fff; border-color: var(--ds-negative); }
+  .ds-btn--negative:hover:not(:disabled) { background: #c52020; border-color: #c52020; }
+  /* Outline = DS secondaryVariant */
+  .ds-btn--outline { background: var(--ds-bg); color: var(--ds-text-primary); border-color: var(--ds-border-input); }
+  .ds-btn--outline:hover:not(:disabled) { background: var(--ds-bg-page); border-color: #a8a8a8; }
+  .ds-btn--block { width: 100%; }
+  .ds-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .ds-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .ds-btn--s svg { width: 14px; height: 14px; }
+
+  /* ── DS IconButton (m=48, s=36) ── */
+  .ds-icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--ds-radius-lg); border: 1px solid var(--ds-border-input);
+    background: var(--ds-bg); cursor: pointer; transition: all 0.15s;
+    color: var(--ds-text-secondary);
+  }
+  .ds-icon-btn:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); border-color: #a8a8a8; }
+  .ds-icon-btn--m { width: 48px; height: 48px; }
+  .ds-icon-btn--s { width: 36px; height: 36px; }
+  .ds-icon-btn svg { width: 18px; height: 18px; }
+  .ds-icon-btn--s svg { width: 16px; height: 16px; }
+
+  /* ── DS Tag ── */
+  .ds-tag {
+    display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px;
+    border-radius: var(--ds-radius-full); font-size: 12px; font-weight: 500;
+    line-height: 16px; white-space: nowrap; letter-spacing: 0;
+  }
+  .ds-tag--neutral { color: var(--ds-text-secondary); background: var(--ds-neutral-bg); }
+  .ds-tag--positive { color: var(--ds-positive-text); background: var(--ds-positive-bg); }
+  .ds-tag--negative { color: var(--ds-negative-text); background: var(--ds-negative-bg); }
+  .ds-tag--warning { color: #92400E; background: var(--ds-warning-bg); }
+  .ds-tag--brand { color: var(--ds-primary); background: var(--ds-primary-content); }
+  .ds-tag--inactive { color: var(--ds-text-placeholder); background: #f5f5f5; }
+  .ds-tag svg { width: 12px; height: 12px; }
+
+  /* ── DS Chips ── */
+  .ds-chips-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ds-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 0 14px; height: 32px; border: 1px solid var(--ds-border-input);
+    border-radius: var(--ds-radius-full); font-size: 13px; font-weight: 500;
+    cursor: pointer; background: var(--ds-bg); white-space: nowrap;
+    color: var(--ds-text-secondary); transition: all 0.15s;
+    font-family: inherit;
+  }
+  .ds-chip:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
+  .ds-chip--selected { background: var(--ds-primary); color: #fff; border-color: var(--ds-primary); }
+  .ds-chip--selected:hover { background: var(--ds-primary-hover); color: #fff; }
+  .ds-chip--s { height: 28px; padding: 0 12px; font-size: 12px; }
+
+  /* ── DS Input (48px) ── */
+  .ds-input-wrap { margin-bottom: 20px; }
+  .ds-input-label { display: block; font-size: 13px; font-weight: 500; line-height: 18px; color: var(--ds-text-secondary); margin-bottom: 6px; }
+  .ds-input-field {
+    width: 100%; height: 48px; padding: 0 16px; border: 1px solid var(--ds-border-input);
+    border-radius: var(--ds-radius-lg); font-size: 14px; font-family: inherit;
+    line-height: 20px; transition: border-color 0.15s, box-shadow 0.15s;
+    background: var(--ds-bg); color: var(--ds-text-primary); outline: none;
+  }
+  .ds-input-field:focus { border-color: var(--ds-primary); box-shadow: 0 0 0 3px rgba(24,67,248,0.12); }
+  .ds-input-field:hover:not(:focus) { border-color: #a8a8a8; }
+  .ds-input-field::placeholder { color: var(--ds-text-placeholder); }
+  .ds-input-desc { font-size: 12px; line-height: 16px; color: var(--ds-text-muted); margin-top: 6px; }
+  .ds-input-error { font-size: 12px; line-height: 16px; color: var(--ds-negative); margin-top: 6px; }
+  .ds-input-field--error { border-color: var(--ds-negative); }
+  .ds-input-field--error:focus { box-shadow: 0 0 0 3px rgba(231,45,45,0.12); }
+  select.ds-input-field {
+    cursor: pointer; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px;
+  }
+  textarea.ds-input-field { height: auto; padding: 12px 16px; resize: vertical; min-height: 96px; }
+
+  /* ── DS Toggle ── */
+  .ds-toggle { position: relative; display: inline-block; cursor: pointer; }
+  .ds-toggle input { display: none; }
+  .ds-toggle--m .ds-toggle-track { width: 44px; height: 24px; border-radius: 12px; }
+  .ds-toggle--m .ds-toggle-thumb { width: 20px; height: 20px; }
+  .ds-toggle--s .ds-toggle-track { width: 36px; height: 20px; border-radius: 10px; }
+  .ds-toggle--s .ds-toggle-thumb { width: 16px; height: 16px; }
+  .ds-toggle-track {
+    display: block; background: #d4d4d4; transition: background 0.2s; position: relative;
+  }
+  .ds-toggle-thumb {
+    position: absolute; top: 2px; left: 2px; border-radius: 50%;
+    background: #fff; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .ds-toggle input:checked + .ds-toggle-track { background: var(--ds-primary); }
+  .ds-toggle--m input:checked + .ds-toggle-track .ds-toggle-thumb { transform: translateX(20px); }
+  .ds-toggle--s input:checked + .ds-toggle-track .ds-toggle-thumb { transform: translateX(16px); }
+
+  /* ── DS Checkbox ── */
+  .ds-checkbox { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+  .ds-checkbox input { display: none; }
+  .ds-checkbox-box {
+    width: 20px; height: 20px; border: 2px solid #d4d4d4; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .ds-checkbox input:checked + .ds-checkbox-box {
+    background: var(--ds-primary); border-color: var(--ds-primary);
+  }
+  .ds-checkbox input:checked + .ds-checkbox-box svg { display: block; }
+  .ds-checkbox-box svg { display: none; width: 14px; height: 14px; color: #fff; }
+
+  /* ── DS Tabs (44px) ── */
+  .ds-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--ds-border); }
+  .ds-tabs--padded { padding: 0 24px; }
+  .ds-tab {
+    height: 44px; padding: 0 16px; font-size: 14px; line-height: 20px;
+    color: var(--ds-text-secondary); cursor: pointer;
+    border-bottom: 2px solid transparent; font-weight: 500;
+    position: relative; bottom: -1px; background: none; border-top: none;
+    border-left: none; border-right: none; transition: color 0.15s;
+    font-family: inherit;
+  }
+  .ds-tab:hover { color: var(--ds-text-primary); }
+  .ds-tab--active { color: var(--ds-text-primary); border-bottom-color: var(--ds-primary); font-weight: 700; }
+
+  /* ── DS Notification ── */
+  .ds-notification {
+    display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px;
+    border-radius: var(--ds-radius-lg); font-size: 14px; line-height: 20px; position: relative;
+    overflow: hidden;
+  }
+  .ds-notification::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  }
+  .ds-notification--positive { background: var(--ds-positive-bg); }
+  .ds-notification--positive::before { background: var(--ds-positive); }
+  .ds-notification--negative { background: var(--ds-negative-bg); border: 1px solid #fca5a5; }
+  .ds-notification--negative::before { background: var(--ds-negative); }
+  .ds-notification--warning { background: var(--ds-warning-bg); }
+  .ds-notification--warning::before { background: var(--ds-warning); }
+  .ds-notification--info { background: var(--ds-primary-content); }
+  .ds-notification--info::before { background: var(--ds-primary); }
+  .ds-notification--neutral { background: var(--ds-neutral-bg); }
+  .ds-notification__icon { flex-shrink: 0; width: 20px; height: 20px; }
+  .ds-notification__content { flex: 1; }
+  .ds-notification__title { font-weight: 600; margin-bottom: 4px; color: var(--ds-text-primary); }
+  .ds-notification__desc { font-size: 13px; line-height: 18px; color: var(--ds-text-secondary); }
+  .ds-notification__actions { display: flex; gap: 8px; margin-top: 12px; }
+
+  /* ── DS Container ── */
+  .ds-container {
+    max-width: 1216px; margin: 32px auto; padding: 40px;
+    background: var(--ds-bg); border-radius: var(--ds-radius-xl);
+    border: 1px solid var(--ds-border);
+  }
+
+  /* ── DS List ── */
+  .ds-list { list-style: none; }
+  .ds-list-item {
+    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--ds-border); font-size: 14px;
+  }
+  .ds-list-item:last-child { border-bottom: none; }
+
+  /* ── DS Modal ── */
+  .ds-modal-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.35); display: flex; align-items: center;
+    justify-content: center; padding: 24px;
+  }
+  .ds-modal {
+    background: var(--ds-bg); border-radius: var(--ds-radius-xl); width: 100%;
+    max-width: 520px; box-shadow: var(--ds-shadow-modal); max-height: 90vh; overflow-y: auto;
+  }
+  .ds-modal__header {
+    padding: 20px 24px; border-bottom: 1px solid var(--ds-border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ds-modal__body { padding: 24px; }
+  .ds-modal__footer {
+    padding: 16px 24px; border-top: 1px solid var(--ds-border);
+    display: flex; gap: 12px; justify-content: flex-end;
+  }
+
+  /* ═══════════════════════════════════════════════ */
+  /* APP-LEVEL STYLES                                */
+  /* ═══════════════════════════════════════════════ */
+
+  .app { padding-top: 64px; min-height: 100vh; }
+
+  /* TopNav */
+  .topnav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--ds-bg); display: flex; align-items: center;
+    padding: 0 32px; height: 64px; border-bottom: 1px solid var(--ds-border);
+  }
+  .topnav__logo {
+    width: 36px; height: 36px; background: var(--ds-primary);
+    border-radius: var(--ds-radius-md); display: flex; align-items: center;
+    justify-content: center; margin-right: 24px; flex-shrink: 0;
+  }
+  .topnav__logo-mark {
+    font-family: var(--ds-font-display); font-weight: 700; font-size: 18px;
+    color: #fff; line-height: 1; letter-spacing: -0.02em;
+  }
+  .topnav__links { display: flex; gap: 4px; }
+  .topnav__link {
+    height: 36px; padding: 0 16px; border-radius: var(--ds-radius-full);
+    font-size: 14px; color: var(--ds-text-secondary); cursor: pointer;
+    white-space: nowrap; font-weight: 500; border: none; background: transparent;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .topnav__link:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
+  .topnav__link--active { background: var(--ds-primary); color: #fff; }
+  .topnav__link--active:hover { background: var(--ds-primary-hover); color: #fff; }
+
+  /* Page layout */
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 18px; color: var(--ds-text-muted); margin-bottom: 16px; }
+  .breadcrumb a { color: var(--ds-text-muted); text-decoration: none; cursor: pointer; transition: color 0.15s; }
+  .breadcrumb a:hover { color: var(--ds-text-primary); }
+  .breadcrumb .sep { color: var(--ds-text-tertiary); }
+  .breadcrumb .current { color: var(--ds-text-primary); font-weight: 500; }
+
+  /* Card */
+  .card {
+    background: var(--ds-bg); border-radius: var(--ds-radius-xl);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid var(--ds-border);
+    overflow: hidden; transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: var(--ds-shadow-card); }
+  .card__header {
+    padding: 16px 24px; border-bottom: 1px solid var(--ds-border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .card__body { padding: 24px; }
+
+  /* Stats row */
+  .stats { display: flex; padding: 20px 24px; }
+  .stat-card { flex: 1; padding: 0 16px; text-align: center; }
+  .stat-card:not(:last-child) { border-right: 1px solid var(--ds-border); }
+  .stat-card:first-child { padding-left: 0; }
+  .stat-card:last-child { padding-right: 0; }
+  .stat-value { font-family: var(--ds-font-display); font-size: 28px; font-weight: 700; line-height: 36px; color: var(--ds-text-primary); letter-spacing: -0.28px; }
+  .stat-label { font-size: 13px; color: var(--ds-text-muted); margin-top: 4px; font-weight: 400; line-height: 18px; }
+  .stat-trend { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 500; margin-top: 4px; }
+  .stat-trend--up { color: var(--ds-positive); }
+  .stat-trend--down { color: var(--ds-negative); }
+  .stat-trend--neutral { color: var(--ds-text-placeholder); }
+
+  /* Table */
+  .table-wrap { border: 1px solid var(--ds-border); border-radius: var(--ds-radius-xl); overflow: hidden; background: var(--ds-bg); }
+  .table-title { display: flex; justify-content: space-between; align-items: center; padding: 20px 16px 12px; }
+  .table-title h4 { margin: 0; }
+  .table-title .meta { font-size: 13px; color: var(--ds-text-muted); }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; padding: 12px 16px; font-size: 12px; line-height: 16px; color: var(--ds-text-muted); border-bottom: 1px solid var(--ds-border); font-weight: 500; white-space: nowrap; letter-spacing: 0; background: var(--ds-bg); text-transform: uppercase; }
+  td { padding: 16px; border-bottom: 1px solid var(--ds-border); font-size: 14px; line-height: 20px; color: var(--ds-text-primary); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tr { transition: background .1s; }
+  tbody tr:hover td { background: var(--ds-row-hover); }
+  .td-actions { opacity: 0; transition: opacity .15s; display: inline-flex; gap: 4px; }
+  tbody tr:hover .td-actions { opacity: 1; }
+  tr.highlight td { background: var(--ds-bg-selected); font-weight: 600; }
+  tr.highlight td:first-child { box-shadow: inset 3px 0 0 var(--ds-primary); }
+
+  /* Medal */
+  .medal { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-size: 13px; font-weight: 600; background: var(--ds-neutral-bg); color: var(--ds-text-secondary); }
+  .medal--1 { background: #FEF3C7; color: #92400E; }
+  .medal--2 { background: #E5E7EB; color: #4B5563; }
+  .medal--3 { background: #FED7AA; color: #9A3412; }
+
+  /* Type cell */
+  .type-cell { display: flex; align-items: center; gap: 8px; }
+  .type-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .type-icon--volume { background: var(--ds-primary-content); color: var(--ds-primary); }
+  .type-icon--streak { background: var(--ds-warning-bg); color: var(--ds-warning); }
+  .type-icon--top { background: var(--ds-positive-bg); color: var(--ds-positive); }
+  .type-icon--grow { background: var(--ds-grow-bg); color: var(--ds-grow); }
+
+  /* Icon helpers */
+  .icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; vertical-align: middle; }
+  .icon svg { display: block; }
+  .icon--xs { width: 14px; height: 14px; }
+  .icon--sm { width: 16px; height: 16px; }
+  .icon--md { width: 20px; height: 20px; }
+  .icon--lg { width: 24px; height: 24px; }
+  .icon-circle { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+  .icon-circle--primary { background: var(--ds-primary-content); color: var(--ds-primary); }
+  .icon-circle--positive { background: var(--ds-positive-bg); color: var(--ds-positive); }
+  .icon-circle--warning { background: var(--ds-warning-bg); color: var(--ds-warning); }
+  .icon-circle--negative { background: var(--ds-negative-bg); color: var(--ds-negative); }
+  .icon-circle--grow { background: var(--ds-grow-bg); color: var(--ds-grow); }
+
+  /* Contest type info button */
+  .type-info-btn {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: none; background: transparent; cursor: pointer;
+    color: var(--ds-text-tertiary); padding: 0; flex-shrink: 0;
+    transition: color 0.15s, background 0.15s;
+  }
+  .type-info-btn:hover { color: var(--ds-primary); background: var(--ds-primary-content); }
+  .type-info-btn svg { width: 14px; height: 14px; }
+
+  /* Score block in type modal */
+  .score-formula {
+    padding: 14px 16px; background: var(--ds-bg-page);
+    border-radius: var(--ds-radius-md); border: 1px solid var(--ds-border);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 13px; line-height: 20px; color: var(--ds-text-primary);
+    overflow-wrap: anywhere;
+  }
+  .score-rules { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 20px; color: var(--ds-text-secondary); margin: 0; }
+  .score-section { display: flex; flex-direction: column; gap: 8px; }
+  .score-section__title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ds-text-muted); font-weight: 500; }
+
+  /* Progress bars */
+  .progress { height: 8px; background: #e0e0e0; border-radius: 100px; overflow: hidden; }
+  .progress__bar { height: 100%; border-radius: 100px; transition: width 0.5s ease; }
+  .progress__bar--primary { background: var(--ds-primary); }
+  .progress-mini { height: 3px; background: #e8e8e8; border-radius: 2px; width: 100%; margin-top: 6px; overflow: hidden; }
+  .progress-mini__bar { height: 100%; border-radius: 2px; transition: width 0.5s ease; background: var(--ds-primary); }
+
+  /* Contest card (client) */
+  .contest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+  .contest-card { background: var(--ds-bg); border-radius: var(--ds-radius-xl); border: 1px solid var(--ds-border); padding: 24px; transition: all 0.2s; cursor: pointer; }
+  .contest-card:hover { box-shadow: var(--ds-shadow-md); border-color: #c6c6c6; }
+  .contest-card__title { font-family: var(--ds-font-display); font-size: 18px; font-weight: 700; line-height: 24px; letter-spacing: -0.18px; color: var(--ds-text-primary); }
+
+  /* User progress (client leaderboard) */
+  .user-progress { background: var(--ds-primary); border-radius: var(--ds-radius-xl); padding: 32px; color: #fff; margin-bottom: 24px; }
+  .up-progress-wrap { background: rgba(255,255,255,0.2); border-radius: 100px; height: 10px; }
+  .up-progress-fill { height: 100%; background: #fff; border-radius: 100px; transition: width 0.5s; }
+
+  /* Wizard */
+  .wizard-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+  .wizard-steps { display: flex; align-items: center; gap: 16px; padding: 4px; margin-bottom: 32px; }
+  .wizard-dot { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--ds-text-muted); transition: all 0.3s; flex-shrink: 0; }
+  .wizard-dot svg { width: 24px; height: 24px; }
+  .wizard-dot--active { color: var(--ds-primary); }
+  .wizard-dot--done { color: var(--ds-text-muted); }
+  .wizard-connector { flex: 1; height: 1px; background: var(--ds-border-input); transition: background 0.3s; min-width: 16px; }
+  .wizard-connector--done { background: var(--ds-positive); }
+
+  /* Preview card */
+  .preview-card { background: var(--ds-bg); border-radius: var(--ds-radius-xl); border: 1px dashed var(--ds-border-input); padding: 24px; position: sticky; top: 80px; }
+  .preview-inner { background: var(--ds-bg-page); border-radius: var(--ds-radius-lg); padding: 24px; text-align: center; }
+
+  /* Radio cards */
+  .radio-cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .radio-card { padding: 16px 20px; border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-lg); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 14px; background: var(--ds-bg); }
+  .radio-card:hover { border-color: #a8a8a8; background: var(--ds-bg-hover); }
+  .radio-card--selected { border-color: var(--ds-primary); background: var(--ds-bg-selected); box-shadow: inset 0 0 0 1px var(--ds-primary); }
+
+  /* Audit trail */
+  .audit-trail { border-left: 2px solid var(--ds-border); margin-left: 12px; padding-left: 20px; }
+  .audit-item { position: relative; margin-bottom: 16px; }
+  .audit-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--ds-border-input); }
+  .audit-item--alert::before { background: var(--ds-negative); }
+
+  /* Calendar */
+  .cal-input { width: 100%; height: 48px; padding: 0 16px; border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-lg); font-size: 14px; font-family: inherit; background: var(--ds-bg); color: var(--ds-text-primary); cursor: pointer; outline: none; transition: border-color 0.15s; display: flex; align-items: center; gap: 10px; }
+  .cal-input:hover { border-color: #a8a8a8; }
+  .cal-input--open { border-color: var(--ds-primary); box-shadow: 0 0 0 3px rgba(24,67,248,0.12); }
+  .cal-dropdown { position: absolute; top: calc(100% + 6px); left: 0; z-index: 100; width: 288px; background: var(--ds-bg); border: 1px solid #c6c6c6; border-radius: var(--ds-radius-lg); padding-top: 12px; box-shadow: var(--ds-shadow-dropdown); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 16px; gap: 0; }
+  .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; border-radius: 50%; cursor: pointer; border: none; background: none; font-family: inherit; color: var(--ds-text-primary); transition: all 0.12s; }
+  .cal-day:hover { background: var(--ds-bg-page); }
+  .cal-day--today { font-weight: 700; color: var(--ds-primary); }
+  .cal-day--selected { background: var(--ds-primary); color: #fff; font-weight: 600; }
+
+  /* Toast */
+  .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-100px); z-index: 3000; padding: 14px 20px; border-radius: var(--ds-radius-lg); font-size: 14px; font-weight: 500; box-shadow: var(--ds-shadow-dropdown); opacity: 0; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+  .toast--visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast--positive { background: var(--ds-positive-bg); color: var(--ds-text-primary); }
+  .toast--negative { background: var(--ds-negative-bg); color: var(--ds-text-primary); }
+
+  /* Info box */
+  .info-box { padding: 12px 16px; background: var(--ds-primary-content); border-radius: var(--ds-radius-lg); font-size: 13px; line-height: 18px; color: var(--ds-text-primary); display: flex; align-items: flex-start; gap: 8px; margin-top: 16px; }
+
+  /* Section title */
+  .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ds-text-muted); margin: 32px 0 16px; font-weight: 500; }
+
+  /* Empty state */
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 24px; text-align: center; }
+
+  /* Screen animation */
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .screen-enter { animation: fadeInUp 0.25s ease-out forwards; }
+
+  /* Prize row */
+  .prize-row { display: grid; grid-template-columns: 50px 1fr 120px; gap: 12px; align-items: center; margin-bottom: 12px; }
+
+  /* Responsive */
+  @media (max-width: 1023px) {
+    .ds-container { margin: 24px; padding: 24px; }
+    .wizard-layout { grid-template-columns: 1fr; }
+    .contest-grid { grid-template-columns: 1fr; }
+    .stats { flex-wrap: wrap; padding: 16px; }
+    .stat-card { flex: 1 1 40%; min-width: 120px; }
+  }
+  @media (max-width: 643px) {
+    .ds-container { margin: 16px; padding: 16px; border-radius: var(--ds-radius-lg); }
+    .stats { flex-direction: column; padding: 8px; }
+    .stat-card { padding: 12px 16px; }
+    .stat-card:not(:last-child) { border-right: none; border-bottom: 1px solid var(--ds-border); padding-bottom: 12px; }
+    .td-actions { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG Icon Sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3h12v6a6 6 0 01-12 0V3zM12 15v3M8 21h8M10 18h4"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 16V10M12 16V6M17 16v-4"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.418 0 7-2.686 7-7.5 0-3.5-2-6-3.5-7.5-.317-.317-.758.091-.633.503C15.28 9 14.5 10 13 10c0-3.5-2.5-6-5-8 0 3-1 5.5-3 8-1.5 1.875-2 4.063-2 5.5C3 19.314 5.582 22 10 22h2z"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></symbol>
+  <symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 010-5C9 3 12 6 12 8M16.5 8a2.5 2.5 0 000-5C15 3 12 6 12 8"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-check-circle-filled" viewBox="0 0 24 24" fill="none"><path d="M10.7396 15.7695L17.0416 9.46739L16.4752 8.90099C16.1173 8.54301 15.5369 8.54301 15.1789 8.90099L10.7396 13.3403L8.82108 11.4218C8.4631 11.0638 7.8827 11.0638 7.52472 11.4218L6.95831 11.9882L10.7396 15.7695Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M21.1666 11.9997C21.1666 17.0623 17.0626 21.1663 12 21.1663C6.93737 21.1663 2.83331 17.0623 2.83331 11.9997C2.83331 6.93706 6.93737 2.83301 12 2.83301C17.0626 2.83301 21.1666 6.93706 21.1666 11.9997ZM19.3333 11.9997C19.3333 16.0498 16.0501 19.333 12 19.333C7.94989 19.333 4.66665 16.0501 4.66665 11.9997C4.66665 7.94959 7.94989 4.66634 12 4.66634C16.0501 4.66634 19.3333 7.94959 19.3333 11.9997Z" fill="currentColor"/></symbol>
+  <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-alert-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
+  <symbol id="i-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09zM12 15l-3-3M22 2l-7.5 7.5"/><path d="M15 12l2.3 2.3a1 1 0 010 1.4l-3 3a1 1 0 01-1.4 0L9 15M12 9l-2.3-2.3a1 1 0 010-1.4l3-3a1 1 0 011.4 0L18 6"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
+  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
+  <symbol id="i-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+  <symbol id="i-digit-1" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">1</text></symbol>
+  <symbol id="i-digit-2" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">2</text></symbol>
+  <symbol id="i-digit-3" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">3</text></symbol>
+  <symbol id="i-digit-4" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">4</text></symbol>
+  <symbol id="i-digit-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">5</text></symbol>
+</svg>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useCallback, useRef, useEffect, createContext, useContext } = React;
+
+/* ═══════════════════════════════════════════════════════
+   DS COMPONENTS — matching RIG v2.51.0 Storybook
+   ═══════════════════════════════════════════════════════ */
+
+const Icon = ({ name, size = 'sm', className = '', style }) => (
+  <span className={`icon icon--${size} ${className}`} style={style}>
+    <svg><use href={`#i-${name}`} /></svg>
+  </span>
+);
+
+const Button = ({ children, variant = 'primary', size = 'm', icon, iconRight, block, onClick, disabled, style, className = '' }) => (
+  <button
+    className={`ds-btn ds-btn--${size} ds-btn--${variant} ${block ? 'ds-btn--block' : ''} ${className}`}
+    onClick={onClick} disabled={disabled} style={style}
+  >
+    {icon && <svg><use href={`#i-${icon}`} /></svg>}
+    {children}
+    {iconRight && <svg><use href={`#i-${iconRight}`} /></svg>}
+  </button>
+);
+
+const IconButton = ({ icon, size = 's', onClick, title, className = '' }) => (
+  <button className={`ds-icon-btn ds-icon-btn--${size} ${className}`} onClick={onClick} title={title}>
+    <svg><use href={`#i-${icon}`} /></svg>
+  </button>
+);
+
+const Tag = ({ label, variant = 'neutral', icon }) => (
+  <span className={`ds-tag ds-tag--${variant}`}>
+    {icon && <svg><use href={`#i-${icon}`} /></svg>}
+    {label}
+  </span>
+);
+
+const Chips = ({ label, selected, onClick, size }) => (
+  <div
+    className={`ds-chip ${selected ? 'ds-chip--selected' : ''} ${size ? `ds-chip--${size}` : ''}`}
+    onClick={onClick}
+  >
+    {label}
+  </div>
+);
+
+const ChipsGroup = ({ children }) => <div className="ds-chips-group">{children}</div>;
+
+const Input = ({ label, description, error, type = 'text', children, ...props }) => (
+  <div className="ds-input-wrap">
+    {label && <label className="ds-input-label">{label}</label>}
+    {type === 'select' ? (
+      <select className={`ds-input-field ${error ? 'ds-input-field--error' : ''}`} {...props}>{children}</select>
+    ) : type === 'textarea' ? (
+      <textarea className={`ds-input-field ${error ? 'ds-input-field--error' : ''}`} {...props} />
+    ) : (
+      <input type={type} className={`ds-input-field ${error ? 'ds-input-field--error' : ''}`} {...props} />
+    )}
+    {error && <div className="ds-input-error">{error}</div>}
+    {description && !error && <div className="ds-input-desc">{description}</div>}
+  </div>
+);
+
+const Toggle = ({ checked, onChange, size = 'm' }) => (
+  <label className={`ds-toggle ds-toggle--${size}`}>
+    <input type="checkbox" checked={checked} onChange={onChange} />
+    <span className="ds-toggle-track"><span className="ds-toggle-thumb" /></span>
+  </label>
+);
+
+const Checkbox = ({ checked, onChange, label, size = 'm' }) => (
+  <label className="ds-checkbox">
+    <input type="checkbox" checked={checked} onChange={onChange} />
+    <span className="ds-checkbox-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </span>
+    {label && <span>{label}</span>}
+  </label>
+);
+
+const Tabs = ({ children, padded }) => (
+  <div className={`ds-tabs ${padded ? 'ds-tabs--padded' : ''}`}>{children}</div>
+);
+const Tab = ({ label, active, onClick }) => (
+  <button className={`ds-tab ${active ? 'ds-tab--active' : ''}`} onClick={onClick}>{label}</button>
+);
+
+const Notification = ({ variant = 'negative', title, description, actions, icon }) => (
+  <div className={`ds-notification ds-notification--${variant}`}>
+    {icon && <span className="ds-notification__icon" style={{color: variant === 'negative' ? 'var(--ds-negative)' : variant === 'warning' ? 'var(--ds-warning)' : 'var(--ds-primary)'}}>
+      <svg width="20" height="20"><use href={`#i-${icon}`} /></svg>
+    </span>}
+    <div className="ds-notification__content">
+      {title && <div className="ds-notification__title" style={{color: variant === 'negative' ? 'var(--ds-negative-text)' : undefined}}>{title}</div>}
+      {description && <div className="ds-notification__desc">{description}</div>}
+      {actions && <div className="ds-notification__actions">{actions}</div>}
+    </div>
+  </div>
+);
+
+const Container = ({ children, style }) => (
+  <div className="ds-container" style={style}>{children}</div>
+);
+
+const Modal = ({ open, onClose, title, children, footer, size = 'm' }) => {
+  if (!open) return null;
+  const maxWidth = size === 'l' ? 640 : 520;
+  return (
+    <div className="ds-modal-overlay" onClick={onClose}>
+      <div className="ds-modal" style={{maxWidth}} onClick={e => e.stopPropagation()}>
+        <div className="ds-modal__header">
+          <span className="ds-heading-03">{title}</span>
+          <button style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:'var(--ds-text-secondary)',width:32,height:32,borderRadius:'50%',display:'inline-flex',alignItems:'center',justifyContent:'center'}} onClick={onClose} aria-label="Закрыть">&times;</button>
+        </div>
+        <div className="ds-modal__body">{children}</div>
+        {footer && <div className="ds-modal__footer">{footer}</div>}
+      </div>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════
+   CONTEST TYPES — shared config (titles, icons, scoring)
+   ═══════════════════════════════════════════════════════ */
+
+const CONTEST_TYPES = {
+  volume: {
+    id: 'volume',
+    title: 'Volume Race',
+    desc: 'Кто наторгует больше лотов за период',
+    shortDesc: 'Наторгуйте больше лотов и выиграйте!',
+    icon: 'chart',
+    circle: 'primary',
+    typeIcon: 'volume',
+    metric: 'Объём (лоты)',
+    scoring: {
+      formula: 'Score = Σ объём качественных сделок (в лотах)',
+      rules: [
+        'Учитываются только сделки объёмом ≥ минимального лота (по умолчанию 0.1)',
+        'Минимальное время удержания позиции — 5 минут (защита от wash-trading)',
+        'Встречные одновременные buy+sell по одному инструменту не учитываются',
+        'Результат обновляется в реальном времени после закрытия сделки',
+      ],
+      tiebreak: 'При равном объёме — выше тот, кто раньше достиг результата',
+    },
+  },
+  streak: {
+    id: 'streak',
+    title: 'Trading Streak',
+    desc: 'Кто торгует больше дней подряд',
+    shortDesc: 'Торгуйте каждый день и покажите дисциплину!',
+    icon: 'flame',
+    circle: 'warning',
+    typeIcon: 'streak',
+    metric: 'Дней подряд',
+    scoring: {
+      formula: 'Score = max длина непрерывной серии торговых дней',
+      rules: [
+        'Торговый день = хотя бы одна качественная сделка за сутки (UTC)',
+        'Качественная сделка: объём ≥ 0.1 лот, удержание ≥ 5 мин',
+        'Пропуск дня обнуляет текущую серию, но не стирает лучший результат',
+        'Финальный Score — максимальная серия за период контеста',
+      ],
+      tiebreak: 'При равной серии — выше тот, у кого больше сделок суммарно',
+    },
+  },
+  top: {
+    id: 'top',
+    title: 'Top Trader',
+    desc: 'Комбинация объёма и частоты',
+    shortDesc: 'Покажите лучшую комбинацию объёма и стабильности!',
+    icon: 'trophy',
+    circle: 'positive',
+    typeIcon: 'top',
+    metric: 'Score (0–100)',
+    scoring: {
+      formula: 'Score = (Volume_norm × 0.6) + (ActiveDays_norm × 0.4)',
+      rules: [
+        'Volume_norm — объём участника / объём лидера (0..1)',
+        'ActiveDays_norm — активных дней участника / длительность контеста (0..1)',
+        'Объём учитывается по правилам Volume Race',
+        'Активный день = хотя бы одна качественная сделка',
+        'Итоговый Score нормализуется в шкалу 0–100',
+      ],
+      tiebreak: 'При равном Score приоритет у участника с большим Volume_norm',
+    },
+  },
+  grow: {
+    id: 'grow',
+    title: 'Grow your account',
+    desc: 'Кто больше нарастит баланс в процентах',
+    shortDesc: 'Нарастите баланс в процентах и победите!',
+    icon: 'trending-up',
+    circle: 'grow',
+    typeIcon: 'grow',
+    metric: 'Прирост, %',
+    scoring: {
+      formula: 'Score = (EndBalance_adj − StartBalance) / StartBalance × 100 %',
+      rules: [
+        'StartBalance — баланс счёта в момент старта контеста',
+        'EndBalance_adj = финальный баланс − (пополнения − выводы за период)',
+        'Пополнения и выводы исключаются из прироста, чтобы оценивать только результат торговли',
+        'Открытые позиции на момент фиксации оцениваются по рыночной цене',
+        'Минимальный стартовый баланс для участия задаётся IB (по умолчанию $100)',
+      ],
+      tiebreak: 'При равном %: выше тот, у кого меньше максимальная просадка за период',
+    },
+  },
+};
+
+const CONTEST_TYPE_LIST = Object.values(CONTEST_TYPES);
+
+const ContestTypeInfo = ({ typeId, className = '' }) => {
+  const [open, setOpen] = useState(false);
+  const t = CONTEST_TYPES[typeId];
+  if (!t) return null;
+
+  const stop = e => e.stopPropagation();
+
+  return (
+    <>
+      <button
+        type="button"
+        className={`type-info-btn ${className}`}
+        onClick={e => { e.stopPropagation(); setOpen(true); }}
+        title={`Как считается Score — ${t.title}`}
+        aria-label={`Информация о подсчёте Score для ${t.title}`}
+      >
+        <svg><use href="#i-info" /></svg>
+      </button>
+      {open && (
+        <div onClick={stop}>
+          <Modal
+            open={open}
+            onClose={() => setOpen(false)}
+            size="l"
+            title={
+              <span style={{display:'inline-flex',alignItems:'center',gap:10}}>
+                <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32}}>
+                  <svg width="18" height="18"><use href={`#i-${t.icon}`} /></svg>
+                </span>
+                <span>{t.title} — как считается Score</span>
+              </span>
+            }
+            footer={<Button variant="primary" onClick={() => setOpen(false)}>Понятно</Button>}
+          >
+            <div style={{display:'flex',flexDirection:'column',gap:20}}>
+              <div style={{fontSize:14,lineHeight:'20px',color:'var(--ds-text-secondary)'}}>{t.desc}. Участники ранжируются по метрике <strong style={{color:'var(--ds-text-primary)'}}>«{t.metric}»</strong>.</div>
+
+              <div className="score-section">
+                <div className="score-section__title">Формула</div>
+                <div className="score-formula">{t.scoring.formula}</div>
+              </div>
+
+              <div className="score-section">
+                <div className="score-section__title">Правила учёта</div>
+                <ul className="score-rules">
+                  {t.scoring.rules.map((r, i) => <li key={i}>{r}</li>)}
+                </ul>
+              </div>
+
+              <div className="score-section">
+                <div className="score-section__title">Тай-брейк</div>
+                <div style={{fontSize:14,lineHeight:'20px',color:'var(--ds-text-secondary)'}}>{t.scoring.tiebreak}</div>
+              </div>
+            </div>
+          </Modal>
+        </div>
+      )}
+    </>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════
+   APP COMPONENTS
+   ═══════════════════════════════════════════════════════ */
+
+const ToastContext = createContext();
+
+const ToastProvider = ({ children }) => {
+  const [toast, setToast] = useState(null);
+  const timerRef = useRef();
+
+  const showToast = useCallback((msg, type = 'negative') => {
+    clearTimeout(timerRef.current);
+    setToast({ msg, type });
+    timerRef.current = setTimeout(() => setToast(null), 4000);
+  }, []);
+
+  const iconSvg = toast?.type === 'positive'
+    ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{flexShrink:0}}><path d="M10.7396 15.77L17.0416 9.46788L16.4752 8.90148C16.1173 8.5435 15.5369 8.5435 15.1789 8.90148L10.7396 13.3408L8.82108 11.4223C8.4631 11.0643 7.8827 11.0643 7.52472 11.4223L6.95831 11.9887L10.7396 15.77Z" fill="#31865B"/><path fillRule="evenodd" clipRule="evenodd" d="M21.1666 12C21.1666 17.0626 17.0626 21.1666 12 21.1666C6.93737 21.1666 2.83331 17.0626 2.83331 12C2.83331 6.93737 6.93737 2.83331 12 2.83331C17.0626 2.83331 21.1666 6.93737 21.1666 12ZM19.3333 12C19.3333 16.0501 16.0501 19.3333 12 19.3333C7.94989 19.3333 4.66665 16.0501 4.66665 12C4.66665 7.94989 7.94989 4.66665 12 4.66665C16.0501 4.66665 19.3333 7.94989 19.3333 12Z" fill="#31865B"/></svg>
+    : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{flexShrink:0}}><circle cx="12" cy="12" r="9.17" stroke="#e72d2d" strokeWidth="1.83"/><path d="M12 8v4M12 16h.01" stroke="#e72d2d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+
+  return (
+    <ToastContext.Provider value={showToast}>
+      {children}
+      <div className={`toast toast--${toast?.type || 'negative'} ${toast ? 'toast--visible' : ''}`}>
+        {toast && iconSvg}
+        <span>{toast?.msg}</span>
+      </div>
+    </ToastContext.Provider>
+  );
+};
+
+const useToast = () => useContext(ToastContext);
+
+const TopNav = ({ role, onRoleChange }) => (
+  <nav className="topnav">
+    <div className="topnav__logo"><span className="topnav__logo-mark">D</span></div>
+    <div className="topnav__links">
+      {['ib', 'client', 'admin'].map(r => (
+        <button key={r} className={`topnav__link ${role === r ? 'topnav__link--active' : ''}`} onClick={() => onRoleChange(r)}>
+          {r === 'ib' ? 'IB Partner' : r === 'client' ? 'Client' : 'Admin'}
+        </button>
+      ))}
+    </div>
+  </nav>
+);
+
+const Breadcrumb = ({ items }) => (
+  <div className="breadcrumb">
+    {items.map((item, i) => (
+      <React.Fragment key={i}>
+        {i > 0 && <span className="sep">/</span>}
+        {item.onClick ? <a onClick={item.onClick}>{item.label}</a> : <span className="current">{item.label}</span>}
+      </React.Fragment>
+    ))}
+  </div>
+);
+
+const StatCard = ({ value, label, color, trend }) => (
+  <div className="stat-card">
+    <div className="stat-value" style={color ? {color} : undefined}>{value}</div>
+    <div className="stat-label">{label}</div>
+    {trend && <div className={`stat-trend stat-trend--${trend.dir}`}>
+      {trend.dir === 'up' && <Icon name="trending-up" size="xs" />}
+      {trend.dir === 'down' && <Icon name="trending-down" size="xs" />}
+      {trend.text}
+    </div>}
+  </div>
+);
+
+const Medal = ({ position }) => {
+  const cls = position <= 3 ? `medal--${position}` : '';
+  return <span className={`medal ${cls}`}>{position}</span>;
+};
+
+const InfoBox = ({ icon, children }) => (
+  <div className="info-box">
+    {icon && <Icon name={icon} size="sm" style={{color:'var(--ds-primary)',marginTop:1}} />}
+    <span>{children}</span>
+  </div>
+);
+
+/* ── Wizard Stepper ── */
+const WizardStepper = ({ currentStep, totalSteps }) => {
+  const checkSvg = <svg viewBox="0 0 24 24" fill="none" style={{width:24,height:24}}><path d="M10.7396 15.7695L17.0416 9.46739L16.4752 8.90099C16.1173 8.54301 15.5369 8.54301 15.1789 8.90099L10.7396 13.3403L8.82108 11.4218C8.4631 11.0638 7.8827 11.0638 7.52472 11.4218L6.95831 11.9882L10.7396 15.7695Z" fill="#31865B"/><path fillRule="evenodd" clipRule="evenodd" d="M21.1666 11.9997C21.1666 17.0623 17.0626 21.1663 12 21.1663C6.93737 21.1663 2.83331 17.0623 2.83331 11.9997C2.83331 6.93706 6.93737 2.83301 12 2.83301C17.0626 2.83301 21.1666 6.93706 21.1666 11.9997ZM19.3333 11.9997C19.3333 16.0498 16.0501 19.333 12 19.333C7.94989 19.333 4.66665 16.0501 4.66665 11.9997C4.66665 7.94959 7.94989 4.66634 12 4.66634C16.0501 4.66634 19.3333 7.94959 19.3333 11.9997Z" fill="#31865B"/></svg>;
+
+  const items = [];
+  for (let i = 1; i <= totalSteps; i++) {
+    const isDone = i < currentStep;
+    const isActive = i === currentStep;
+    items.push(
+      <div key={`d${i}`} className={`wizard-dot ${isActive ? 'wizard-dot--active' : ''} ${isDone ? 'wizard-dot--done' : ''}`}>
+        {isDone ? checkSvg : <svg><use href={`#i-digit-${i}`} /></svg>}
+      </div>
+    );
+    if (i < totalSteps) {
+      items.push(<div key={`c${i}`} className={`wizard-connector ${i < currentStep ? 'wizard-connector--done' : ''}`} />);
+    }
+  }
+  return <div className="wizard-steps">{items}</div>;
+};
+
+/* ── Calendar ── */
+const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const MONTHS_SHORT = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+const DOW = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+
+const formatDate = d => `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+
+const CalendarInput = ({ value, onChange, label }) => {
+  const [open, setOpen] = useState(false);
+  const [viewYear, setViewYear] = useState(value.getFullYear());
+  const [viewMonth, setViewMonth] = useState(value.getMonth());
+  const ref = useRef();
+
+  useEffect(() => {
+    const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, []);
+
+  const firstDay = new Date(viewYear, viewMonth, 1);
+  let startDow = firstDay.getDay();
+  startDow = startDow === 0 ? 6 : startDow - 1;
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  const nav = dir => {
+    let m = viewMonth + dir, y = viewYear;
+    if (m > 11) { m = 0; y++; } else if (m < 0) { m = 11; y--; }
+    setViewMonth(m); setViewYear(y);
+  };
+
+  const select = d => { onChange(new Date(viewYear, viewMonth, d)); setOpen(false); };
+
+  return (
+    <div className="ds-input-wrap">
+      {label && <label className="ds-input-label">{label}</label>}
+      <div style={{position:'relative'}} ref={ref}>
+        <div className={`cal-input ${open ? 'cal-input--open' : ''}`} onClick={() => setOpen(!open)}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
+          <span>{formatDate(value)}</span>
+        </div>
+        {open && (
+          <div className="cal-dropdown">
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px 12px'}}>
+              <button style={{width:28,height:28,border:'none',background:'none',borderRadius:8,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ds-text-secondary)'}} onClick={() => nav(-1)}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <span style={{fontSize:14,fontWeight:600}}>{MONTHS[viewMonth]} {viewYear}</span>
+              <button style={{width:28,height:28,border:'none',background:'none',borderRadius:8,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ds-text-secondary)'}} onClick={() => nav(1)}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <div className="cal-grid">
+              {DOW.map(d => <div key={d} style={{fontSize:12,fontWeight:600,color:'var(--ds-text-tertiary)',textAlign:'center',padding:'0 0 8px'}}>{d}</div>)}
+              {Array.from({length: startDow}).map((_,i) => <div key={`e${i}`} />)}
+              {Array.from({length: daysInMonth}).map((_,i) => {
+                const d = i + 1;
+                const dt = new Date(viewYear, viewMonth, d);
+                const isToday = dt.getTime() === today.getTime();
+                const isSelected = value && dt.getTime() === value.getTime();
+                return <button key={d} className={`cal-day ${isToday ? 'cal-day--today' : ''} ${isSelected ? 'cal-day--selected' : ''}`} onClick={() => select(d)}>{d}</button>;
+              })}
+            </div>
+            <div style={{display:'flex',gap:12,padding:'12px 16px 16px'}}>
+              <button style={{flex:1,height:40,border:'none',background:'none',borderRadius:12,fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}} onClick={() => setOpen(false)}>Закрыть</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════
+   IB PAGES
+   ═══════════════════════════════════════════════════════ */
+
+const IBMyContests = ({ onNavigate }) => {
+  const showToast = useToast();
+  return (
+    <div className="screen-enter">
+      <div className="page-header">
+        <h1 className="ds-heading-01">Мои контесты</h1>
+        <Button variant="primary" size="m" icon="plus" onClick={() => onNavigate('wizard')}>Создать контест</Button>
+      </div>
+      <div style={{marginBottom:24}}>
+        <div className="stats">
+          <StatCard value="3" label="Всего контестов" />
+          <StatCard value="1" label="Активных" />
+          <StatCard value="79" label="Участников" />
+          <StatCard value="$2,400" label="Призовой фонд" />
+        </div>
+      </div>
+      <div className="table-wrap">
+        <table>
+          <thead><tr><th>Название</th><th>Тип</th><th>Статус</th><th>Участники</th><th>Период</th><th></th></tr></thead>
+          <tbody>
+            {[
+              {name:'Весенний Volume Race', typeId:'volume', status:'Active', statusTag:'positive', count:47, period:'1 — 30 Apr 2026', progress:33, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
+              {name:'Streak Challenge May', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'Не задан', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
+              {name:'Grow Challenge Q2', typeId:'grow', status:'Active', statusTag:'positive', count:18, period:'1 — 30 Apr 2026', progress:45, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
+              {name:'Турнир февраля', typeId:'top', status:'Completed', statusTag:'neutral', count:32, period:'1 — 28 Feb 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
+            ].map(r => {
+              const t = CONTEST_TYPES[r.typeId];
+              return (
+                <tr key={r.name} style={{cursor:'pointer'}} onClick={() => onNavigate(r.nav)}>
+                  <td><strong>{r.name}</strong></td>
+                  <td>
+                    <div className="type-cell">
+                      <span className={`type-icon type-icon--${t.typeIcon}`}><svg width="14" height="14"><use href={`#i-${t.icon}`}/></svg></span>
+                      <span>{t.title}</span>
+                      <ContestTypeInfo typeId={t.id} />
+                    </div>
+                  </td>
+                  <td><Tag label={r.status} variant={r.statusTag} /></td>
+                  <td>{r.count}</td>
+                  <td>
+                    <div>{r.period}</div>
+                    {r.progress != null && <div className="progress-mini"><div className="progress-mini__bar" style={{width:`${r.progress}%`}} /></div>}
+                  </td>
+                  <td style={{textAlign:'right'}}>
+                    <div className="td-actions">
+                      <Button variant="outline" size="s" icon={r.actionIcon} onClick={e => { e.stopPropagation(); onNavigate(r.nav); }}>{r.action}</Button>
+                      {r.share && <IconButton icon="link" size="s" onClick={e => { e.stopPropagation(); showToast('Ссылка скопирована!', 'positive'); }} title="Поделиться" />}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const IBCreateContest = ({ onNavigate }) => {
+  const showToast = useToast();
+  const [step, setStep] = useState(1);
+  const [contestType, setContestType] = useState('volume');
+  const [startDate, setStartDate] = useState(new Date(2026, 3, 15));
+  const [endDate, setEndDate] = useState(new Date(2026, 4, 15));
+
+  const activeType = CONTEST_TYPES[contestType];
+
+  const next = () => step < 5 && setStep(step + 1);
+  const prev = () => step > 1 && setStep(step - 1);
+
+  return (
+    <div className="screen-enter">
+      <Breadcrumb items={[{label: 'Мои контесты', onClick: () => onNavigate('list')}, {label: 'Создание контеста'}]} />
+      <div className="wizard-layout">
+        <div>
+          <WizardStepper currentStep={step} totalSteps={5} />
+
+          {step === 1 && (
+            <div>
+              <h3 className="ds-heading-03" style={{marginBottom:4}}>Тип контеста</h3>
+              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>Выберите формат соревнования</p>
+              <div className="radio-cards">
+                {CONTEST_TYPE_LIST.map(t => (
+                  <div key={t.id} className={`radio-card ${contestType === t.id ? 'radio-card--selected' : ''}`} onClick={() => setContestType(t.id)}>
+                    <div className={`icon-circle icon-circle--${t.circle}`}><svg width="20" height="20"><use href={`#i-${t.icon}`}/></svg></div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{display:'flex',alignItems:'center',gap:6}}>
+                        <div style={{fontWeight:600,fontSize:14,lineHeight:'20px'}}>{t.title}</div>
+                        <ContestTypeInfo typeId={t.id} />
+                      </div>
+                      <div style={{fontSize:13,lineHeight:'18px',color:'var(--ds-text-muted)',marginTop:2}}>{t.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div style={{marginTop:24, textAlign:'right'}}>
+                <Button variant="primary" iconRight="chevron-right" onClick={next}>Далее</Button>
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div>
+              <h3 className="ds-heading-03" style={{marginBottom:4}}>Период проведения</h3>
+              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>Укажите даты начала и окончания</p>
+              <CalendarInput label="Дата начала" value={startDate} onChange={setStartDate} />
+              <CalendarInput label="Дата окончания" value={endDate} onChange={setEndDate} />
+              <InfoBox icon="lightbulb"><strong>Рекомендация:</strong> оптимальная длительность для {activeType.title} — {contestType === 'grow' ? '2–8 недель, чтобы прирост был значимым' : contestType === 'streak' ? '3–6 недель для демонстрации дисциплины' : '1–4 недели'}</InfoBox>
+              <div style={{marginTop:24, display:'flex', justifyContent:'space-between'}}>
+                <Button variant="outline" icon="arrow-left" onClick={prev}>Назад</Button>
+                <Button variant="primary" iconRight="chevron-right" onClick={next}>Далее</Button>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div>
+              <h3 className="ds-heading-03" style={{marginBottom:4}}>Правила контеста</h3>
+              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>
+                Настройте условия участия для <strong>{activeType.title}</strong>.{' '}
+                <span style={{display:'inline-flex',alignItems:'center',gap:4,verticalAlign:'middle'}}>
+                  <ContestTypeInfo typeId={activeType.id} />
+                  <span style={{fontSize:13}}>посмотреть формулу Score</span>
+                </span>
+              </p>
+              <Input label="Учитываемые инструменты" type="select" defaultValue="all">
+                <option value="all">Все инструменты</option>
+                <option value="forex">Только Forex</option>
+                <option value="cfd">Только CFD</option>
+              </Input>
+              {contestType === 'grow' ? (
+                <>
+                  <Input label="Минимальный стартовый баланс ($)" type="number" defaultValue="100" step="10" min="0" description="Ниже этого баланса клиенты не смогут присоединиться к контесту" />
+                  <Input label="Учёт пополнений и выводов" type="select" defaultValue="exclude" description={<span><Icon name="alert-triangle" size="xs" style={{color:'var(--ds-warning)'}} /> Рекомендуем исключить, чтобы оценить только результат торговли</span>}>
+                    <option value="exclude">Исключить из прироста</option>
+                    <option value="include">Учитывать</option>
+                  </Input>
+                </>
+              ) : (
+                <>
+                  <Input label="Минимальный объём сделки (лот)" type="number" defaultValue="0.1" step="0.01" min="0.01" />
+                  <Input label="Минимальное время удержания позиции" type="select" defaultValue="5" description={<span><Icon name="alert-triangle" size="xs" style={{color:'var(--ds-warning)'}} /> Защита от wash trading</span>}>
+                    <option value="5">5 минут</option>
+                    <option value="10">10 минут</option>
+                    <option value="15">15 минут</option>
+                    <option value="30">30 минут</option>
+                  </Input>
+                </>
+              )}
+              <Input label="Дополнительные условия (опционально)" type="textarea" placeholder="Например: только для клиентов с депозитом от $500" />
+              <div style={{marginTop:24, display:'flex', justifyContent:'space-between'}}>
+                <Button variant="outline" icon="arrow-left" onClick={prev}>Назад</Button>
+                <Button variant="primary" iconRight="chevron-right" onClick={next}>Далее</Button>
+              </div>
+            </div>
+          )}
+
+          {step === 4 && (
+            <div>
+              <h3 className="ds-heading-03" style={{marginBottom:4}}>Призовой фонд</h3>
+              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>Определите призы для победителей</p>
+              <Input label="Тип приза" type="select" defaultValue="bonus">
+                <option value="bonus">Бонус на торговый счёт</option>
+                <option value="cash">Денежный приз</option>
+                <option value="gift">Подарок (описание)</option>
+              </Input>
+              {[{pos:1,val:'$500'},{pos:2,val:'$300'},{pos:3,val:'$100'}].map(p => (
+                <div key={p.pos} className="prize-row">
+                  <div style={{textAlign:'center'}}><Medal position={p.pos} /></div>
+                  <div><label style={{fontSize:13}}>{p.pos} место</label></div>
+                  <div><input type="text" className="ds-input-field" defaultValue={p.val} style={{textAlign:'center'}} /></div>
+                </div>
+              ))}
+              <Button variant="outline" size="s" icon="plus" style={{marginTop:8}}>Добавить место</Button>
+              <InfoBox icon="lightbulb"><strong>Общий призовой фонд: $900</strong></InfoBox>
+              <div style={{marginTop:24, display:'flex', justifyContent:'space-between'}}>
+                <Button variant="outline" icon="arrow-left" onClick={prev}>Назад</Button>
+                <Button variant="primary" iconRight="chevron-right" onClick={next}>Далее</Button>
+              </div>
+            </div>
+          )}
+
+          {step === 5 && (
+            <div>
+              <h3 className="ds-heading-03" style={{marginBottom:4}}>Проверьте и запустите</h3>
+              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>Убедитесь, что всё верно перед запуском</p>
+              <div className="card" style={{marginBottom:16}}>
+                <div className="card__body">
+                  <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
+                    {[['Тип', activeType.title], ['Метрика', activeType.metric], ['Период', '15 Apr — 15 May 2026'], ['Инструменты', 'Все инструменты'], ['Мин. объём', '0.1 лот'], ['Призовой фонд', '$900']].map(([k,v]) => (
+                      <div key={k}><strong style={{color:'var(--ds-text-muted)',fontSize:12,textTransform:'uppercase'}}>{k}</strong><div>{v}</div></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div style={{display:'flex', gap:12}}>
+                <Button variant="outline" icon="arrow-left" onClick={prev}>Назад</Button>
+                <Button variant="outline" icon="save" onClick={() => { onNavigate('list'); showToast('Черновик сохранён'); }}>Сохранить черновик</Button>
+                <Button variant="primary" icon="rocket" style={{flex:1}} onClick={() => { onNavigate('list'); showToast('Контест запущен!', 'positive'); }}>Запустить контест</Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div className="preview-card">
+          <h4 className="section-title" style={{margin:'0 0 16px'}}>Предпросмотр для клиента</h4>
+          <div className="preview-inner">
+            <div style={{marginBottom:12}}><span className={`icon-circle icon-circle--${activeType.circle}`} style={{width:48,height:48}}><svg width="24" height="24"><use href={`#i-${activeType.icon}`}/></svg></span></div>
+            <div style={{display:'inline-flex',alignItems:'center',gap:6,marginBottom:8}}>
+              <div className="contest-card__title">{activeType.title}</div>
+              <ContestTypeInfo typeId={activeType.id} />
+            </div>
+            <p style={{fontSize:13,lineHeight:'18px',color:'var(--ds-text-muted)',marginBottom:4}}>{activeType.shortDesc}</p>
+            <p style={{fontSize:13,color:'var(--ds-text-muted)'}}><Icon name="calendar" size="xs" /> 15 Apr — 15 May 2026</p>
+            <p style={{fontSize:13,color:'var(--ds-text-muted)'}}><Icon name="users" size="xs" /> 0 участников</p>
+            <div style={{display:'inline-flex',alignItems:'center',gap:6,marginTop:12,padding:'4px 10px',borderRadius:'var(--ds-radius-full)',background:'var(--ds-primary-content)',color:'var(--ds-primary)',fontWeight:500,fontSize:12,lineHeight:'16px'}}>
+              <Icon name="gift" size="xs" /> Призы: $900
+            </div>
+            <div style={{marginTop:16}}><Button variant="primary" size="m" disabled>Участвую</Button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const IBContestDetail = ({ onNavigate }) => {
+  const showToast = useToast();
+  const rows = [
+    {pos:1,name:'Client_A****',vol:'245.3',prize:'$500'},
+    {pos:2,name:'Client_B****',vol:'198.7',prize:'$300'},
+    {pos:3,name:'Client_C****',vol:'156.2',prize:'$100'},
+    {pos:4,name:'Client_D****',vol:'134.0'},{pos:5,name:'Client_E****',vol:'112.8'},
+    {pos:6,name:'Client_F****',vol:'98.4'},{pos:7,name:'Client_G****',vol:'87.1'},
+  ];
+  return (
+    <div className="screen-enter">
+      <Breadcrumb items={[{label:'Мои контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
+      <div className="page-header">
+        <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+          <h1 className="ds-heading-01">Весенний Volume Race</h1>
+          <Tag label="Active" variant="positive" />
+          <ContestTypeInfo typeId="volume" />
+        </div>
+      </div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12}}>
+        <div style={{display:'flex',gap:8,color:'var(--ds-text-muted)',fontSize:14,alignItems:'center',flexWrap:'wrap'}}>
+          <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
+            <span className="type-icon type-icon--volume" style={{width:24,height:24}}><svg width="14" height="14"><use href="#i-chart"/></svg></span>
+            <span style={{color:'var(--ds-text-primary)',fontWeight:500}}>Volume Race</span>
+          </span>
+          <span>•</span>
+          <Icon name="calendar" size="sm" /><span>1 — 30 Apr 2026</span><span>•</span>
+          <Icon name="clock" size="sm" /><span>Осталось: 20 дней</span>
+        </div>
+        <div style={{display:'flex',gap:8}}>
+          <Button variant="outline" size="s" icon="link" onClick={() => showToast('Ссылка скопирована!', 'positive')}>Поделиться</Button>
+          <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Контест приостановлен')}>Приостановить</Button>
+          <Button variant="outline" size="s" icon="download">Экспорт</Button>
+        </div>
+      </div>
+      <div style={{marginBottom:24}}>
+        <div className="stats">
+          <StatCard value="47" label="Участников" />
+          <StatCard value="1,234" label="Лотов наторговано" />
+          <StatCard value="$900" label="Призовой фонд" />
+          <StatCard value="+23%" label="Рост объёма" trend={{dir:'up',text:'неделя к неделе'}} />
+        </div>
+      </div>
+      <div className="table-wrap">
+        <div className="table-title"><h4 className="ds-heading-04">Лидерборд</h4><span className="meta">Обновлено: 3 мин назад</span></div>
+        <table>
+          <thead><tr><th>Место</th><th>Участник</th><th>Объём (лоты)</th><th>Приз</th></tr></thead>
+          <tbody>
+            {rows.map(r => (
+              <tr key={r.pos}>
+                <td><Medal position={r.pos} /></td>
+                <td>{r.pos <= 3 ? <strong>{r.name}</strong> : r.name}</td>
+                <td style={{fontVariantNumeric:'tabular-nums'}}>{r.vol}</td>
+                <td>{r.prize ? <Tag label={r.prize} variant="brand" /> : '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════
+   CLIENT PAGES
+   ═══════════════════════════════════════════════════════ */
+
+const ClientContestList = ({ onNavigate }) => {
+  const cards = [
+    {typeId:'volume', name:'Весенний Volume Race', status:'Active', statusVariant:'positive', desc:'Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!', dates:'1 — 30 Apr', participants:47, prize:'$900', progressText:'Прошло 10 из 30 дней', progress:33, days:'20 дней'},
+    {typeId:'streak', name:'Streak Challenge May', status:'Starts May 1', statusVariant:'warning', desc:'Торгуйте каждый день и выиграйте! Кто удержит самый длинный streak — тот победит.', dates:'1 — 31 May', participants:12, prize:'$600', progressText:'Начнётся через 21 день', progress:0},
+    {typeId:'grow', name:'Grow Challenge Q2', status:'Active', statusVariant:'positive', desc:'Покажите лучший прирост баланса в % — наши лидеры заберут до $700 бонус.', dates:'1 — 30 Apr', participants:18, prize:'$700', progressText:'Прошло 10 из 30 дней', progress:45, days:'20 дней'},
+  ];
+
+  return (
+  <div className="screen-enter">
+    <h1 className="ds-heading-01" style={{marginBottom:24}}>Контесты</h1>
+    <div className="contest-grid">
+      {cards.map(c => {
+        const t = CONTEST_TYPES[c.typeId];
+        return (
+          <div key={c.name} className="contest-card" onClick={() => onNavigate('terms')}>
+            <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16}}>
+              <div className={`icon-circle icon-circle--${t.circle}`} style={{width:40,height:40}}><svg width="20" height="20"><use href={`#i-${t.icon}`}/></svg></div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:'flex',alignItems:'center',gap:6}}>
+                  <div className="contest-card__title">{c.name}</div>
+                  <ContestTypeInfo typeId={c.typeId} />
+                </div>
+                <Tag label={c.status} variant={c.statusVariant} />
+              </div>
+            </div>
+            <div style={{fontSize:14,lineHeight:'20px',color:'var(--ds-text-secondary)',marginBottom:16}}>{c.desc}</div>
+            <div style={{display:'flex',gap:16,fontSize:13,color:'var(--ds-text-muted)',paddingTop:16,borderTop:'1px solid var(--ds-border)',flexWrap:'wrap'}}>
+              <span><Icon name="calendar" size="xs" /> {c.dates}</span>
+              <span><Icon name="users" size="xs" /> {c.participants} участников</span>
+              <span><Icon name="gift" size="xs" /> {c.prize}</span>
+              {c.days && <span><Icon name="clock" size="xs" /> {c.days}</span>}
+            </div>
+            <div style={{marginTop:12}}>
+              {c.progress > 0 ? (
+                <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'var(--ds-text-muted)',marginBottom:6}}>
+                  <span>{c.progressText}</span>
+                  <span style={{fontWeight:500,color:'var(--ds-primary)'}}>{c.progress}%</span>
+                </div>
+              ) : (
+                <div style={{fontSize:12,color:'var(--ds-text-muted)',marginBottom:6}}>{c.progressText}</div>
+              )}
+              <div className="progress-mini"><div className="progress-mini__bar" style={{width:`${c.progress}%`}} /></div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+    <div className="section-title">Завершённые</div>
+    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'16px 20px',background:'var(--ds-bg)',borderRadius:'var(--ds-radius-xl)',border:'1px solid var(--ds-border)'}}>
+      <div style={{display:'flex',alignItems:'center',gap:12}}>
+        <Icon name="check-circle" size="md" style={{color:'var(--ds-positive)'}} />
+        <div><div style={{fontWeight:600,fontSize:14,lineHeight:'20px'}}>Турнир февраля</div><div style={{fontSize:13,color:'var(--ds-text-muted)',marginTop:2}}>Top Trader • 1-28 Feb 2026</div></div>
+      </div>
+      <div style={{fontSize:14,color:'var(--ds-text-muted)'}}>Ваше место: <span style={{fontWeight:600,color:'var(--ds-primary)'}}>#7</span> из 32</div>
+    </div>
+  </div>
+  );
+};
+
+const ClientContestTerms = ({ onNavigate }) => {
+  const showToast = useToast();
+  return (
+    <div className="screen-enter">
+      <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
+      <div style={{textAlign:'center',marginBottom:24}}>
+        <div style={{marginBottom:12}}><span className="icon-circle icon-circle--primary" style={{width:64,height:64}}><svg width="32" height="32"><use href="#i-chart"/></svg></span></div>
+        <div style={{display:'inline-flex',alignItems:'center',gap:8,justifyContent:'center'}}>
+          <h1 className="ds-heading-01">Весенний Volume Race</h1>
+          <ContestTypeInfo typeId="volume" />
+        </div>
+        <p style={{color:'var(--ds-text-muted)',marginTop:8}}>Наторгуйте больше лотов и выиграйте до $500!</p>
+      </div>
+      <div className="card" style={{marginBottom:16}}>
+        <div className="card__body">
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,textAlign:'center'}}>
+            <div><div className="stat-value">20 дней</div><div className="stat-label">Осталось</div></div>
+            <div><div className="stat-value">47</div><div className="stat-label">Участников</div></div>
+          </div>
+        </div>
+      </div>
+      <div className="card" style={{marginBottom:16}}>
+        <div className="card__header"><h4 className="ds-heading-04"><Icon name="clipboard" size="sm" style={{marginRight:4}} /> Правила</h4></div>
+        <div className="card__body" style={{fontSize:14}}>
+          <ul style={{paddingLeft:20,display:'flex',flexDirection:'column',gap:8}}>
+            <li>Учитываются все инструменты</li><li>Минимальный объём сделки: 0.1 лот</li>
+            <li>Минимальное время удержания: 5 минут</li><li>Позиция определяется суммарным объёмом в лотах</li>
+            <li>Период: 1 — 30 апреля 2026</li>
+          </ul>
+        </div>
+      </div>
+      <div className="card" style={{marginBottom:24}}>
+        <div className="card__header"><h4 className="ds-heading-04"><Icon name="gift" size="sm" style={{marginRight:4}} /> Призы</h4></div>
+        <div className="card__body">
+          <div style={{display:'flex',flexDirection:'column',gap:12}}>
+            {[{pos:1,prize:'$500 бонус',color:'var(--ds-primary)'},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}].map(p => (
+              <div key={p.pos} style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                <span style={{display:'flex',alignItems:'center',gap:8}}><Medal position={p.pos} /> {p.pos} место</span>
+                <strong style={{fontSize:18,color:p.color || 'var(--ds-text-secondary)'}}>{p.prize}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div style={{display:'flex',gap:12}}>
+        <Button variant="primary" icon="check-circle" style={{flex:1}} onClick={() => { onNavigate('board'); showToast('Вы участвуете!', 'positive'); }}>Участвую</Button>
+        <Button variant="outline" onClick={() => onNavigate('list')}>Не сейчас</Button>
+      </div>
+      <p style={{fontSize:12,color:'var(--ds-text-placeholder)',textAlign:'center',marginTop:12}}>Нажимая "Участвую", вы соглашаетесь с правилами контеста и условиями участия.</p>
+    </div>
+  );
+};
+
+const ClientLeaderboard = ({ onNavigate }) => (
+  <div className="screen-enter">
+    <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Лидерборд'}]} />
+    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20,gap:12,flexWrap:'wrap'}}>
+      <div style={{display:'flex',alignItems:'center',gap:10}}>
+        <h1 className="ds-heading-01">Весенний Volume Race</h1>
+        <ContestTypeInfo typeId="volume" />
+      </div>
+      <span style={{fontSize:14,color:'var(--ds-text-muted)',display:'flex',alignItems:'center',gap:4}}><Icon name="clock" size="sm" /> 20 дней</span>
+    </div>
+    <div className="user-progress">
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
+        <div>
+          <div style={{fontFamily:'var(--ds-font-display)',fontSize:56,fontWeight:700,lineHeight:1,letterSpacing:'-1.12px'}}>#12</div>
+          <div style={{fontSize:14,opacity:0.85,marginTop:8}}>из 47 участников • Top 25%</div>
+        </div>
+        <div style={{textAlign:'right'}}>
+          <div style={{fontFamily:'var(--ds-font-display)',fontSize:28,fontWeight:700,lineHeight:'36px',letterSpacing:'-0.28px'}}>67.4 лот</div>
+          <div style={{fontSize:13,opacity:0.75,marginTop:4}}>До 3 места: ещё 88.8 лот</div>
+        </div>
+      </div>
+      <div className="up-progress-wrap" style={{marginTop:16}}><div className="up-progress-fill" style={{width:'43%'}} /></div>
+      <div style={{fontSize:13,opacity:0.85,marginTop:8,textAlign:'right'}}>43% до призовой зоны</div>
+    </div>
+    <div className="card">
+      <div className="table-wrap" style={{border:'none'}}>
+        <div className="table-title"><h4 className="ds-heading-04">Лидерборд</h4><span className="meta">Обновлено: 2 мин назад</span></div>
+        <table>
+          <thead><tr><th>Место</th><th>Участник</th><th>Объём</th><th>Приз</th></tr></thead>
+          <tbody>
+            {[{p:1,n:'A****',v:'245.3',pr:'$500'},{p:2,n:'B****',v:'198.7',pr:'$300'},{p:3,n:'C****',v:'156.2',pr:'$100'}].map(r => (
+              <tr key={r.p}><td><Medal position={r.p}/></td><td><strong>{r.n}</strong></td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td><Tag label={r.pr} variant="brand"/></td></tr>
+            ))}
+            <tr><td colSpan="4" style={{textAlign:'center',color:'var(--ds-text-placeholder)',fontSize:13}}>• • •</td></tr>
+            {[{p:10,n:'J****',v:'89.1'},{p:11,n:'K****',v:'74.2'}].map(r => (
+              <tr key={r.p}><td><Medal position={r.p}/></td><td>{r.n}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td>—</td></tr>
+            ))}
+            <tr className="highlight">
+              <td><span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>12</span></td>
+              <td><Icon name="star" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> ВЫ</td>
+              <td style={{fontVariantNumeric:'tabular-nums'}}>67.4</td><td>—</td>
+            </tr>
+            {[{p:13,n:'M****',v:'61.0'},{p:14,n:'N****',v:'55.3'}].map(r => (
+              <tr key={r.p}><td><Medal position={r.p}/></td><td>{r.n}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td>—</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+);
+
+/* ═══════════════════════════════════════════════════════
+   ADMIN PAGES
+   ═══════════════════════════════════════════════════════ */
+
+const AdminDashboard = ({ onNavigate }) => {
+  const showToast = useToast();
+  const [filter, setFilter] = useState('all');
+  return (
+    <div className="screen-enter">
+      <div className="page-header"><h1 className="ds-heading-01">Admin Panel — Contests</h1></div>
+      <div style={{marginBottom:24}}>
+        <div style={{color:'var(--ds-negative)',marginBottom:12,display:'flex',alignItems:'center',gap:6,fontSize:13,fontWeight:600}}>
+          <Icon name="alert-triangle" size="sm" /> Требует внимания
+        </div>
+        <Notification
+          variant="negative" icon="alert-circle"
+          title="IB Partner_X — «Mega Contest»"
+          description="Client_Z: 200 лотов за 1 час, средняя позиция 2 мин — возможный wash trading"
+          actions={<>
+            <Button variant="negative" size="s" onClick={() => onNavigate('detail')}>Посмотреть</Button>
+            <Button variant="outline" size="s">Игнорировать</Button>
+          </>}
+        />
+      </div>
+      <div style={{marginBottom:24}}>
+        <div className="stats">
+          <StatCard value="12" label="Active" trend={{dir:'up',text:'+3 за неделю'}} />
+          <StatCard value="3" label="Pending" trend={{dir:'neutral',text:'без изменений'}} />
+          <StatCard value="1" label="Flagged" color="var(--ds-negative)" trend={{dir:'down',text:'+1 новый'}} />
+          <StatCard value="45" label="Completed" trend={{dir:'up',text:'+5 за месяц'}} />
+        </div>
+      </div>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'16px 24px',borderBottom:'1px solid var(--ds-border)'}}>
+        <h4 className="ds-heading-04">Все контесты</h4>
+        <ChipsGroup>
+          {['all','active','pending','flagged'].map(f => (
+            <Chips key={f} label={f === 'all' ? 'Все' : f.charAt(0).toUpperCase() + f.slice(1)} selected={filter === f} onClick={() => setFilter(f)} />
+          ))}
+        </ChipsGroup>
+      </div>
+      <div className="table-wrap" style={{borderTop:'none',borderTopLeftRadius:0,borderTopRightRadius:0}}>
+        <table>
+          <thead><tr><th>Контест</th><th>IB Partner</th><th>Статус</th><th>Участники</th><th></th></tr></thead>
+          <tbody>
+            {[
+              {name:'Volume Race Apr',partner:'Partner_A',status:'Active',tag:'positive',count:47,action:'Статистика',actionIcon:'chart'},
+              {name:'Streak May',partner:'Partner_A',status:'Pending',tag:'warning',count:0,action:'Обзор',actionIcon:'eye'},
+              {name:'Mega Contest',partner:'Partner_X',status:'Flagged',tag:'negative',count:23,flagged:true,action:'Проверить',actionVariant:'negative'},
+              {name:'Top Trader Q1',partner:'Partner_B',status:'Done',tag:'neutral',count:32,action:'Результаты',actionIcon:'eye'},
+              {name:'Spring Challenge',partner:'Partner_C',status:'Active',tag:'positive',count:18,action:'Статистика',actionIcon:'chart'},
+            ].map(r => (
+              <tr key={r.name} style={{cursor:'pointer', background: r.flagged ? 'var(--ds-negative-bg)' : undefined}} onClick={() => onNavigate('detail')}>
+                <td><strong>{r.name}</strong></td><td>{r.partner}</td>
+                <td><Tag label={r.status} variant={r.tag} icon={r.flagged ? 'alert-triangle' : undefined} /></td>
+                <td>{r.count}</td>
+                <td style={{textAlign:'right'}}><div className="td-actions">
+                  <Button variant={r.actionVariant || 'outline'} size="s" icon={r.actionIcon} onClick={e => { e.stopPropagation(); onNavigate('detail'); }}>{r.action}</Button>
+                </div></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+const AdminContestDetail = ({ onNavigate }) => {
+  const showToast = useToast();
+  return (
+    <div className="screen-enter">
+      <Breadcrumb items={[{label:'Dashboard', onClick:() => onNavigate('dashboard')}, {label:'Детали контеста'}]} />
+      <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:24,flexWrap:'wrap'}}>
+        <h1 className="ds-heading-01">Mega Contest</h1>
+        <Tag label="Flagged" variant="negative" icon="alert-triangle" />
+        <ContestTypeInfo typeId="volume" />
+      </div>
+      <div style={{display:'flex',gap:8,marginBottom:24,color:'var(--ds-text-muted)',fontSize:14,flexWrap:'wrap',alignItems:'center'}}>
+        <span>IB: <strong>Partner_X</strong></span><span>•</span>
+        <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
+          <span className="type-icon type-icon--volume" style={{width:20,height:20}}><svg width="12" height="12"><use href="#i-chart"/></svg></span>
+          <span style={{color:'var(--ds-text-primary)',fontWeight:500}}>Volume Race</span>
+        </span>
+        <span>•</span><span>1 — 30 Apr 2026</span><span>•</span><span>Призы: $1,700</span>
+      </div>
+      <Notification
+        variant="negative" icon="alert-circle"
+        title="Подозрительная активность: Client_Z"
+        description="200 лотов за 1 час • средняя позиция: 2 мин • 45 встречных сделок (buy+sell одновременно) • паттерн: возможный wash trading"
+        actions={<>
+          <Button variant="negative" size="s" onClick={() => showToast('Client_Z дисквалифицирован. Лидерборд пересчитан.', 'positive')}>Дисквалифицировать</Button>
+          <Button variant="outline" size="s" onClick={() => showToast('Алерт отклонён')}>Ложное срабатывание</Button>
+        </>}
+      />
+      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:24}}>
+        <div className="card">
+          <div className="table-wrap" style={{border:'none'}}>
+            <div className="table-title"><h4 className="ds-heading-04">Лидерборд (полный)</h4></div>
+            <table>
+              <thead><tr><th>Место</th><th>Клиент</th><th>Объём</th><th>Сделки</th><th>Ср. удерж.</th></tr></thead>
+              <tbody>
+                <tr style={{background:'var(--ds-negative-bg)'}}><td><Medal position={1}/></td><td><strong>Client_Z ⚠</strong></td><td style={{fontVariantNumeric:'tabular-nums'}}>312.5</td><td>89</td><td style={{color:'var(--ds-negative)'}}>2 мин</td></tr>
+                <tr><td><Medal position={2}/></td><td>Client_A</td><td style={{fontVariantNumeric:'tabular-nums'}}>187.3</td><td>42</td><td>47 мин</td></tr>
+                <tr><td><Medal position={3}/></td><td>Client_B</td><td style={{fontVariantNumeric:'tabular-nums'}}>145.8</td><td>35</td><td>1.2 ч</td></tr>
+                <tr><td><Medal position={4}/></td><td>Client_C</td><td style={{fontVariantNumeric:'tabular-nums'}}>112.0</td><td>28</td><td>35 мин</td></tr>
+                <tr><td><Medal position={5}/></td><td>Client_D</td><td style={{fontVariantNumeric:'tabular-nums'}}>98.4</td><td>24</td><td>52 мин</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div className="card" style={{marginBottom:20}}>
+            <div className="card__header"><h4 className="ds-heading-04">Действия</h4></div>
+            <div className="card__body" style={{display:'flex',flexDirection:'column',gap:8}}>
+              <Button variant="outline" icon="pause" onClick={() => showToast('Контест приостановлен')}>Приостановить контест</Button>
+              <Button variant="negative" icon="x-circle" onClick={() => showToast('Контест отменён')}>Отменить контест</Button>
+              <Button variant="outline" icon="edit">Добавить заметку</Button>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card__header"><h4 className="ds-heading-04">Audit Trail</h4></div>
+            <div className="card__body">
+              <div className="audit-trail">
+                {[
+                  {time:'18 Apr 11:45', text:<><Icon name="alert-triangle" size="xs" style={{color:'var(--ds-negative)'}}/> Alert: Client_Z flagged — wash trading pattern</>, alert:true},
+                  {time:'15 Apr 09:00', text:'Contest started'},
+                  {time:'10 Apr 14:33', text:'Auto-approved (standard rules)'},
+                  {time:'10 Apr 14:32', text:'Contest created by Partner_X'},
+                ].map((a,i) => (
+                  <div key={i} className={`audit-item ${a.alert ? 'audit-item--alert' : ''}`}>
+                    <div style={{fontSize:12,color:'var(--ds-text-placeholder)',fontVariantNumeric:'tabular-nums'}}>{a.time}</div>
+                    <div style={{fontSize:14,color:'var(--ds-text-secondary)'}}>{a.text}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ═══════════════════════════════════════════════════════
+   APP SHELL
+   ═══════════════════════════════════════════════════════ */
+
+const App = () => {
+  const [role, setRole] = useState('ib');
+  const [ibScreen, setIbScreen] = useState('list');
+  const [clientScreen, setClientScreen] = useState('list');
+  const [adminScreen, setAdminScreen] = useState('dashboard');
+
+  const handleRoleChange = r => {
+    setRole(r);
+    if (r === 'ib') setIbScreen('list');
+    if (r === 'client') setClientScreen('list');
+    if (r === 'admin') setAdminScreen('dashboard');
+    window.scrollTo(0, 0);
+  };
+
+  const navIB = s => { setIbScreen(s); window.scrollTo(0, 0); };
+  const navClient = s => { setClientScreen(s); window.scrollTo(0, 0); };
+  const navAdmin = s => { setAdminScreen(s); window.scrollTo(0, 0); };
+
+  return (
+    <ToastProvider>
+      <TopNav role={role} onRoleChange={handleRoleChange} />
+      <div className="app">
+        {role === 'ib' && (
+          <Container>
+            {ibScreen === 'list' && <IBMyContests onNavigate={navIB} />}
+            {ibScreen === 'wizard' && <IBCreateContest onNavigate={navIB} />}
+            {ibScreen === 'detail' && <IBContestDetail onNavigate={navIB} />}
+          </Container>
+        )}
+        {role === 'client' && (
+          <Container>
+            {clientScreen === 'list' && <ClientContestList onNavigate={navClient} />}
+            {clientScreen === 'terms' && <ClientContestTerms onNavigate={navClient} />}
+            {clientScreen === 'board' && <ClientLeaderboard onNavigate={navClient} />}
+          </Container>
+        )}
+        {role === 'admin' && (
+          <Container>
+            {adminScreen === 'dashboard' && <AdminDashboard onNavigate={navAdmin} />}
+            {adminScreen === 'detail' && <AdminContestDetail onNavigate={navAdmin} />}
+          </Container>
+        )}
+      </div>
+    </ToastProvider>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
