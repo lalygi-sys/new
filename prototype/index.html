@@ -640,11 +640,11 @@
     color: var(--ds-text-primary); text-align: left;
   }
   .rig-bullet-list__bullet {
-    flex-shrink: 0; width: 16px; height: 20px;
+    flex-shrink: 0; width: 20px; height: 20px;
     display: inline-flex; align-items: center; justify-content: center;
     color: var(--ds-primary);
   }
-  .rig-bullet-list__bullet svg { width: 10px; height: 10px; display: block; }
+  .rig-bullet-list__bullet svg { width: 20px; height: 20px; display: block; }
 
   .score-rules { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--ds-dim-2xl); text-align: left; align-items: flex-start; }
   .score-section { display: flex; flex-direction: column; gap: var(--ds-dim-2xl); }
@@ -1159,8 +1159,9 @@
     <path d="M16 19C15.0572 19 14.5859 18.9999 14.293 18.707C14.0001 18.4141 14 17.9428 14 17V7C14 6.05719 14.0001 5.58586 14.293 5.29297C14.5859 5.00008 15.0572 5 16 5V19Z" fill="currentColor"/>
   </symbol>
 
-  <!-- Custom (prototype-only, non-DS): brand triangle bullet -->
-  <symbol id="ic-bullet-triangle-24" viewBox="0 0 10 10" fill="currentColor"><path d="M2 1.5L8 5 2 8.5z"/></symbol>
+  <symbol id="ic-dot-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:966 -->
+    <path d="M9 12C9 9.52951 9.52951 9 12 9C14.4705 9 15 9.52951 15 12C15 14.4705 14.4705 15 12 15C9.52951 15 9 14.4705 9 12Z" fill="currentColor"/>
+  </symbol>
 </svg>
 
 <div id="root"></div>
@@ -1757,7 +1758,7 @@ const CalendarInput = ({ value, onChange, label }) => {
 };
 
 /* DS Bulleted list (triangle bullets from brand assets) */
-const BulletList = ({ items, icon = 'bullet-triangle' }) => (
+const BulletList = ({ items, icon = 'dot' }) => (
   <ul className="rig-bullet-list">
     {items.map((item, i) => (
       <li key={i} className="rig-bullet-list__item">
