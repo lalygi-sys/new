@@ -20,10 +20,10 @@
 
   :root {
     /* DS Colors — Brand1 / Light */
-    --ds-primary: #1843f8;
-    --ds-primary-hover: #1538d0;
+    --ds-primary: #1945ff;             /* Foundations: color/key/primary */
+    --ds-primary-hover: #1537cc;
     --ds-primary-content: #eef1ff;
-    --ds-on-primary: #ffffff;
+    --ds-on-primary: #ffffff;          /* Foundations: color/key/on-primary */
     --ds-secondary: #fff6fa;
 
     --ds-text-primary: #0a0a0a;
@@ -39,35 +39,76 @@
     --ds-row-hover: #F5F7FA;
 
     --ds-border: #e6e6e6;
-    --ds-border-input: #d9d9d9;
+    --ds-border-input: #c6c6c6;        /* Foundations: color/border/01 */
+    --ds-border-input-hover: #a8a8a8;  /* Foundations: color/states/border/hover */
+    --ds-border-focus: #3b71ff;        /* Foundations: color/states/border/focus */
+    --ds-focus-ring: 0 0 0 4px rgba(59,113,255,0.5);       /* DS focus ring — primary */
+    --ds-focus-ring-error: 0 0 0 4px rgba(231,45,45,0.4);  /* DS focus ring — error */
+
+    /* Secondary (dark) button — Foundations: color/key/secondary */
+    --ds-secondary-bg: #262626;
+    --ds-secondary-bg-hover: #404040;
+    --ds-on-secondary: #ffffff;
 
     --ds-positive: #17882c;
-    --ds-positive-text: #31865b;
+    --ds-positive-hover: #136e24;
+    --ds-positive-text: var(--ds-positive);
     --ds-positive-bg: #e9f5ee;
     --ds-negative: #e72d2d;
+    --ds-negative-hover: #c52020;
     --ds-negative-bg: #fef2f2;
-    --ds-negative-text: #b91c1c;
+    --ds-negative-text: var(--ds-negative);
     --ds-warning: #d18119;
+    --ds-warning-hover: #a9661a;
     --ds-warning-bg: #fef4e5;
+    --ds-warning-text: #92400e;        /* High-contrast text on warning-bg */
     --ds-neutral-bg: #f0f0f0;
     --ds-grow: #7c3aed;
     --ds-grow-bg: #ede9fe;
 
-    /* DS Radii */
-    --ds-radius-xs: 4px;
-    --ds-radius-sm: 6px;
-    --ds-radius-md: 8px;
-    --ds-radius-lg: 12px;
-    --ds-radius-xl: 16px;
-    --ds-radius-pill: 20px;
-    --ds-radius-full: 9999px;
+    /* Dimension scale (RIG Foundations — 1 Brand) — used for radius AND spacing */
+    --ds-dim-2xs: 0px;
+    --ds-dim-xs:  2px;
+    --ds-dim-s:   4px;
+    --ds-dim-m:   6px;
+    --ds-dim-l:   8px;
+    --ds-dim-xl:  10px;
+    --ds-dim-2xl: 12px;
+    --ds-dim-3xl: 16px;
+    --ds-dim-4xl: 20px;
+    --ds-dim-5xl: 24px;
+    --ds-dim-6xl: 32px;
+    --ds-dim-7xl: 40px;
+    --ds-dim-8xl: 48px;
+    --ds-dim-9xl: 56px;
+    --ds-dim-10xl: 64px;
+    --ds-dim-11xl: 72px;
+    --ds-dim-12xl: 80px;
+    --ds-dim-13xl: 96px;
+    --ds-dim-14xl: 112px;
+    --ds-dim-pill: 1000px;
 
-    /* DS Shadows */
-    --ds-shadow-card: 0 4px 16px rgba(0,0,0,0.08);
-    --ds-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-    --ds-shadow-lg: 0 8px 40px rgba(0,0,0,0.18);
-    --ds-shadow-modal: 0 20px 60px rgba(0,0,0,0.2);
-    --ds-shadow-dropdown: 0px 16px 24px rgba(0,0,0,0.08), 0px 2px 16px rgba(0,0,0,0.06);
+    /* Legacy radius aliases (map to dimension scale) */
+    --ds-radius-xs: var(--ds-dim-s);       /* 4 */
+    --ds-radius-sm: var(--ds-dim-m);       /* 6 */
+    --ds-radius-md: var(--ds-dim-l);       /* 8 */
+    --ds-radius-lg: var(--ds-dim-2xl);     /* 12 */
+    --ds-radius-xl: var(--ds-dim-3xl);     /* 16 */
+    --ds-radius-pill: var(--ds-dim-4xl);   /* 20 */
+    --ds-radius-full: var(--ds-dim-pill);  /* 1000 */
+
+    /* DS Shadows — Foundations: color/shadow/* (elevation 1 → 4) */
+    --ds-shadow-01: 0 4px 12px rgba(0,0,0,0.08);   /* cards, chips */
+    --ds-shadow-02: 0 4px 16px rgba(0,0,0,0.08);
+    --ds-shadow-03: 0 16px 24px rgba(0,0,0,0.08), 0 2px 16px rgba(0,0,0,0.06); /* dropdowns, popovers */
+    --ds-shadow-04: 0 8px 40px rgba(0,0,0,0.18);   /* overlays */
+    --ds-shadow-05: 0 20px 60px rgba(0,0,0,0.20);  /* modals */
+    /* Legacy aliases — prefer --ds-shadow-0N in new code */
+    --ds-shadow-card:     var(--ds-shadow-02);
+    --ds-shadow-md:       var(--ds-shadow-01);
+    --ds-shadow-lg:       var(--ds-shadow-04);
+    --ds-shadow-modal:    var(--ds-shadow-05);
+    --ds-shadow-dropdown: var(--ds-shadow-03);
 
     /* DS Typography */
     --ds-font-display: 'Sprig Sans', 'Inter', sans-serif;
@@ -76,126 +117,234 @@
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+  /* DS Body 02: 14/20 */
   body {
     font-family: var(--ds-font-body);
     background: var(--ds-bg-page);
     color: var(--ds-text-primary);
-    line-height: 1.43;
     font-size: 14px;
+    line-height: 20px;
   }
 
-  /* DS Typography Tokens (RIG v2.51.0) */
-  .ds-heading-01, .rig-typography-heading03 { font-family: var(--ds-font-display); font-size: 32px; font-weight: 700; line-height: 40px; letter-spacing: -0.32px; color: var(--ds-text-primary); }
-  .ds-heading-02, .rig-typography-heading04 { font-family: var(--ds-font-display); font-size: 24px; font-weight: 700; line-height: 32px; letter-spacing: -0.24px; color: var(--ds-text-primary); }
-  .ds-heading-03, .rig-typography-title01 { font-family: var(--ds-font-body); font-size: 20px; font-weight: 600; line-height: 28px; letter-spacing: -0.1px; color: var(--ds-text-primary); }
-  .ds-heading-04, .rig-typography-title02 { font-family: var(--ds-font-body); font-size: 16px; font-weight: 600; line-height: 24px; color: var(--ds-text-primary); }
-  .ds-body, .rig-typography-body01 { font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px; }
-  .ds-body-extra, .rig-typography-body-extra { font-family: var(--ds-font-body); font-size: 16px; font-weight: 400; line-height: 24px; }
-  .ds-caption { font-family: var(--ds-font-body); font-size: 12px; font-weight: 400; line-height: 16px; }
+  /* ═════════════════════════════════════════════════
+     RIG Foundations — Product Typography (Brand 1)
+     All sizes in px. font-family: Inter.
+     ═════════════════════════════════════════════════ */
+  .rig-title-01      { font-family: var(--ds-font-body); font-weight: 600; font-size: 40px; line-height: 44px; letter-spacing: -1px;   color: var(--ds-text-primary); }
+  .rig-title-02      { font-family: var(--ds-font-body); font-weight: 600; font-size: 28px; line-height: 32px; letter-spacing: -0.4px; color: var(--ds-text-primary); }
+  .rig-title-03      { font-family: var(--ds-font-body); font-weight: 600; font-size: 20px; line-height: 24px; letter-spacing: -0.2px; color: var(--ds-text-primary); }
+  .rig-body-01-bold  { font-family: var(--ds-font-body); font-weight: 600; font-size: 16px; line-height: 24px; letter-spacing: 0;      color: var(--ds-text-primary); }
+  .rig-body-01       { font-family: var(--ds-font-body); font-weight: 400; font-size: 16px; line-height: 24px; letter-spacing: 0;      color: var(--ds-text-primary); }
+  .rig-body-02-bold  { font-family: var(--ds-font-body); font-weight: 600; font-size: 14px; line-height: 20px; letter-spacing: 0;      color: var(--ds-text-primary); }
+  .rig-body-02       { font-family: var(--ds-font-body); font-weight: 400; font-size: 14px; line-height: 20px; letter-spacing: 0;      color: var(--ds-text-primary); }
+  .rig-utility-01-bold { font-family: var(--ds-font-body); font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-primary); }
+  .rig-utility-01    { font-family: var(--ds-font-body); font-weight: 400; font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-primary); }
+  .rig-utility-02-bold { font-family: var(--ds-font-body); font-weight: 600; font-size: 10px; line-height: 12px; letter-spacing: 0.15px; color: var(--ds-text-primary); }
+  .rig-utility-02    { font-family: var(--ds-font-body); font-weight: 400; font-size: 10px; line-height: 12px; letter-spacing: 0.15px; color: var(--ds-text-primary); }
 
-  /* ── DS Button (sizes m=48, s=36 — matches RIG Storybook) ── */
+  /* Legacy heading aliases (map to product scale) */
+  /* Legacy typography classes (ds-heading-*, ds-body*, ds-caption) have
+     been consolidated into rig-* (above). Use rig-title-*, rig-body-*,
+     rig-utility-* in new code. */
+
+  /* ─── DS Button ─────────────────────────────────────────
+     Source: Figma Components · [Components] Deprecated (source of truth).
+     DS canonical (Size M): h 48 · px 16 · gap 8 · radius 12 · icon 24 ·
+                            font Body 02 Bold (14/20, weight 600).
+     Prototype sizes (all 3 use the same DS variant styling, differ only
+     in density — l maps 1:1 to DS Size M, m & s are density extensions):
+       • l — DS Size M (canonical):  h 48 · px 16 · icon 24 (ic-*-24)
+       • m — density medium:         h 40 · px 16 · icon 20
+       • s — density small:          h 32 · px 12 · icon 16 (ic-*-16)
+     Variants (primary / secondary / tertiary / outline / text / positive /
+     negative) are orthogonal to size — they set colors only. */
   .ds-btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-    border-radius: var(--ds-radius-lg); font-weight: 500; cursor: pointer;
-    border: 1px solid transparent; transition: all 0.15s;
-    font-family: inherit; white-space: nowrap; text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: var(--ds-dim-l);                 /* DS gap 8 */
+    border-radius: var(--ds-radius-lg);   /* DS radius 12 */
+    font-weight: 600;                     /* DS Body 02 Bold */
     font-size: 14px; line-height: 20px; letter-spacing: 0;
+    font-family: inherit; white-space: nowrap; text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent; transition: all 0.15s;
+    width: auto; flex: 0 0 auto;
   }
-  .ds-btn--m  { padding: 0 20px; height: 48px; }
-  .ds-btn--s  { padding: 0 16px; height: 36px; font-size: 13px; }
+  .ds-btn--l  { padding: 0 var(--ds-dim-3xl); height: 48px; }
+  .ds-btn--m  { padding: 0 var(--ds-dim-3xl); height: 40px; }
+  .ds-btn--s  { padding: 0 var(--ds-dim-2xl); height: 32px; }
 
   .ds-btn--primary { background: var(--ds-primary); color: var(--ds-on-primary); border-color: var(--ds-primary); }
   .ds-btn--primary:hover:not(:disabled) { background: var(--ds-primary-hover); border-color: var(--ds-primary-hover); }
-  .ds-btn--secondary { background: #262626; color: #ffffff; border-color: #262626; }
-  .ds-btn--secondary:hover:not(:disabled) { background: #404040; border-color: #404040; }
+  .ds-btn--secondary { background: var(--ds-secondary-bg); color: var(--ds-on-secondary); border-color: var(--ds-secondary-bg); }
+  .ds-btn--secondary:hover:not(:disabled) { background: var(--ds-secondary-bg-hover); border-color: var(--ds-secondary-bg-hover); }
   .ds-btn--tertiary { background: transparent; border-color: transparent; color: var(--ds-text-secondary); }
   .ds-btn--tertiary:hover:not(:disabled) { color: var(--ds-text-primary); background: var(--ds-bg-page); }
   .ds-btn--text { background: transparent; border-color: transparent; color: var(--ds-primary); padding: 0; height: auto; }
   .ds-btn--text:hover:not(:disabled) { text-decoration: underline; }
   .ds-btn--positive { background: var(--ds-positive); color: #fff; border-color: var(--ds-positive); }
-  .ds-btn--positive:hover:not(:disabled) { background: #136e24; border-color: #136e24; }
+  .ds-btn--positive:hover:not(:disabled) { background: var(--ds-positive-hover); border-color: var(--ds-positive-hover); }
   .ds-btn--negative { background: var(--ds-negative); color: #fff; border-color: var(--ds-negative); }
-  .ds-btn--negative:hover:not(:disabled) { background: #c52020; border-color: #c52020; }
+  .ds-btn--negative:hover:not(:disabled) { background: var(--ds-negative-hover); border-color: var(--ds-negative-hover); }
   /* Outline = DS secondaryVariant */
   .ds-btn--outline { background: var(--ds-bg); color: var(--ds-text-primary); border-color: var(--ds-border-input); }
-  .ds-btn--outline:hover:not(:disabled) { background: var(--ds-bg-page); border-color: #a8a8a8; }
+  .ds-btn--outline:hover:not(:disabled) { background: var(--ds-bg-page); border-color: var(--ds-border-input-hover); }
   .ds-btn--block { width: 100%; }
   .ds-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .ds-btn:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); }
 
-  .ds-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .ds-btn--s svg { width: 14px; height: 14px; }
+  /* Icons: l → 24 (DS ic-*-24), m → 20, s → 16 (DS ic-*-16) */
+  .ds-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+  .ds-btn--l svg { width: 24px; height: 24px; }
+  .ds-btn--s svg { width: 16px; height: 16px; }
 
-  /* ── DS IconButton (m=48, s=36) ── */
+  /* ── DS IconButton (s=32, m=40, l=48) ── */
   .ds-icon-btn {
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: var(--ds-radius-lg); border: 1px solid var(--ds-border-input);
     background: var(--ds-bg); cursor: pointer; transition: all 0.15s;
-    color: var(--ds-text-secondary);
+    color: var(--ds-text-secondary); flex: 0 0 auto;
   }
-  .ds-icon-btn:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); border-color: #a8a8a8; }
-  .ds-icon-btn--m { width: 48px; height: 48px; }
-  .ds-icon-btn--s { width: 36px; height: 36px; }
-  .ds-icon-btn svg { width: 18px; height: 18px; }
+  .ds-icon-btn:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); border-color: var(--ds-border-input-hover); }
+  .ds-icon-btn--l { width: 48px; height: 48px; }
+  .ds-icon-btn--m { width: 40px; height: 40px; }
+  .ds-icon-btn--s { width: 32px; height: 32px; }
+  /* Icons by DS: l → 24 (ic-*-24), m → 20, s → 16 (ic-*-16) */
+  .ds-icon-btn svg { width: 20px; height: 20px; }
+  .ds-icon-btn--l svg { width: 24px; height: 24px; }
   .ds-icon-btn--s svg { width: 16px; height: 16px; }
+  .ds-icon-btn--ghost { border-color: transparent; background: transparent; }
+  .ds-icon-btn--ghost:hover { background: var(--ds-bg-hover); border-color: transparent; }
 
-  /* ── DS Tag ── */
+  /* ── DS Tag (Components: Utility 01 Bold, full radius) ── */
   .ds-tag {
-    display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px;
-    border-radius: var(--ds-radius-full); font-size: 12px; font-weight: 500;
-    line-height: 16px; white-space: nowrap; letter-spacing: 0;
+    display: inline-flex; align-items: center; gap: var(--ds-dim-s);
+    padding: var(--ds-dim-xs) var(--ds-dim-l);
+    border-radius: var(--ds-radius-full);
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    white-space: nowrap;
   }
   .ds-tag--neutral { color: var(--ds-text-secondary); background: var(--ds-neutral-bg); }
   .ds-tag--positive { color: var(--ds-positive-text); background: var(--ds-positive-bg); }
   .ds-tag--negative { color: var(--ds-negative-text); background: var(--ds-negative-bg); }
-  .ds-tag--warning { color: #92400E; background: var(--ds-warning-bg); }
+  .ds-tag--warning { color: var(--ds-warning-text); background: var(--ds-warning-bg); }
   .ds-tag--brand { color: var(--ds-primary); background: var(--ds-primary-content); }
   .ds-tag--inactive { color: var(--ds-text-placeholder); background: #f5f5f5; }
   .ds-tag svg { width: 12px; height: 12px; }
 
   /* ── DS Chips ── */
-  .ds-chips-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .ds-chips-group { display: flex; gap: var(--ds-dim-l); flex-wrap: wrap; }
   .ds-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 0 14px; height: 32px; border: 1px solid var(--ds-border-input);
-    border-radius: var(--ds-radius-full); font-size: 13px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: var(--ds-dim-m);
+    padding: 0 var(--ds-dim-2xl); height: 32px;
+    border: 1px solid var(--ds-border-input);
+    border-radius: var(--ds-radius-full);
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 14px; line-height: 20px; letter-spacing: 0;
     cursor: pointer; background: var(--ds-bg); white-space: nowrap;
     color: var(--ds-text-secondary); transition: all 0.15s;
-    font-family: inherit;
   }
   .ds-chip:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
   .ds-chip--selected { background: var(--ds-primary); color: #fff; border-color: var(--ds-primary); }
   .ds-chip--selected:hover { background: var(--ds-primary-hover); color: #fff; }
-  .ds-chip--s { height: 28px; padding: 0 12px; font-size: 12px; }
+  .ds-chip--s { height: 24px; padding: 0 var(--ds-dim-l); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; }
 
-  /* ── DS Input (48px) ── */
-  .ds-input-wrap { margin-bottom: 20px; }
-  .ds-input-label { display: block; font-size: 13px; font-weight: 500; line-height: 18px; color: var(--ds-text-secondary); margin-bottom: 6px; }
+  /* ── DS Input (Components: Label above, external) ────────────
+     Layout: label (Body 02) → shell → description/error, gap 4px
+     Size M: h=48, radius=12, padding=12/16, icon=24, text=Body 01 (16/24)
+     Size S: h=32, radius=8,  padding=4/12,  icon=18, text=Body 02 (14/20)
+     Focus: border=#3b71ff + shadow 0 0 0 4px rgba(59,113,255,0.5) */
+  .ds-input-wrap { margin-bottom: var(--ds-dim-5xl); display: flex; flex-direction: column; gap: var(--ds-dim-s); }
+  .ds-input-wrap:last-child { margin-bottom: 0; }
+
+  /* AM/PM chips — paired with a time input */
+  .time-with-meridiem { display: flex; gap: var(--ds-dim-s); align-items: stretch; min-width: 0; }
+  .time-with-meridiem > .ds-input-wrap { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
+  .time-meridiem {
+    display: flex; gap: var(--ds-dim-xs);
+    align-self: flex-end; margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  .ds-input-label {
+    display: flex; align-items: center; gap: var(--ds-dim-s);
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 14px; line-height: 20px; letter-spacing: 0;
+    color: var(--ds-text-secondary); height: 20px;
+  }
+  .ds-input-shell {
+    position: relative;
+    display: flex; align-items: center; gap: var(--ds-dim-l);
+    width: 100%; height: 48px;
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    border: 1px solid var(--ds-border-input);
+    border-radius: var(--ds-radius-lg);
+    background: var(--ds-bg);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .ds-input-shell:hover:not(.ds-input-shell--focus):not(.ds-input-shell--disabled) { border-color: var(--ds-border-input-hover); }
+  .ds-input-shell--focus { border-color: var(--ds-border-focus); box-shadow: var(--ds-focus-ring); }
+  .ds-input-shell--error { border-color: var(--ds-negative); }
+  .ds-input-shell--error.ds-input-shell--focus { box-shadow: var(--ds-focus-ring-error); }
+  .ds-input-shell--disabled { background: rgba(22,22,22,0.06); cursor: not-allowed; }
+  .ds-input-shell--button { cursor: pointer; user-select: none; }
+
+  /* Size S (32/8/12/18/Body-02) */
+  .ds-input-shell--s { height: 32px; padding: var(--ds-dim-s) var(--ds-dim-2xl); border-radius: var(--ds-radius-md); }
+  /* DS Size S → icon 16 (ic-*-16) */
+  .ds-input-shell--s .ds-input-shell__icon,
+  .ds-input-shell--s .ds-input-shell__icon svg { width: 16px; height: 16px; }
+  .ds-input-shell--s .ds-input-field,
+  .ds-input-shell--s .ds-input-shell__prefix { font-size: 14px; line-height: 20px; }
+
+  .ds-input-shell__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; flex-shrink: 0; color: var(--ds-text-muted);
+  }
+  .ds-input-shell__icon svg { width: 24px; height: 24px; }
+  .ds-input-shell__prefix {
+    color: var(--ds-text-muted); flex-shrink: 0;
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 16px; line-height: 24px;
+  }
+
   .ds-input-field {
-    width: 100%; height: 48px; padding: 0 16px; border: 1px solid var(--ds-border-input);
-    border-radius: var(--ds-radius-lg); font-size: 14px; font-family: inherit;
-    line-height: 20px; transition: border-color 0.15s, box-shadow 0.15s;
-    background: var(--ds-bg); color: var(--ds-text-primary); outline: none;
+    flex: 1 1 auto; min-width: 0;
+    border: none; outline: none; background: transparent;
+    height: 100%; padding: 0;
+    font-family: inherit; font-weight: 400;
+    font-size: 16px; line-height: 24px;
+    color: var(--ds-text-primary);
   }
-  .ds-input-field:focus { border-color: var(--ds-primary); box-shadow: 0 0 0 3px rgba(24,67,248,0.12); }
-  .ds-input-field:hover:not(:focus) { border-color: #a8a8a8; }
-  .ds-input-field::placeholder { color: var(--ds-text-placeholder); }
-  .ds-input-desc { font-size: 12px; line-height: 16px; color: var(--ds-text-muted); margin-top: 6px; }
-  .ds-input-error { font-size: 12px; line-height: 16px; color: var(--ds-negative); margin-top: 6px; }
-  .ds-input-field--error { border-color: var(--ds-negative); }
-  .ds-input-field--error:focus { box-shadow: 0 0 0 3px rgba(231,45,45,0.12); }
-  select.ds-input-field {
-    cursor: pointer; -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 16px center; padding-right: 40px;
+  .ds-input-field::placeholder { color: var(--ds-text-muted); }
+
+  .ds-input-desc { font-family: var(--ds-font-body); font-weight: 400; font-size: 14px; line-height: 20px; color: var(--ds-text-secondary); }
+  .ds-input-error { font-family: var(--ds-font-body); font-weight: 400; font-size: 14px; line-height: 20px; color: var(--ds-negative); }
+
+  textarea.ds-input-field { height: auto; min-height: 96px; padding: 0; resize: vertical; line-height: 24px; }
+  .ds-input-shell--textarea { height: auto; padding: var(--ds-dim-2xl) var(--ds-dim-3xl); align-items: stretch; }
+
+  /* DS Dropdown (options popover) */
+  .ds-dropdown {
+    position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 50;
+    background: var(--ds-bg); border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-dropdown);
+    max-height: 280px; overflow-y: auto; padding: var(--ds-dim-s) 0;
   }
-  textarea.ds-input-field { height: auto; padding: 12px 16px; resize: vertical; min-height: 96px; }
+  .ds-dropdown__option {
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary); cursor: pointer; transition: background 0.12s;
+  }
+  .ds-dropdown__option:hover { background: var(--ds-bg-hover); }
+  .ds-dropdown__option--selected { background: var(--ds-primary-content); color: var(--ds-primary); font-weight: 600; }
 
   /* ── DS Toggle ── */
   .ds-toggle { position: relative; display: inline-block; cursor: pointer; }
   .ds-toggle input { display: none; }
-  .ds-toggle--m .ds-toggle-track { width: 44px; height: 24px; border-radius: 12px; }
+  /* DS Toggle: track uses pill radius; thumb padding 2 on all sides */
+  .ds-toggle--m .ds-toggle-track { width: 48px; height: 24px; border-radius: var(--ds-radius-full); }
   .ds-toggle--m .ds-toggle-thumb { width: 20px; height: 20px; }
-  .ds-toggle--s .ds-toggle-track { width: 36px; height: 20px; border-radius: 10px; }
+  .ds-toggle--s .ds-toggle-track { width: 32px; height: 20px; border-radius: var(--ds-radius-full); }
   .ds-toggle--s .ds-toggle-thumb { width: 16px; height: 16px; }
   .ds-toggle-track {
     display: block; background: #d4d4d4; transition: background 0.2s; position: relative;
@@ -205,11 +354,15 @@
     background: #fff; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   }
   .ds-toggle input:checked + .ds-toggle-track { background: var(--ds-primary); }
-  .ds-toggle--m input:checked + .ds-toggle-track .ds-toggle-thumb { transform: translateX(20px); }
-  .ds-toggle--s input:checked + .ds-toggle-track .ds-toggle-thumb { transform: translateX(16px); }
+  .ds-toggle--m input:checked + .ds-toggle-track .ds-toggle-thumb { transform: translateX(24px); }
+  .ds-toggle--s input:checked + .ds-toggle-track .ds-toggle-thumb { transform: translateX(12px); }
 
-  /* ── DS Checkbox ── */
-  .ds-checkbox { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; }
+  /* ── DS Checkbox (Components: Body 02 label) ── */
+  .ds-checkbox {
+    display: inline-flex; align-items: center; gap: var(--ds-dim-l); cursor: pointer;
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 14px; line-height: 20px; color: var(--ds-text-primary);
+  }
   .ds-checkbox input { display: none; }
   .ds-checkbox-box {
     width: 20px; height: 20px; border: 2px solid #d4d4d4; border-radius: 4px;
@@ -222,25 +375,29 @@
   .ds-checkbox input:checked + .ds-checkbox-box svg { display: block; }
   .ds-checkbox-box svg { display: none; width: 14px; height: 14px; color: #fff; }
 
-  /* ── DS Tabs (44px) ── */
+  /* ── DS Tabs (Components: Body 02 Bold, 2px indicator) ── */
   .ds-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--ds-border); }
-  .ds-tabs--padded { padding: 0 24px; }
+  .ds-tabs--padded { padding: 0 var(--ds-dim-5xl); }
   .ds-tab {
-    height: 44px; padding: 0 16px; font-size: 14px; line-height: 20px;
+    height: 44px; padding: 0 var(--ds-dim-3xl);
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 14px; line-height: 20px; letter-spacing: 0;
     color: var(--ds-text-secondary); cursor: pointer;
-    border-bottom: 2px solid transparent; font-weight: 500;
+    border-bottom: 2px solid transparent;
     position: relative; bottom: -1px; background: none; border-top: none;
     border-left: none; border-right: none; transition: color 0.15s;
-    font-family: inherit;
   }
   .ds-tab:hover { color: var(--ds-text-primary); }
-  .ds-tab--active { color: var(--ds-text-primary); border-bottom-color: var(--ds-primary); font-weight: 700; }
+  .ds-tab--active { color: var(--ds-text-primary); border-bottom-color: var(--ds-primary); }
 
-  /* ── DS Notification ── */
+  /* ── DS Notification (Components: Body 02, 12 radius, 4px accent bar) ── */
   .ds-notification {
-    display: flex; align-items: flex-start; gap: 12px; padding: 16px 20px;
-    border-radius: var(--ds-radius-lg); font-size: 14px; line-height: 20px; position: relative;
-    overflow: hidden;
+    display: flex; align-items: flex-start; gap: var(--ds-dim-2xl);
+    padding: var(--ds-dim-3xl) var(--ds-dim-4xl);
+    border-radius: var(--ds-radius-lg);
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 14px; line-height: 20px;
+    position: relative; overflow: hidden;
   }
   .ds-notification::before {
     content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
@@ -256,13 +413,13 @@
   .ds-notification--neutral { background: var(--ds-neutral-bg); }
   .ds-notification__icon { flex-shrink: 0; width: 20px; height: 20px; }
   .ds-notification__content { flex: 1; }
-  .ds-notification__title { font-weight: 600; margin-bottom: 4px; color: var(--ds-text-primary); }
-  .ds-notification__desc { font-size: 13px; line-height: 18px; color: var(--ds-text-secondary); }
-  .ds-notification__actions { display: flex; gap: 8px; margin-top: 12px; }
+  .ds-notification__title { font-weight: 600; font-size: 14px; line-height: 20px; margin-bottom: var(--ds-dim-s); color: var(--ds-text-primary); }
+  .ds-notification__desc { font-size: 14px; line-height: 20px; color: var(--ds-text-secondary); }
+  .ds-notification__actions { display: flex; gap: var(--ds-dim-l); margin-top: var(--ds-dim-2xl); }
 
   /* ── DS Container ── */
   .ds-container {
-    max-width: 1216px; margin: 32px auto; padding: 40px;
+    max-width: 1216px; margin: var(--ds-dim-6xl) auto; padding: var(--ds-dim-7xl);
     background: var(--ds-bg); border-radius: var(--ds-radius-xl);
     border: 1px solid var(--ds-border);
   }
@@ -270,30 +427,45 @@
   /* ── DS List ── */
   .ds-list { list-style: none; }
   .ds-list-item {
-    padding: 12px 16px; display: flex; align-items: center; gap: 12px;
-    border-bottom: 1px solid var(--ds-border); font-size: 14px;
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl); display: flex; align-items: center; gap: var(--ds-dim-2xl);
+    border-bottom: 1px solid var(--ds-border); font-size: 14px; line-height: 20px;
   }
   .ds-list-item:last-child { border-bottom: none; }
 
-  /* ── DS Modal ── */
+  /* ── DS Modal (rendered via React portal into <body>) ── */
   .ds-modal-overlay {
-    position: fixed; inset: 0; z-index: 2000;
-    background: rgba(0,0,0,0.35); display: flex; align-items: center;
-    justify-content: center; padding: 24px;
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw; height: 100vh; z-index: 2000;
+    background: rgba(10,10,10,0.55);
+    display: flex; align-items: center; justify-content: center;
+    padding: var(--ds-dim-5xl);
   }
   .ds-modal {
     background: var(--ds-bg); border-radius: var(--ds-radius-xl); width: 100%;
-    max-width: 520px; box-shadow: var(--ds-shadow-modal); max-height: 90vh; overflow-y: auto;
+    max-width: 520px; box-shadow: var(--ds-shadow-modal);
+    max-height: 90vh; display: flex; flex-direction: column;
   }
+  /* DS Modal spec: header/body/footer padding 24 (equal inset).
+     Close = DS IconButton M (40×40, ghost, radius-lg, icon 20). */
   .ds-modal__header {
-    padding: 20px 24px; border-bottom: 1px solid var(--ds-border);
-    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--ds-dim-5xl) var(--ds-dim-5xl) var(--ds-dim-3xl);
+    display: flex; justify-content: space-between; align-items: flex-start; gap: var(--ds-dim-3xl);
   }
-  .ds-modal__body { padding: 24px; }
+  .ds-modal__title { flex: 1 1 auto; min-width: 0; }
+  .ds-modal__body { padding: 0 var(--ds-dim-5xl) var(--ds-dim-5xl); overflow-y: auto; }
   .ds-modal__footer {
-    padding: 16px 24px; border-top: 1px solid var(--ds-border);
-    display: flex; gap: 12px; justify-content: flex-end;
+    padding: var(--ds-dim-3xl) var(--ds-dim-5xl) var(--ds-dim-5xl);
+    display: flex; gap: var(--ds-dim-2xl); justify-content: flex-end;
   }
+  .ds-modal__close {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 40px; height: 40px; padding: 0; flex-shrink: 0;
+    border: none; background: transparent; cursor: pointer;
+    color: var(--ds-text-secondary); border-radius: var(--ds-radius-lg);
+    transition: background 0.12s, color 0.12s;
+  }
+  .ds-modal__close:hover { background: var(--ds-bg-hover); color: var(--ds-text-primary); }
+  .ds-modal__close svg { width: 20px; height: 20px; display: block; }
 
   /* ═══════════════════════════════════════════════ */
   /* APP-LEVEL STYLES                                */
@@ -316,76 +488,105 @@
     font-family: var(--ds-font-display); font-weight: 700; font-size: 18px;
     color: #fff; line-height: 1; letter-spacing: -0.02em;
   }
-  .topnav__links { display: flex; gap: 4px; }
+  .topnav__links { display: flex; gap: var(--ds-dim-s); }
   .topnav__link {
-    height: 36px; padding: 0 16px; border-radius: var(--ds-radius-full);
-    font-size: 14px; color: var(--ds-text-secondary); cursor: pointer;
-    white-space: nowrap; font-weight: 500; border: none; background: transparent;
+    height: 36px; padding: 0 var(--ds-dim-3xl); border-radius: var(--ds-radius-full);
+    font-size: 14px; line-height: 20px; color: var(--ds-text-secondary); cursor: pointer;
+    white-space: nowrap; font-weight: 400; border: none; background: transparent;
     transition: all 0.15s; font-family: inherit;
   }
   .topnav__link:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
-  .topnav__link--active { background: var(--ds-primary); color: #fff; }
+  .topnav__link--active { background: var(--ds-primary); color: #fff; font-weight: 600; }
   .topnav__link--active:hover { background: var(--ds-primary-hover); color: #fff; }
 
   /* Page layout */
-  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; gap: 16px; }
-  .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 18px; color: var(--ds-text-muted); margin-bottom: 16px; }
-  .breadcrumb a { color: var(--ds-text-muted); text-decoration: none; cursor: pointer; transition: color 0.15s; }
-  .breadcrumb a:hover { color: var(--ds-text-primary); }
-  .breadcrumb .sep { color: var(--ds-text-tertiary); }
-  .breadcrumb .current { color: var(--ds-text-primary); font-weight: 500; }
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--ds-dim-5xl); gap: var(--ds-dim-3xl); }
+  /* DS Breadcrumb — semantic <nav><ol>, Body 02 (14/20) */
+  .breadcrumb { margin-bottom: var(--ds-dim-3xl); }
+  .breadcrumb__list {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: var(--ds-dim-l); list-style: none; padding: 0; margin: 0;
+    font-size: 14px; line-height: 20px; color: var(--ds-text-secondary);
+  }
+  .breadcrumb__item { display: inline-flex; align-items: center; gap: var(--ds-dim-l); }
+  .breadcrumb__link {
+    color: var(--ds-text-secondary); text-decoration: none; cursor: pointer;
+    transition: color 0.15s; background: none; border: none; padding: 0;
+    font: inherit;
+  }
+  .breadcrumb__link:hover { color: var(--ds-text-primary); }
+  .breadcrumb__sep { color: var(--ds-text-tertiary); display: inline-flex; }
+  .breadcrumb__sep svg { width: 16px; height: 16px; }
+  .breadcrumb__current { color: var(--ds-text-primary); font-weight: 600; }
 
-  /* Card */
+  /* Card — non-interactive by default. Add .card--interactive to opt-in. */
   .card {
     background: var(--ds-bg); border-radius: var(--ds-radius-xl);
     box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid var(--ds-border);
-    overflow: hidden; transition: box-shadow 0.2s;
+    overflow: hidden;
   }
-  .card:hover { box-shadow: var(--ds-shadow-card); }
+  .card--interactive { cursor: pointer; transition: box-shadow 0.2s, border-color 0.2s; }
+  .card--interactive:hover { box-shadow: var(--ds-shadow-card); border-color: #c6c6c6; }
   .card__header {
-    padding: 16px 24px; border-bottom: 1px solid var(--ds-border);
+    padding: var(--ds-dim-3xl) var(--ds-dim-5xl);
+    border-bottom: 1px solid var(--ds-border);
     display: flex; justify-content: space-between; align-items: center;
   }
-  .card__body { padding: 24px; }
+  .card__body { padding: var(--ds-dim-5xl); }
 
   /* Stats row */
-  .stats { display: flex; padding: 20px 24px; }
-  .stat-card { flex: 1; padding: 0 16px; text-align: center; }
+  /* DS statcard row: left-aligned, divider between columns */
+  .stats { display: flex; padding: var(--ds-dim-4xl) var(--ds-dim-5xl); }
+  .stat-card { flex: 1; padding: 0 var(--ds-dim-3xl); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .stat-card:not(:last-child) { border-right: 1px solid var(--ds-border); }
   .stat-card:first-child { padding-left: 0; }
   .stat-card:last-child { padding-right: 0; }
-  .stat-value { font-family: var(--ds-font-display); font-size: 28px; font-weight: 700; line-height: 36px; color: var(--ds-text-primary); letter-spacing: -0.28px; }
-  .stat-label { font-size: 13px; color: var(--ds-text-muted); margin-top: 4px; font-weight: 400; line-height: 18px; }
-  .stat-trend { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 500; margin-top: 4px; }
+  .stat-value { font-family: var(--ds-font-body); font-weight: 600; font-size: 20px; line-height: 24px; letter-spacing: -0.2px; color: var(--ds-text-primary); }
+  .stat-label { font-family: var(--ds-font-body); font-weight: 400; font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-secondary); margin-top: var(--ds-dim-l); }
+  /* DS Utility 01 Bold (12/16, weight 600) */
+  .stat-trend { display: inline-flex; align-items: center; gap: var(--ds-dim-xs); font-size: 12px; line-height: 16px; font-weight: 600; margin-top: var(--ds-dim-s); }
   .stat-trend--up { color: var(--ds-positive); }
   .stat-trend--down { color: var(--ds-negative); }
   .stat-trend--neutral { color: var(--ds-text-placeholder); }
 
   /* Table */
+  .table-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: var(--ds-dim-3xl); margin-bottom: var(--ds-dim-3xl);
+  }
+  .table-header__meta { font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); font-weight: 400; }
   .table-wrap { border: 1px solid var(--ds-border); border-radius: var(--ds-radius-xl); overflow: hidden; background: var(--ds-bg); }
-  .table-title { display: flex; justify-content: space-between; align-items: center; padding: 20px 16px 12px; }
-  .table-title h4 { margin: 0; }
-  .table-title .meta { font-size: 13px; color: var(--ds-text-muted); }
   table { width: 100%; border-collapse: collapse; }
-  th { text-align: left; padding: 12px 16px; font-size: 12px; line-height: 16px; color: var(--ds-text-muted); border-bottom: 1px solid var(--ds-border); font-weight: 500; white-space: nowrap; letter-spacing: 0; background: var(--ds-bg); text-transform: uppercase; }
-  td { padding: 16px; border-bottom: 1px solid var(--ds-border); font-size: 14px; line-height: 20px; color: var(--ds-text-primary); vertical-align: middle; }
+  /* th uses Utility 01 from DS Foundations (12/16, regular, 0.15 tracking) */
+  th {
+    text-align: left; padding: var(--ds-dim-3xl);
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    color: var(--ds-text-muted); border-bottom: 1px solid var(--ds-border);
+    white-space: nowrap; background: var(--ds-bg); text-transform: none;
+  }
+  td { padding: var(--ds-dim-3xl); border-bottom: 1px solid var(--ds-border); font-family: var(--ds-font-body); font-weight: 400; font-size: 14px; line-height: 20px; letter-spacing: 0; color: var(--ds-text-primary); vertical-align: middle; }
+  /* First column (body 2 bold from DS Foundations) */
+  tbody td:first-child, td strong { font-family: var(--ds-font-body); font-weight: 600; font-size: 14px; line-height: 20px; letter-spacing: 0; color: var(--ds-text-primary); }
   tbody tr:last-child td { border-bottom: none; }
   tr { transition: background .1s; }
   tbody tr:hover td { background: var(--ds-row-hover); }
-  .td-actions { opacity: 0; transition: opacity .15s; display: inline-flex; gap: 4px; }
+  .td-actions { opacity: 0; transition: opacity .15s; display: inline-flex; gap: var(--ds-dim-s); }
   tbody tr:hover .td-actions { opacity: 1; }
-  tr.highlight td { background: var(--ds-bg-selected); font-weight: 600; }
+  tr.highlight td { background: var(--ds-bg-selected); }
+  tr.highlight td:first-child { font-weight: 600; }
   tr.highlight td:first-child { box-shadow: inset 3px 0 0 var(--ds-primary); }
 
   /* Medal */
-  .medal { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-size: 13px; font-weight: 600; background: var(--ds-neutral-bg); color: var(--ds-text-secondary); }
-  .medal--1 { background: #FEF3C7; color: #92400E; }
-  .medal--2 { background: #E5E7EB; color: #4B5563; }
-  .medal--3 { background: #FED7AA; color: #9A3412; }
+  .medal { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; line-height: 20px; font-weight: 600; background: var(--ds-neutral-bg); color: var(--ds-text-secondary); }
+  /* Award medals: gold / silver / bronze — DS-adjacent tints */
+  .medal--1 { background: var(--ds-warning-bg);  color: var(--ds-warning-text); }
+  .medal--2 { background: var(--ds-neutral-bg);  color: var(--ds-text-secondary); }
+  .medal--3 { background: #FED7AA; color: #9A3412; } /* bronze — no DS equivalent yet */
 
   /* Type cell */
-  .type-cell { display: flex; align-items: center; gap: 8px; }
-  .type-icon { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .type-cell { display: flex; align-items: center; gap: var(--ds-dim-l); }
+  .type-icon { width: 32px; height: 32px; border-radius: var(--ds-radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .type-icon--volume { background: var(--ds-primary-content); color: var(--ds-primary); }
   .type-icon--streak { background: var(--ds-warning-bg); color: var(--ds-warning); }
   .type-icon--top { background: var(--ds-positive-bg); color: var(--ds-positive); }
@@ -394,10 +595,12 @@
   /* Icon helpers */
   .icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; vertical-align: middle; }
   .icon svg { display: block; }
-  .icon--xs { width: 14px; height: 14px; }
+  /* DS icon sizes: 12 / 16 / 20 / 24 / 32 (no 14) */
+  .icon--xs { width: 12px; height: 12px; }
   .icon--sm { width: 16px; height: 16px; }
   .icon--md { width: 20px; height: 20px; }
   .icon--lg { width: 24px; height: 24px; }
+  .icon--xl { width: 32px; height: 32px; }
   .icon-circle { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
   .icon-circle--primary { background: var(--ds-primary-content); color: var(--ds-primary); }
   .icon-circle--positive { background: var(--ds-positive-bg); color: var(--ds-positive); }
@@ -405,162 +608,559 @@
   .icon-circle--negative { background: var(--ds-negative-bg); color: var(--ds-negative); }
   .icon-circle--grow { background: var(--ds-grow-bg); color: var(--ds-grow); }
 
-  /* Contest type info button */
+  /* Contest type info button — DS icon, no hover affordance */
   .type-info-btn {
-    width: 22px; height: 22px; border-radius: 50%;
+    width: 20px; height: 20px; border-radius: 0;
     display: inline-flex; align-items: center; justify-content: center;
     border: none; background: transparent; cursor: pointer;
-    color: var(--ds-text-tertiary); padding: 0; flex-shrink: 0;
-    transition: color 0.15s, background 0.15s;
+    color: var(--ds-text-muted); padding: 0; flex-shrink: 0;
+    outline: none;
   }
-  .type-info-btn:hover { color: var(--ds-primary); background: var(--ds-primary-content); }
-  .type-info-btn svg { width: 14px; height: 14px; }
+  .type-info-btn:hover,
+  .type-info-btn:focus-visible { color: var(--ds-text-muted); background: transparent; }
+  .type-info-btn svg { width: 16px; height: 16px; display: block; }
 
   /* Score block in type modal */
   .score-formula {
-    padding: 14px 16px; background: var(--ds-bg-page);
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl); background: var(--ds-bg-page);
     border-radius: var(--ds-radius-md); border: 1px solid var(--ds-border);
     font-family: ui-monospace, 'SF Mono', Menlo, monospace;
-    font-size: 13px; line-height: 20px; color: var(--ds-text-primary);
+    font-size: 14px; line-height: 20px; color: var(--ds-text-primary);
     overflow-wrap: anywhere;
   }
-  .score-rules { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 20px; color: var(--ds-text-secondary); margin: 0; }
-  .score-section { display: flex; flex-direction: column; gap: 8px; }
-  .score-section__title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ds-text-muted); font-weight: 500; }
+  /* Bulleted list (with brand triangle bullet icon) */
+  .rig-bullet-list {
+    display: flex; flex-direction: column; gap: var(--ds-dim-2xl);
+    list-style: none; padding: 0; margin: 0;
+    text-align: left; align-items: flex-start; justify-content: flex-start;
+  }
+  .rig-bullet-list__item {
+    display: flex; align-items: flex-start; gap: var(--ds-dim-2xl);
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary); text-align: left;
+  }
+  .rig-bullet-list__bullet {
+    flex-shrink: 0; width: 16px; height: 20px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ds-primary);
+  }
+  .rig-bullet-list__bullet svg { width: 10px; height: 10px; display: block; }
 
-  /* Progress bars */
-  .progress { height: 8px; background: #e0e0e0; border-radius: 100px; overflow: hidden; }
-  .progress__bar { height: 100%; border-radius: 100px; transition: width 0.5s ease; }
-  .progress__bar--primary { background: var(--ds-primary); }
-  .progress-mini { height: 3px; background: #e8e8e8; border-radius: 2px; width: 100%; margin-top: 6px; overflow: hidden; }
-  .progress-mini__bar { height: 100%; border-radius: 2px; transition: width 0.5s ease; background: var(--ds-primary); }
+  .score-rules { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--ds-dim-2xl); text-align: left; align-items: flex-start; }
+  .score-section { display: flex; flex-direction: column; gap: var(--ds-dim-2xl); }
+  .score-section__title { font-family: var(--ds-font-body); font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); text-transform: none; }
 
-  /* Contest card (client) */
-  .contest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-  .contest-card { background: var(--ds-bg); border-radius: var(--ds-radius-xl); border: 1px solid var(--ds-border); padding: 24px; transition: all 0.2s; cursor: pointer; }
-  .contest-card:hover { box-shadow: var(--ds-shadow-md); border-color: #c6c6c6; }
-  .contest-card__title { font-family: var(--ds-font-display); font-size: 18px; font-weight: 700; line-height: 24px; letter-spacing: -0.18px; color: var(--ds-text-primary); }
+  /* DS ProgressBar (sizes: xs=2, s=4, m=6, l=8) */
+  .ds-progress { position: relative; width: 100%; background: #e8e8e8; border-radius: 100px; overflow: hidden; }
+  .ds-progress--xs { height: 2px; }
+  .ds-progress--s  { height: 4px; }
+  .ds-progress--m  { height: 6px; }
+  .ds-progress--l  { height: 8px; }
+  .ds-progress--xl { height: 10px; }
+  .ds-progress__bar { height: 100%; background: var(--ds-primary); border-radius: 100px; transition: width 0.5s ease; }
+  .ds-progress--on-brand { background: rgba(255,255,255,0.22); }
+  .ds-progress--on-brand .ds-progress__bar { background: #fff; }
 
-  /* User progress (client leaderboard) */
-  .user-progress { background: var(--ds-primary); border-radius: var(--ds-radius-xl); padding: 32px; color: #fff; margin-bottom: 24px; }
-  .up-progress-wrap { background: rgba(255,255,255,0.2); border-radius: 100px; height: 10px; }
-  .up-progress-fill { height: 100%; background: #fff; border-radius: 100px; transition: width 0.5s; }
+  /* Contest card (shared between client list and wizard preview) */
+  .contest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--ds-dim-4xl); }
+  .contest-card {
+    background: var(--ds-bg); border-radius: var(--ds-radius-xl);
+    border: 1px solid var(--ds-border); padding: var(--ds-dim-5xl);
+    transition: box-shadow 0.2s, border-color 0.2s;
+    display: flex; flex-direction: column; gap: var(--ds-dim-3xl);
+    text-align: left; align-self: start;
+  }
+  .contest-card--interactive { cursor: pointer; }
+  .contest-card--interactive:hover { box-shadow: var(--ds-shadow-02); border-color: var(--ds-border-input); }
+  .contest-card__head { display: flex; align-items: flex-start; gap: var(--ds-dim-3xl); }
+  .contest-card__type { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--ds-dim-l); }
+  .contest-card__title { font-family: var(--ds-font-body); font-size: 20px; font-weight: 600; line-height: 24px; letter-spacing: -0.2px; color: var(--ds-text-primary); margin-bottom: var(--ds-dim-xs); }
+  .contest-card__desc { font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--ds-text-secondary); }
+  .contest-card__meta {
+    display: flex; flex-wrap: wrap; gap: var(--ds-dim-3xl) var(--ds-dim-5xl);
+    padding-top: var(--ds-dim-3xl); border-top: 1px solid var(--ds-border);
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    color: var(--ds-text-secondary);
+  }
+  .contest-card__meta-item { display: inline-flex; align-items: center; gap: var(--ds-dim-l); }
+  .contest-card__meta-item svg { width: 16px; height: 16px; }
+  .contest-card__footer { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-dim-3xl); flex-wrap: wrap; }
+
+  /* User progress (client leaderboard hero) */
+  .user-progress {
+    background: var(--ds-primary); border-radius: var(--ds-radius-xl);
+    padding: var(--ds-dim-7xl); color: #fff;
+    margin-bottom: var(--ds-dim-6xl);
+    display: flex; flex-direction: column; gap: var(--ds-dim-4xl);
+  }
+  .user-progress__row {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: var(--ds-dim-5xl); flex-wrap: wrap;
+  }
+  .user-progress__rank { min-width: 0; }
+  /* DS Title 01 (40/44, weight 600) */
+  .user-progress__place {
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 40px; line-height: 44px; letter-spacing: -1px;
+  }
+  .user-progress__place-meta { font-size: 14px; line-height: 20px; opacity: 0.85; margin-top: var(--ds-dim-m); }
+  .user-progress__score { text-align: right; }
+  .user-progress__score-value {
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 28px; line-height: 32px; letter-spacing: -0.4px;
+  }
+  .user-progress__score-unit { font-size: 16px; font-weight: 400; opacity: 0.85; }
+  .user-progress__score-meta { font-size: 14px; line-height: 20px; opacity: 0.85; margin-top: var(--ds-dim-xs); }
+  .user-progress__bar { margin-top: var(--ds-dim-s); }
+  .user-progress__caption { font-size: 14px; line-height: 20px; opacity: 0.85; text-align: right; }
 
   /* Wizard */
-  .wizard-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
-  .wizard-steps { display: flex; align-items: center; gap: 16px; padding: 4px; margin-bottom: 32px; }
-  .wizard-dot { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--ds-text-muted); transition: all 0.3s; flex-shrink: 0; }
-  .wizard-dot svg { width: 24px; height: 24px; }
+  .wizard-layout { display: grid; grid-template-columns: 1fr 380px; gap: var(--ds-dim-5xl); }
+  .wizard-steps { display: flex; align-items: center; gap: var(--ds-dim-3xl); padding: var(--ds-dim-s); margin-bottom: var(--ds-dim-6xl); }
+  /* DS Wizard step dot: 24×24 digit-in-circle icon from DS "Icons (1 brand)",
+     or a check icon when completed. Uses currentColor so state = color. */
+  .wizard-dot {
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ds-text-placeholder); transition: color 0.2s;
+    flex-shrink: 0;
+  }
+  .wizard-dot svg { width: 24px; height: 24px; display: block; }
   .wizard-dot--active { color: var(--ds-primary); }
-  .wizard-dot--done { color: var(--ds-text-muted); }
-  .wizard-connector { flex: 1; height: 1px; background: var(--ds-border-input); transition: background 0.3s; min-width: 16px; }
+  .wizard-dot--done   { color: var(--ds-positive); }
+  .wizard-connector { flex: 1; height: 1px; background: var(--ds-border-input); transition: background 0.3s; min-width: var(--ds-dim-3xl); }
   .wizard-connector--done { background: var(--ds-positive); }
 
-  /* Preview card */
-  .preview-card { background: var(--ds-bg); border-radius: var(--ds-radius-xl); border: 1px dashed var(--ds-border-input); padding: 24px; position: sticky; top: 80px; }
-  .preview-inner { background: var(--ds-bg-page); border-radius: var(--ds-radius-lg); padding: 24px; text-align: center; }
+  /* Preview card wrapper — holds the DS ContestCard for wizard preview */
+  .preview-card {
+    background: var(--ds-bg); border-radius: var(--ds-radius-xl);
+    border: 1px solid var(--ds-border); padding: var(--ds-dim-5xl);
+    position: sticky; top: 80px; align-self: start;
+    display: flex; flex-direction: column; gap: var(--ds-dim-3xl);
+  }
+  /* DS Utility 01 Bold (12/16, weight 600) */
+  .preview-card__label {
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    color: var(--ds-text-secondary); text-transform: none;
+  }
 
-  /* Radio cards */
-  .radio-cards { display: grid; grid-template-columns: 1fr; gap: 12px; }
-  .radio-card { padding: 16px 20px; border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-lg); cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 14px; background: var(--ds-bg); }
-  .radio-card:hover { border-color: #a8a8a8; background: var(--ds-bg-hover); }
-  .radio-card--selected { border-color: var(--ds-primary); background: var(--ds-bg-selected); box-shadow: inset 0 0 0 1px var(--ds-primary); }
+  /* RadioCard DS component (proposed) — hover/selected aligned with table row style */
+  /* DS Radio-card (selectable card with visible radio indicator) */
+  .rig-radio-cards { display: grid; grid-template-columns: 1fr; gap: var(--ds-dim-2xl); }
+  .rig-radio-card {
+    padding: var(--ds-dim-3xl) var(--ds-dim-4xl);
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-lg); cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+    display: flex; align-items: center; gap: var(--ds-dim-3xl);
+    background: var(--ds-bg); text-align: left;
+  }
+  .rig-radio-card::after {
+    content: ''; flex-shrink: 0;
+    width: 20px; height: 20px; border-radius: 50%;
+    border: 1.5px solid var(--ds-border-input);
+    background: var(--ds-bg);
+    transition: border-color 0.12s, box-shadow 0.12s;
+  }
+  .rig-radio-card:hover { background: var(--ds-row-hover); border-color: var(--ds-border-input-hover); }
+  .rig-radio-card:hover::after { border-color: var(--ds-border-input-hover); }
+  .rig-radio-card--selected { border-color: var(--ds-primary); background: var(--ds-primary-content); }
+  .rig-radio-card--selected:hover { background: var(--ds-primary-content); border-color: var(--ds-primary); }
+  .rig-radio-card--selected::after {
+    border-color: var(--ds-primary);
+    box-shadow: inset 0 0 0 5px var(--ds-primary), inset 0 0 0 7px var(--ds-bg);
+  }
 
   /* Audit trail */
-  .audit-trail { border-left: 2px solid var(--ds-border); margin-left: 12px; padding-left: 20px; }
-  .audit-item { position: relative; margin-bottom: 16px; }
+  .audit-trail { border-left: 1px solid var(--ds-border); margin-left: var(--ds-dim-2xl); padding-left: var(--ds-dim-4xl); }
+  .audit-item { position: relative; margin-bottom: var(--ds-dim-3xl); }
   .audit-item::before { content: ''; position: absolute; left: -26px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--ds-border-input); }
   .audit-item--alert::before { background: var(--ds-negative); }
 
-  /* Calendar */
-  .cal-input { width: 100%; height: 48px; padding: 0 16px; border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-lg); font-size: 14px; font-family: inherit; background: var(--ds-bg); color: var(--ds-text-primary); cursor: pointer; outline: none; transition: border-color 0.15s; display: flex; align-items: center; gap: 10px; }
-  .cal-input:hover { border-color: #a8a8a8; }
-  .cal-input--open { border-color: var(--ds-primary); box-shadow: 0 0 0 3px rgba(24,67,248,0.12); }
-  .cal-dropdown { position: absolute; top: calc(100% + 6px); left: 0; z-index: 100; width: 288px; background: var(--ds-bg); border: 1px solid #c6c6c6; border-radius: var(--ds-radius-lg); padding-top: 12px; box-shadow: var(--ds-shadow-dropdown); }
-  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 16px; gap: 0; }
-  .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; border-radius: 50%; cursor: pointer; border: none; background: none; font-family: inherit; color: var(--ds-text-primary); transition: all 0.12s; }
+  /* Calendar popover (used with DS Input trigger) */
+  .cal-dropdown { position: absolute; top: calc(100% + var(--ds-dim-m)); left: 0; z-index: 100; width: 288px; background: var(--ds-bg); border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-lg); padding-top: var(--ds-dim-2xl); box-shadow: var(--ds-shadow-dropdown); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 var(--ds-dim-3xl); gap: 0; }
+  .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 20px; font-weight: 400; border-radius: 50%; cursor: pointer; border: none; background: none; font-family: inherit; color: var(--ds-text-primary); transition: all 0.12s; }
   .cal-day:hover { background: var(--ds-bg-page); }
   .cal-day--today { font-weight: 700; color: var(--ds-primary); }
   .cal-day--selected { background: var(--ds-primary); color: #fff; font-weight: 600; }
 
   /* Toast */
-  .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-100px); z-index: 3000; padding: 14px 20px; border-radius: var(--ds-radius-lg); font-size: 14px; font-weight: 500; box-shadow: var(--ds-shadow-dropdown); opacity: 0; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+  /* DS Toast — built on .ds-notification visual pattern (left accent bar,
+     Body 02 typography). Fixed-positioned, top-centered. */
+  .toast {
+    position: fixed; top: var(--ds-dim-5xl); left: 50%;
+    transform: translateX(-50%) translateY(-100px);
+    z-index: 3000;
+    display: flex; align-items: center; gap: var(--ds-dim-2xl);
+    padding: var(--ds-dim-2xl) var(--ds-dim-4xl) var(--ds-dim-2xl) var(--ds-dim-4xl);
+    border-radius: var(--ds-radius-lg);
+    font-size: 14px; line-height: 20px; font-weight: 400;
+    color: var(--ds-text-primary);
+    box-shadow: var(--ds-shadow-03);
+    opacity: 0; white-space: nowrap;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    overflow: hidden;
+  }
+  .toast::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 4px; background: var(--ds-primary);
+  }
   .toast--visible { transform: translateX(-50%) translateY(0); opacity: 1; }
-  .toast--positive { background: var(--ds-positive-bg); color: var(--ds-text-primary); }
-  .toast--negative { background: var(--ds-negative-bg); color: var(--ds-text-primary); }
+  .toast--positive { background: var(--ds-positive-bg); }
+  .toast--positive::before { background: var(--ds-positive); }
+  .toast--negative { background: var(--ds-negative-bg); }
+  .toast--negative::before { background: var(--ds-negative); }
 
-  /* Info box */
-  .info-box { padding: 12px 16px; background: var(--ds-primary-content); border-radius: var(--ds-radius-lg); font-size: 13px; line-height: 18px; color: var(--ds-text-primary); display: flex; align-items: flex-start; gap: 8px; margin-top: 16px; }
+  /* DS Inline-message (default = info; variants via modifier) */
+  .info-box {
+    padding: var(--ds-dim-3xl);
+    background: var(--ds-primary-content);
+    border-left: 4px solid var(--ds-primary);
+    border-radius: var(--ds-radius-md);
+    font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px;
+    color: var(--ds-text-primary);
+    display: flex; align-items: flex-start; gap: var(--ds-dim-2xl);
+    margin-top: var(--ds-dim-3xl);
+  }
+  .info-box--positive { background: var(--ds-positive-bg); border-left-color: var(--ds-positive); }
+  .info-box--warning  { background: var(--ds-warning-bg);  border-left-color: var(--ds-warning); }
+  .info-box--negative { background: var(--ds-negative-bg); border-left-color: var(--ds-negative); }
 
-  /* Section title */
-  .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ds-text-muted); margin: 32px 0 16px; font-weight: 500; }
+  /* Hover tooltip */
+  .info-tip {
+    position: relative; display: inline-flex; align-items: center;
+    cursor: help; outline: none;
+  }
+  .info-tip__icon {
+    width: 16px; height: 16px; display: inline-flex;
+    color: var(--ds-text-placeholder);
+    transition: color 0.15s ease;
+  }
+  .info-tip__icon svg { width: 16px; height: 16px; display: block; }
+  .info-tip:hover .info-tip__icon,
+  .info-tip:focus-visible .info-tip__icon { color: var(--ds-text-muted); }
+  .info-tip__bubble {
+    position: absolute; z-index: 1000;
+    background: var(--ds-text-primary); color: var(--ds-bg);
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    padding: var(--ds-dim-m) var(--ds-dim-2xl);
+    border-radius: var(--ds-radius-md);
+    max-width: 280px; width: max-content;
+    white-space: normal; text-align: left;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  .info-tip__bubble::after {
+    content: ''; position: absolute;
+    border: 5px solid transparent;
+  }
+  .info-tip--top .info-tip__bubble {
+    bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  }
+  .info-tip--top .info-tip__bubble::after {
+    top: 100%; left: 50%; transform: translateX(-50%);
+    border-top-color: var(--ds-text-primary);
+  }
+  .info-tip--bottom .info-tip__bubble {
+    top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+  }
+  .info-tip--bottom .info-tip__bubble::after {
+    bottom: 100%; left: 50%; transform: translateX(-50%);
+    border-bottom-color: var(--ds-text-primary);
+  }
+  .info-tip:hover .info-tip__bubble,
+  .info-tip:focus-visible .info-tip__bubble {
+    opacity: 1; visibility: visible;
+  }
+
+  /* Join contest modal — rules summary + create account row */
+  .join-rules {
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-md);
+    padding: var(--ds-dim-3xl);
+    background: var(--ds-bg-page);
+  }
+  .join-rules__title {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--ds-text-muted);
+    margin-bottom: var(--ds-dim-2xl);
+  }
+  .join-rules__grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--ds-dim-3xl);
+  }
+  .join-rules__label {
+    font-size: 13px; line-height: 18px; color: var(--ds-text-muted);
+    display: inline-flex; align-items: center; gap: var(--ds-dim-s);
+  }
+  .join-rules__value {
+    font-size: 18px; line-height: 24px; font-weight: 600;
+    color: var(--ds-text-primary); margin-top: var(--ds-dim-xs);
+  }
+  .join-create {
+    display: flex; align-items: center; gap: var(--ds-dim-3xl);
+    padding: var(--ds-dim-3xl) var(--ds-dim-4xl);
+    border: 1px dashed var(--ds-border-input);
+    border-radius: var(--ds-radius-lg);
+    background: var(--ds-bg); cursor: pointer;
+    font-family: inherit; text-align: left; color: var(--ds-text-primary);
+    transition: background 0.12s, border-color 0.12s;
+  }
+  .join-create:hover { background: var(--ds-row-hover); border-color: var(--ds-border-input-hover); }
+  .join-create__icon {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--ds-primary-content); color: var(--ds-primary);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .join-create__icon svg { width: 20px; height: 20px; fill: currentColor; }
+  .join-deposit {
+    display: flex; align-items: flex-end; gap: var(--ds-dim-3xl);
+  }
+  .join-deposit > .ds-input-wrap,
+  .join-deposit > div:not(.ds-btn) { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
+  .join-deposit > .ds-btn { flex-shrink: 0; margin-bottom: 2px; }
+  @media (max-width: 560px) {
+    .join-rules__grid { grid-template-columns: 1fr 1fr; }
+    .join-deposit { flex-direction: column; align-items: stretch; }
+  }
+
+  /* Fixed platform conditions (read-only block on rules step) */
+  .fixed-conditions {
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-md);
+    padding: var(--ds-dim-3xl);
+    background: var(--ds-bg-page);
+    margin-bottom: var(--ds-dim-5xl);
+  }
+  .fixed-conditions__header {
+    display: flex; align-items: center; gap: var(--ds-dim-s);
+    color: var(--ds-text-primary);
+    margin-bottom: var(--ds-dim-3xl);
+  }
+  .fixed-conditions__list {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column; gap: var(--ds-dim-3xl);
+  }
+  .fixed-conditions__list li {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: var(--ds-dim-3xl);
+    padding-top: var(--ds-dim-3xl);
+    border-top: 1px solid var(--ds-border);
+  }
+  .fixed-conditions__list li:first-child { padding-top: 0; border-top: none; }
+  .fixed-conditions__key {
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary);
+    display: flex; flex-direction: column; gap: var(--ds-dim-xs);
+    flex: 1;
+  }
+  .fixed-conditions__note {
+    font-size: 12px; line-height: 16px; color: var(--ds-text-muted);
+  }
+  .fixed-conditions__val {
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary);
+    white-space: nowrap;
+  }
+
+  /* Section title (Body 01 bold, no caps) */
+  .section-title {
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 16px; line-height: 24px; letter-spacing: 0;
+    color: var(--ds-text-primary);
+    margin: var(--ds-dim-6xl) 0 var(--ds-dim-3xl);
+    text-transform: none;
+  }
 
   /* Empty state */
-  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 24px; text-align: center; }
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--ds-dim-10xl) var(--ds-dim-5xl); text-align: center; }
 
   /* Screen animation */
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .screen-enter { animation: fadeInUp 0.25s ease-out forwards; }
 
   /* Prize row */
-  .prize-row { display: grid; grid-template-columns: 50px 1fr 120px; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .prize-row { display: grid; grid-template-columns: 48px 1fr 120px; gap: var(--ds-dim-2xl); align-items: center; margin-bottom: var(--ds-dim-2xl); }
 
   /* Responsive */
+  /* DS breakpoints (Guides): tablet < 1024px, mobile < 640px */
   @media (max-width: 1023px) {
-    .ds-container { margin: 24px; padding: 24px; }
+    .ds-container { margin: var(--ds-dim-5xl); padding: var(--ds-dim-5xl); }
     .wizard-layout { grid-template-columns: 1fr; }
     .contest-grid { grid-template-columns: 1fr; }
-    .stats { flex-wrap: wrap; padding: 16px; }
+    .stats { flex-wrap: wrap; padding: var(--ds-dim-3xl); }
     .stat-card { flex: 1 1 40%; min-width: 120px; }
   }
-  @media (max-width: 643px) {
-    .ds-container { margin: 16px; padding: 16px; border-radius: var(--ds-radius-lg); }
-    .stats { flex-direction: column; padding: 8px; }
-    .stat-card { padding: 12px 16px; }
-    .stat-card:not(:last-child) { border-right: none; border-bottom: 1px solid var(--ds-border); padding-bottom: 12px; }
+  @media (max-width: 639px) {
+    .ds-container { margin: var(--ds-dim-3xl); padding: var(--ds-dim-3xl); border-radius: var(--ds-radius-lg); }
+    .stats { flex-direction: column; padding: var(--ds-dim-l); }
+    .stat-card { padding: var(--ds-dim-2xl) var(--ds-dim-3xl); }
+    .stat-card:not(:last-child) { border-right: none; border-bottom: 1px solid var(--ds-border); padding-bottom: var(--ds-dim-2xl); }
     .td-actions { opacity: 1; }
   }
 </style>
 </head>
 <body>
 
-<!-- SVG Icon Sprite -->
-<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
-  <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4a2 2 0 01-2-2V5a2 2 0 012-2h2M18 9h2a2 2 0 002-2V5a2 2 0 00-2-2h-2M6 3h12v6a6 6 0 01-12 0V3zM12 15v3M8 21h8M10 18h4"/></symbol>
-  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 16V10M12 16V6M17 16v-4"/></symbol>
-  <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4.418 0 7-2.686 7-7.5 0-3.5-2-6-3.5-7.5-.317-.317-.758.091-.633.503C15.28 9 14.5 10 13 10c0-3.5-2.5-6-5-8 0 3-1 5.5-3 8-1.5 1.875-2 4.063-2 5.5C3 19.314 5.582 22 10 22h2z"/></symbol>
-  <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></symbol>
-  <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></symbol>
-  <symbol id="i-gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 01-2 2H7a2 2 0 01-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 010-5C9 3 12 6 12 8M16.5 8a2.5 2.5 0 000-5C15 3 12 6 12 8"/></symbol>
-  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
-  <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></symbol>
-  <symbol id="i-check-circle-filled" viewBox="0 0 24 24" fill="none"><path d="M10.7396 15.7695L17.0416 9.46739L16.4752 8.90099C16.1173 8.54301 15.5369 8.54301 15.1789 8.90099L10.7396 13.3403L8.82108 11.4218C8.4631 11.0638 7.8827 11.0638 7.52472 11.4218L6.95831 11.9882L10.7396 15.7695Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M21.1666 11.9997C21.1666 17.0623 17.0626 21.1663 12 21.1663C6.93737 21.1663 2.83331 17.0623 2.83331 11.9997C2.83331 6.93706 6.93737 2.83301 12 2.83301C17.0626 2.83301 21.1666 6.93706 21.1666 11.9997ZM19.3333 11.9997C19.3333 16.0498 16.0501 19.333 12 19.333C7.94989 19.333 4.66665 16.0501 4.66665 11.9997C4.66665 7.94959 7.94989 4.66634 12 4.66634C16.0501 4.66634 19.3333 7.94959 19.3333 11.9997Z" fill="currentColor"/></symbol>
-  <symbol id="i-alert-triangle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01"/></symbol>
-  <symbol id="i-alert-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></symbol>
-  <symbol id="i-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7V17a1 1 0 001 1h6a1 1 0 001-1v-2.3A7 7 0 0012 2z"/></symbol>
-  <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
-  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
-  <symbol id="i-rocket" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09zM12 15l-3-3M22 2l-7.5 7.5"/><path d="M15 12l2.3 2.3a1 1 0 010 1.4l-3 3a1 1 0 01-1.4 0L9 15M12 9l-2.3-2.3a1 1 0 010-1.4l3-3a1 1 0 011.4 0L18 6"/></symbol>
-  <symbol id="i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></symbol>
-  <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></symbol>
-  <symbol id="i-edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol>
-  <symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></symbol>
-  <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
-  <symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
-  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
-  <symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></symbol>
-  <symbol id="i-trending-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></symbol>
-  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></symbol>
-  <symbol id="i-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
-  <symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></symbol>
-  <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
-  <symbol id="i-more" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
-  <symbol id="i-digit-1" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">1</text></symbol>
-  <symbol id="i-digit-2" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">2</text></symbol>
-  <symbol id="i-digit-3" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">3</text></symbol>
-  <symbol id="i-digit-4" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">4</text></symbol>
-  <symbol id="i-digit-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><text x="12" y="12" text-anchor="middle" dominant-baseline="central" fill="currentColor" font-family="Inter,sans-serif" font-size="12" font-weight="600">5</text></symbol>
+<!-- ═══════════════════════════════════════════════════════════════════
+     SVG Icon Sprite — DS "Icons (1 brand)" (single source of truth)
+     Figma: https://www.figma.com/design/FKANiWYfEqgcoBVGXZtxX4/Icons--1-brand-
+
+     Naming convention: ic-<ds-name>-24 (kebab-case, matches Figma node name).
+     Paths use fill="currentColor" so CSS `color` drives icon color.
+     Each symbol is annotated with its Figma nodeId.
+     Only icons actually used by the prototype are bundled here.
+     ═══════════════════════════════════════════════════════════════════ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <!-- Arrows -->
+  <symbol id="ic-arrow-left-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:791 -->
+    <path d="M7.41423 13L10.7172 16.303C11.2639 16.8497 11.2639 17.7361 10.7172 18.2829L10.2929 18.7071L3.58582 12L10.2929 5.29291L10.7172 5.71717C11.2639 6.26391 11.2639 7.15034 10.7172 7.69707L7.41426 11L18.4 11C18.7314 11 19 11.2686 19 11.6L19 12.4C19 12.7314 18.7314 13 18.4 13L7.41423 13Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-arrow-right-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:793 -->
+    <path d="M16.5857 11L13.2828 7.69707C12.7361 7.15034 12.7361 6.26391 13.2828 5.71717L13.7071 5.29291L20.4142 12L13.7071 18.7071L13.2828 18.2829C12.7361 17.7361 12.7361 16.8497 13.2828 16.303L16.5858 13L5.6 13C5.26863 13 5 12.7314 5 12.4V11.6C5 11.2686 5.26863 11 5.6 11L16.5857 11Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-chevron-left-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:884 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.2929 18.7071L15 18C15.3906 17.6095 15.3906 16.9763 15 16.5858L10.4142 12L15 7.41423C15.3906 7.0237 15.3906 6.39054 15 6.00001L14.2929 5.29291L7.58582 12L14.2929 18.7071Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-chevron-right-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:886 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.70715 5.29291L9.00005 6.00001C8.60952 6.39054 8.60952 7.0237 9.00005 7.41423L13.5858 12L9.00005 16.5858C8.60952 16.9763 8.60952 17.6095 9.00005 18L9.70715 18.7071L16.4143 12L9.70715 5.29291Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-upward-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1272 -->
+    <path d="M19 17C19.3819 17 19.7306 16.7825 19.8984 16.4395C20.0662 16.0964 20.0235 15.6872 19.789 15.3857L12.789 6.38574C12.5996 6.14236 12.3084 6 12 6C11.6915 6 11.4004 6.14236 11.2109 6.38574L4.21092 15.3857C3.97643 15.6872 3.93374 16.0964 4.10154 16.4395C4.26935 16.7825 4.61806 17 4.99998 17H19ZM12 8.62891L16.9551 15H7.0449L12 8.62891Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-downward-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:970 -->
+    <path d="M19 7C19.3819 7 19.7306 7.21747 19.8984 7.56055C20.0662 7.90364 20.0235 8.31278 19.789 8.61426L12.789 17.6143C12.5996 17.8576 12.3084 18 12 18C11.6915 18 11.4004 17.8576 11.2109 17.6143L4.21092 8.61426C3.97643 8.31278 3.93374 7.90364 4.10154 7.56055C4.26935 7.21747 4.61806 7 4.99998 7H19ZM12 15.3711L16.9551 9H7.0449L12 15.3711Z" fill="currentColor"/>
+  </symbol>
+
+  <!-- Interaction -->
+  <symbol id="ic-alert-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:777 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M13.1 14.9V16C13.1 16.6075 12.6075 17.1 12 17.1H10.9V16C10.9 15.3925 11.3925 14.9 12 14.9H13.1Z" fill="currentColor"/>
+    <path d="M11.829 7C11.2655 7 10.8133 7.46532 10.8294 8.02856L11 14H12.0282C12.5693 14 13.0123 13.5695 13.0277 13.0286L13.2 7H11.829Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-info-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1028 -->
+    <path d="M11.109 7.54601C11 7.75992 11 8.03995 11 8.6V9H11.4C11.9601 9 12.2401 9 12.454 8.89101C12.6422 8.79513 12.7951 8.64215 12.891 8.45399C13 8.24008 13 7.96005 13 7.4V7H12.6C12.0399 7 11.7599 7 11.546 7.10899C11.3578 7.20487 11.2049 7.35785 11.109 7.54601Z" fill="currentColor"/>
+    <path d="M13 15.4C13 15.9601 13 16.2401 12.891 16.454C12.7951 16.6422 12.6422 16.7951 12.454 16.891C12.2401 17 11.9601 17 11.4 17H11V13H10V12.6C10 12.0399 10 11.7599 10.109 11.546C10.2049 11.3578 10.3578 11.2049 10.546 11.109C10.6648 11.0485 10.832 11.0117 11.0547 11.0039L13 11V15.4Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-cross-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:916 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5857 12L5.29285 6.70706L5.99995 5.99995C6.39048 5.60943 7.02364 5.60943 7.41417 5.99995L12 10.5857L17.2928 5.29285L18.7071 6.70706L13.4142 12L18.7071 17.2928L18 18C17.6094 18.3905 16.9763 18.3905 16.5857 18L12 13.4142L6.70706 18.7071L5.29285 17.2928L10.5857 12Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-cross-round-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:918 -->
+    <path d="M7.29289 8.70712L10.5858 12L7.29289 15.2929L8.70711 16.7071L12 13.4142L14.5858 16C14.9763 16.3905 15.6095 16.3905 16 16L16.7071 15.2929L13.4142 12L16.7071 8.70712L15.2929 7.29291L12 10.5858L9.41421 8.00001C9.02369 7.60949 8.39052 7.60949 8 8.00001L7.29289 8.70712Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-check-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:878 -->
+    <path d="M9.58563 17.1333L9.58165 17.1373L3.85864 11.4142L4.70717 10.5657C5.09769 10.1752 5.73086 10.1752 6.12138 10.5657L9.74269 14.187L17.364 6.56572C17.7545 6.1752 18.3877 6.1752 18.7782 6.56572L19.6267 7.41425L9.74667 17.2943L9.58563 17.1333Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-plus-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1152 -->
+    <path d="M12 6C11.4477 6 11 6.44771 11 7V11H7C6.44772 11 6 11.4477 6 12V13H11V18H12C12.5523 18 13 17.5523 13 17V13H17C17.5523 13 18 12.5523 18 12V11H13V6H12Z" fill="currentColor"/>
+  </symbol>
+
+  <!-- Digits in circle -->
+  <symbol id="ic-digit-1-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:946 -->
+    <path d="M13.4463 16C13.4463 16.5522 12.9985 16.9999 12.4463 17H11.6016V8.61328H11.542L9.16113 10.1338V8.44434L11.6914 6.81836H13.4463V16Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-digit-2-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:948 -->
+    <path d="M12.1953 6.67871C12.878 6.67871 13.4781 6.80636 13.9951 7.06152C14.512 7.31667 14.9132 7.66638 15.1982 8.11035C15.4866 8.55442 15.6308 9.06186 15.6309 9.63184C15.6309 10.013 15.5579 10.388 15.4121 10.7559C15.2663 11.1237 15.0094 11.5312 14.6416 11.9785C14.277 12.4259 13.765 12.9682 13.1055 13.6045L11.3506 15.3896V15.459H14.7852C15.3373 15.4591 15.7852 15.9068 15.7852 16.459V17H8.80469V15.668L12.3398 12.2021C12.6777 11.861 12.9593 11.558 13.1846 11.293C13.4099 11.0279 13.5797 10.771 13.6924 10.5225C13.8051 10.2739 13.8613 10.0083 13.8613 9.72656C13.8613 9.40519 13.7883 9.13001 13.6426 8.90137C13.4968 8.66945 13.2961 8.4902 13.041 8.36426C12.7859 8.23835 12.4956 8.17582 12.1709 8.17578C11.8364 8.17578 11.5428 8.24476 11.291 8.38379C11.0392 8.51966 10.8433 8.71398 10.7041 8.96582C10.4597 9.41881 10.083 9.86595 9.56836 9.86621H8.74512C8.74512 9.22003 8.89263 8.65788 9.1875 8.18066C9.48245 7.70344 9.8883 7.33312 10.4053 7.07129C10.9256 6.80947 11.5225 6.67873 12.1953 6.67871Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-digit-3-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:950 -->
+    <path d="M12.1885 6.67871C12.8679 6.67871 13.4585 6.80631 13.959 7.06152C14.4627 7.31341 14.8519 7.65354 15.127 8.08105C15.402 8.50859 15.54 8.98103 15.54 9.49805C15.5433 10.0713 15.3736 10.5517 15.0322 10.9395C14.6942 11.3272 14.2503 11.5809 13.7002 11.7002V11.7803C14.416 11.8797 14.9646 12.1444 15.3457 12.5752C15.7301 13.0027 15.9203 13.5346 15.917 14.1709C15.917 14.7408 15.7553 15.2515 15.4307 15.7021C15.1092 16.1496 14.6644 16.5016 14.0977 16.7568C13.5344 17.0119 12.8881 17.1396 12.1592 17.1396C11.4434 17.1396 10.8068 17.0167 10.25 16.7715C9.69651 16.5262 9.25899 16.1846 8.9375 15.7471C8.616 15.3096 8.44469 14.8039 8.4248 14.2305H9.51074C9.95108 14.2305 10.2919 14.6094 10.5684 14.9521C10.734 15.1541 10.9546 15.3112 11.2295 15.4238C11.5045 15.5365 11.813 15.5928 12.1543 15.5928C12.5186 15.5927 12.8415 15.5301 13.123 15.4043C13.4047 15.2751 13.6251 15.0958 13.7842 14.8672C13.9432 14.6386 14.0218 14.3753 14.0186 14.0771C14.0219 13.7689 13.9417 13.497 13.7793 13.2617C13.6169 13.0264 13.3815 12.8425 13.0732 12.71C12.7684 12.5775 12.4005 12.5107 11.9697 12.5107H11.4697C11.249 12.5105 11.0703 12.3311 11.0703 12.1104V11.4883C11.0706 11.2677 11.2492 11.0891 11.4697 11.0889H11.9697C12.3242 11.0889 12.6344 11.0278 12.8994 10.9053C13.1679 10.7826 13.3788 10.6098 13.5312 10.3877C13.6836 10.1624 13.7582 9.90227 13.7549 9.60742C13.7582 9.31907 13.6931 9.06857 13.5605 8.85645C13.4313 8.64111 13.2473 8.47377 13.0088 8.35449C12.7735 8.23524 12.4968 8.17578 12.1787 8.17578C11.8672 8.1758 11.5786 8.23205 11.3135 8.34473C11.0485 8.45741 10.8352 8.61843 10.6729 8.82715C10.3984 9.17445 10.0628 9.5625 9.62012 9.5625H8.63867C8.65192 8.99264 8.81622 8.49228 9.13086 8.06152C9.44904 7.62734 9.87399 7.28883 10.4043 7.04688C10.9345 6.80173 11.5291 6.67875 12.1885 6.67871Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-digit-4-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:952 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.4385 6.81836V13.5947H15.7402V14.1104C15.7402 14.6626 15.2925 15.1104 14.7402 15.1104H14.4385V16C14.4385 16.5521 13.9906 16.9998 13.4385 17H12.6777V15.1104H7.82129V13.6445L12.1416 6.81836H14.4385ZM12.6182 8.90625L9.70996 13.5146V13.5947H12.6982V8.90625H12.6182Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" fill="currentColor"/>
+  </symbol>
+
+  <!-- Common -->
+  <symbol id="ic-calendar-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:836 -->
+    <path d="M7 8V9H16C16.5523 9 17 8.55228 17 8V7H8C7.44772 7 7 7.44772 7 8Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M6 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H18V1.8C18 1.77239 17.9986 1.7451 17.9959 1.7182C17.9549 1.3148 17.6142 1 17.2 1H16.8C16.3582 1 16 1.35817 16 1.8V3H8V1.8C8 1.35817 7.64183 1 7.2 1H6.8C6.35817 1 6 1.35817 6 1.8V3ZM16 5H8V5.2C8 5.64183 7.64183 6 7.2 6H6.8C6.35817 6 6 5.64183 6 5.2V5H5.6C5.26863 5 5 5.26863 5 5.6L5 18.4C5 18.7314 5.26863 19 5.6 19H18.4C18.7314 19 19 18.7314 19 18.4V5.6C19 5.26863 18.7314 5 18.4 5H18V5.2C18 5.64183 17.6418 6 17.2 6H16.8C16.3582 6 16 5.64183 16 5.2V5Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-clock-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:894 -->
+    <path d="M12.9004 12.9219L12.5762 13.1914L9.57617 15.6914L9.06392 15.0767C8.71039 14.6525 8.76766 14.022 9.19185 13.6684L11.0996 12.0781V8C11.0996 7.44772 11.5473 7 12.0996 7H12.9004V12.9219Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-users-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1282 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99884 12C12.1702 12 14.7514 12.2896 16.7274 13.3105C17.0906 13.4983 17.3645 13.7709 17.5711 14.1191C17.7511 14.4959 17.8198 14.8858 17.7694 15.3037C17.5936 16.7582 17.1295 18.3553 16.577 19.7236C16.4579 20.0185 16.2783 20.3384 15.949 20.5898C15.62 20.841 15.198 20.9961 14.9988 21H4.99884C4.79159 20.9997 4.37742 20.8409 4.04865 20.5898C3.71961 20.3384 3.53976 20.0184 3.42072 19.7236C2.87561 18.3737 2.40467 16.7631 2.22833 15.3037C2.18395 14.9361 2.20661 14.5296 2.42658 14.1191C2.63313 13.7709 2.90729 13.4983 3.27033 13.3105C5.24611 12.2895 7.82744 12.0001 9.99884 12ZM9.99884 14C8.11187 14.0001 5.94061 14.2564 4.21564 15.0762C4.33908 16.0031 4.82915 17.6136 5.09747 18.4541C5.18076 18.715 5.22275 18.8458 5.32794 18.9229C5.43325 18.9998 5.57227 19 5.84943 19H14.1131C14.4019 19 14.5473 19.0001 14.6541 18.9199C14.761 18.8394 14.8003 18.7004 14.8797 18.4238C15.1681 17.4193 15.735 15.4212 15.7811 15.0762C14.0533 14.257 11.8777 14 9.99884 14Z" fill="currentColor"/>
+    <path d="M19.2869 12.792C19.7716 12.9374 20.2781 13.0779 20.7283 13.3105C21.0916 13.4983 21.3654 13.7708 21.5721 14.1191C21.7521 14.4959 21.8208 14.8858 21.7703 15.3037C21.4718 16.4284 21.0194 18.2116 20.5819 19.7168C20.4683 20.0012 20.2985 20.3109 19.9871 20.5605C19.6869 20.8012 19.3216 20.9265 18.9422 20.9697C18.6628 21.0015 18.3305 21 17.9998 21V19.3838C18.0061 19.1726 18.1621 19.0104 18.3729 18.9961C18.3761 18.9959 18.3959 18.9945 18.4324 18.9932C18.5974 18.9827 18.7424 18.8673 18.7899 18.709C18.7913 18.7043 18.7926 18.7004 18.7947 18.6924L19.782 15.0762C19.7789 15.075 19.7324 15.0578 19.659 15.0312C19.2034 14.8667 18.9751 14.7842 18.8856 14.6064C18.7964 14.4287 18.8643 14.202 18.9998 13.75L19.2869 12.792Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99884 2C12.208 2 13.9988 3.79086 13.9988 6C13.9988 8.5 12.4988 11 9.99884 11C7.49924 10.9996 5.99884 8.49978 5.99884 6C5.99884 3.79108 7.79001 2.00036 9.99884 2ZM9.99884 4C8.89458 4.00036 7.99884 4.89565 7.99884 6C7.99884 6.87874 8.26913 7.70176 8.67462 8.25488C9.05498 8.77341 9.49583 8.9998 9.99884 9C10.502 9 10.9426 8.77341 11.3231 8.25488C11.7287 7.70176 11.9988 6.87891 11.9988 6C11.9988 4.89543 11.1034 4 9.99884 4Z" fill="currentColor"/>
+    <path d="M13.9998 2C16.2429 2 17.9998 3.87541 17.9998 6.11133C17.9998 7.26108 17.6702 8.44197 17.0194 9.3623C16.357 10.2988 15.3265 11 13.9998 11V10C13.9998 9.44779 14.4888 9.01803 14.9305 8.68652C15.0957 8.5625 15.2484 8.40241 15.3865 8.20703C15.7668 7.66915 15.9998 6.90575 15.9998 6.11133C15.9998 5.21616 15.4829 4.48251 14.7762 4.16699C14.3729 3.98688 13.9999 3.64187 13.9998 3.2002V2Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-gift-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1006 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.8571 2.70001C13.8755 2.70001 12.665 4.07766 12 5.23191C11.335 4.07766 10.1245 2.70001 8.14286 2.70001C7.30932 2.70001 6.50992 3.03113 5.92052 3.62053C5.33112 4.20993 5 5.00933 5 5.84287C5 6.24292 5.07627 6.63512 5.22077 7H5C3.89543 7 3 7.89543 3 9V11C3 11.7403 3.4022 12.3866 4 12.7324V19C4 20.1046 4.89543 21 6 21H18C19.1046 21 20 20.1046 20 19V12.7324C20.5978 12.3866 21 11.7403 21 11V9C21 7.89543 20.1046 7 19 7H18.7792C18.9237 6.63512 19 6.24292 19 5.84287C19 5.00933 18.6689 4.20993 18.0795 3.62053C17.4901 3.03113 16.6907 2.70001 15.8571 2.70001ZM7.33473 5.03475C7.54906 4.82042 7.83975 4.70001 8.14286 4.70001C9.08676 4.70001 9.78946 5.35978 10.3202 6.32479C10.4426 6.54739 10.5473 6.77216 10.6357 6.98573H8.14286C7.83975 6.98573 7.54906 6.86532 7.33473 6.65099C7.12041 6.43666 7 6.14597 7 5.84287C7 5.53976 7.12041 5.24907 7.33473 5.03475ZM15.8571 6.98573H13.3643C13.4527 6.77216 13.5574 6.54739 13.6798 6.32479C14.2105 5.35978 14.9132 4.70001 15.8571 4.70001C16.1602 4.70001 16.4509 4.82042 16.6653 5.03475C16.8796 5.24907 17 5.53976 17 5.84287C17 6.14597 16.8796 6.43666 16.6653 6.65099C16.4509 6.86532 16.1602 6.98573 15.8571 6.98573ZM11 11H5V9.6C5 9.26863 5.26863 9 5.6 9H11V11ZM13 11H19V9.6C19 9.26863 18.7314 9 18.4 9H13V11ZM6.6 19C6.26863 19 6 18.7314 6 18.4V13H18V18.4C18 18.7314 17.7314 19 17.4 19H6.6Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-star-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1216 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.46412 13.5485L8.65193 17.0322C8.61175 17.2045 8.79871 17.3403 8.95016 17.2487L12.0001 15.4054L15.0499 17.2487C15.2014 17.3403 15.3884 17.2045 15.3482 17.0322L14.536 13.5485L17.2468 11.2012C17.3806 11.0853 17.3091 10.8656 17.1327 10.8507L13.5802 10.5499L12.1803 7.2316C12.1116 7.06871 11.8808 7.06855 11.8119 7.23134L10.4199 10.5177L6.84661 10.8334C6.67068 10.8489 6.59977 11.0682 6.73328 11.1838L9.46412 13.5485ZM7.24224 14.2701L5.84265 20.2733C5.72212 20.7903 6.28299 21.1976 6.73733 20.923L12.0001 17.7423L17.2628 20.923C17.7171 21.1976 18.278 20.7903 18.1575 20.2733L16.7579 14.2701L21.4244 10.2293C21.8257 9.8818 21.6112 9.22265 21.0823 9.17787L14.9532 8.65901L12.5518 2.96679C12.3456 2.47812 11.6533 2.47763 11.4465 2.966L9.04693 8.63123L2.91021 9.17333C2.38244 9.21995 2.16971 9.87776 2.57024 10.2246L7.24224 14.2701Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-document-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:964 -->
+    <path d="M15 8C15.5523 8 16 7.55228 16 7V6H9C8.44772 6 8 6.44772 8 7V8H15Z" fill="currentColor"/>
+    <path d="M12 16C12.5523 16 13 15.5523 13 15V14H9C8.44772 14 8 14.4477 8 15V16H12Z" fill="currentColor"/>
+    <path d="M16 11C16 11.5523 15.5523 12 15 12H8V11C8 10.4477 8.44772 10 9 10H16V11Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M6 2C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V4C20 2.89543 19.1046 2 18 2H6ZM17.4 4C17.7314 4 18 4.26863 18 4.6L18 19.4C18 19.7314 17.7314 20 17.4 20H6.6C6.26863 20 6 19.7314 6 19.4V4.6C6 4.26863 6.26863 4 6.6 4L17.4 4Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-cup-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:920 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.44531 4.66791C8.1156 3.55443 10.0597 2.99732 12.0014 3.00001C13.9289 3.00268 15.8824 3.55311 17.5547 4.66791C17.6846 4.75452 17.7903 4.86877 17.866 5.00001L19 5.00002C19.8188 5.00002 20.5888 5.34914 21.1453 5.94533C21.6995 6.53918 22 7.33075 22 8.14287C22 10.1641 20.6342 11.3942 19.5077 12.058C18.9317 12.3974 18.3645 12.6243 17.9463 12.7662C17.8303 12.8055 17.7245 12.8388 17.6315 12.8664C17.3511 13.4675 16.925 14.0076 16.403 14.5125C15.5617 15.3263 14.3913 16.1257 13 17.0135V20H16V21C16 21.5523 15.5523 22 15 22H8V21C8 20.4477 8.44772 20 9 20H11V17.0107C9.57738 16.0856 8.41376 15.1972 7.57523 14.3345C7.13478 13.8814 6.75096 13.4016 6.47247 12.8966C6.35751 12.8641 6.21546 12.8211 6.0537 12.7662C5.63554 12.6243 5.06829 12.3974 4.49231 12.058C3.36582 11.3942 2 10.1641 2 8.14287C2 7.33075 2.30047 6.53918 2.85473 5.94533C3.41117 5.34914 4.18122 5.00002 5 5.00002L6.13395 5.00001C6.20971 4.86877 6.3154 4.75452 6.44531 4.66791ZM6 7.00001L5 7.00002C4.75792 7.00002 4.51055 7.10242 4.31684 7.30996C4.12096 7.51984 4 7.81836 4 8.14287C4 9.12161 4.63418 9.82016 5.50769 10.3349C5.67263 10.4321 5.83888 10.5179 6 10.5932V7.00001ZM18 10.5932V7.00001L19 7.00002C19.2421 7.00002 19.4895 7.10242 19.6832 7.30996C19.879 7.51984 20 7.81836 20 8.14287C20 9.12161 19.3658 9.82016 18.4923 10.3349C18.3274 10.4321 18.1611 10.5179 18 10.5932ZM16 6.28844C16 6.14504 15.9236 6.01187 15.7971 5.94434C14.6218 5.31704 13.3065 5.00182 11.9986 5.00001C10.686 4.99819 9.37696 5.31504 8.20255 5.94389C8.07626 6.01152 8 6.14457 8 6.28783V11.2054C8 11.5661 8.22239 12.1309 9.00935 12.9405C9.68762 13.6383 10.6843 14.4141 12.003 15.277C13.3494 14.4152 14.3379 13.7275 15.0125 13.075C15.7464 12.3651 16 11.8016 16 11.2054V6.28844Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-flame-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:992 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.652 3.14665C14.6321 2.44497 13.8478 1.89003 13.14 2.31287C11.1099 3.52567 10.1706 5.61632 9.73272 7.39628C9.59842 7.94227 9.50766 8.47313 9.44701 8.96187C9.42338 8.81619 9.40777 8.658 9.40224 8.48632C9.37968 7.78593 8.59887 7.23644 7.89333 7.65461C5.62803 8.99721 4.09998 11.4799 4.09998 14.25C4.09998 18.5055 7.66805 21.9 12 21.9C16.3319 21.9 19.9 18.5055 19.9 14.25C19.9 11.1994 18.4272 9.33935 17.1109 7.78497C15.9559 6.42291 14.7056 5.03089 14.652 3.14665ZM11.4806 7.82623C11.7649 6.67039 12.2527 5.52995 13.0633 4.66661C13.5426 6.47639 14.741 7.77173 15.7373 8.94821C17.0128 10.4544 18.1 11.8847 18.1 14.25C18.1 16.2823 17.0112 18.0926 15.3457 19.1433C15.3813 18.9532 15.4 18.7551 15.4 18.55C15.4 17.9069 15.1855 17.2572 14.9277 16.694C14.6643 16.1182 14.3213 15.5597 13.9916 15.0802C13.5868 14.4913 13.146 13.919 12.663 13.3914C12.4925 13.2057 12.252 13.1 12 13.1C11.7479 13.1 11.5074 13.2057 11.337 13.3914C10.854 13.919 10.4131 14.4913 10.0083 15.0802C9.67869 15.5597 9.33569 16.1182 9.07222 16.694C8.81447 17.2572 8.59998 17.9069 8.59998 18.55C8.59998 18.7547 8.61837 18.9527 8.65351 19.1428C6.98845 18.092 5.89998 16.282 5.89998 14.25C5.89998 12.5726 6.64148 11.0171 7.82968 9.93088C8.27627 11.3395 9.25885 11.9732 9.73001 12.1951C10.4842 12.5503 11.1699 11.9107 11.1409 11.2506C11.122 10.8199 11.0978 9.38269 11.4806 7.82623ZM11.4916 16.0999C11.6656 15.8468 11.8402 15.6117 12 15.4059C12.1597 15.6117 12.3343 15.8468 12.5083 16.0999C12.8037 16.5295 13.0857 16.9944 13.291 17.443C13.502 17.9041 13.6 18.2798 13.6 18.55C13.6 19.2762 12.9979 19.9307 11.987 19.9307C10.989 19.9307 10.4 19.2877 10.4 18.55C10.4 18.2798 10.498 17.9041 10.709 17.443C10.9143 16.9944 11.1963 16.5295 11.4916 16.0999Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-edit-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:976 -->
+    <path d="M15.932 4.07576C15.694 4.30943 15.6923 4.6923 15.9281 4.92813L19.0757 8.07572C19.31 8.31003 19.6899 8.31003 19.9242 8.07572L21.2969 6.70301C21.6859 6.31408 21.6877 5.68407 21.301 5.2929L18.7466 2.70879C18.3592 2.31694 17.7279 2.31225 17.3347 2.6983L15.932 4.07576Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.5322 9.46776L7.99997 20L4.47084 20.7058C3.77112 20.8458 3.1542 20.2288 3.29415 19.5291L3.99997 16L14.5732 5.47087C14.8087 5.23644 15.1898 5.23794 15.4233 5.47421L18.5346 8.62169C18.7667 8.85639 18.7656 9.2344 18.5322 9.46776ZM5.84366 18.3916C5.70371 18.4196 5.58033 18.2962 5.60832 18.1563L5.84193 16.9883L14.8466 8.02121C14.925 7.94306 15.0521 7.94356 15.1299 8.02232L15.9939 8.89638C16.0713 8.97461 16.0709 9.10061 15.9931 9.1784L7.01395 18.1576L5.84366 18.3916Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-show-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1186 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12ZM14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.35897 6.18493C3.36752 7.64155 1.91453 9.57991 1 12C1.91453 14.4201 3.36752 16.3584 5.35897 17.8151C7.35043 19.2717 9.5641 20 12 20C14.4359 20 16.6496 19.2717 18.641 17.8151C20.6325 16.3584 22.0855 14.4201 23 12C22.0855 9.57991 20.6325 7.64155 18.641 6.18493C16.6496 4.72831 14.4359 4 12 4C9.5641 4 7.35043 4.72831 5.35897 6.18493ZM12 18C9.9945 18 8.19325 17.4103 6.53971 16.2008C5.42453 15.3851 4.50765 14.3895 3.78808 13.196C3.34473 12.4606 3.34473 11.5394 3.78808 10.804C4.50765 9.61048 5.42453 8.61489 6.53971 7.7992C8.19325 6.58974 9.9945 6 12 6C14.0055 6 15.8067 6.58974 17.4603 7.7992C18.5755 8.61489 19.4923 9.61048 20.2119 10.804C20.6553 11.5394 20.6553 12.4606 20.2119 13.196C19.4923 14.3895 18.5755 15.3851 17.4603 16.2008C15.8067 17.4103 14.0055 18 12 18Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-hide-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1018 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M17.2698 18.684L19.7929 21.2071L20.5 20.5C20.8905 20.1095 20.8905 19.4763 20.5 19.0858L4.20709 2.79291L3.49999 3.50001C3.10946 3.89054 3.10946 4.5237 3.49999 4.91423L5.02412 6.43837C3.20385 7.86379 1.86247 9.71767 1 12C1.91453 14.4201 3.36752 16.3584 5.35897 17.8151C7.35043 19.2717 9.5641 20 12 20C13.8904 20 15.647 19.5613 17.2698 18.684ZM15.7795 17.1938L14.0319 15.4462C13.4364 15.7981 12.7418 16 12 16C9.79086 16 8 14.2091 8 12C8 11.2582 8.20193 10.5636 8.55381 9.96805L6.45073 7.86498C5.37567 8.66824 4.48843 9.64237 3.78808 10.804C3.34473 11.5394 3.34473 12.4606 3.78808 13.196C4.50765 14.3895 5.42453 15.3851 6.53971 16.2008C8.19325 17.4103 9.9945 18 12 18C13.3462 18 14.6003 17.7343 15.7795 17.1938ZM10.0677 11.482C10.0236 11.6472 10 11.8208 10 12C10 13.1046 10.8954 14 12 14C12.1792 14 12.3528 13.9764 12.518 13.9323L10.0677 11.482Z" fill="currentColor"/>
+    <path d="M23 12C22.3884 13.6183 21.5361 15.0213 20.443 16.2088L19.0273 14.7931C19.4685 14.3058 19.8634 13.7741 20.2119 13.196C20.6553 12.4606 20.6553 11.5394 20.2119 10.804C19.4923 9.61048 18.5755 8.61489 17.4603 7.7992C15.8067 6.58974 14.0055 6 12 6C11.4419 6 10.8996 6.04567 10.3719 6.13767L8.71588 4.48166C9.7616 4.16055 10.8563 4 12 4C14.4359 4 16.6496 4.72831 18.641 6.18493C20.6325 7.64155 22.0855 9.57991 23 12Z" fill="currentColor"/>
+    <path d="M12.2414 8.00716C14.2583 8.12721 15.8728 9.74172 15.9928 11.7586L12.2414 8.00716Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-link-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1054 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5014 8.49861C15.1109 8.10808 14.4778 8.10808 14.0872 8.49861L7.79292 14.7929L8.50003 15.5C8.89055 15.8905 9.52372 15.8905 9.91424 15.5L16.2086 9.20571L15.5014 8.49861Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2929 4.22184C13.6361 1.87869 17.435 1.87869 19.7782 4.22184C22.1213 6.56498 22.1213 10.364 19.7782 12.7071L17.2782 15.2071L16.8539 14.7829C16.3072 14.2361 16.3072 13.3497 16.8539 12.803L18.364 11.2929C19.9261 9.73081 19.9261 7.19815 18.364 5.63605C16.8019 4.07395 14.2692 4.07395 12.7071 5.63605L11.1971 7.1461C10.6503 7.69284 9.7639 7.69284 9.21717 7.1461L8.7929 6.72184L11.2929 4.22184ZM11.2929 18.364L12.803 16.8539C13.3497 16.3072 14.2361 16.3072 14.7829 16.8539L15.2071 17.2782L12.7071 19.7782C10.364 22.1213 6.56498 22.1213 4.22184 19.7782C1.87869 17.435 1.87869 13.6361 4.22184 11.2929L6.72181 8.79293L7.14607 9.2172C7.69281 9.76393 7.69281 10.6504 7.14607 11.1971L5.63605 12.7071C4.07395 14.2692 4.07395 16.8019 5.63605 18.364C7.19815 19.9261 9.73081 19.9261 11.2929 18.364Z" fill="currentColor"/>
+  </symbol>
+
+  <!-- Trading -->
+  <symbol id="ic-market-watch-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1078 -->
+    <path d="M15 12.8V17H16.2C16.6418 17 17 16.6418 17 16.2V12.8C17 12.3582 16.6418 12 16.2 12H15.8C15.3582 12 15 12.3582 15 12.8Z" fill="currentColor"/>
+    <path d="M11 17V7.8C11 7.35817 11.3582 7 11.8 7H12.2C12.6418 7 13 7.35817 13 7.8V17H11Z" fill="currentColor"/>
+    <path d="M7 16.2C7 16.6418 7.35817 17 7.8 17H9V9.8C9 9.35817 8.64183 9 8.2 9H7.8C7.35817 9 7 9.35817 7 9.8V16.2Z" fill="currentColor"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M3 5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5ZM5.6 19C5.26863 19 5 18.7314 5 18.4L5 5.6C5 5.26863 5.26863 5 5.6 5L18.4 5C18.7314 5 19 5.26863 19 5.6V18.4C19 18.7314 18.7314 19 18.4 19H5.6Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-pattern-trend-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1128 -->
+    <path d="M10.9999 12.9213V2H11.9999C12.5522 2 12.9999 2.44772 12.9999 3V14.5859L12.9544 14.6314L10.9999 12.9213Z" fill="currentColor"/>
+    <path d="M8.99994 11.1713V6H6.99994V12.9768L8.98443 11.1577L8.99994 11.1713Z" fill="currentColor"/>
+    <path d="M4.99994 10V14.8102L2.99994 16.6435V11C2.99994 10.4477 3.44765 10 3.99994 10H4.99994Z" fill="currentColor"/>
+    <path d="M18.5857 12H15.9999C15.4477 12 14.9999 11.5523 14.9999 11V10H21.9999V17H20.9999C20.4477 17 19.9999 16.5523 19.9999 16V13.4142L13.0455 20.3686L9.01546 16.8423L3.67567 21.7371L2.32422 20.2628L8.98443 14.1576L12.9544 17.6313L18.5857 12Z" fill="currentColor"/>
+  </symbol>
+
+  <!-- System -->
+  <symbol id="ic-save-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1164 -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M5 21H19C20.1046 21 21 20.1046 21 19V7.91421C21 7.649 20.8946 7.39464 20.7071 7.20711L16.7929 3.29289C16.6054 3.10536 16.351 3 16.0858 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21ZM5 18.2C5 18.6418 5.35817 19 5.8 19H7V16C7 14.8954 7.89543 14 9 14H15C16.1046 14 17 14.8954 17 16V19H19V8.41127C19 8.35823 18.9789 8.30735 18.9414 8.26985L15.7302 5.05858C15.6926 5.02107 15.6418 5 15.5887 5H9V6.2C9 6.64183 9.35817 7 9.8 7H14C14.5523 7 15 7.44772 15 8V9H9C7.89543 9 7 8.10457 7 7V5L5.8 5C5.35817 5 5 5.35817 5 5.8L5 18.2ZM15 19H9V16.8C9 16.3582 9.35817 16 9.8 16H14.2C14.6418 16 15 16.3582 15 16.8L15 19Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-download-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:968 -->
+    <path d="M13 3.6C13 3.26863 12.7314 3 12.4 3H11.6C11.2686 3 11 3.26863 11 3.6V11.5858L9.41423 9.99999C9.0237 9.60946 8.39054 9.60946 8.00001 9.99999L7.29291 10.7071L12 15.4142L16.7071 10.7071L16 9.99999C15.6095 9.60946 14.9763 9.60946 14.5858 9.99999L13 11.5858V3.6Z" fill="currentColor"/>
+    <path d="M3 13H4C4.55228 13 5 13.4477 5 14V18.4C5 18.7314 5.26863 19 5.6 19H18.4C18.7314 19 19 18.7314 19 18.4V14C19 13.4477 19.4477 13 20 13H21V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V13Z" fill="currentColor"/>
+  </symbol>
+
+  <!-- Media -->
+  <symbol id="ic-pause-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1140 -->
+    <path d="M8 5C8.94281 5 9.41414 5.00008 9.70703 5.29297C9.99992 5.58586 10 6.05719 10 7V17C10 17.9428 9.99992 18.4141 9.70703 18.707C9.41414 18.9999 8.94281 19 8 19V5Z" fill="currentColor"/>
+    <path d="M16 19C15.0572 19 14.5859 18.9999 14.293 18.707C14.0001 18.4141 14 17.9428 14 17V7C14 6.05719 14.0001 5.58586 14.293 5.29297C14.5859 5.00008 15.0572 5 16 5V19Z" fill="currentColor"/>
+  </symbol>
+
+  <!-- Custom (prototype-only, non-DS): brand triangle bullet -->
+  <symbol id="ic-bullet-triangle-24" viewBox="0 0 10 10" fill="currentColor"><path d="M2 1.5L8 5 2 8.5z"/></symbol>
 </svg>
 
 <div id="root"></div>
@@ -572,9 +1172,30 @@ const { useState, useCallback, useRef, useEffect, createContext, useContext } = 
    DS COMPONENTS — matching RIG v2.51.0 Storybook
    ═══════════════════════════════════════════════════════ */
 
+/* Maps the prototype's semantic icon name to its canonical DS name in
+   "Icons (1 brand)". Resolves to a sprite href "#ic-<ds>-24".
+   Only names that exist in the Figma DS are valid targets here.
+   Add new semantic aliases here when wiring a new icon. */
+const DS_ICON_ALIAS = {
+  'close':           'cross',
+  'chart':           'market-watch',
+  'trending-up':     'upward',
+  'trending-down':   'downward',
+  'clipboard':       'document',
+  'trophy':          'cup',
+  'alert-triangle':  'alert',
+  'alert-circle':    'alert',
+  'x-circle':        'cross-round',
+  'eye':             'show',
+  'eye-off':         'hide',
+  'lightbulb':       'info',
+  'rocket':          'flame',
+};
+const dsIc = (name) => `#ic-${DS_ICON_ALIAS[name] || name}-24`;
+
 const Icon = ({ name, size = 'sm', className = '', style }) => (
   <span className={`icon icon--${size} ${className}`} style={style}>
-    <svg><use href={`#i-${name}`} /></svg>
+    <svg><use href={dsIc(name)} /></svg>
   </span>
 );
 
@@ -583,21 +1204,21 @@ const Button = ({ children, variant = 'primary', size = 'm', icon, iconRight, bl
     className={`ds-btn ds-btn--${size} ds-btn--${variant} ${block ? 'ds-btn--block' : ''} ${className}`}
     onClick={onClick} disabled={disabled} style={style}
   >
-    {icon && <svg><use href={`#i-${icon}`} /></svg>}
+    {icon && <svg><use href={dsIc(icon)} /></svg>}
     {children}
-    {iconRight && <svg><use href={`#i-${iconRight}`} /></svg>}
+    {iconRight && <svg><use href={dsIc(iconRight)} /></svg>}
   </button>
 );
 
 const IconButton = ({ icon, size = 's', onClick, title, className = '' }) => (
   <button className={`ds-icon-btn ds-icon-btn--${size} ${className}`} onClick={onClick} title={title}>
-    <svg><use href={`#i-${icon}`} /></svg>
+    <svg><use href={dsIc(icon)} /></svg>
   </button>
 );
 
 const Tag = ({ label, variant = 'neutral', icon }) => (
   <span className={`ds-tag ds-tag--${variant}`}>
-    {icon && <svg><use href={`#i-${icon}`} /></svg>}
+    {icon && <svg><use href={dsIc(icon)} /></svg>}
     {label}
   </span>
 );
@@ -613,18 +1234,104 @@ const Chips = ({ label, selected, onClick, size }) => (
 
 const ChipsGroup = ({ children }) => <div className="ds-chips-group">{children}</div>;
 
-const Input = ({ label, description, error, type = 'text', children, ...props }) => (
-  <div className="ds-input-wrap">
-    {label && <label className="ds-input-label">{label}</label>}
-    {type === 'select' ? (
-      <select className={`ds-input-field ${error ? 'ds-input-field--error' : ''}`} {...props}>{children}</select>
-    ) : type === 'textarea' ? (
-      <textarea className={`ds-input-field ${error ? 'ds-input-field--error' : ''}`} {...props} />
-    ) : (
-      <input type={type} className={`ds-input-field ${error ? 'ds-input-field--error' : ''}`} {...props} />
-    )}
-    {error && <div className="ds-input-error">{error}</div>}
-    {description && !error && <div className="ds-input-desc">{description}</div>}
+/* DS Input — label floats inside the field per RIG Storybook.
+   Supports leftIcon, rightIcon, prefix, textarea, and a "button" mode used by
+   wrappers like CalendarInput and Select that handle value rendering themselves.
+*/
+const Input = ({
+  label, description, error, type = 'text',
+  leftIcon, rightIcon, prefix,
+  value, onChange, placeholder, disabled,
+  onClick, asButton, children,
+  size = 'M',
+  style, className = '',
+  ...rest
+}) => {
+  const [focused, setFocused] = useState(false);
+  const hasValue = asButton ? !!children : value !== undefined && value !== null && value !== '';
+  const shellCls = [
+    'ds-input-shell',
+    size === 'S' ? 'ds-input-shell--s' : '',
+    focused ? 'ds-input-shell--focus' : '',
+    error ? 'ds-input-shell--error' : '',
+    disabled ? 'ds-input-shell--disabled' : '',
+    asButton ? 'ds-input-shell--button' : '',
+    hasValue ? 'ds-input-shell--filled' : '',
+    type === 'textarea' ? 'ds-input-shell--textarea' : '',
+  ].filter(Boolean).join(' ');
+
+  const renderIcon = (name, side) => name && (
+    <span className={`ds-input-shell__icon ds-input-shell__icon--${side}`}>
+      <svg><use href={dsIc(name)} /></svg>
+    </span>
+  );
+
+  return (
+    <div className={`ds-input-wrap ${className}`} style={style}>
+      {label && <label className="ds-input-label">{label}</label>}
+      <div className={shellCls} onClick={asButton ? onClick : undefined}
+           onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>
+        {renderIcon(leftIcon, 'left')}
+        {prefix && <span className="ds-input-shell__prefix">{prefix}</span>}
+        {asButton ? (
+          <span className="ds-input-field" style={{display:'flex', alignItems:'center'}}>{children}</span>
+        ) : type === 'textarea' ? (
+          <textarea className="ds-input-field"
+            value={value} onChange={onChange} placeholder={placeholder} disabled={disabled}
+            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+            {...rest} />
+        ) : (
+          <input type={type} className="ds-input-field"
+            value={value ?? ''} onChange={onChange} placeholder={placeholder} disabled={disabled}
+            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
+            {...rest} />
+        )}
+        {renderIcon(rightIcon, 'right')}
+      </div>
+      {error && <div className="ds-input-error">{error}</div>}
+      {description && !error && <div className="ds-input-desc">{description}</div>}
+    </div>
+  );
+};
+
+/* DS Dropdown (Select) — DS Input trigger + options popover */
+const Select = ({ label, value, onChange, options = [], placeholder, description, error, leftIcon }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+  const selected = options.find(o => o.value === value);
+  return (
+    <div ref={ref} style={{position:'relative'}}>
+      <Input
+        asButton label={label} leftIcon={leftIcon} rightIcon="chevron-down"
+        description={description} error={error}
+        onClick={() => setOpen(v => !v)}
+      >
+        {selected ? selected.label : (placeholder || '')}
+      </Input>
+      {open && (
+        <div className="ds-dropdown">
+          {options.map(opt => (
+            <div key={opt.value}
+                 className={`ds-dropdown__option ${opt.value === value ? 'ds-dropdown__option--selected' : ''}`}
+                 onClick={() => { onChange && onChange(opt.value); setOpen(false); }}>
+              {opt.label}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* DS ProgressBar */
+const ProgressBar = ({ value = 0, size = 'm', onBrand = false, className = '' }) => (
+  <div className={`ds-progress ds-progress--${size} ${onBrand ? 'ds-progress--on-brand' : ''} ${className}`}>
+    <div className="ds-progress__bar" style={{width: `${Math.max(0, Math.min(100, value))}%`}} />
   </div>
 );
 
@@ -655,7 +1362,7 @@ const Tab = ({ label, active, onClick }) => (
 const Notification = ({ variant = 'negative', title, description, actions, icon }) => (
   <div className={`ds-notification ds-notification--${variant}`}>
     {icon && <span className="ds-notification__icon" style={{color: variant === 'negative' ? 'var(--ds-negative)' : variant === 'warning' ? 'var(--ds-warning)' : 'var(--ds-primary)'}}>
-      <svg width="20" height="20"><use href={`#i-${icon}`} /></svg>
+      <svg width="20" height="20"><use href={dsIc(icon)} /></svg>
     </span>}
     <div className="ds-notification__content">
       {title && <div className="ds-notification__title" style={{color: variant === 'negative' ? 'var(--ds-negative-text)' : undefined}}>{title}</div>}
@@ -669,21 +1376,35 @@ const Container = ({ children, style }) => (
   <div className="ds-container" style={style}>{children}</div>
 );
 
-const Modal = ({ open, onClose, title, children, footer, size = 'm' }) => {
+const Modal = ({ open, onClose, title, subtitle, children, footer, size = 'm' }) => {
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => { document.body.style.overflow = prev; document.removeEventListener('keydown', onKey); };
+  }, [open, onClose]);
   if (!open) return null;
-  const maxWidth = size === 'l' ? 640 : 520;
-  return (
+  const maxWidth = size === 'l' ? 640 : size === 's' ? 420 : 520;
+  const modal = (
     <div className="ds-modal-overlay" onClick={onClose}>
       <div className="ds-modal" style={{maxWidth}} onClick={e => e.stopPropagation()}>
         <div className="ds-modal__header">
-          <span className="ds-heading-03">{title}</span>
-          <button style={{background:'none',border:'none',fontSize:22,cursor:'pointer',color:'var(--ds-text-secondary)',width:32,height:32,borderRadius:'50%',display:'inline-flex',alignItems:'center',justifyContent:'center'}} onClick={onClose} aria-label="Закрыть">&times;</button>
+          <div className="ds-modal__title">
+            {title && <div className="rig-title-03">{title}</div>}
+            {subtitle && <div style={{marginTop:'var(--ds-dim-s)', color:'var(--ds-text-muted)', fontSize:14, lineHeight:'20px'}}>{subtitle}</div>}
+          </div>
+          <button className="ds-modal__close" onClick={onClose} aria-label="Закрыть" type="button">
+            <svg><use href="#ic-cross-24"/></svg>
+          </button>
         </div>
         <div className="ds-modal__body">{children}</div>
         {footer && <div className="ds-modal__footer">{footer}</div>}
       </div>
     </div>
   );
+  return ReactDOM.createPortal(modal, document.body);
 };
 
 /* ═══════════════════════════════════════════════════════
@@ -777,12 +1498,17 @@ const CONTEST_TYPES = {
 
 const CONTEST_TYPE_LIST = Object.values(CONTEST_TYPES);
 
+const InfoTip = ({ children, label, className = '', placement = 'top' }) => (
+  <span className={`info-tip info-tip--${placement} ${className}`} tabIndex={0} aria-label={label || (typeof children === 'string' ? children : 'Подробнее')}>
+    <span className="info-tip__icon"><svg><use href="#ic-info-24" /></svg></span>
+    <span className="info-tip__bubble" role="tooltip">{children}</span>
+  </span>
+);
+
 const ContestTypeInfo = ({ typeId, className = '' }) => {
   const [open, setOpen] = useState(false);
   const t = CONTEST_TYPES[typeId];
   if (!t) return null;
-
-  const stop = e => e.stopPropagation();
 
   return (
     <>
@@ -793,26 +1519,24 @@ const ContestTypeInfo = ({ typeId, className = '' }) => {
         title={`Как считается Score — ${t.title}`}
         aria-label={`Информация о подсчёте Score для ${t.title}`}
       >
-        <svg><use href="#i-info" /></svg>
+        <svg><use href="#ic-info-24" /></svg>
       </button>
-      {open && (
-        <div onClick={stop}>
-          <Modal
-            open={open}
-            onClose={() => setOpen(false)}
-            size="l"
-            title={
-              <span style={{display:'inline-flex',alignItems:'center',gap:10}}>
-                <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32}}>
-                  <svg width="18" height="18"><use href={`#i-${t.icon}`} /></svg>
-                </span>
-                <span>{t.title} — как считается Score</span>
-              </span>
-            }
-            footer={<Button variant="primary" onClick={() => setOpen(false)}>Понятно</Button>}
-          >
-            <div style={{display:'flex',flexDirection:'column',gap:20}}>
-              <div style={{fontSize:14,lineHeight:'20px',color:'var(--ds-text-secondary)'}}>{t.desc}. Участники ранжируются по метрике <strong style={{color:'var(--ds-text-primary)'}}>«{t.metric}»</strong>.</div>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        size="l"
+        title={
+          <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+            <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32}}>
+              <svg width="18" height="18"><use href={dsIc(t.icon)} /></svg>
+            </span>
+            <span>{t.title} — как считается Score</span>
+          </span>
+        }
+        footer={<Button variant="primary" size="m" onClick={() => setOpen(false)}>Понятно</Button>}
+      >
+            <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-4xl)'}}>
+              <div className="rig-body-02" style={{color:'var(--ds-text-secondary)'}}>{t.desc}. Участники ранжируются по метрике <strong style={{color:'var(--ds-text-primary)'}}>«{t.metric}»</strong>.</div>
 
               <div className="score-section">
                 <div className="score-section__title">Формула</div>
@@ -821,19 +1545,15 @@ const ContestTypeInfo = ({ typeId, className = '' }) => {
 
               <div className="score-section">
                 <div className="score-section__title">Правила учёта</div>
-                <ul className="score-rules">
-                  {t.scoring.rules.map((r, i) => <li key={i}>{r}</li>)}
-                </ul>
+                <BulletList items={t.scoring.rules} />
               </div>
 
               <div className="score-section">
                 <div className="score-section__title">Тай-брейк</div>
-                <div style={{fontSize:14,lineHeight:'20px',color:'var(--ds-text-secondary)'}}>{t.scoring.tiebreak}</div>
+                <div className="rig-body-02" style={{color:'var(--ds-text-secondary)'}}>{t.scoring.tiebreak}</div>
               </div>
             </div>
-          </Modal>
-        </div>
-      )}
+      </Modal>
     </>
   );
 };
@@ -885,14 +1605,25 @@ const TopNav = ({ role, onRoleChange }) => (
 );
 
 const Breadcrumb = ({ items }) => (
-  <div className="breadcrumb">
-    {items.map((item, i) => (
-      <React.Fragment key={i}>
-        {i > 0 && <span className="sep">/</span>}
-        {item.onClick ? <a onClick={item.onClick}>{item.label}</a> : <span className="current">{item.label}</span>}
-      </React.Fragment>
-    ))}
-  </div>
+  <nav className="breadcrumb" aria-label="Breadcrumb">
+    <ol className="breadcrumb__list">
+      {items.map((item, i) => {
+        const isLast = i === items.length - 1;
+        return (
+          <li key={i} className="breadcrumb__item">
+            {i > 0 && (
+              <span className="breadcrumb__sep" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </span>
+            )}
+            {isLast || !item.onClick
+              ? <span className="breadcrumb__current" aria-current={isLast ? 'page' : undefined}>{item.label}</span>
+              : <button type="button" className="breadcrumb__link" onClick={item.onClick}>{item.label}</button>}
+          </li>
+        );
+      })}
+    </ol>
+  </nav>
 );
 
 const StatCard = ({ value, label, color, trend }) => (
@@ -912,12 +1643,21 @@ const Medal = ({ position }) => {
   return <span className={`medal ${cls}`}>{position}</span>;
 };
 
-const InfoBox = ({ icon, children }) => (
-  <div className="info-box">
-    {icon && <Icon name={icon} size="sm" style={{color:'var(--ds-primary)',marginTop:1}} />}
-    <span>{children}</span>
-  </div>
-);
+const InfoBox = ({ icon, variant = 'info', children }) => {
+  const accentByVariant = {
+    info:     'var(--ds-primary)',
+    positive: 'var(--ds-positive)',
+    warning:  'var(--ds-warning)',
+    negative: 'var(--ds-negative)',
+  };
+  const cls = variant === 'info' ? 'info-box' : `info-box info-box--${variant}`;
+  return (
+    <div className={cls}>
+      {icon && <Icon name={icon} size="sm" style={{color: accentByVariant[variant], marginTop: 1}} />}
+      <span>{children}</span>
+    </div>
+  );
+};
 
 /* ── Wizard Stepper ── */
 const WizardStepper = ({ currentStep, totalSteps }) => {
@@ -929,7 +1669,7 @@ const WizardStepper = ({ currentStep, totalSteps }) => {
     const isActive = i === currentStep;
     items.push(
       <div key={`d${i}`} className={`wizard-dot ${isActive ? 'wizard-dot--active' : ''} ${isDone ? 'wizard-dot--done' : ''}`}>
-        {isDone ? checkSvg : <svg><use href={`#i-digit-${i}`} /></svg>}
+        {isDone ? checkSvg : <svg><use href={`#ic-digit-${i}-24`} /></svg>}
       </div>
     );
     if (i < totalSteps) {
@@ -946,6 +1686,14 @@ const DOW = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 
 const formatDate = d => `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
 
+const MeridiemToggle = ({ value, onChange }) => (
+  <div className="time-meridiem" role="group" aria-label="AM или PM">
+    {['AM', 'PM'].map(m => (
+      <Chips key={m} label={m} selected={value === m} onClick={() => onChange(m)} size="s" />
+    ))}
+  </div>
+);
+
 const CalendarInput = ({ value, onChange, label }) => {
   const [open, setOpen] = useState(false);
   const [viewYear, setViewYear] = useState(value.getFullYear());
@@ -954,8 +1702,8 @@ const CalendarInput = ({ value, onChange, label }) => {
 
   useEffect(() => {
     const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
   const firstDay = new Date(viewYear, viewMonth, 1);
@@ -973,41 +1721,93 @@ const CalendarInput = ({ value, onChange, label }) => {
   const select = d => { onChange(new Date(viewYear, viewMonth, d)); setOpen(false); };
 
   return (
-    <div className="ds-input-wrap">
-      {label && <label className="ds-input-label">{label}</label>}
-      <div style={{position:'relative'}} ref={ref}>
-        <div className={`cal-input ${open ? 'cal-input--open' : ''}`} onClick={() => setOpen(!open)}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/></svg>
-          <span>{formatDate(value)}</span>
-        </div>
-        {open && (
-          <div className="cal-dropdown">
-            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px 12px'}}>
-              <button style={{width:28,height:28,border:'none',background:'none',borderRadius:8,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ds-text-secondary)'}} onClick={() => nav(-1)}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-              </button>
-              <span style={{fontSize:14,fontWeight:600}}>{MONTHS[viewMonth]} {viewYear}</span>
-              <button style={{width:28,height:28,border:'none',background:'none',borderRadius:8,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ds-text-secondary)'}} onClick={() => nav(1)}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-            </div>
-            <div className="cal-grid">
-              {DOW.map(d => <div key={d} style={{fontSize:12,fontWeight:600,color:'var(--ds-text-tertiary)',textAlign:'center',padding:'0 0 8px'}}>{d}</div>)}
-              {Array.from({length: startDow}).map((_,i) => <div key={`e${i}`} />)}
-              {Array.from({length: daysInMonth}).map((_,i) => {
-                const d = i + 1;
-                const dt = new Date(viewYear, viewMonth, d);
-                const isToday = dt.getTime() === today.getTime();
-                const isSelected = value && dt.getTime() === value.getTime();
-                return <button key={d} className={`cal-day ${isToday ? 'cal-day--today' : ''} ${isSelected ? 'cal-day--selected' : ''}`} onClick={() => select(d)}>{d}</button>;
-              })}
-            </div>
-            <div style={{display:'flex',gap:12,padding:'12px 16px 16px'}}>
-              <button style={{flex:1,height:40,border:'none',background:'none',borderRadius:12,fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}} onClick={() => setOpen(false)}>Закрыть</button>
-            </div>
+    <div ref={ref} style={{position:'relative'}}>
+      <Input asButton label={label} rightIcon="calendar" onClick={() => setOpen(v => !v)}>
+        {formatDate(value)}
+      </Input>
+      {open && (
+        <div className="cal-dropdown">
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0 16px 12px'}}>
+            <button style={{width:28,height:28,border:'none',background:'none',borderRadius:8,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ds-text-secondary)'}} onClick={() => nav(-1)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span style={{fontSize:14,fontWeight:600}}>{MONTHS[viewMonth]} {viewYear}</span>
+            <button style={{width:28,height:28,border:'none',background:'none',borderRadius:8,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',color:'var(--ds-text-secondary)'}} onClick={() => nav(1)}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
           </div>
-        )}
+          <div className="cal-grid">
+            {DOW.map(d => <div key={d} style={{fontSize:12,fontWeight:600,color:'var(--ds-text-tertiary)',textAlign:'center',padding:'0 0 8px'}}>{d}</div>)}
+            {Array.from({length: startDow}).map((_,i) => <div key={`e${i}`} />)}
+            {Array.from({length: daysInMonth}).map((_,i) => {
+              const d = i + 1;
+              const dt = new Date(viewYear, viewMonth, d);
+              const isToday = dt.getTime() === today.getTime();
+              const isSelected = value && dt.getTime() === value.getTime();
+              return <button key={d} className={`cal-day ${isToday ? 'cal-day--today' : ''} ${isSelected ? 'cal-day--selected' : ''}`} onClick={() => select(d)}>{d}</button>;
+            })}
+          </div>
+          <div style={{display:'flex',gap:12,padding:'12px 16px 16px'}}>
+            <button style={{flex:1,height:40,border:'none',background:'none',borderRadius:12,fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}} onClick={() => setOpen(false)}>Закрыть</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* DS Bulleted list (triangle bullets from brand assets) */
+const BulletList = ({ items, icon = 'bullet-triangle' }) => (
+  <ul className="rig-bullet-list">
+    {items.map((item, i) => (
+      <li key={i} className="rig-bullet-list__item">
+        <span className="rig-bullet-list__bullet"><svg><use href={dsIc(icon)}/></svg></span>
+        <span>{item}</span>
+      </li>
+    ))}
+  </ul>
+);
+
+/* Shared ContestCard — used in ClientContestList and wizard preview */
+const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Участвую', onAction, actionDisabled }) => {
+  const t = CONTEST_TYPES[typeId];
+  return (
+    <div className={`contest-card ${onClick ? 'contest-card--interactive' : ''}`} onClick={onClick}>
+      <div className="contest-card__head">
+        <div className={`icon-circle icon-circle--${t.circle}`} style={{width:40,height:40,flexShrink:0}}>
+          <svg width="20" height="20"><use href={dsIc(t.icon)}/></svg>
+        </div>
+        <div className="contest-card__type">
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-m)'}}>
+              <div className="contest-card__title">{name}</div>
+              <ContestTypeInfo typeId={typeId} />
+            </div>
+            {statusLabel && <div style={{marginTop:'var(--ds-dim-m)'}}><Tag label={statusLabel} variant={statusVariant} /></div>}
+          </div>
+        </div>
       </div>
+      {desc && <div className="contest-card__desc">{desc}</div>}
+      <div className="contest-card__meta">
+        {dates && <span className="contest-card__meta-item"><svg><use href="#ic-calendar-24"/></svg>{dates}</span>}
+        {participants != null && <span className="contest-card__meta-item"><svg><use href="#ic-users-24"/></svg>{participants} участников</span>}
+        {prize && <span className="contest-card__meta-item"><svg><use href="#ic-gift-24"/></svg>{prize}</span>}
+        {days && <span className="contest-card__meta-item"><svg><use href="#ic-clock-24"/></svg>{days}</span>}
+      </div>
+      {progress != null && (
+        <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-m)'}}>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:12,lineHeight:'16px',color:'var(--ds-text-muted)'}}>
+            <span>{progressText}</span>
+            {progress > 0 && <span style={{fontWeight:500,color:'var(--ds-primary)'}}>{progress}%</span>}
+          </div>
+          <ProgressBar value={progress} size="xs" />
+        </div>
+      )}
+      {onAction && (
+        <div className="contest-card__footer">
+          <Button variant="primary" size="m" onClick={e => { e.stopPropagation(); onAction(); }} disabled={actionDisabled}>{actionLabel}</Button>
+        </div>
+      )}
     </div>
   );
 };
@@ -1021,7 +1821,7 @@ const IBMyContests = ({ onNavigate }) => {
   return (
     <div className="screen-enter">
       <div className="page-header">
-        <h1 className="ds-heading-01">Мои контесты</h1>
+        <h1 className="rig-title-03">Мои контесты</h1>
         <Button variant="primary" size="m" icon="plus" onClick={() => onNavigate('wizard')}>Создать контест</Button>
       </div>
       <div style={{marginBottom:24}}>
@@ -1048,7 +1848,7 @@ const IBMyContests = ({ onNavigate }) => {
                   <td><strong>{r.name}</strong></td>
                   <td>
                     <div className="type-cell">
-                      <span className={`type-icon type-icon--${t.typeIcon}`}><svg width="14" height="14"><use href={`#i-${t.icon}`}/></svg></span>
+                      <span className={`type-icon type-icon--${t.typeIcon}`}><svg width="14" height="14"><use href={dsIc(t.icon)}/></svg></span>
                       <span>{t.title}</span>
                       <ContestTypeInfo typeId={t.id} />
                     </div>
@@ -1057,7 +1857,7 @@ const IBMyContests = ({ onNavigate }) => {
                   <td>{r.count}</td>
                   <td>
                     <div>{r.period}</div>
-                    {r.progress != null && <div className="progress-mini"><div className="progress-mini__bar" style={{width:`${r.progress}%`}} /></div>}
+                    {r.progress != null && <div style={{marginTop:'var(--ds-dim-m)'}}><ProgressBar value={r.progress} size="xs" /></div>}
                   </td>
                   <td style={{textAlign:'right'}}>
                     <div className="td-actions">
@@ -1075,168 +1875,208 @@ const IBMyContests = ({ onNavigate }) => {
   );
 };
 
+const TIMEZONES = [
+  {value: 'UTC-05', label: 'UTC−05:00 (New York)'},
+  {value: 'UTC+00', label: 'UTC+00:00 (London)'},
+  {value: 'UTC+01', label: 'UTC+01:00 (Berlin)'},
+  {value: 'UTC+03', label: 'UTC+03:00 (Moscow)'},
+  {value: 'UTC+08', label: 'UTC+08:00 (Singapore)'},
+];
+
 const IBCreateContest = ({ onNavigate }) => {
   const showToast = useToast();
   const [step, setStep] = useState(1);
   const [contestType, setContestType] = useState('volume');
   const [startDate, setStartDate] = useState(new Date(2026, 3, 15));
   const [endDate, setEndDate] = useState(new Date(2026, 4, 15));
+  const [startTime, setStartTime] = useState('12:00');
+  const [endTime, setEndTime] = useState('11:59');
+  const [startMeridiem, setStartMeridiem] = useState('AM');
+  const [endMeridiem, setEndMeridiem] = useState('PM');
+  const [timezone, setTimezone] = useState('UTC+00');
+
+  const FIXED_CONDITIONS = {
+    minBalance: 100,
+    minLot: 0.01,
+    accountScope: 'single',
+  };
+  const [prizeType, setPrizeType] = useState('bonus');
+
+  const [prizes, setPrizes] = useState([
+    {id: 1, pos: 1, amount: '500'},
+    {id: 2, pos: 2, amount: '300'},
+    {id: 3, pos: 3, amount: '100'},
+  ]);
+
+  const addPrize = () => {
+    setPrizes(prev => {
+      const nextPos = prev.length + 1;
+      const nextId = (prev[prev.length - 1]?.id || 0) + 1;
+      return [...prev, {id: nextId, pos: nextPos, amount: '50'}];
+    });
+  };
+  const removePrize = (id) => {
+    setPrizes(prev => prev.filter(p => p.id !== id).map((p, i) => ({...p, pos: i + 1})));
+  };
+  const updatePrize = (id, amount) => {
+    setPrizes(prev => prev.map(p => p.id === id ? {...p, amount} : p));
+  };
+  const prizeTotal = prizes.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
 
   const activeType = CONTEST_TYPES[contestType];
 
-  const next = () => step < 5 && setStep(step + 1);
+  const next = () => step < 4 && setStep(step + 1);
   const prev = () => step > 1 && setStep(step - 1);
+
+  const fmtShort = d => `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+  const periodString = `${fmtShort(startDate)} — ${fmtShort(endDate)}`;
 
   return (
     <div className="screen-enter">
       <Breadcrumb items={[{label: 'Мои контесты', onClick: () => onNavigate('list')}, {label: 'Создание контеста'}]} />
       <div className="wizard-layout">
         <div>
-          <WizardStepper currentStep={step} totalSteps={5} />
+          <WizardStepper currentStep={step} totalSteps={4} />
 
           {step === 1 && (
             <div>
-              <h3 className="ds-heading-03" style={{marginBottom:4}}>Тип контеста</h3>
-              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>Выберите формат соревнования</p>
-              <div className="radio-cards">
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Тип контеста</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Выберите формат соревнования</p>
+              <div className="rig-radio-cards">
                 {CONTEST_TYPE_LIST.map(t => (
-                  <div key={t.id} className={`radio-card ${contestType === t.id ? 'radio-card--selected' : ''}`} onClick={() => setContestType(t.id)}>
-                    <div className={`icon-circle icon-circle--${t.circle}`}><svg width="20" height="20"><use href={`#i-${t.icon}`}/></svg></div>
+                  <div key={t.id} className={`rig-radio-card ${contestType === t.id ? 'rig-radio-card--selected' : ''}`} onClick={() => setContestType(t.id)}>
+                    <div className={`icon-circle icon-circle--${t.circle}`}><svg width="20" height="20"><use href={dsIc(t.icon)}/></svg></div>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:'flex',alignItems:'center',gap:6}}>
-                        <div style={{fontWeight:600,fontSize:14,lineHeight:'20px'}}>{t.title}</div>
+                      <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-m)'}}>
+                        <div className="rig-body-02-bold">{t.title}</div>
                         <ContestTypeInfo typeId={t.id} />
                       </div>
-                      <div style={{fontSize:13,lineHeight:'18px',color:'var(--ds-text-muted)',marginTop:2}}>{t.desc}</div>
+                      <div className="rig-utility-01" style={{color:'var(--ds-text-muted)',marginTop:'var(--ds-dim-xs)'}}>{t.desc}</div>
                     </div>
                   </div>
                 ))}
               </div>
-              <div style={{marginTop:24, textAlign:'right'}}>
-                <Button variant="primary" iconRight="chevron-right" onClick={next}>Далее</Button>
+              <div style={{marginTop:'var(--ds-dim-5xl)', display:'flex', justifyContent:'flex-end'}}>
+                <Button variant="primary" size="m" iconRight="arrow-right" onClick={next}>Далее</Button>
               </div>
             </div>
           )}
 
           {step === 2 && (
             <div>
-              <h3 className="ds-heading-03" style={{marginBottom:4}}>Период проведения</h3>
-              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>Укажите даты начала и окончания</p>
-              <CalendarInput label="Дата начала" value={startDate} onChange={setStartDate} />
-              <CalendarInput label="Дата окончания" value={endDate} onChange={setEndDate} />
-              <InfoBox icon="lightbulb"><strong>Рекомендация:</strong> оптимальная длительность для {activeType.title} — {contestType === 'grow' ? '2–8 недель, чтобы прирост был значимым' : contestType === 'streak' ? '3–6 недель для демонстрации дисциплины' : '1–4 недели'}</InfoBox>
-              <div style={{marginTop:24, display:'flex', justifyContent:'space-between'}}>
-                <Button variant="outline" icon="arrow-left" onClick={prev}>Назад</Button>
-                <Button variant="primary" iconRight="chevron-right" onClick={next}>Далее</Button>
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Период проведения</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Укажите даты, время и часовой пояс</p>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
+                <CalendarInput label="Дата начала" value={startDate} onChange={setStartDate} />
+                <div className="time-with-meridiem">
+                  <Input label="Время начала" leftIcon="clock" value={startTime} onChange={e => setStartTime(e.target.value)} />
+                  <MeridiemToggle value={startMeridiem} onChange={setStartMeridiem} />
+                </div>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
+                <CalendarInput label="Дата окончания" value={endDate} onChange={setEndDate} />
+                <div className="time-with-meridiem">
+                  <Input label="Время окончания" leftIcon="clock" value={endTime} onChange={e => setEndTime(e.target.value)} />
+                  <MeridiemToggle value={endMeridiem} onChange={setEndMeridiem} />
+                </div>
+              </div>
+              <Select label="Часовой пояс" leftIcon="globe" value={timezone} onChange={setTimezone} options={TIMEZONES} />
+              <InfoBox icon="lightbulb"><span><strong>Рекомендация:</strong> оптимальная длительность для {activeType.title} — {contestType === 'grow' ? '2–8 недель, чтобы прирост был значимым' : contestType === 'streak' ? '3–6 недель для демонстрации дисциплины' : '1–4 недели'}</span></InfoBox>
+              <div style={{marginTop:'var(--ds-dim-5xl)', display:'flex', justifyContent:'space-between'}}>
+                <Button variant="outline" size="m" icon="arrow-left" onClick={prev}>Назад</Button>
+                <Button variant="primary" size="m" iconRight="arrow-right" onClick={next}>Далее</Button>
               </div>
             </div>
           )}
 
           {step === 3 && (
             <div>
-              <h3 className="ds-heading-03" style={{marginBottom:4}}>Правила контеста</h3>
-              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>
-                Настройте условия участия для <strong>{activeType.title}</strong>.{' '}
-                <span style={{display:'inline-flex',alignItems:'center',gap:4,verticalAlign:'middle'}}>
-                  <ContestTypeInfo typeId={activeType.id} />
-                  <span style={{fontSize:13}}>посмотреть формулу Score</span>
-                </span>
-              </p>
-              <Input label="Учитываемые инструменты" type="select" defaultValue="all">
-                <option value="all">Все инструменты</option>
-                <option value="forex">Только Forex</option>
-                <option value="cfd">Только CFD</option>
-              </Input>
-              {contestType === 'grow' ? (
-                <>
-                  <Input label="Минимальный стартовый баланс ($)" type="number" defaultValue="100" step="10" min="0" description="Ниже этого баланса клиенты не смогут присоединиться к контесту" />
-                  <Input label="Учёт пополнений и выводов" type="select" defaultValue="exclude" description={<span><Icon name="alert-triangle" size="xs" style={{color:'var(--ds-warning)'}} /> Рекомендуем исключить, чтобы оценить только результат торговли</span>}>
-                    <option value="exclude">Исключить из прироста</option>
-                    <option value="include">Учитывать</option>
-                  </Input>
-                </>
-              ) : (
-                <>
-                  <Input label="Минимальный объём сделки (лот)" type="number" defaultValue="0.1" step="0.01" min="0.01" />
-                  <Input label="Минимальное время удержания позиции" type="select" defaultValue="5" description={<span><Icon name="alert-triangle" size="xs" style={{color:'var(--ds-warning)'}} /> Защита от wash trading</span>}>
-                    <option value="5">5 минут</option>
-                    <option value="10">10 минут</option>
-                    <option value="15">15 минут</option>
-                    <option value="30">30 минут</option>
-                  </Input>
-                </>
-              )}
-              <Input label="Дополнительные условия (опционально)" type="textarea" placeholder="Например: только для клиентов с депозитом от $500" />
-              <div style={{marginTop:24, display:'flex', justifyContent:'space-between'}}>
-                <Button variant="outline" icon="arrow-left" onClick={prev}>Назад</Button>
-                <Button variant="primary" iconRight="chevron-right" onClick={next}>Далее</Button>
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Призовой фонд</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Определите призы для победителей</p>
+              <Select label="Тип приза" value={prizeType} onChange={setPrizeType} options={[
+                {value:'bonus', label:'Бонус на торговый счёт'},
+                {value:'cash', label:'Денежный приз'},
+                {value:'gift', label:'Подарок (описание)'},
+              ]} />
+              <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-3xl)'}}>
+                {prizes.map(p => (
+                  <div key={p.id} style={{display:'grid',gridTemplateColumns:'40px 1fr 180px 40px',gap:'var(--ds-dim-3xl)',alignItems:'center'}}>
+                    <div><Medal position={p.pos} /></div>
+                    <div className="rig-body-02">{p.pos} место</div>
+                    <Input label="Сумма приза" prefix="$" value={p.amount} onChange={e => updatePrize(p.id, e.target.value)} />
+                    {prizes.length > 1 && (
+                      <IconButton icon="close" size="s" className="ds-icon-btn--ghost" onClick={() => removePrize(p.id)} title="Удалить" />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div style={{marginTop:'var(--ds-dim-2xl)'}}>
+                <Button variant="outline" size="s" icon="plus" onClick={addPrize}>Добавить место</Button>
+              </div>
+              <InfoBox icon="lightbulb"><strong>Общий призовой фонд: ${prizeTotal.toLocaleString('en-US')}</strong></InfoBox>
+              <div style={{marginTop:'var(--ds-dim-5xl)', display:'flex', justifyContent:'space-between'}}>
+                <Button variant="outline" size="m" icon="arrow-left" onClick={prev}>Назад</Button>
+                <Button variant="primary" size="m" iconRight="arrow-right" onClick={next}>Далее</Button>
               </div>
             </div>
           )}
 
           {step === 4 && (
             <div>
-              <h3 className="ds-heading-03" style={{marginBottom:4}}>Призовой фонд</h3>
-              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>Определите призы для победителей</p>
-              <Input label="Тип приза" type="select" defaultValue="bonus">
-                <option value="bonus">Бонус на торговый счёт</option>
-                <option value="cash">Денежный приз</option>
-                <option value="gift">Подарок (описание)</option>
-              </Input>
-              {[{pos:1,val:'$500'},{pos:2,val:'$300'},{pos:3,val:'$100'}].map(p => (
-                <div key={p.pos} className="prize-row">
-                  <div style={{textAlign:'center'}}><Medal position={p.pos} /></div>
-                  <div><label style={{fontSize:13}}>{p.pos} место</label></div>
-                  <div><input type="text" className="ds-input-field" defaultValue={p.val} style={{textAlign:'center'}} /></div>
-                </div>
-              ))}
-              <Button variant="outline" size="s" icon="plus" style={{marginTop:8}}>Добавить место</Button>
-              <InfoBox icon="lightbulb"><strong>Общий призовой фонд: $900</strong></InfoBox>
-              <div style={{marginTop:24, display:'flex', justifyContent:'space-between'}}>
-                <Button variant="outline" icon="arrow-left" onClick={prev}>Назад</Button>
-                <Button variant="primary" iconRight="chevron-right" onClick={next}>Далее</Button>
-              </div>
-            </div>
-          )}
-
-          {step === 5 && (
-            <div>
-              <h3 className="ds-heading-03" style={{marginBottom:4}}>Проверьте и запустите</h3>
-              <p style={{color:'var(--ds-text-muted)', marginBottom:20}}>Убедитесь, что всё верно перед запуском</p>
-              <div className="card" style={{marginBottom:16}}>
-                <div className="card__body">
-                  <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:16}}>
-                    {[['Тип', activeType.title], ['Метрика', activeType.metric], ['Период', '15 Apr — 15 May 2026'], ['Инструменты', 'Все инструменты'], ['Мин. объём', '0.1 лот'], ['Призовой фонд', '$900']].map(([k,v]) => (
-                      <div key={k}><strong style={{color:'var(--ds-text-muted)',fontSize:12,textTransform:'uppercase'}}>{k}</strong><div>{v}</div></div>
-                    ))}
-                  </div>
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Проверьте и запустите</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Убедитесь, что всё верно перед запуском</p>
+              <div className="card" style={{marginBottom:'var(--ds-dim-3xl)'}}>
+                <div className="card__body" style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'var(--ds-dim-5xl) var(--ds-dim-6xl)'}}>
+                  {[
+                    {k:'Тип', v: activeType.title},
+                    {k:'Метрика', v: activeType.metric},
+                    {k:'Период', v: periodString},
+                    {k:'Время', v: `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}, ${timezone}`},
+                    {k:'Мин. баланс клиента', v: `$${FIXED_CONDITIONS.minBalance}`},
+                    {k:'Мин. объём сделки', v: `${FIXED_CONDITIONS.minLot} лота`, tip:(
+                      <>
+                        Учитываются только сделки, проходящие по правилу валидного лота.
+                        <br /><br />
+                        <strong>Валидный лот</strong> — сделка удерживалась минимум 3 минуты и прошла минимум 3 пипса.
+                      </>
+                    )},
+                    {k:'Торговые аккаунты', v:'Только 1 счёт клиента'},
+                    {k:'Призовой фонд', v: `$${prizeTotal.toLocaleString('en-US')}`},
+                    {k:'Тип приза', v: prizeType === 'bonus' ? 'Бонус на счёт' : prizeType === 'cash' ? 'Денежный приз' : 'Подарок'},
+                  ].map(({k,v,tip}) => (
+                    <div key={k}>
+                      <div className="rig-utility-01" style={{color:'var(--ds-text-muted)'}}>{k}</div>
+                      <div className="rig-body-02-bold" style={{marginTop:'var(--ds-dim-xs)', display:'inline-flex', alignItems:'center', gap:'var(--ds-dim-s)'}}>
+                        <span>{v}</span>
+                        {tip && <InfoTip label="Правило валидного лота">{tip}</InfoTip>}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <div style={{display:'flex', gap:12}}>
-                <Button variant="outline" icon="arrow-left" onClick={prev}>Назад</Button>
-                <Button variant="outline" icon="save" onClick={() => { onNavigate('list'); showToast('Черновик сохранён'); }}>Сохранить черновик</Button>
-                <Button variant="primary" icon="rocket" style={{flex:1}} onClick={() => { onNavigate('list'); showToast('Контест запущен!', 'positive'); }}>Запустить контест</Button>
+              <div style={{display:'flex', gap:'var(--ds-dim-2xl)', flexWrap:'wrap'}}>
+                <Button variant="outline" size="m" icon="arrow-left" onClick={prev}>Назад</Button>
+                <Button variant="outline" size="m" icon="save" onClick={() => { onNavigate('list'); showToast('Черновик сохранён'); }}>Сохранить черновик</Button>
+                <Button variant="primary" size="m" icon="rocket" onClick={() => { onNavigate('list'); showToast('Контест запущен!', 'positive'); }}>Запустить контест</Button>
               </div>
             </div>
           )}
         </div>
 
         <div className="preview-card">
-          <h4 className="section-title" style={{margin:'0 0 16px'}}>Предпросмотр для клиента</h4>
-          <div className="preview-inner">
-            <div style={{marginBottom:12}}><span className={`icon-circle icon-circle--${activeType.circle}`} style={{width:48,height:48}}><svg width="24" height="24"><use href={`#i-${activeType.icon}`}/></svg></span></div>
-            <div style={{display:'inline-flex',alignItems:'center',gap:6,marginBottom:8}}>
-              <div className="contest-card__title">{activeType.title}</div>
-              <ContestTypeInfo typeId={activeType.id} />
-            </div>
-            <p style={{fontSize:13,lineHeight:'18px',color:'var(--ds-text-muted)',marginBottom:4}}>{activeType.shortDesc}</p>
-            <p style={{fontSize:13,color:'var(--ds-text-muted)'}}><Icon name="calendar" size="xs" /> 15 Apr — 15 May 2026</p>
-            <p style={{fontSize:13,color:'var(--ds-text-muted)'}}><Icon name="users" size="xs" /> 0 участников</p>
-            <div style={{display:'inline-flex',alignItems:'center',gap:6,marginTop:12,padding:'4px 10px',borderRadius:'var(--ds-radius-full)',background:'var(--ds-primary-content)',color:'var(--ds-primary)',fontWeight:500,fontSize:12,lineHeight:'16px'}}>
-              <Icon name="gift" size="xs" /> Призы: $900
-            </div>
-            <div style={{marginTop:16}}><Button variant="primary" size="m" disabled>Участвую</Button></div>
-          </div>
+          <div className="preview-card__label">Предпросмотр для клиента</div>
+          <ContestCard
+            typeId={activeType.id}
+            name={activeType.title}
+            desc={activeType.shortDesc}
+            dates={periodString}
+            participants={0}
+            prize={`$${prizeTotal.toLocaleString('en-US')}`}
+            progress={0}
+            progressText="Начнётся в указанную дату"
+            onAction={() => showToast('Это предпросмотр — клиент увидит такую карточку')}
+            actionLabel="Участвую"
+          />
         </div>
       </div>
     </div>
@@ -1257,7 +2097,7 @@ const IBContestDetail = ({ onNavigate }) => {
       <Breadcrumb items={[{label:'Мои контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
       <div className="page-header">
         <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
-          <h1 className="ds-heading-01">Весенний Volume Race</h1>
+          <h1 className="rig-title-03">Весенний Volume Race</h1>
           <Tag label="Active" variant="positive" />
           <ContestTypeInfo typeId="volume" />
         </div>
@@ -1265,7 +2105,7 @@ const IBContestDetail = ({ onNavigate }) => {
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12}}>
         <div style={{display:'flex',gap:8,color:'var(--ds-text-muted)',fontSize:14,alignItems:'center',flexWrap:'wrap'}}>
           <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-            <span className="type-icon type-icon--volume" style={{width:24,height:24}}><svg width="14" height="14"><use href="#i-chart"/></svg></span>
+            <span className="type-icon type-icon--volume" style={{width:24,height:24}}><svg width="14" height="14"><use href="#ic-market-watch-24"/></svg></span>
             <span style={{color:'var(--ds-text-primary)',fontWeight:500}}>Volume Race</span>
           </span>
           <span>•</span>
@@ -1287,7 +2127,7 @@ const IBContestDetail = ({ onNavigate }) => {
         </div>
       </div>
       <div className="table-wrap">
-        <div className="table-title"><h4 className="ds-heading-04">Лидерборд</h4><span className="meta">Обновлено: 3 мин назад</span></div>
+        <div className="table-title"><h4 className="rig-body-01-bold">Лидерборд</h4><span className="meta">Обновлено: 3 мин назад</span></div>
         <table>
           <thead><tr><th>Место</th><th>Участник</th><th>Объём (лоты)</th><th>Приз</th></tr></thead>
           <tbody>
@@ -1312,112 +2152,336 @@ const IBContestDetail = ({ onNavigate }) => {
 
 const ClientContestList = ({ onNavigate }) => {
   const cards = [
-    {typeId:'volume', name:'Весенний Volume Race', status:'Active', statusVariant:'positive', desc:'Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!', dates:'1 — 30 Apr', participants:47, prize:'$900', progressText:'Прошло 10 из 30 дней', progress:33, days:'20 дней'},
-    {typeId:'streak', name:'Streak Challenge May', status:'Starts May 1', statusVariant:'warning', desc:'Торгуйте каждый день и выиграйте! Кто удержит самый длинный streak — тот победит.', dates:'1 — 31 May', participants:12, prize:'$600', progressText:'Начнётся через 21 день', progress:0},
-    {typeId:'grow', name:'Grow Challenge Q2', status:'Active', statusVariant:'positive', desc:'Покажите лучший прирост баланса в % — наши лидеры заберут до $700 бонус.', dates:'1 — 30 Apr', participants:18, prize:'$700', progressText:'Прошло 10 из 30 дней', progress:45, days:'20 дней'},
+    {typeId:'volume', name:'Весенний Volume Race', statusLabel:'Active', statusVariant:'positive', desc:'Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!', dates:'1 — 30 Apr 2026', participants:47, prize:'$900', progressText:'Прошло 10 из 30 дней', progress:33, days:'20 дней'},
+    {typeId:'streak', name:'Streak Challenge May', statusLabel:'Starts May 1', statusVariant:'warning', desc:'Торгуйте каждый день и выиграйте! Кто удержит самый длинный streak — тот победит.', dates:'1 — 31 May 2026', participants:12, prize:'$600', progressText:'Начнётся через 21 день', progress:0},
+    {typeId:'grow', name:'Grow Challenge Q2', statusLabel:'Active', statusVariant:'positive', desc:'Покажите лучший прирост баланса в % — наши лидеры заберут до $700 бонус.', dates:'1 — 30 Apr 2026', participants:18, prize:'$700', progressText:'Прошло 10 из 30 дней', progress:45, days:'20 дней'},
+  ];
+
+  const completed = [
+    {typeId:'top',       name:'Турнир февраля',        dates:'1 — 28 Feb 2026', participants:32, prize:'$900', yourPlace:7,  yourReward:null},
+    {typeId:'volume',    name:'Winter Volume Race',    dates:'1 — 31 Jan 2026', participants:41, prize:'$900', yourPlace:2,  yourReward:'$300 бонус'},
+    {typeId:'streak',    name:'December Streak',       dates:'1 — 31 Dec 2025', participants:18, prize:'$500', yourPlace:12, yourReward:null},
+    {typeId:'grow',      name:'Autumn Grow Challenge', dates:'1 — 30 Nov 2025', participants:27, prize:'$700', yourPlace:3,  yourReward:'$100 бонус'},
   ];
 
   return (
   <div className="screen-enter">
-    <h1 className="ds-heading-01" style={{marginBottom:24}}>Контесты</h1>
+    <h1 className="rig-title-03" style={{marginBottom:'var(--ds-dim-5xl)'}}>Контесты</h1>
     <div className="contest-grid">
-      {cards.map(c => {
-        const t = CONTEST_TYPES[c.typeId];
-        return (
-          <div key={c.name} className="contest-card" onClick={() => onNavigate('terms')}>
-            <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:16}}>
-              <div className={`icon-circle icon-circle--${t.circle}`} style={{width:40,height:40}}><svg width="20" height="20"><use href={`#i-${t.icon}`}/></svg></div>
-              <div style={{flex:1,minWidth:0}}>
-                <div style={{display:'flex',alignItems:'center',gap:6}}>
-                  <div className="contest-card__title">{c.name}</div>
-                  <ContestTypeInfo typeId={c.typeId} />
-                </div>
-                <Tag label={c.status} variant={c.statusVariant} />
-              </div>
-            </div>
-            <div style={{fontSize:14,lineHeight:'20px',color:'var(--ds-text-secondary)',marginBottom:16}}>{c.desc}</div>
-            <div style={{display:'flex',gap:16,fontSize:13,color:'var(--ds-text-muted)',paddingTop:16,borderTop:'1px solid var(--ds-border)',flexWrap:'wrap'}}>
-              <span><Icon name="calendar" size="xs" /> {c.dates}</span>
-              <span><Icon name="users" size="xs" /> {c.participants} участников</span>
-              <span><Icon name="gift" size="xs" /> {c.prize}</span>
-              {c.days && <span><Icon name="clock" size="xs" /> {c.days}</span>}
-            </div>
-            <div style={{marginTop:12}}>
-              {c.progress > 0 ? (
-                <div style={{display:'flex',justifyContent:'space-between',fontSize:12,color:'var(--ds-text-muted)',marginBottom:6}}>
-                  <span>{c.progressText}</span>
-                  <span style={{fontWeight:500,color:'var(--ds-primary)'}}>{c.progress}%</span>
-                </div>
-              ) : (
-                <div style={{fontSize:12,color:'var(--ds-text-muted)',marginBottom:6}}>{c.progressText}</div>
-              )}
-              <div className="progress-mini"><div className="progress-mini__bar" style={{width:`${c.progress}%`}} /></div>
-            </div>
-          </div>
-        );
-      })}
+      {cards.map(c => (
+        <ContestCard
+          key={c.name}
+          typeId={c.typeId}
+          name={c.name}
+          statusLabel={c.statusLabel}
+          statusVariant={c.statusVariant}
+          desc={c.desc}
+          dates={c.dates}
+          participants={c.participants}
+          prize={c.prize}
+          days={c.days}
+          progress={c.progress}
+          progressText={c.progressText}
+          onClick={() => onNavigate('terms')}
+        />
+      ))}
     </div>
-    <div className="section-title">Завершённые</div>
-    <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'16px 20px',background:'var(--ds-bg)',borderRadius:'var(--ds-radius-xl)',border:'1px solid var(--ds-border)'}}>
-      <div style={{display:'flex',alignItems:'center',gap:12}}>
-        <Icon name="check-circle" size="md" style={{color:'var(--ds-positive)'}} />
-        <div><div style={{fontWeight:600,fontSize:14,lineHeight:'20px'}}>Турнир февраля</div><div style={{fontSize:13,color:'var(--ds-text-muted)',marginTop:2}}>Top Trader • 1-28 Feb 2026</div></div>
-      </div>
-      <div style={{fontSize:14,color:'var(--ds-text-muted)'}}>Ваше место: <span style={{fontWeight:600,color:'var(--ds-primary)'}}>#7</span> из 32</div>
+
+    <div className="section-title" style={{marginTop:'var(--ds-dim-7xl)'}}>Завершённые</div>
+    <div className="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Контест</th>
+            <th>Период</th>
+            <th>Участники</th>
+            <th>Ваше место</th>
+            <th>Награда</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {completed.map(c => {
+            const t = CONTEST_TYPES[c.typeId];
+            return (
+              <tr key={c.name} style={{cursor:'pointer'}} onClick={() => onNavigate('board')}>
+                <td>
+                  <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+                    <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32,flexShrink:0}}>
+                      <svg width="16" height="16"><use href={dsIc(t.icon)}/></svg>
+                    </span>
+                    <div>
+                      <div className="rig-body-02-bold">{c.name}</div>
+                      <div className="rig-utility-01" style={{color:'var(--ds-text-muted)',marginTop:'var(--ds-dim-xs)'}}>{t.title}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{c.dates}</td>
+                <td>{c.participants}</td>
+                <td><strong style={{color: c.yourPlace <= 3 ? 'var(--ds-primary)' : 'inherit'}}>#{c.yourPlace}</strong></td>
+                <td>{c.yourReward ? <Tag label={c.yourReward} variant="brand" /> : <span style={{color:'var(--ds-text-muted)'}}>—</span>}</td>
+                <td style={{textAlign:'right'}}>
+                  <Button variant="outline" size="s" iconRight="arrow-right" onClick={e => { e.stopPropagation(); onNavigate('board'); }}>Результаты</Button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   </div>
   );
 };
 
+const MIN_BALANCE_USD = 100;
+
+const INITIAL_TRADING_ACCOUNTS = [
+  { id: 'mt5-5123467', type: 'MT5', number: '5123467', label: 'Рабочий',  balance: 1540, currency: 'USD' },
+  { id: 'mt5-5123482', type: 'MT5', number: '5123482', label: 'Swing',    balance: 45,   currency: 'USD' },
+  { id: 'mt4-4298110', type: 'MT4', number: '4298110', label: 'Scalping', balance: 250,  currency: 'USD' },
+];
+
+const JoinContestModal = ({ open, onClose, onJoin, contestName }) => {
+  const [accounts, setAccounts] = useState(INITIAL_TRADING_ACCOUNTS);
+  const [selectedId, setSelectedId] = useState(null);
+  const [mode, setMode] = useState('select');
+  const [newAccountType, setNewAccountType] = useState('MT5');
+  const [depositAmount, setDepositAmount] = useState('');
+
+  useEffect(() => {
+    if (open) {
+      setAccounts(INITIAL_TRADING_ACCOUNTS);
+      setSelectedId(null);
+      setMode('select');
+      setNewAccountType('MT5');
+      setDepositAmount('');
+    }
+  }, [open]);
+
+  const selected = accounts.find(a => a.id === selectedId) || null;
+  const deficit = selected ? Math.max(0, MIN_BALANCE_USD - selected.balance) : 0;
+  const needsDeposit = !!selected && selected.balance < MIN_BALANCE_USD;
+  const canJoin = !!selected && selected.balance >= MIN_BALANCE_USD;
+
+  const handleCreateAccount = () => {
+    const num = String(5300000 + Math.floor(Math.random() * 999999));
+    const newAcc = { id: `new-${num}`, type: newAccountType, number: num, label: 'Новый', balance: 0, currency: 'USD' };
+    setAccounts([newAcc, ...accounts]);
+    setSelectedId(newAcc.id);
+    setMode('select');
+    setDepositAmount(String(MIN_BALANCE_USD));
+  };
+
+  const handleDeposit = () => {
+    const amount = Number(depositAmount);
+    if (!selected || !amount || amount <= 0) return;
+    setAccounts(accounts.map(a => a.id === selected.id ? { ...a, balance: a.balance + amount } : a));
+    setDepositAmount('');
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      title="Участие в контесте"
+      subtitle={contestName}
+      size="l"
+      footer={<>
+        <Button variant="outline" size="m" onClick={onClose}>Отмена</Button>
+        <Button variant="primary" size="m" disabled={!canJoin} onClick={() => selected && onJoin(selected)}>Участвую</Button>
+      </>}
+    >
+      <div className="join-rules">
+        <div className="join-rules__title">Условия участия</div>
+        <div className="join-rules__grid">
+          <div>
+            <div className="join-rules__label">Минимальный баланс</div>
+            <div className="join-rules__value">${MIN_BALANCE_USD}</div>
+          </div>
+          <div>
+            <div className="join-rules__label">
+              Мин. объём сделки
+              <InfoTip placement="bottom">
+                Учитываются только сделки, проходящие по правилу валидного лота.
+                <br /><br />
+                <strong>Валидный лот</strong> — сделка удерживалась минимум 3 минуты и прошла минимум 3 пипса.
+              </InfoTip>
+            </div>
+            <div className="join-rules__value">0.01 лота</div>
+          </div>
+          <div>
+            <div className="join-rules__label">Торговый аккаунт</div>
+            <div className="join-rules__value">1</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="section-title" style={{marginTop:'var(--ds-dim-4xl)', marginBottom:'var(--ds-dim-2xl)'}}>
+        Выберите торговый аккаунт
+      </div>
+
+      <div className="rig-radio-cards">
+        {accounts.map(a => {
+          const low = a.balance < MIN_BALANCE_USD;
+          return (
+            <div
+              key={a.id}
+              className={`rig-radio-card ${selectedId === a.id ? 'rig-radio-card--selected' : ''}`}
+              onClick={() => setSelectedId(a.id)}
+            >
+              <div className="icon-circle icon-circle--primary" style={{flexShrink:0}}>
+                <svg width="20" height="20"><use href="#ic-market-watch-24"/></svg>
+              </div>
+              <div style={{flex:1, minWidth:0}}>
+                <div style={{display:'flex', alignItems:'center', gap:'var(--ds-dim-m)', flexWrap:'wrap'}}>
+                  <div className="rig-body-02-bold">{a.type} #{a.number}</div>
+                  {low && <Tag label="Недостаточно средств" variant="warning" icon="alert-triangle" />}
+                </div>
+                <div className="rig-utility-01" style={{color:'var(--ds-text-muted)', marginTop:'var(--ds-dim-xs)'}}>
+                  Баланс: <strong style={{color: low ? 'var(--ds-warning)' : 'var(--ds-text-primary)'}}>${a.balance.toLocaleString('en-US')}</strong> · {a.label}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {mode === 'create' ? (
+          <div className="info-box" style={{marginTop:0, flexDirection:'column', alignItems:'stretch', gap:'var(--ds-dim-2xl)'}}>
+            <div style={{display:'flex', alignItems:'center', gap:'var(--ds-dim-2xl)'}}>
+              <Icon name="info" size="sm" style={{color:'var(--ds-primary)'}} />
+              <span className="rig-body-02-bold">Новый торговый аккаунт</span>
+            </div>
+            <div className="join-deposit">
+              <Select
+                label="Платформа"
+                value={newAccountType}
+                onChange={setNewAccountType}
+                options={[{value:'MT5', label:'MetaTrader 5'}, {value:'MT4', label:'MetaTrader 4'}]}
+              />
+              <Button variant="primary" size="m" icon="plus" onClick={handleCreateAccount}>Создать</Button>
+              <Button variant="outline" size="m" onClick={() => setMode('select')}>Отмена</Button>
+            </div>
+            <div className="rig-utility-01" style={{color:'var(--ds-text-muted)'}}>
+              Аккаунт создаётся мгновенно. После создания нужно пополнить баланс до ${MIN_BALANCE_USD}.
+            </div>
+          </div>
+        ) : (
+          <button type="button" className="join-create" onClick={() => setMode('create')}>
+            <span className="join-create__icon"><svg><use href="#ic-plus-24"/></svg></span>
+            <span style={{flex:1, minWidth:0}}>
+              <span className="rig-body-02-bold">Создать торговый аккаунт</span>
+              <span className="rig-utility-01" style={{display:'block', color:'var(--ds-text-muted)', marginTop:'var(--ds-dim-xs)'}}>MT4 / MT5 · создаётся мгновенно</span>
+            </span>
+          </button>
+        )}
+      </div>
+
+      {selected && needsDeposit && (
+        <div className="info-box info-box--warning" style={{flexDirection:'column', alignItems:'stretch', gap:'var(--ds-dim-2xl)'}}>
+          <div style={{display:'flex', alignItems:'flex-start', gap:'var(--ds-dim-2xl)'}}>
+            <Icon name="alert-triangle" size="sm" style={{color:'var(--ds-warning)', marginTop:1}} />
+            <span>
+              На аккаунте <strong>{selected.type} #{selected.number}</strong> недостаточно средств для участия.
+              Нужно пополнить ещё на <strong>${deficit.toLocaleString('en-US')}</strong>.
+            </span>
+          </div>
+          <div className="join-deposit">
+            <Input
+              label="Сумма пополнения, $"
+              type="number"
+              value={depositAmount}
+              onChange={e => setDepositAmount(e.target.value)}
+              placeholder={String(deficit)}
+            />
+            <Button variant="primary" size="m" icon="plus"
+              onClick={handleDeposit}
+              disabled={!Number(depositAmount) || Number(depositAmount) <= 0}
+            >Пополнить</Button>
+          </div>
+        </div>
+      )}
+
+      {canJoin && (
+        <div className="info-box info-box--positive" style={{marginTop:'var(--ds-dim-3xl)'}}>
+          <Icon name="check" size="sm" style={{color:'var(--ds-positive)', marginTop:1}} />
+          <span>
+            Аккаунт <strong>{selected.type} #{selected.number}</strong> готов к участию.
+            Баланс <strong>${selected.balance.toLocaleString('en-US')}</strong>, минимальный объём сделки — <strong>0.01 лота</strong>.
+          </span>
+        </div>
+      )}
+    </Modal>
+  );
+};
+
 const ClientContestTerms = ({ onNavigate }) => {
   const showToast = useToast();
+  const [joinOpen, setJoinOpen] = useState(false);
   return (
     <div className="screen-enter">
       <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
-      <div style={{textAlign:'center',marginBottom:24}}>
-        <div style={{marginBottom:12}}><span className="icon-circle icon-circle--primary" style={{width:64,height:64}}><svg width="32" height="32"><use href="#i-chart"/></svg></span></div>
-        <div style={{display:'inline-flex',alignItems:'center',gap:8,justifyContent:'center'}}>
-          <h1 className="ds-heading-01">Весенний Volume Race</h1>
+      <div style={{textAlign:'center',marginBottom:'var(--ds-dim-6xl)'}}>
+        <div style={{marginBottom:'var(--ds-dim-3xl)'}}><span className="icon-circle icon-circle--primary" style={{width:64,height:64}}><svg width="32" height="32"><use href="#ic-market-watch-24"/></svg></span></div>
+        <div style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)',justifyContent:'center'}}>
+          <h1 className="rig-title-03">Весенний Volume Race</h1>
           <ContestTypeInfo typeId="volume" />
         </div>
-        <p style={{color:'var(--ds-text-muted)',marginTop:8}}>Наторгуйте больше лотов и выиграйте до $500!</p>
+        <p className="rig-body-01" style={{color:'var(--ds-text-muted)',marginTop:'var(--ds-dim-2xl)'}}>Наторгуйте больше лотов и выиграйте до $500!</p>
       </div>
-      <div className="card" style={{marginBottom:16}}>
+
+      <div className="card" style={{marginBottom:'var(--ds-dim-3xl)'}}>
         <div className="card__body">
-          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,textAlign:'center'}}>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'var(--ds-dim-5xl)',textAlign:'center'}}>
             <div><div className="stat-value">20 дней</div><div className="stat-label">Осталось</div></div>
             <div><div className="stat-value">47</div><div className="stat-label">Участников</div></div>
           </div>
         </div>
       </div>
-      <div className="card" style={{marginBottom:16}}>
-        <div className="card__header"><h4 className="ds-heading-04"><Icon name="clipboard" size="sm" style={{marginRight:4}} /> Правила</h4></div>
-        <div className="card__body" style={{fontSize:14}}>
-          <ul style={{paddingLeft:20,display:'flex',flexDirection:'column',gap:8}}>
-            <li>Учитываются все инструменты</li><li>Минимальный объём сделки: 0.1 лот</li>
-            <li>Минимальное время удержания: 5 минут</li><li>Позиция определяется суммарным объёмом в лотах</li>
-            <li>Период: 1 — 30 апреля 2026</li>
-          </ul>
+
+      <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-6xl)'}} className="terms-grid">
+        <div className="card">
+          <div className="card__header"><h4 className="rig-title-04"><Icon name="clipboard" size="sm" style={{marginRight:'var(--ds-dim-s)'}} /> Правила</h4></div>
+          <div className="card__body">
+            <BulletList items={[
+              'Минимальный баланс клиента: $100',
+              'Минимальный объём сделки: 0.01 лота (только сделки по правилу валидного лота)',
+              'Участвует только 1 торговый аккаунт клиента',
+              'Позиция определяется суммарным объёмом в лотах',
+              'Период: 1 — 30 апреля 2026',
+            ]} />
+          </div>
         </div>
-      </div>
-      <div className="card" style={{marginBottom:24}}>
-        <div className="card__header"><h4 className="ds-heading-04"><Icon name="gift" size="sm" style={{marginRight:4}} /> Призы</h4></div>
-        <div className="card__body">
-          <div style={{display:'flex',flexDirection:'column',gap:12}}>
-            {[{pos:1,prize:'$500 бонус',color:'var(--ds-primary)'},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}].map(p => (
-              <div key={p.pos} style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                <span style={{display:'flex',alignItems:'center',gap:8}}><Medal position={p.pos} /> {p.pos} место</span>
-                <strong style={{fontSize:18,color:p.color || 'var(--ds-text-secondary)'}}>{p.prize}</strong>
-              </div>
-            ))}
+        <div className="card">
+          <div className="card__header"><h4 className="rig-title-04"><Icon name="gift" size="sm" style={{marginRight:'var(--ds-dim-s)'}} /> Призы</h4></div>
+          <div className="card__body">
+            <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-3xl)'}}>
+              {[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}].map(p => (
+                <div key={p.pos} style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+                  <Medal position={p.pos} />
+                  <span className="rig-body-02-bold" style={{color: p.primary ? 'var(--ds-primary)' : 'var(--ds-text-primary)'}}>{p.prize}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-      <div style={{display:'flex',gap:12}}>
-        <Button variant="primary" icon="check-circle" style={{flex:1}} onClick={() => { onNavigate('board'); showToast('Вы участвуете!', 'positive'); }}>Участвую</Button>
-        <Button variant="outline" onClick={() => onNavigate('list')}>Не сейчас</Button>
+
+      <div style={{display:'flex',gap:'var(--ds-dim-3xl)',alignItems:'center',flexWrap:'wrap'}}>
+        <Button variant="primary" size="m" onClick={() => setJoinOpen(true)}>Участвую</Button>
+        <Button variant="outline" size="m" onClick={() => onNavigate('list')}>Не сейчас</Button>
       </div>
-      <p style={{fontSize:12,color:'var(--ds-text-placeholder)',textAlign:'center',marginTop:12}}>Нажимая "Участвую", вы соглашаетесь с правилами контеста и условиями участия.</p>
+      <p className="rig-utility-01" style={{color:'var(--ds-text-placeholder)',textAlign:'center',marginTop:'var(--ds-dim-3xl)'}}>Нажимая «Участвую», вы соглашаетесь с правилами контеста и условиями участия.</p>
+
+      <JoinContestModal
+        open={joinOpen}
+        onClose={() => setJoinOpen(false)}
+        contestName="Весенний Volume Race"
+        onJoin={(account) => {
+          setJoinOpen(false);
+          onNavigate('board');
+          showToast(`Вы участвуете на аккаунте ${account.type} #${account.number}!`, 'positive');
+        }}
+      />
     </div>
   );
 };
@@ -1425,51 +2489,56 @@ const ClientContestTerms = ({ onNavigate }) => {
 const ClientLeaderboard = ({ onNavigate }) => (
   <div className="screen-enter">
     <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Лидерборд'}]} />
-    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20,gap:12,flexWrap:'wrap'}}>
-      <div style={{display:'flex',alignItems:'center',gap:10}}>
-        <h1 className="ds-heading-01">Весенний Volume Race</h1>
+    <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'var(--ds-dim-5xl)',gap:'var(--ds-dim-3xl)',flexWrap:'wrap'}}>
+      <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+        <h1 className="rig-title-03">Весенний Volume Race</h1>
         <ContestTypeInfo typeId="volume" />
       </div>
-      <span style={{fontSize:14,color:'var(--ds-text-muted)',display:'flex',alignItems:'center',gap:4}}><Icon name="clock" size="sm" /> 20 дней</span>
+      <span className="rig-body-02" style={{color:'var(--ds-text-muted)',display:'flex',alignItems:'center',gap:'var(--ds-dim-s)'}}><Icon name="clock" size="sm" /> Осталось 20 дней</span>
     </div>
+
     <div className="user-progress">
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start'}}>
-        <div>
-          <div style={{fontFamily:'var(--ds-font-display)',fontSize:56,fontWeight:700,lineHeight:1,letterSpacing:'-1.12px'}}>#12</div>
-          <div style={{fontSize:14,opacity:0.85,marginTop:8}}>из 47 участников • Top 25%</div>
+      <div className="user-progress__row">
+        <div className="user-progress__rank">
+          <div className="user-progress__place">#12</div>
+          <div className="user-progress__place-meta">из 47 участников • Top 25%</div>
         </div>
-        <div style={{textAlign:'right'}}>
-          <div style={{fontFamily:'var(--ds-font-display)',fontSize:28,fontWeight:700,lineHeight:'36px',letterSpacing:'-0.28px'}}>67.4 лот</div>
-          <div style={{fontSize:13,opacity:0.75,marginTop:4}}>До 3 места: ещё 88.8 лот</div>
+        <div className="user-progress__score">
+          <div className="user-progress__score-value">67.4 <span className="user-progress__score-unit">лот</span></div>
+          <div className="user-progress__score-meta">До 3 места: ещё 88.8 лот</div>
         </div>
       </div>
-      <div className="up-progress-wrap" style={{marginTop:16}}><div className="up-progress-fill" style={{width:'43%'}} /></div>
-      <div style={{fontSize:13,opacity:0.85,marginTop:8,textAlign:'right'}}>43% до призовой зоны</div>
+      <div className="user-progress__bar">
+        <ProgressBar value={43} size="m" onBrand />
+      </div>
+      <div className="user-progress__caption">43% до призовой зоны</div>
     </div>
-    <div className="card">
-      <div className="table-wrap" style={{border:'none'}}>
-        <div className="table-title"><h4 className="ds-heading-04">Лидерборд</h4><span className="meta">Обновлено: 2 мин назад</span></div>
-        <table>
-          <thead><tr><th>Место</th><th>Участник</th><th>Объём</th><th>Приз</th></tr></thead>
-          <tbody>
-            {[{p:1,n:'A****',v:'245.3',pr:'$500'},{p:2,n:'B****',v:'198.7',pr:'$300'},{p:3,n:'C****',v:'156.2',pr:'$100'}].map(r => (
-              <tr key={r.p}><td><Medal position={r.p}/></td><td><strong>{r.n}</strong></td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td><Tag label={r.pr} variant="brand"/></td></tr>
-            ))}
-            <tr><td colSpan="4" style={{textAlign:'center',color:'var(--ds-text-placeholder)',fontSize:13}}>• • •</td></tr>
-            {[{p:10,n:'J****',v:'89.1'},{p:11,n:'K****',v:'74.2'}].map(r => (
-              <tr key={r.p}><td><Medal position={r.p}/></td><td>{r.n}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td>—</td></tr>
-            ))}
-            <tr className="highlight">
-              <td><span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>12</span></td>
-              <td><Icon name="star" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> ВЫ</td>
-              <td style={{fontVariantNumeric:'tabular-nums'}}>67.4</td><td>—</td>
-            </tr>
-            {[{p:13,n:'M****',v:'61.0'},{p:14,n:'N****',v:'55.3'}].map(r => (
-              <tr key={r.p}><td><Medal position={r.p}/></td><td>{r.n}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td>—</td></tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+
+    <div className="table-header">
+      <h4 className="rig-title-04">Лидерборд</h4>
+      <span className="table-header__meta">Обновлено: 2 мин назад</span>
+    </div>
+    <div className="table-wrap">
+      <table>
+        <thead><tr><th>Место</th><th>Участник</th><th>Объём</th><th>Приз</th></tr></thead>
+        <tbody>
+          {[{p:1,n:'A****',v:'245.3',pr:'$500'},{p:2,n:'B****',v:'198.7',pr:'$300'},{p:3,n:'C****',v:'156.2',pr:'$100'}].map(r => (
+            <tr key={r.p}><td><Medal position={r.p}/></td><td><strong>{r.n}</strong></td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td><Tag label={r.pr} variant="brand"/></td></tr>
+          ))}
+          <tr><td colSpan="4" style={{textAlign:'center',color:'var(--ds-text-placeholder)'}}>• • •</td></tr>
+          {[{p:10,n:'J****',v:'89.1'},{p:11,n:'K****',v:'74.2'}].map(r => (
+            <tr key={r.p}><td><Medal position={r.p}/></td><td>{r.n}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td>—</td></tr>
+          ))}
+          <tr className="highlight">
+            <td><span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>12</span></td>
+            <td><Icon name="star" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы</td>
+            <td style={{fontVariantNumeric:'tabular-nums'}}>67.4</td><td>—</td>
+          </tr>
+          {[{p:13,n:'M****',v:'61.0'},{p:14,n:'N****',v:'55.3'}].map(r => (
+            <tr key={r.p}><td><Medal position={r.p}/></td><td>{r.n}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td>—</td></tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   </div>
 );
@@ -1483,7 +2552,7 @@ const AdminDashboard = ({ onNavigate }) => {
   const [filter, setFilter] = useState('all');
   return (
     <div className="screen-enter">
-      <div className="page-header"><h1 className="ds-heading-01">Admin Panel — Contests</h1></div>
+      <div className="page-header"><h1 className="rig-title-03">Admin Panel — Contests</h1></div>
       <div style={{marginBottom:24}}>
         <div style={{color:'var(--ds-negative)',marginBottom:12,display:'flex',alignItems:'center',gap:6,fontSize:13,fontWeight:600}}>
           <Icon name="alert-triangle" size="sm" /> Требует внимания
@@ -1506,15 +2575,15 @@ const AdminDashboard = ({ onNavigate }) => {
           <StatCard value="45" label="Completed" trend={{dir:'up',text:'+5 за месяц'}} />
         </div>
       </div>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'16px 24px',borderBottom:'1px solid var(--ds-border)'}}>
-        <h4 className="ds-heading-04">Все контесты</h4>
+      <div className="table-header">
+        <h4 className="rig-title-04">Все контесты</h4>
         <ChipsGroup>
           {['all','active','pending','flagged'].map(f => (
             <Chips key={f} label={f === 'all' ? 'Все' : f.charAt(0).toUpperCase() + f.slice(1)} selected={filter === f} onClick={() => setFilter(f)} />
           ))}
         </ChipsGroup>
       </div>
-      <div className="table-wrap" style={{borderTop:'none',borderTopLeftRadius:0,borderTopRightRadius:0}}>
+      <div className="table-wrap">
         <table>
           <thead><tr><th>Контест</th><th>IB Partner</th><th>Статус</th><th>Участники</th><th></th></tr></thead>
           <tbody>
@@ -1547,14 +2616,14 @@ const AdminContestDetail = ({ onNavigate }) => {
     <div className="screen-enter">
       <Breadcrumb items={[{label:'Dashboard', onClick:() => onNavigate('dashboard')}, {label:'Детали контеста'}]} />
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:24,flexWrap:'wrap'}}>
-        <h1 className="ds-heading-01">Mega Contest</h1>
+        <h1 className="rig-title-03">Mega Contest</h1>
         <Tag label="Flagged" variant="negative" icon="alert-triangle" />
         <ContestTypeInfo typeId="volume" />
       </div>
       <div style={{display:'flex',gap:8,marginBottom:24,color:'var(--ds-text-muted)',fontSize:14,flexWrap:'wrap',alignItems:'center'}}>
         <span>IB: <strong>Partner_X</strong></span><span>•</span>
         <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-          <span className="type-icon type-icon--volume" style={{width:20,height:20}}><svg width="12" height="12"><use href="#i-chart"/></svg></span>
+          <span className="type-icon type-icon--volume" style={{width:20,height:20}}><svg width="12" height="12"><use href="#ic-market-watch-24"/></svg></span>
           <span style={{color:'var(--ds-text-primary)',fontWeight:500}}>Volume Race</span>
         </span>
         <span>•</span><span>1 — 30 Apr 2026</span><span>•</span><span>Призы: $1,700</span>
@@ -1571,7 +2640,7 @@ const AdminContestDetail = ({ onNavigate }) => {
       <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:24}}>
         <div className="card">
           <div className="table-wrap" style={{border:'none'}}>
-            <div className="table-title"><h4 className="ds-heading-04">Лидерборд (полный)</h4></div>
+            <div className="table-title"><h4 className="rig-body-01-bold">Лидерборд (полный)</h4></div>
             <table>
               <thead><tr><th>Место</th><th>Клиент</th><th>Объём</th><th>Сделки</th><th>Ср. удерж.</th></tr></thead>
               <tbody>
@@ -1586,7 +2655,7 @@ const AdminContestDetail = ({ onNavigate }) => {
         </div>
         <div>
           <div className="card" style={{marginBottom:20}}>
-            <div className="card__header"><h4 className="ds-heading-04">Действия</h4></div>
+            <div className="card__header"><h4 className="rig-body-01-bold">Действия</h4></div>
             <div className="card__body" style={{display:'flex',flexDirection:'column',gap:8}}>
               <Button variant="outline" icon="pause" onClick={() => showToast('Контест приостановлен')}>Приостановить контест</Button>
               <Button variant="negative" icon="x-circle" onClick={() => showToast('Контест отменён')}>Отменить контест</Button>
@@ -1594,7 +2663,7 @@ const AdminContestDetail = ({ onNavigate }) => {
             </div>
           </div>
           <div className="card">
-            <div className="card__header"><h4 className="ds-heading-04">Audit Trail</h4></div>
+            <div className="card__header"><h4 className="rig-body-01-bold">Audit Trail</h4></div>
             <div className="card__body">
               <div className="audit-trail">
                 {[
