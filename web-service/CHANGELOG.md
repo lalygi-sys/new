@@ -4,6 +4,41 @@ All notable changes к Disko web service.
 
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Версии SemVer.
 
+## [0.9.1] — 2026-04-23 (wizard 2.0 partial port from frontend MR)
+
+Синхронизация с параллельным MR команды (prototype/ 0e54cb9). Portированы улучшения wizard UX без потери compliance fixes из 0.9.0.
+
+### Added
+- `Dropdown` component — DS Input trigger + custom options popover (лучше нативного select на Octa design)
+- `InfoTip` component — hover/focus-visible tooltip с top/bottom placement
+- `MeridiemToggle` inline component в `IBCreateContest` — AM/PM chips для clarity US/UK клиентам
+- `FIXED_CONDITIONS` const в `helpers.js` ($100 min balance, 0.01 lot, 1 account, 3 min hold, 3 pips) — замена configurable rules step на фиксированные платформенные условия
+- `CalendarInput` prop `iconPlacement='left'|'right'` — icon справа в wizard period step
+- `TIMEZONES` const (8 часовых поясов, CySEC Cyprus default UTC+02)
+
+### Changed
+- **Wizard 5 → 4 шага** — Rules step удалён, условия стали фиксированными (см. FIXED_CONDITIONS). Упрощение UX: IB не конфигурирует balance/lot/accounts вручную.
+- **Prize type dropdown** — убрана опция "Бонус на торговый счёт" (ESMA RULE-043 prohibition на CFD retail). Default = 'cash'.
+- **Wizard Confirm step** — 2-col grid k/v layout, editable rows с pencil-jump, fixed conditions rows read-only с `InfoTip` на «Правиле валидного лота» (3 мин + 3 пипса).
+- **Wizard Period step** — AM/PM chips + time input + timezone Dropdown. Grid `1fr 260px` для date+time pair.
+
+### Compliance
+- ESMA RULE-043 bonus prohibition — "Бонус на торговый счёт" option удалён из wizard prize type select (был 1 из 3)
+- Inducement safeguard — валидный лот rule (3 мин hold, 3 pips movement) displayed read-only в Confirm с InfoTip
+
+### Metrics
+- Bundle: **314 KB JS / 98 KB gzip**, **56 KB CSS / 10 KB gzip**
+- Build time: **450-470ms**
+- Console errors: **0**
+
+### Deferred (→ BACKLOG § P1 Wizard 2.0 partial port)
+- JoinContestModal (balance check + MT4/MT5 radio + deposit inline)
+- WizardPreviewCard → shared ContestCard pattern
+- AM/PM + timezone в backend contest contract (ISO mapping)
+- DS digit icons для WizardStepper
+
+---
+
 ## [0.9.0] — 2026-04-24 (post-evolution baseline)
 
 Full product polish + system-wide consistency audit. Ready for stakeholder demo.

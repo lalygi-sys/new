@@ -9,7 +9,7 @@ import { MONTHS, DOW, formatDate } from '../lib/helpers.js';
  * @props {string} [label] - input label.
  * @a11y Trigger role=button, aria-expanded/haspopup. Dropdown role=dialog. Grid role=grid; каждый day — role=gridcell + aria-selected + aria-label. Esc closes. Return focus to trigger.
  */
-export const CalendarInput = ({ value, onChange, label }) => {
+export const CalendarInput = ({ value, onChange, label, iconPlacement = 'left' }) => {
   const [open, setOpen] = useState(false);
   const [viewYear, setViewYear] = useState(value.getFullYear());
   const [viewMonth, setViewMonth] = useState(value.getMonth());
@@ -77,7 +77,7 @@ export const CalendarInput = ({ value, onChange, label }) => {
       {label && <label className="ds-input-label">{label}</label>}
       <div style={{ position: 'relative' }} ref={ref}>
         <div
-          className={`cal-input ${open ? 'cal-input--open' : ''}`}
+          className={`cal-input cal-input--icon-${iconPlacement} ${open ? 'cal-input--open' : ''}`}
           onClick={() => setOpen(!open)}
           onKeyDown={onTriggerKey}
           role="button"
@@ -88,11 +88,19 @@ export const CalendarInput = ({ value, onChange, label }) => {
           aria-label={`${label || 'Дата'}: ${formatDate(value)}`}
           ref={triggerRef}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <rect x="3" y="4" width="18" height="18" rx="2" />
-            <path d="M3 10h18M8 2v4M16 2v4" />
-          </svg>
-          <span>{formatDate(value)}</span>
+          {iconPlacement === 'left' && (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M3 10h18M8 2v4M16 2v4" />
+            </svg>
+          )}
+          <span className="cal-input__value">{formatDate(value)}</span>
+          {iconPlacement === 'right' && (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <path d="M3 10h18M8 2v4M16 2v4" />
+            </svg>
+          )}
         </div>
         {open && (
           <div

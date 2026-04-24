@@ -28,7 +28,7 @@ npm run dev          # http://localhost:5173
 
 ### 2. Прокликать 3 flow
 
-- `/ib/contests/new` → wizard 5 steps → «Запустить контест» → появляется в списке
+- `/ib/contests/new` → wizard 4 steps → «Запустить контест» → появляется в списке (5→4 шагов в 0.9.1, Rules удалён)
 - `/client/contests` → card → «Принять вызов» → leaderboard
 - `/admin/contests/c-005` → «Дисквалифицировать» → audit trail получает новую запись
 

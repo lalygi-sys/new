@@ -21,6 +21,13 @@ Priorities:
 - [ ] [P0] **GDPR DPIA для public leaderboard** — публичная демонстрация volumes других traders (даже masked names). Data Protection Impact Assessment обязательна EU retail. → privacy officer
 - [ ] [P0] **KYC gate pre-payout** — сейчас нет проверки KYC перед zачислением приза. AML compliance requirement. → backend team
 
+### P1 — Wizard 2.0 partial port (2026-04-23)
+
+- [ ] [P1] **JoinContestModal** — клиент заходит с витрины, видит "Принять вызов" → открывается modal: balance check → MT4/MT5 account radio → inline deposit → "+ Создать аккаунт". Сейчас Accept ведёт сразу на `/client/contest/:id/board` без modal. Portировано из prototype wizard 2.0. Требует: (a) SEED extension `trading_accounts: [{id, type: 'MT4'|'MT5', balance, currency}]`, (b) `<JoinContestModal />` component, (c) замена Accept button в `ClientContestTerms`. → medium scope.
+- [ ] [P1] **WizardPreviewCard → reuse ContestCard pattern** — currently custom layout. Prototype 2.0 использует shared list-card structure для консистентности. Refactor: заменить `.preview-inner__*` classes на `.contest-card__*` с `.contest-card__prize`, `.contest-card__meta`, `.contest-card__progress`. Small scope, visual QA required.
+- [ ] [P1] **AM/PM + timezone в backend contest contract** — UI собирает `startTime/endTime/meridiem/timezone`, но `store.createContest` принимает только `start/end` Date. Mapping: build ISO string из date+time+meridiem+tz на persist. → backend API decision.
+- [ ] [P1] **DS digit icons для WizardStepper** — prototype использует `ic-digit-1-24..4-24` из DS sprite. Сейчас WizardStepper рендерит числа через CSS counter. Добавить spritesheet entries + swap. Small scope.
+
 ### P1 — UX / functional полировка
 
 - [ ] [P1] **Zero-state для empty slots на `/client/contests`** — при N контестов mod 3 ≠ 0 grid показывает empty slot. Placeholder card "Новые контесты скоро" с illustration + CTA «Подписаться на анонсы». Альтернатива: центровать последний row или `minmax(340px, 1fr)` auto-fill. Сейчас при 5 контестах визуально виден gap.
@@ -66,6 +73,14 @@ Research artifacts живут в `../../memory/research/` (relative to workspace
 ---
 
 ## Done (post-evolution, 2026-04-23 → 2026-04-24)
+
+### Wizard 2.0 partial port (2026-04-23, from prototype 0e54cb9)
+- [x] **4 шага вместо 5** — WIZARD_TOTAL_STEPS=4, Rules step удалён, условия стали фиксированными (FIXED_CONDITIONS)
+- [x] **Бонус как prize type убран** — ESMA RULE-043 compliance. Остались cash + gift. Default prize type = 'cash'
+- [x] **Dropdown + InfoTip components** — portированы из prototype (DS-styled select + focus-visible tooltip)
+- [x] **Confirm 2-col grid k/v** с pencil-jump editable rows + InfoTip на «валидный лот»
+- [x] **AM/PM chips + time input + timezone** — explicit AM/PM понятнее US/UK клиентам чем 24hr. 8 timezones (CySEC Cyprus, Dubai UAE, London, Moscow и т.д.)
+- [x] **CalendarInput icon-right option** — `iconPlacement="right"` prop, используется в wizard step 2
 
 ### Compliance
 - [x] **RegulatoryFooter** с CySEC entity + 71.36% ESMA verbatim warning на 3 client screens

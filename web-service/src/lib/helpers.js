@@ -12,7 +12,20 @@ export const MIN_LOT_SIZE = 0.01;
 export const DEFAULT_MIN_LOT = 0.1;
 export const DEFAULT_MIN_HOLD_MIN = 5;
 export const DEFAULT_MIN_START_BALANCE = 100;
-export const WIZARD_TOTAL_STEPS = 5;
+export const WIZARD_TOTAL_STEPS = 4;
+
+/**
+ * Fixed platform conditions. Простая продуктовая модель: один счёт, минимальный баланс,
+ * минимальный объём сделки — одинаковы для всех контестов. Portировано из prototype/
+ * wizard 2.0 (commit 0e54cb9). Убирает конфигурацию rules в IB wizard.
+ */
+export const FIXED_CONDITIONS = {
+  minBalance: 100,            // USD
+  minLot: 0.01,               // торговый лот
+  accounts: 1,                // один аккаунт клиента
+  minHoldMinutes: 3,          // валидный лот: удержание ≥ 3 мин
+  minPips: 3,                 // валидный лот: движение ≥ 3 пипса
+};
 
 export const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 export const MONTHS_SHORT = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];

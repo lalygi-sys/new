@@ -2,7 +2,7 @@
 
 Production-grade web service для IB (Introducing Broker) Contest Platform. Brand 4 (Octa) под брендом **Octa Markets Cyprus Ltd** (CySEC 372/18). Mobile-first, CFD-compliant, demo-ready для stakeholder preview и iteration.
 
-- **Версия**: 0.9.0 (post-evolution, 2026-04-24)
+- **Версия**: 0.9.1 (wizard 2.0 partial port from team MR, 2026-04-23)
 - **Stack**: Vite 5.4 + React 18 + react-router-dom 6.26
 - **DS**: Octa Foundations (primary #1945ff, Title 02/03, Body 02, Utility 01)
 - **Compliance footprint**: ESMA-aligned warning, CySEC entity, offshore IB conditional warning

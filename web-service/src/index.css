@@ -337,6 +337,55 @@ select.ds-input-field {
 }
 textarea.ds-input-field { height: auto; padding: 12px 16px; resize: vertical; min-height: 96px; }
 
+/* Button-variant input (Dropdown trigger) — portированo из prototype 0e54cb9. */
+.ds-dropdown-wrap { position: relative; margin-bottom: 20px; }
+.ds-input-field--button {
+  display: inline-flex; align-items: center; gap: 12px;
+  cursor: pointer; text-align: left; font-family: inherit;
+}
+.ds-input-field--button .ds-input-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-input-field--button .ds-input-value--placeholder { color: var(--ds-text-placeholder); }
+.ds-input-icon { display: inline-flex; align-items: center; color: var(--ds-text-muted); flex-shrink: 0; }
+.ds-input-icon--left { margin-right: -4px; }
+.ds-input-icon--right { margin-right: -4px; }
+
+/* Options popover */
+.ds-dropdown {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 50;
+  background: var(--ds-bg); border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-lg); box-shadow: 0 16px 24px rgba(0,0,0,0.08), 0 2px 16px rgba(0,0,0,0.06);
+  max-height: 280px; overflow-y: auto; padding: 4px 0;
+}
+.ds-dropdown__option {
+  padding: 10px 16px; font-family: inherit; font-size: 14px; line-height: 20px;
+  color: var(--ds-text-primary); cursor: pointer; transition: background 0.12s;
+}
+.ds-dropdown__option:hover { background: var(--ds-bg-hover); }
+.ds-dropdown__option--selected { background: var(--ds-primary-content); color: var(--ds-primary); font-weight: 600; }
+
+/* InfoTip — hover/focus tooltip (portированo из prototype) */
+.info-tip { position: relative; display: inline-flex; align-items: center; cursor: help; outline: none; }
+.info-tip__icon { width: 16px; height: 16px; display: inline-flex; color: var(--ds-text-placeholder); transition: color 0.15s; }
+.info-tip__icon svg { width: 16px; height: 16px; display: block; }
+.info-tip:hover .info-tip__icon, .info-tip:focus-visible .info-tip__icon { color: var(--ds-text-muted); }
+.info-tip__bubble {
+  position: absolute; z-index: 1000;
+  background: var(--ds-text-primary); color: var(--ds-bg);
+  font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+  padding: 8px 12px; border-radius: var(--ds-radius-md);
+  max-width: 280px; width: max-content;
+  white-space: normal; text-align: left;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.15s, visibility 0.15s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.info-tip__bubble::after { content: ''; position: absolute; border: 5px solid transparent; }
+.info-tip--top .info-tip__bubble { bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.info-tip--top .info-tip__bubble::after { top: 100%; left: 50%; transform: translateX(-50%); border-top-color: var(--ds-text-primary); }
+.info-tip--bottom .info-tip__bubble { top: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.info-tip--bottom .info-tip__bubble::after { bottom: 100%; left: 50%; transform: translateX(-50%); border-bottom-color: var(--ds-text-primary); }
+.info-tip:hover .info-tip__bubble, .info-tip:focus-visible .info-tip__bubble { opacity: 1; visibility: visible; }
+
 /* ── DS Toggle ── */
 .ds-toggle { position: relative; display: inline-block; cursor: pointer; }
 .ds-toggle input { display: none; }
@@ -743,6 +792,18 @@ tr.table-row--flagged td { background: var(--ds-negative-bg); }
 .cal-input { width: 100%; height: 48px; padding: 0 16px; border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-lg); font-size: 14px; font-family: inherit; background: var(--ds-bg); color: var(--ds-text-primary); cursor: pointer; outline: none; transition: border-color 0.15s; display: flex; align-items: center; gap: 10px; }
 .cal-input:hover { border-color: var(--ds-border-hover); }
 .cal-input--open { border-color: var(--ds-primary); box-shadow: 0 0 0 3px rgba(25,69,255,0.12); }
+.cal-input__value { flex: 1; text-align: left; }
+.cal-input--icon-right .cal-input__value { text-align: left; }
+.cal-input--icon-right svg { color: var(--ds-text-muted); }
+
+/* AM/PM time picker — paired с time input (wizard 2.0) */
+.time-with-meridiem { display: flex; gap: 8px; align-items: flex-end; min-width: 0; }
+.time-with-meridiem > .ds-input-wrap { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
+.time-meridiem { display: flex; gap: 4px; flex-shrink: 0; }
+.wizard-period-row { display: grid; grid-template-columns: 1fr 260px; gap: 16px; margin-bottom: 16px; }
+@media (max-width: 768px) {
+  .wizard-period-row { grid-template-columns: 1fr; gap: 12px; }
+}
 .cal-dropdown { position: absolute; top: calc(100% + 6px); left: 0; z-index: 100; width: 288px; background: var(--ds-bg); border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-lg); padding-top: 12px; box-shadow: var(--ds-shadow-dropdown); }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 16px; gap: 0; }
 .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; border-radius: 50%; cursor: pointer; border: none; background: none; font-family: inherit; color: var(--ds-text-primary); transition: all 0.12s; }
