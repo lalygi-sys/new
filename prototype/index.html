@@ -21,6 +21,7 @@
   :root {
     /* DS Colors — Brand1 / Light */
     --ds-primary: #1945ff;             /* Foundations: color/key/primary */
+    --ds-on-primary-container: #173398;/* Foundations: color/key/on-primary-container */
     --ds-primary-hover: #1537cc;
     --ds-primary-content: #eef1ff;
     --ds-on-primary: #ffffff;          /* Foundations: color/key/on-primary */
@@ -214,6 +215,10 @@
   .ds-icon-btn--s svg { width: 16px; height: 16px; }
   .ds-icon-btn--ghost { border-color: transparent; background: transparent; }
   .ds-icon-btn--ghost:hover { background: var(--ds-bg-hover); border-color: transparent; }
+  /* Danger ghost — for destructive actions (e.g. remove row).
+     Default: subtle. Hover: tints red on negative-bg. */
+  .ds-icon-btn--danger { border-color: transparent; background: transparent; color: var(--ds-text-secondary); }
+  .ds-icon-btn--danger:hover { background: var(--ds-negative-bg); color: var(--ds-negative); border-color: transparent; }
 
   /* ── DS Tag (Components: Utility 01 Bold, full radius) ── */
   .ds-tag {
@@ -232,22 +237,75 @@
   .ds-tag--inactive { color: var(--ds-text-placeholder); background: #f5f5f5; }
   .ds-tag svg { width: 12px; height: 12px; }
 
-  /* ── DS Chips ── */
+  /* ── DS Chips ── (Components: Chips, default node 11732:8500, selected node 170:12728)
+     Default (Selected=False):
+       bg: surface/low (white) | border: 1px color/border/02 (#dddedf → --ds-border)
+       radius: 12px | padding: 24px horizontal | height: 40px (Size M)
+       text: Body 02 Bold (14/20 600), color key/secondary
+     Selected (Selected=True):
+       bg: color/key/primary-container (#eef1ff) | NO border
+       text: color/key/on-primary-container (#173398)
+       same shape/typography */
   .ds-chips-group { display: flex; gap: var(--ds-dim-l); flex-wrap: wrap; }
   .ds-chip {
-    display: inline-flex; align-items: center; gap: var(--ds-dim-m);
-    padding: 0 var(--ds-dim-2xl); height: 32px;
-    border: 1px solid var(--ds-border-input);
-    border-radius: var(--ds-radius-full);
+    display: inline-flex; align-items: center; gap: var(--ds-dim-l);
+    padding: 0 var(--ds-dim-5xl); height: 40px;
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-lg);
     font-family: var(--ds-font-body); font-weight: 600;
     font-size: 14px; line-height: 20px; letter-spacing: 0;
     cursor: pointer; background: var(--ds-bg); white-space: nowrap;
-    color: var(--ds-text-secondary); transition: all 0.15s;
+    color: var(--ds-text-primary);
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
-  .ds-chip:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
-  .ds-chip--selected { background: var(--ds-primary); color: #fff; border-color: var(--ds-primary); }
-  .ds-chip--selected:hover { background: var(--ds-primary-hover); color: #fff; }
-  .ds-chip--s { height: 24px; padding: 0 var(--ds-dim-l); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; }
+  .ds-chip:hover { background: var(--ds-bg-hover); }
+  .ds-chip--selected {
+    background: var(--ds-primary-content);
+    color: var(--ds-on-primary-container);
+    border-color: transparent;
+  }
+  .ds-chip--selected:hover { background: var(--ds-primary-content); border-color: transparent; }
+  .ds-chip--s { height: 32px; padding: 0 var(--ds-dim-3xl); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; }
+
+  /* ── DS Button Group (segmented control) ──
+     For binary or few-option selection where all values must be visible
+     (e.g. AM/PM, view modes, time ranges).
+     Size M: h=36 (segments 32) — pairs with input--m
+     Size S: h=28 (segments 24) — pairs with input--s
+     Tokens: track bg=row-hover, active bg=bg + shadow-01, radius-md/sm */
+  .ds-button-group {
+    display: inline-flex; align-items: center;
+    background: var(--ds-row-hover);
+    border-radius: var(--ds-radius-md);
+    padding: 2px;
+    gap: 2px;
+  }
+  .ds-button-group__segment {
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 0; background: transparent;
+    color: var(--ds-text-secondary);
+    font-family: var(--ds-font-body); font-weight: 500;
+    cursor: pointer; white-space: nowrap;
+    border-radius: var(--ds-radius-sm);
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  }
+  .ds-button-group__segment:hover:not(.ds-button-group__segment--active):not(:disabled) {
+    color: var(--ds-text-primary);
+  }
+  .ds-button-group__segment:focus-visible {
+    outline: none; box-shadow: var(--ds-focus-ring);
+  }
+  .ds-button-group__segment--active {
+    background: var(--ds-bg);
+    color: var(--ds-text-primary);
+    font-weight: 600;
+    box-shadow: var(--ds-shadow-01);
+  }
+  .ds-button-group__segment:disabled { cursor: not-allowed; opacity: 0.5; }
+  .ds-button-group--m { height: 36px; }
+  .ds-button-group--m .ds-button-group__segment { height: 32px; padding: 0 var(--ds-dim-3xl); font-size: 14px; line-height: 20px; }
+  .ds-button-group--s { height: 28px; }
+  .ds-button-group--s .ds-button-group__segment { height: 24px; padding: 0 var(--ds-dim-2xl); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; }
 
   /* ── DS Input (Components: Label above, external) ────────────
      Layout: label (Body 02) → shell → description/error, gap 4px
@@ -261,8 +319,8 @@
   .time-with-meridiem { display: flex; gap: var(--ds-dim-s); align-items: stretch; min-width: 0; }
   .time-with-meridiem > .ds-input-wrap { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
   .time-meridiem {
-    display: flex; gap: var(--ds-dim-xs);
-    align-self: flex-end; margin-bottom: 12px;
+    display: flex;
+    align-self: flex-end; margin-bottom: 10px;
     flex-shrink: 0;
   }
   .ds-input-label {
@@ -423,6 +481,14 @@
     background: var(--ds-bg); border-radius: var(--ds-radius-xl);
     border: 1px solid var(--ds-border);
   }
+  /* Wizard-page only: split the outer white frame into two standalone panels */
+  .ds-container--split {
+    background: transparent; border: none; padding: 0;
+  }
+  .wizard-panel {
+    background: var(--ds-bg);
+    border-radius: var(--ds-radius-xl); padding: var(--ds-dim-5xl);
+  }
 
   /* ── DS List ── */
   .ds-list { list-style: none; }
@@ -471,33 +537,86 @@
   /* APP-LEVEL STYLES                                */
   /* ═══════════════════════════════════════════════ */
 
-  .app { padding-top: 64px; min-height: 100vh; }
+  .app { padding-top: 100px; min-height: 100vh; }
 
-  /* TopNav */
-  .topnav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    background: var(--ds-bg); display: flex; align-items: center;
-    padding: 0 32px; height: 64px; border-bottom: 1px solid var(--ds-border);
+  /* ── Role preview bar (above the real product header) ──
+     Demo-only control to switch between IB / Client / Admin views.
+     Sits OUTSIDE the product interface — visually separated. */
+  .role-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
+    height: 36px;
+    background: var(--ds-bg-page);
+    border-bottom: 1px solid var(--ds-border);
+    display: flex; align-items: center; justify-content: center;
+    gap: var(--ds-dim-2xl);
+    padding: 0 var(--ds-dim-6xl);
+    font-family: var(--ds-font-body);
   }
-  .topnav__logo {
-    width: 36px; height: 36px; background: var(--ds-primary);
-    border-radius: var(--ds-radius-md); display: flex; align-items: center;
-    justify-content: center; margin-right: 24px; flex-shrink: 0;
+  .role-bar__label {
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    color: var(--ds-text-muted); font-weight: 400;
   }
-  .topnav__logo-mark {
-    font-family: var(--ds-font-display); font-weight: 700; font-size: 18px;
+
+  /* ── App header (IB cabinet style — matches Figma 7pd3z) ──
+     Logo (left) → Menu (center-left) → Right side (wallet + avatar).
+     Height 64px, white bg, 1px bottom border, 32px side padding. */
+  .app-header {
+    position: fixed; top: 36px; left: 0; right: 0; z-index: 1000;
+    height: 64px;
+    background: var(--ds-bg);
+    border-bottom: 1px solid var(--ds-border);
+    display: flex; align-items: center;
+    padding: 0 var(--ds-dim-6xl);
+    gap: var(--ds-dim-6xl);
+  }
+  .app-header__logo {
+    width: 32px; height: 32px; background: var(--ds-primary);
+    border-radius: var(--ds-radius-md);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; cursor: pointer;
+  }
+  .app-header__logo-mark {
+    font-family: var(--ds-font-display); font-weight: 700; font-size: 16px;
     color: #fff; line-height: 1; letter-spacing: -0.02em;
   }
-  .topnav__links { display: flex; gap: var(--ds-dim-s); }
-  .topnav__link {
-    height: 36px; padding: 0 var(--ds-dim-3xl); border-radius: var(--ds-radius-full);
-    font-size: 14px; line-height: 20px; color: var(--ds-text-secondary); cursor: pointer;
-    white-space: nowrap; font-weight: 400; border: none; background: transparent;
-    transition: all 0.15s; font-family: inherit;
+  .app-header__menu { display: flex; align-items: center; gap: var(--ds-dim-s); flex: 1; min-width: 0; }
+  .app-header__menu-item {
+    height: 32px; padding: 0 var(--ds-dim-3xl);
+    border-radius: var(--ds-radius-full);
+    border: 0; background: transparent;
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 14px; line-height: 20px; letter-spacing: 0;
+    color: var(--ds-text-primary);
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
   }
-  .topnav__link:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
-  .topnav__link--active { background: var(--ds-primary); color: #fff; font-weight: 600; }
-  .topnav__link--active:hover { background: var(--ds-primary-hover); color: #fff; }
+  .app-header__menu-item:hover:not(.app-header__menu-item--active) { background: var(--ds-bg-page); }
+  .app-header__menu-item--active {
+    background: var(--ds-row-hover);
+    font-weight: 600;
+  }
+  .app-header__right { display: flex; align-items: center; gap: var(--ds-dim-l); flex-shrink: 0; }
+  .app-header__wallet {
+    height: 32px; padding: 0 var(--ds-dim-3xl);
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-full);
+    background: var(--ds-bg);
+    display: inline-flex; align-items: center; gap: var(--ds-dim-l);
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary); cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .app-header__wallet:hover { background: var(--ds-bg-hover); border-color: var(--ds-border-input-hover); }
+  .app-header__wallet-label { color: var(--ds-text-secondary); }
+  .app-header__wallet-amount { font-weight: 600; }
+  .app-header__avatar {
+    width: 32px; height: 32px; border-radius: var(--ds-radius-full);
+    background: var(--ds-row-hover);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ds-text-secondary); cursor: pointer; flex-shrink: 0;
+    border: 0;
+  }
+  .app-header__avatar:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
 
   /* Page layout */
   .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--ds-dim-5xl); gap: var(--ds-dim-3xl); }
@@ -555,7 +674,7 @@
     gap: var(--ds-dim-3xl); margin-bottom: var(--ds-dim-3xl);
   }
   .table-header__meta { font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); font-weight: 400; }
-  .table-wrap { border: 1px solid var(--ds-border); border-radius: var(--ds-radius-xl); overflow: hidden; background: var(--ds-bg); }
+  .table-wrap { border: 1px solid var(--ds-border); border-radius: var(--ds-radius-lg); overflow: hidden; background: var(--ds-bg); }
   table { width: 100%; border-collapse: collapse; }
   /* th uses Utility 01 from DS Foundations (12/16, regular, 0.15 tracking) */
   th {
@@ -571,7 +690,8 @@
   tbody tr:last-child td { border-bottom: none; }
   tr { transition: background .1s; }
   tbody tr:hover td { background: var(--ds-row-hover); }
-  .td-actions { opacity: 0; transition: opacity .15s; display: inline-flex; gap: var(--ds-dim-s); }
+  .td-actions { opacity: 0; transition: opacity .15s; display: inline-flex; gap: var(--ds-dim-s); align-items: center; justify-content: flex-end; min-width: 184px; }
+  .td-actions > .ds-btn { min-width: 144px; justify-content: center; }
   tbody tr:hover .td-actions { opacity: 1; }
   tr.highlight td { background: var(--ds-bg-selected); }
   tr.highlight td:first-child { font-weight: 600; }
@@ -583,6 +703,45 @@
   .medal--1 { background: var(--ds-warning-bg);  color: var(--ds-warning-text); }
   .medal--2 { background: var(--ds-neutral-bg);  color: var(--ds-text-secondary); }
   .medal--3 { background: #FED7AA; color: #9A3412; } /* bronze — no DS equivalent yet */
+
+  /* Prize rank — star-icon badge used in prize editor.
+     Mirrors medal-1/2/3 tint scale but uses star glyph for ranking. */
+  .prize-rank { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }
+  .prize-rank svg { width: 18px; height: 18px; }
+  .prize-rank--1 { background: var(--ds-warning-bg);  color: var(--ds-warning-text); }
+  .prize-rank--2 { background: var(--ds-neutral-bg);  color: var(--ds-text-secondary); }
+  .prize-rank--3 { background: #FED7AA;               color: #9A3412; }
+  .prize-rank--default { background: var(--ds-bg-page); color: var(--ds-text-secondary); }
+
+  /* Prize-row — grid row in IB Create-Contest step 3.
+     Compacts the embedded Input by zeroing its margin. */
+  .prize-row .ds-input-wrap { margin-bottom: 0; }
+
+  /* Review-field — clickable cell in IB review summary card.
+     Editable fields turn into hoverable buttons with subtle bg + reveal pencil.
+     Static fields render as plain blocks with same internal layout. */
+  .review-field {
+    display: block; text-align: left; width: 100%;
+    border: 0; background: transparent; padding: var(--ds-dim-l) var(--ds-dim-2xl);
+    margin: calc(-1 * var(--ds-dim-l)) calc(-1 * var(--ds-dim-2xl));
+    border-radius: var(--ds-radius-md);
+    color: inherit; font: inherit;
+    transition: background 0.15s;
+  }
+  .review-field--editable { cursor: pointer; }
+  .review-field--editable:hover { background: var(--ds-bg-page); }
+  .review-field--editable:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); }
+  .review-field__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--ds-dim-l); min-height: 24px;
+  }
+  .review-field__edit {
+    width: 16px; height: 16px; flex-shrink: 0;
+    color: var(--ds-text-secondary);
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .review-field--editable:hover .review-field__edit,
+  .review-field--editable:focus-visible .review-field__edit { opacity: 1; }
 
   /* Type cell */
   .type-cell { display: flex; align-items: center; gap: var(--ds-dim-l); }
@@ -613,11 +772,11 @@
     width: 20px; height: 20px; border-radius: 0;
     display: inline-flex; align-items: center; justify-content: center;
     border: none; background: transparent; cursor: pointer;
-    color: var(--ds-text-muted); padding: 0; flex-shrink: 0;
+    color: var(--ds-text-primary); padding: 0; flex-shrink: 0;
     outline: none;
   }
   .type-info-btn:hover,
-  .type-info-btn:focus-visible { color: var(--ds-text-muted); background: transparent; }
+  .type-info-btn:focus-visible { color: var(--ds-text-primary); background: transparent; }
   .type-info-btn svg { width: 16px; height: 16px; display: block; }
 
   /* Score block in type modal */
@@ -642,7 +801,7 @@
   .rig-bullet-list__bullet {
     flex-shrink: 0; width: 20px; height: 20px;
     display: inline-flex; align-items: center; justify-content: center;
-    color: var(--ds-primary);
+    color: var(--ds-text-primary);
   }
   .rig-bullet-list__bullet svg { width: 20px; height: 20px; display: block; }
 
@@ -667,23 +826,90 @@
     background: var(--ds-bg); border-radius: var(--ds-radius-xl);
     border: 1px solid var(--ds-border); padding: var(--ds-dim-5xl);
     transition: box-shadow 0.2s, border-color 0.2s;
-    display: flex; flex-direction: column; gap: var(--ds-dim-3xl);
+    display: flex; flex-direction: column; gap: var(--ds-dim-5xl);
     text-align: left; align-self: start;
   }
   .contest-card--interactive { cursor: pointer; }
   .contest-card--interactive:hover { box-shadow: var(--ds-shadow-02); border-color: var(--ds-border-input); }
-  .contest-card__head { display: flex; align-items: flex-start; gap: var(--ds-dim-3xl); }
+  .contest-card__head { display: flex; align-items: center; gap: var(--ds-dim-3xl); }
   .contest-card__type { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--ds-dim-l); }
-  .contest-card__title { font-family: var(--ds-font-body); font-size: 20px; font-weight: 600; line-height: 24px; letter-spacing: -0.2px; color: var(--ds-text-primary); margin-bottom: var(--ds-dim-xs); }
+  .contest-card__title { font-family: var(--ds-font-body); font-size: 20px; font-weight: 600; line-height: 24px; letter-spacing: -0.2px; color: var(--ds-text-primary); }
   .contest-card__desc { font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--ds-text-secondary); }
+  .contest-card__divider { height: 1px; background: var(--ds-border); border: 0; margin: 0; }
   .contest-card__meta {
-    display: flex; flex-wrap: wrap; gap: var(--ds-dim-3xl) var(--ds-dim-5xl);
-    padding-top: var(--ds-dim-3xl); border-top: 1px solid var(--ds-border);
+    display: flex; flex-wrap: wrap; gap: var(--ds-dim-l) var(--ds-dim-4xl);
     font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
     color: var(--ds-text-secondary);
   }
   .contest-card__meta-item { display: inline-flex; align-items: center; gap: var(--ds-dim-l); }
   .contest-card__meta-item svg { width: 16px; height: 16px; }
+  /* Prize — multiple compact variants */
+
+  /* A. Inline meta emphasis — becomes a meta-item styled with bold value */
+  .contest-card__meta-item--prize {
+    font-weight: 600; color: var(--ds-text-primary);
+  }
+  .contest-card__meta-item--prize .contest-card__prize-label {
+    font-weight: 400; color: var(--ds-text-muted); margin-right: var(--ds-dim-xs);
+  }
+
+  /* B. Row — muted label left, bold value right, separated by gap only */
+  .contest-card__prize-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: var(--ds-dim-3xl);
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+  }
+  .contest-card__prize-row-label { color: var(--ds-text-muted); font-weight: 400; }
+  .contest-card__prize-row-value {
+    color: var(--ds-text-primary); font-weight: 600;
+    font-size: 18px; line-height: 24px; letter-spacing: -0.1px;
+  }
+
+  /* C. Chip — subtle surface-low pill, inline */
+  .contest-card__prize-chip {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: var(--ds-dim-l);
+    padding: var(--ds-dim-l) var(--ds-dim-2xl);
+    background: var(--ds-surface-low); border-radius: var(--ds-radius-full, 999px);
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    color: var(--ds-text-secondary);
+  }
+  .contest-card__prize-chip svg { width: 16px; height: 16px; color: var(--ds-text-muted); }
+  .contest-card__prize-chip strong {
+    color: var(--ds-text-primary); font-weight: 600;
+  }
+
+  /* D. Stack — small label above, medium bold value (compact hero) */
+  .contest-card__prize-stack { display: flex; flex-direction: column; gap: var(--ds-dim-xs); }
+  .contest-card__prize-stack-label {
+    font-family: var(--ds-font-body);
+    font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: 0.15px;
+    color: var(--ds-text-muted); text-transform: uppercase;
+  }
+  .contest-card__prize-stack-value {
+    font-family: var(--ds-font-body);
+    font-size: 20px; line-height: 24px; font-weight: 600; letter-spacing: -0.2px;
+    color: var(--ds-text-primary);
+  }
+
+  /* Variant switcher for the preview */
+  .prize-variant-switch {
+    display: flex; flex-wrap: wrap; gap: var(--ds-dim-m);
+    padding: var(--ds-dim-l); background: var(--ds-surface-low);
+    border-radius: var(--ds-radius-md); margin-bottom: var(--ds-dim-m);
+  }
+  .prize-variant-switch__btn {
+    appearance: none; border: 1px solid transparent; background: transparent;
+    padding: var(--ds-dim-m) var(--ds-dim-2xl); border-radius: var(--ds-radius-sm);
+    font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; font-weight: 500;
+    color: var(--ds-text-secondary); cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+  }
+  .prize-variant-switch__btn:hover { color: var(--ds-text-primary); }
+  .prize-variant-switch__btn--active {
+    background: var(--ds-bg); color: var(--ds-text-primary);
+    box-shadow: var(--ds-shadow-01);
+  }
   .contest-card__footer { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-dim-3xl); flex-wrap: wrap; }
 
   /* User progress (client leaderboard hero) */
@@ -731,46 +957,39 @@
   .wizard-connector { flex: 1; height: 1px; background: var(--ds-border-input); transition: background 0.3s; min-width: var(--ds-dim-3xl); }
   .wizard-connector--done { background: var(--ds-positive); }
 
-  /* Preview card wrapper — holds the DS ContestCard for wizard preview */
-  .preview-card {
-    background: var(--ds-bg); border-radius: var(--ds-radius-xl);
-    border: 1px solid var(--ds-border); padding: var(--ds-dim-5xl);
-    position: sticky; top: 80px; align-self: start;
-    display: flex; flex-direction: column; gap: var(--ds-dim-3xl);
-  }
-  /* DS Utility 01 Bold (12/16, weight 600) */
+  /* Preview label (DS Utility 01 — 12/16, weight 400, muted) */
   .preview-card__label {
-    font-family: var(--ds-font-body); font-weight: 600;
+    font-family: var(--ds-font-body); font-weight: 400;
     font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
-    color: var(--ds-text-secondary); text-transform: none;
+    color: var(--ds-text-muted); text-transform: none;
   }
 
-  /* RadioCard DS component (proposed) — hover/selected aligned with table row style */
-  /* DS Radio-card (selectable card with visible radio indicator) */
+  /* RadioCard DS component — selectable card with DS "List item" selected-indicator pattern
+     Mirrors DS List item — Selected=True variant (Components file bjsAJWAk0DP4bbVxeRNiKr,
+     Dropdown menu / Autocomplete, node 10509:18896):
+       — trailing slot: 24×24 reserved for icon
+       — selected: ic-check-24 in Color/key/primary-content (#1945FF → --ds-primary)
+       — unselected: empty 24×24 slot (no visual indicator, preserves layout) */
   .rig-radio-cards { display: grid; grid-template-columns: 1fr; gap: var(--ds-dim-2xl); }
   .rig-radio-card {
     padding: var(--ds-dim-3xl) var(--ds-dim-4xl);
     border: 1px solid var(--ds-border);
     border-radius: var(--ds-radius-lg); cursor: pointer;
-    transition: background 0.12s, border-color 0.12s;
+    transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
     display: flex; align-items: center; gap: var(--ds-dim-3xl);
     background: var(--ds-bg); text-align: left;
   }
-  .rig-radio-card::after {
-    content: ''; flex-shrink: 0;
-    width: 20px; height: 20px; border-radius: 50%;
-    border: 1.5px solid var(--ds-border-input);
-    background: var(--ds-bg);
-    transition: border-color 0.12s, box-shadow 0.12s;
+  .rig-radio-card__trail {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ds-primary);
   }
+  .rig-radio-card__trail svg { width: 24px; height: 24px; display: block; }
   .rig-radio-card:hover { background: var(--ds-row-hover); border-color: var(--ds-border-input-hover); }
-  .rig-radio-card:hover::after { border-color: var(--ds-border-input-hover); }
+  .rig-radio-card:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); border-color: var(--ds-border-focus); }
   .rig-radio-card--selected { border-color: var(--ds-primary); background: var(--ds-primary-content); }
   .rig-radio-card--selected:hover { background: var(--ds-primary-content); border-color: var(--ds-primary); }
-  .rig-radio-card--selected::after {
-    border-color: var(--ds-primary);
-    box-shadow: inset 0 0 0 5px var(--ds-primary), inset 0 0 0 7px var(--ds-bg);
-  }
 
   /* Audit trail */
   .audit-trail { border-left: 1px solid var(--ds-border); margin-left: var(--ds-dim-2xl); padding-left: var(--ds-dim-4xl); }
@@ -787,46 +1006,41 @@
   .cal-day--selected { background: var(--ds-primary); color: #fff; font-weight: 600; }
 
   /* Toast */
-  /* DS Toast — built on .ds-notification visual pattern (left accent bar,
-     Body 02 typography). Fixed-positioned, top-centered. */
+  /* DS Toast — built on .ds-notification visual pattern (no left accent bar,
+     same treatment as InfoBox). Fixed-positioned, top-centered. */
   .toast {
-    position: fixed; top: var(--ds-dim-5xl); left: 50%;
+    /* Top offset = role-bar (36) + app-header (64) + 16 buffer = 116 */
+    position: fixed; top: 116px; left: 50%;
     transform: translateX(-50%) translateY(-100px);
     z-index: 3000;
     display: flex; align-items: center; gap: var(--ds-dim-2xl);
-    padding: var(--ds-dim-2xl) var(--ds-dim-4xl) var(--ds-dim-2xl) var(--ds-dim-4xl);
+    padding: var(--ds-dim-3xl) var(--ds-dim-4xl);
     border-radius: var(--ds-radius-lg);
     font-size: 14px; line-height: 20px; font-weight: 400;
     color: var(--ds-text-primary);
     box-shadow: var(--ds-shadow-03);
     opacity: 0; white-space: nowrap;
     transition: transform 0.3s ease, opacity 0.3s ease;
-    overflow: hidden;
-  }
-  .toast::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-    width: 4px; background: var(--ds-primary);
   }
   .toast--visible { transform: translateX(-50%) translateY(0); opacity: 1; }
   .toast--positive { background: var(--ds-positive-bg); }
-  .toast--positive::before { background: var(--ds-positive); }
   .toast--negative { background: var(--ds-negative-bg); }
-  .toast--negative::before { background: var(--ds-negative); }
 
   /* DS Inline-message (default = info; variants via modifier) */
+  /* Info-box — inherits DS Notification visual treatment, no left accent bar */
   .info-box {
-    padding: var(--ds-dim-3xl);
-    background: var(--ds-primary-content);
-    border-left: 4px solid var(--ds-primary);
-    border-radius: var(--ds-radius-md);
-    font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px;
-    color: var(--ds-text-primary);
     display: flex; align-items: flex-start; gap: var(--ds-dim-2xl);
+    padding: var(--ds-dim-3xl) var(--ds-dim-4xl);
+    border-radius: var(--ds-radius-lg);
+    background: var(--ds-primary-content);
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary);
     margin-top: var(--ds-dim-3xl);
   }
-  .info-box--positive { background: var(--ds-positive-bg); border-left-color: var(--ds-positive); }
-  .info-box--warning  { background: var(--ds-warning-bg);  border-left-color: var(--ds-warning); }
-  .info-box--negative { background: var(--ds-negative-bg); border-left-color: var(--ds-negative); }
+  .info-box--positive { background: var(--ds-positive-bg); }
+  .info-box--warning  { background: var(--ds-warning-bg); }
+  .info-box--negative { background: var(--ds-negative-bg); }
 
   /* Hover tooltip */
   .info-tip {
@@ -1078,6 +1292,11 @@
     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.4385 6.81836V13.5947H15.7402V14.1104C15.7402 14.6626 15.2925 15.1104 14.7402 15.1104H14.4385V16C14.4385 16.5521 13.9906 16.9998 13.4385 17H12.6777V15.1104H7.82129V13.6445L12.1416 6.81836H14.4385ZM12.6182 8.90625L9.70996 13.5146V13.5947H12.6982V8.90625H12.6182Z" fill="currentColor"/>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" fill="currentColor"/>
   </symbol>
+  <!-- digit-5: glyph rendered via SVG <text> (no DS path available in source set) -->
+  <symbol id="ic-digit-5-24" viewBox="0 0 24 24" fill="none">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" fill="currentColor"/>
+    <text x="12" y="16" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="currentColor">5</text>
+  </symbol>
 
   <!-- Common -->
   <symbol id="ic-calendar-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:836 -->
@@ -1225,12 +1444,15 @@ const Tag = ({ label, variant = 'neutral', icon }) => (
 );
 
 const Chips = ({ label, selected, onClick, size }) => (
-  <div
+  <button
+    type="button"
+    role="checkbox"
+    aria-checked={!!selected}
     className={`ds-chip ${selected ? 'ds-chip--selected' : ''} ${size ? `ds-chip--${size}` : ''}`}
     onClick={onClick}
   >
     {label}
-  </div>
+  </button>
 );
 
 const ChipsGroup = ({ children }) => <div className="ds-chips-group">{children}</div>;
@@ -1360,6 +1582,37 @@ const Tab = ({ label, active, onClick }) => (
   <button className={`ds-tab ${active ? 'ds-tab--active' : ''}`} onClick={onClick}>{label}</button>
 );
 
+/* ButtonGroup — DS segmented control.
+   Use for binary or few-option mutually exclusive selection where
+   all options must be visible at once (e.g. AM/PM, view mode toggles).
+   Props:
+     value       — currently selected option.value
+     onChange    — fn(nextValue)
+     options     — [{ value, label, disabled? }]
+     size        — 's' | 'm' (default 'm')
+     ariaLabel   — label for the radiogroup
+*/
+const ButtonGroup = ({ value, onChange, options, size = 'm', ariaLabel }) => (
+  <div className={`ds-button-group ds-button-group--${size}`} role="radiogroup" aria-label={ariaLabel}>
+    {options.map(opt => {
+      const active = opt.value === value;
+      return (
+        <button
+          key={opt.value}
+          type="button"
+          role="radio"
+          aria-checked={active}
+          disabled={opt.disabled}
+          className={`ds-button-group__segment ${active ? 'ds-button-group__segment--active' : ''}`}
+          onClick={() => !opt.disabled && onChange(opt.value)}
+        >
+          {opt.label}
+        </button>
+      );
+    })}
+  </div>
+);
+
 const Notification = ({ variant = 'negative', title, description, actions, icon }) => (
   <div className={`ds-notification ds-notification--${variant}`}>
     {icon && <span className="ds-notification__icon" style={{color: variant === 'negative' ? 'var(--ds-negative)' : variant === 'warning' ? 'var(--ds-warning)' : 'var(--ds-primary)'}}>
@@ -1373,8 +1626,8 @@ const Notification = ({ variant = 'negative', title, description, actions, icon 
   </div>
 );
 
-const Container = ({ children, style }) => (
-  <div className="ds-container" style={style}>{children}</div>
+const Container = ({ children, style, className = '' }) => (
+  <div className={`ds-container ${className}`} style={style}>{children}</div>
 );
 
 const Modal = ({ open, onClose, title, subtitle, children, footer, size = 'm' }) => {
@@ -1418,6 +1671,7 @@ const CONTEST_TYPES = {
     title: 'Volume Race',
     desc: 'Кто наторгует больше лотов за период',
     shortDesc: 'Наторгуйте больше лотов и выиграйте!',
+    clientDescTemplate: (topPrize) => `Наторгуйте больше лотов и выиграйте до $${topPrize} бонус на торговый счёт!`,
     icon: 'chart',
     circle: 'primary',
     typeIcon: 'volume',
@@ -1438,6 +1692,7 @@ const CONTEST_TYPES = {
     title: 'Trading Streak',
     desc: 'Кто торгует больше дней подряд',
     shortDesc: 'Торгуйте каждый день и покажите дисциплину!',
+    clientDescTemplate: (topPrize) => `Торгуйте каждый день и выиграйте до $${topPrize}! Кто удержит самый длинный streak — тот победит.`,
     icon: 'flame',
     circle: 'warning',
     typeIcon: 'streak',
@@ -1458,6 +1713,7 @@ const CONTEST_TYPES = {
     title: 'Top Trader',
     desc: 'Комбинация объёма и частоты',
     shortDesc: 'Покажите лучшую комбинацию объёма и стабильности!',
+    clientDescTemplate: (topPrize) => `Покажите лучшую комбинацию объёма и стабильности — заберите до $${topPrize} бонус на торговый счёт!`,
     icon: 'trophy',
     circle: 'positive',
     typeIcon: 'top',
@@ -1479,6 +1735,7 @@ const CONTEST_TYPES = {
     title: 'Grow your account',
     desc: 'Кто больше нарастит баланс в процентах',
     shortDesc: 'Нарастите баланс в процентах и победите!',
+    clientDescTemplate: (topPrize) => `Покажите лучший прирост баланса в % — наши лидеры заберут до $${topPrize} бонус.`,
     icon: 'trending-up',
     circle: 'grow',
     typeIcon: 'grow',
@@ -1592,18 +1849,85 @@ const ToastProvider = ({ children }) => {
 
 const useToast = () => useContext(ToastContext);
 
-const TopNav = ({ role, onRoleChange }) => (
-  <nav className="topnav">
-    <div className="topnav__logo"><span className="topnav__logo-mark">D</span></div>
-    <div className="topnav__links">
-      {['ib', 'client', 'admin'].map(r => (
-        <button key={r} className={`topnav__link ${role === r ? 'topnav__link--active' : ''}`} onClick={() => onRoleChange(r)}>
-          {r === 'ib' ? 'IB Partner' : r === 'client' ? 'Client' : 'Admin'}
-        </button>
-      ))}
-    </div>
-  </nav>
+/* RolePreviewBar — demo control above the real product header.
+   Lets the prototype reviewer switch between role mockups. NOT part of
+   the production interface. */
+const RolePreviewBar = ({ role, onRoleChange }) => (
+  <div className="role-bar" role="region" aria-label="Demo: переключение роли">
+    <span className="role-bar__label">Demo preview:</span>
+    <ButtonGroup
+      value={role}
+      onChange={onRoleChange}
+      options={[
+        {value: 'ib',     label: 'IB Partner'},
+        {value: 'client', label: 'Client'},
+        {value: 'admin',  label: 'Admin'},
+      ]}
+      size="s"
+      ariaLabel="Роль для предпросмотра"
+    />
+  </div>
 );
+
+/* Menu items per role — keeps the header consistent with each role's
+   navigation surface. IB matches Figma 7pd3z (IB cabinet). */
+const HEADER_MENUS = {
+  ib: [
+    {key: 'dashboard', label: 'IB Dashboard'},
+    {key: 'revenue',   label: 'Revenue statistics'},
+    {key: 'promo',     label: 'Promo materials'},
+  ],
+  client: [
+    {key: 'contests', label: 'Контесты'},
+    {key: 'cabinet',  label: 'Кабинет'},
+    {key: 'support',  label: 'Поддержка'},
+  ],
+  admin: [
+    {key: 'dashboard', label: 'Dashboard'},
+    {key: 'contests',  label: 'Контесты'},
+    {key: 'users',     label: 'Пользователи'},
+  ],
+};
+
+/* AppHeader — IB cabinet header per Figma file 7pd3z7UFoNiFr4wiyLlfUY.
+   Structure: Logo + Menu + Wallet + Avatar. Menu items adapt per role. */
+const AppHeader = ({ role }) => {
+  const menu = HEADER_MENUS[role] || HEADER_MENUS.ib;
+  const [activeKey, setActiveKey] = useState(menu[0].key);
+
+  useEffect(() => { setActiveKey(menu[0].key); }, [role]);
+
+  return (
+    <header className="app-header" role="banner">
+      <div className="app-header__logo" aria-label="Octa">
+        <span className="app-header__logo-mark">O</span>
+      </div>
+      <nav className="app-header__menu" aria-label="Главное меню">
+        {menu.map(item => (
+          <button
+            key={item.key}
+            className={`app-header__menu-item ${activeKey === item.key ? 'app-header__menu-item--active' : ''}`}
+            onClick={() => setActiveKey(item.key)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </nav>
+      <div className="app-header__right">
+        <button className="app-header__wallet" type="button" aria-label="Кошелёк">
+          <span className="app-header__wallet-label">Wallet</span>
+          <span className="app-header__wallet-amount">$0.00</span>
+        </button>
+        <button className="app-header__avatar" type="button" aria-label="Профиль">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+  );
+};
 
 const Breadcrumb = ({ items }) => (
   <nav className="breadcrumb" aria-label="Breadcrumb">
@@ -1642,6 +1966,18 @@ const StatCard = ({ value, label, color, trend }) => (
 const Medal = ({ position }) => {
   const cls = position <= 3 ? `medal--${position}` : '';
   return <span className={`medal ${cls}`}>{position}</span>;
+};
+
+/* PrizeRank — star-icon ranking badge.
+   Same tint scale as Medal (gold/silver/bronze), but uses a star glyph
+   instead of a numeral. Position number is shown alongside in label text. */
+const PrizeRank = ({ position }) => {
+  const cls = position <= 3 ? `prize-rank--${position}` : 'prize-rank--default';
+  return (
+    <span className={`prize-rank ${cls}`} aria-hidden="true">
+      <svg><use href={dsIc('star')} /></svg>
+    </span>
+  );
 };
 
 const InfoBox = ({ icon, variant = 'info', children }) => {
@@ -1688,10 +2024,14 @@ const DOW = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const formatDate = d => `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
 
 const MeridiemToggle = ({ value, onChange }) => (
-  <div className="time-meridiem" role="group" aria-label="AM или PM">
-    {['AM', 'PM'].map(m => (
-      <Chips key={m} label={m} selected={value === m} onClick={() => onChange(m)} size="s" />
-    ))}
+  <div className="time-meridiem">
+    <ButtonGroup
+      value={value}
+      onChange={onChange}
+      options={[{value:'AM', label:'AM'}, {value:'PM', label:'PM'}]}
+      size="s"
+      ariaLabel="AM или PM"
+    />
   </div>
 );
 
@@ -1770,8 +2110,9 @@ const BulletList = ({ items, icon = 'dot' }) => (
 );
 
 /* Shared ContestCard — used in ClientContestList and wizard preview */
-const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Участвую', onAction, actionDisabled }) => {
+const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Участвую', onAction, actionDisabled, prizeVariant = 'inline' }) => {
   const t = CONTEST_TYPES[typeId];
+  const showPrizeInMeta = prize && prizeVariant === 'inline';
   return (
     <div className={`contest-card ${onClick ? 'contest-card--interactive' : ''}`} onClick={onClick}>
       <div className="contest-card__head">
@@ -1789,12 +2130,37 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
         </div>
       </div>
       {desc && <div className="contest-card__desc">{desc}</div>}
+      {desc && <hr className="contest-card__divider" aria-hidden="true" />}
       <div className="contest-card__meta">
         {dates && <span className="contest-card__meta-item"><svg><use href="#ic-calendar-24"/></svg>{dates}</span>}
         {participants != null && <span className="contest-card__meta-item"><svg><use href="#ic-users-24"/></svg>{participants} участников</span>}
-        {prize && <span className="contest-card__meta-item"><svg><use href="#ic-gift-24"/></svg>{prize}</span>}
         {days && <span className="contest-card__meta-item"><svg><use href="#ic-clock-24"/></svg>{days}</span>}
+        {showPrizeInMeta && (
+          <span className="contest-card__meta-item contest-card__meta-item--prize">
+            <svg><use href="#ic-gift-24"/></svg>
+            <span className="contest-card__prize-label">Призовой фонд</span>
+            {prize}
+          </span>
+        )}
       </div>
+      {prize && prizeVariant === 'row' && (
+        <div className="contest-card__prize-row">
+          <span className="contest-card__prize-row-label">Призовой фонд</span>
+          <span className="contest-card__prize-row-value">{prize}</span>
+        </div>
+      )}
+      {prize && prizeVariant === 'chip' && (
+        <span className="contest-card__prize-chip">
+          <svg aria-hidden="true"><use href="#ic-gift-24"/></svg>
+          Призовой фонд <strong>{prize}</strong>
+        </span>
+      )}
+      {prize && prizeVariant === 'stack' && (
+        <div className="contest-card__prize-stack">
+          <span className="contest-card__prize-stack-label">Призовой фонд</span>
+          <span className="contest-card__prize-stack-value">{prize}</span>
+        </div>
+      )}
       {progress != null && (
         <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-m)'}}>
           <div style={{display:'flex',justifyContent:'space-between',fontSize:12,lineHeight:'16px',color:'var(--ds-text-muted)'}}>
@@ -1806,7 +2172,7 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
       )}
       {onAction && (
         <div className="contest-card__footer">
-          <Button variant="primary" size="m" onClick={e => { e.stopPropagation(); onAction(); }} disabled={actionDisabled}>{actionLabel}</Button>
+          <Button variant="primary" size="m" block onClick={e => { e.stopPropagation(); onAction(); }} disabled={actionDisabled}>{actionLabel}</Button>
         </div>
       )}
     </div>
@@ -1822,7 +2188,7 @@ const IBMyContests = ({ onNavigate }) => {
   return (
     <div className="screen-enter">
       <div className="page-header">
-        <h1 className="rig-title-03">Мои контесты</h1>
+        <h1 className="rig-title-02">Мои контесты</h1>
         <Button variant="primary" size="m" icon="plus" onClick={() => onNavigate('wizard')}>Создать контест</Button>
       </div>
       <div style={{marginBottom:24}}>
@@ -1884,6 +2250,33 @@ const TIMEZONES = [
   {value: 'UTC+08', label: 'UTC+08:00 (Singapore)'},
 ];
 
+/* WizardFooter — sticky-bottom action row used across all wizard steps.
+   Layout:
+     [Назад] ........... [Сохранить черновик] [Далее / Запустить]
+   "Сохранить черновик" is available on every step. The right-most button
+   becomes the launch CTA on the final step. */
+const WizardFooter = ({ step, isFinal = false, onPrev, onNext, onSaveDraft, onLaunch, nextDisabled }) => (
+  <div style={{
+    marginTop: 'var(--ds-dim-5xl)',
+    display: 'flex', justifyContent: 'space-between',
+    gap: 'var(--ds-dim-2xl)', flexWrap: 'wrap', alignItems: 'center',
+  }}>
+    <div>
+      {step > 1 && (
+        <Button variant="outline" size="m" icon="arrow-left" onClick={onPrev}>Назад</Button>
+      )}
+    </div>
+    <div style={{display:'flex', gap:'var(--ds-dim-2xl)', flexWrap:'wrap'}}>
+      <Button variant="outline" size="m" icon="save" onClick={onSaveDraft}>Сохранить черновик</Button>
+      {isFinal ? (
+        <Button variant="primary" size="m" icon="rocket" onClick={onLaunch}>Запустить контест</Button>
+      ) : (
+        <Button variant="primary" size="m" iconRight="arrow-right" onClick={onNext} disabled={nextDisabled}>Далее</Button>
+      )}
+    </div>
+  </div>
+);
+
 const IBCreateContest = ({ onNavigate }) => {
   const showToast = useToast();
   const [step, setStep] = useState(1);
@@ -1901,13 +2294,28 @@ const IBCreateContest = ({ onNavigate }) => {
     minLot: 0.01,
     accountScope: 'single',
   };
-  const [prizeType, setPrizeType] = useState('bonus');
+  const [prizeType, setPrizeType] = useState('wallet');
 
   const [prizes, setPrizes] = useState([
     {id: 1, pos: 1, amount: '500'},
     {id: 2, pos: 2, amount: '300'},
     {id: 3, pos: 3, amount: '100'},
   ]);
+
+  /* Contest name/description.
+     Auto-prefilled from contest type and top prize, until the IB
+     manually edits — then user input is preserved. */
+  const initialActive = CONTEST_TYPES[contestType];
+  const initialTopPrize = (parseFloat(prizes[0]?.amount) || 0).toLocaleString('en-US');
+  const [contestName, setContestName] = useState(initialActive.title);
+  const [contestDesc, setContestDesc] = useState(initialActive.clientDescTemplate(initialTopPrize));
+  const [nameTouched, setNameTouched] = useState(false);
+  const [descTouched, setDescTouched] = useState(false);
+  const topPrizeStr = (parseFloat(prizes[0]?.amount) || 0).toLocaleString('en-US');
+  useEffect(() => {
+    if (!nameTouched) setContestName(CONTEST_TYPES[contestType].title);
+    if (!descTouched) setContestDesc(CONTEST_TYPES[contestType].clientDescTemplate(topPrizeStr));
+  }, [contestType, topPrizeStr, nameTouched, descTouched]);
 
   const addPrize = () => {
     setPrizes(prev => {
@@ -1926,155 +2334,266 @@ const IBCreateContest = ({ onNavigate }) => {
 
   const activeType = CONTEST_TYPES[contestType];
 
-  const next = () => step < 4 && setStep(step + 1);
+  const next = () => step < 5 && setStep(step + 1);
   const prev = () => step > 1 && setStep(step - 1);
+  const saveDraft = () => { onNavigate('list'); showToast('Черновик сохранён'); };
+  const launchContest = () => { onNavigate('list'); showToast('Контест запущен!', 'positive'); };
 
   const fmtShort = d => `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
   const periodString = `${fmtShort(startDate)} — ${fmtShort(endDate)}`;
 
   return (
     <div className="screen-enter">
-      <Breadcrumb items={[{label: 'Мои контесты', onClick: () => onNavigate('list')}, {label: 'Создание контеста'}]} />
       <div className="wizard-layout">
-        <div>
-          <WizardStepper currentStep={step} totalSteps={4} />
+        <div className="wizard-panel">
+          <Breadcrumb items={[{label: 'Мои контесты', onClick: () => onNavigate('list')}, {label: 'Создание контеста'}]} />
+          <WizardStepper currentStep={step} totalSteps={5} />
 
           {step === 1 && (
             <div>
               <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Тип контеста</h3>
               <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Выберите формат соревнования</p>
-              <div className="rig-radio-cards">
-                {CONTEST_TYPE_LIST.map(t => (
-                  <div key={t.id} className={`rig-radio-card ${contestType === t.id ? 'rig-radio-card--selected' : ''}`} onClick={() => setContestType(t.id)}>
-                    <div className={`icon-circle icon-circle--${t.circle}`}><svg width="20" height="20"><use href={dsIc(t.icon)}/></svg></div>
-                    <div style={{flex:1,minWidth:0}}>
-                      <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-m)'}}>
-                        <div className="rig-body-02-bold">{t.title}</div>
-                        <ContestTypeInfo typeId={t.id} />
+              <div className="rig-radio-cards" role="radiogroup" aria-label="Тип контеста">
+                {CONTEST_TYPE_LIST.map(t => {
+                  const isSelected = contestType === t.id;
+                  const onKeyDown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setContestType(t.id);
+                    } else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+                      e.preventDefault();
+                      const i = CONTEST_TYPE_LIST.findIndex(x => x.id === contestType);
+                      setContestType(CONTEST_TYPE_LIST[(i + 1) % CONTEST_TYPE_LIST.length].id);
+                    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                      e.preventDefault();
+                      const i = CONTEST_TYPE_LIST.findIndex(x => x.id === contestType);
+                      setContestType(CONTEST_TYPE_LIST[(i - 1 + CONTEST_TYPE_LIST.length) % CONTEST_TYPE_LIST.length].id);
+                    }
+                  };
+                  return (
+                    <div
+                      key={t.id}
+                      role="radio"
+                      aria-checked={isSelected}
+                      tabIndex={isSelected ? 0 : -1}
+                      className={`rig-radio-card ${isSelected ? 'rig-radio-card--selected' : ''}`}
+                      onClick={() => setContestType(t.id)}
+                      onKeyDown={onKeyDown}
+                    >
+                      <div className={`icon-circle icon-circle--${t.circle}`} style={{flexShrink:0}}>
+                        <svg width="20" height="20"><use href={dsIc(t.icon)}/></svg>
                       </div>
-                      <div className="rig-utility-01" style={{color:'var(--ds-text-muted)',marginTop:'var(--ds-dim-xs)'}}>{t.desc}</div>
+                      <div style={{flex:1,minWidth:0}}>
+                        <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-m)'}}>
+                          <div className="rig-body-02-bold">{t.title}</div>
+                          <ContestTypeInfo typeId={t.id} />
+                        </div>
+                        <div className="rig-utility-01" style={{color:'var(--ds-text-muted)',marginTop:'var(--ds-dim-xs)'}}>{t.desc}</div>
+                      </div>
+                      <span className="rig-radio-card__trail" aria-hidden="true">
+                        {isSelected && <svg><use href="#ic-check-24"/></svg>}
+                      </span>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-              <div style={{marginTop:'var(--ds-dim-5xl)', display:'flex', justifyContent:'flex-end'}}>
-                <Button variant="primary" size="m" iconRight="arrow-right" onClick={next}>Далее</Button>
-              </div>
+              <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
             </div>
           )}
 
           {step === 2 && (
+            <div>
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Название и описание</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Так контест увидят клиенты в каталоге</p>
+              <Input
+                label="Название контеста"
+                value={contestName}
+                onChange={e => { setContestName(e.target.value); setNameTouched(true); }}
+                placeholder="Например, Volume Race"
+                description={`${contestName.length} / 50`}
+                maxLength={50}
+              />
+              <Input
+                type="textarea"
+                label="Описание для клиентов"
+                value={contestDesc}
+                onChange={e => { setContestDesc(e.target.value); setDescTouched(true); }}
+                placeholder="Кратко расскажите клиентам, как победить и что они получат"
+                description={`${contestDesc.length} / 200`}
+                maxLength={200}
+              />
+              <InfoBox icon="lightbulb"><span><strong>Совет:</strong> укажите главный приз и условие победы — так карточка контеста заметнее в каталоге</span></InfoBox>
+              <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} nextDisabled={!contestName.trim()} />
+            </div>
+          )}
+
+          {step === 3 && (
             <div>
               <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Период проведения</h3>
               <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Укажите даты, время и часовой пояс</p>
               <div style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
                 <CalendarInput label="Дата начала" value={startDate} onChange={setStartDate} />
                 <div className="time-with-meridiem">
-                  <Input label="Время начала" leftIcon="clock" value={startTime} onChange={e => setStartTime(e.target.value)} />
+                  <Input label="Время начала" rightIcon="clock" value={startTime} onChange={e => setStartTime(e.target.value)} />
                   <MeridiemToggle value={startMeridiem} onChange={setStartMeridiem} />
                 </div>
               </div>
               <div style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
                 <CalendarInput label="Дата окончания" value={endDate} onChange={setEndDate} />
                 <div className="time-with-meridiem">
-                  <Input label="Время окончания" leftIcon="clock" value={endTime} onChange={e => setEndTime(e.target.value)} />
+                  <Input label="Время окончания" rightIcon="clock" value={endTime} onChange={e => setEndTime(e.target.value)} />
                   <MeridiemToggle value={endMeridiem} onChange={setEndMeridiem} />
                 </div>
               </div>
               <Select label="Часовой пояс" leftIcon="globe" value={timezone} onChange={setTimezone} options={TIMEZONES} />
               <InfoBox icon="lightbulb"><span><strong>Рекомендация:</strong> оптимальная длительность для {activeType.title} — {contestType === 'grow' ? '2–8 недель, чтобы прирост был значимым' : contestType === 'streak' ? '3–6 недель для демонстрации дисциплины' : '1–4 недели'}</span></InfoBox>
-              <div style={{marginTop:'var(--ds-dim-5xl)', display:'flex', justifyContent:'space-between'}}>
-                <Button variant="outline" size="m" icon="arrow-left" onClick={prev}>Назад</Button>
-                <Button variant="primary" size="m" iconRight="arrow-right" onClick={next}>Далее</Button>
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div>
-              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Призовой фонд</h3>
-              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Определите призы для победителей</p>
-              <Select label="Тип приза" value={prizeType} onChange={setPrizeType} options={[
-                {value:'bonus', label:'Бонус на торговый счёт'},
-                {value:'cash', label:'Денежный приз'},
-                {value:'gift', label:'Подарок (описание)'},
-              ]} />
-              <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-3xl)'}}>
-                {prizes.map(p => (
-                  <div key={p.id} style={{display:'grid',gridTemplateColumns:'40px 1fr 180px 40px',gap:'var(--ds-dim-3xl)',alignItems:'center'}}>
-                    <div><Medal position={p.pos} /></div>
-                    <div className="rig-body-02">{p.pos} место</div>
-                    <Input label="Сумма приза" prefix="$" value={p.amount} onChange={e => updatePrize(p.id, e.target.value)} />
-                    {prizes.length > 1 && (
-                      <IconButton icon="close" size="s" className="ds-icon-btn--ghost" onClick={() => removePrize(p.id)} title="Удалить" />
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div style={{marginTop:'var(--ds-dim-2xl)'}}>
-                <Button variant="outline" size="s" icon="plus" onClick={addPrize}>Добавить место</Button>
-              </div>
-              <InfoBox icon="lightbulb"><strong>Общий призовой фонд: ${prizeTotal.toLocaleString('en-US')}</strong></InfoBox>
-              <div style={{marginTop:'var(--ds-dim-5xl)', display:'flex', justifyContent:'space-between'}}>
-                <Button variant="outline" size="m" icon="arrow-left" onClick={prev}>Назад</Button>
-                <Button variant="primary" size="m" iconRight="arrow-right" onClick={next}>Далее</Button>
-              </div>
+              <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
             </div>
           )}
 
           {step === 4 && (
             <div>
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Призовой фонд</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Определите призы для победителей</p>
+              <div className="ds-input-wrap">
+                <label className="ds-input-label">Тип приза</label>
+                <ChipsGroup>
+                  <Chips
+                    label="Денежный приз на Wallet"
+                    selected={prizeType === 'wallet'}
+                    onClick={() => setPrizeType('wallet')}
+                  />
+                  <Chips
+                    label="Призы T&W"
+                    selected={prizeType === 'tw'}
+                    onClick={() => setPrizeType('tw')}
+                  />
+                </ChipsGroup>
+              </div>
+              <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-3xl)',marginTop:'var(--ds-dim-l)'}}>
+                {prizes.map(p => (
+                  <div key={p.id} className="prize-row" style={{display:'grid',gridTemplateColumns:'40px 1fr 180px 40px',gap:'var(--ds-dim-3xl)',alignItems:'center'}}>
+                    <PrizeRank position={p.pos} />
+                    <div className="rig-body-01-bold">{p.pos} место</div>
+                    <Input prefix="$" value={p.amount} onChange={e => updatePrize(p.id, e.target.value)} placeholder="0" />
+                    {prizes.length > 1 && (
+                      <IconButton icon="close" size="s" className="ds-icon-btn--danger" onClick={() => removePrize(p.id)} title="Удалить место" />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div style={{marginTop:'var(--ds-dim-5xl)', marginBottom:'var(--ds-dim-3xl)'}}>
+                <Button variant="text" size="s" icon="plus" onClick={addPrize}>Добавить место</Button>
+              </div>
+              <InfoBox icon="lightbulb"><strong>Общий призовой фонд: ${prizeTotal.toLocaleString('en-US')}</strong></InfoBox>
+              <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
+            </div>
+          )}
+
+          {step === 5 && (
+            <div>
               <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Проверьте и запустите</h3>
               <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Убедитесь, что всё верно перед запуском</p>
-              <div className="card" style={{marginBottom:'var(--ds-dim-3xl)'}}>
-                <div className="card__body" style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'var(--ds-dim-5xl) var(--ds-dim-6xl)'}}>
-                  {[
-                    {k:'Тип', v: activeType.title},
-                    {k:'Метрика', v: activeType.metric},
-                    {k:'Период', v: periodString},
-                    {k:'Время', v: `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}, ${timezone}`},
-                    {k:'Мин. баланс клиента', v: `$${FIXED_CONDITIONS.minBalance}`},
-                    {k:'Мин. объём сделки', v: `${FIXED_CONDITIONS.minLot} лота`, tip:(
-                      <>
-                        Учитываются только сделки, проходящие по правилу валидного лота.
-                        <br /><br />
-                        <strong>Валидный лот</strong> — сделка удерживалась минимум 3 минуты и прошла минимум 3 пипса.
-                      </>
-                    )},
-                    {k:'Торговые аккаунты', v:'Только 1 счёт клиента'},
-                    {k:'Призовой фонд', v: `$${prizeTotal.toLocaleString('en-US')}`},
-                    {k:'Тип приза', v: prizeType === 'bonus' ? 'Бонус на счёт' : prizeType === 'cash' ? 'Денежный приз' : 'Подарок'},
-                  ].map(({k,v,tip}) => (
-                    <div key={k}>
-                      <div className="rig-utility-01" style={{color:'var(--ds-text-muted)'}}>{k}</div>
+              {(() => {
+                const renderField = ({k,v,tip,span,editStep}) => {
+                  const isEditable = !!editStep;
+                  const inner = (
+                    <>
+                      <div className="review-field__head">
+                        <div className="rig-utility-01" style={{color:'var(--ds-text-muted)'}}>{k}</div>
+                        {isEditable && (
+                          <svg className="review-field__edit" aria-hidden="true">
+                            <use href={dsIc('edit')} />
+                          </svg>
+                        )}
+                      </div>
                       <div className="rig-body-02-bold" style={{marginTop:'var(--ds-dim-xs)', display:'inline-flex', alignItems:'center', gap:'var(--ds-dim-s)'}}>
                         <span>{v}</span>
                         {tip && <InfoTip label="Правило валидного лота">{tip}</InfoTip>}
                       </div>
+                    </>
+                  );
+                  const cellStyle = span === 2 ? {gridColumn:'1 / -1'} : undefined;
+                  if (isEditable) {
+                    return (
+                      <button
+                        key={k}
+                        type="button"
+                        className="review-field review-field--editable"
+                        style={cellStyle}
+                        onClick={() => setStep(editStep)}
+                        aria-label={`Изменить «${k}»`}
+                      >
+                        {inner}
+                      </button>
+                    );
+                  }
+                  return (
+                    <div key={k} className="review-field" style={cellStyle}>
+                      {inner}
                     </div>
-                  ))}
-                </div>
-              </div>
-              <div style={{display:'flex', gap:'var(--ds-dim-2xl)', flexWrap:'wrap'}}>
-                <Button variant="outline" size="m" icon="arrow-left" onClick={prev}>Назад</Button>
-                <Button variant="outline" size="m" icon="save" onClick={() => { onNavigate('list'); showToast('Черновик сохранён'); }}>Сохранить черновик</Button>
-                <Button variant="primary" size="m" icon="rocket" onClick={() => { onNavigate('list'); showToast('Контест запущен!', 'positive'); }}>Запустить контест</Button>
-              </div>
+                  );
+                };
+                const sectionGrid = {display:'grid', gridTemplateColumns:'1fr 1fr', gap:'var(--ds-dim-5xl) var(--ds-dim-6xl)'};
+                const divider = <hr style={{height:1, background:'var(--ds-border)', border:0, margin:0}} aria-hidden="true" />;
+                return (
+                  <div className="card" style={{marginBottom:'var(--ds-dim-3xl)'}}>
+                    <div className="card__body" style={{display:'flex', flexDirection:'column', gap:'var(--ds-dim-5xl)'}}>
+                      <div style={sectionGrid}>
+                        {[
+                          {k:'Название', v: contestName, editStep: 2},
+                          {k:'Тип', v: activeType.title, editStep: 1},
+                          {k:'Описание', v: contestDesc, span: 2, editStep: 2},
+                        ].map(renderField)}
+                      </div>
+                      {divider}
+                      <div style={sectionGrid}>
+                        {[
+                          {k:'Период', v: periodString, editStep: 3},
+                          {k:'Время', v: `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}, ${timezone}`, editStep: 3},
+                          {k:'Метрика', v: activeType.metric},
+                          {k:'Мин. баланс клиента', v: `$${FIXED_CONDITIONS.minBalance}`},
+                          {k:'Мин. объём сделки', v: `${FIXED_CONDITIONS.minLot} лота`, tip:(
+                            <>
+                              Учитываются только сделки, проходящие по правилу валидного лота.
+                              <br /><br />
+                              <strong>Валидный лот</strong> — сделка удерживалась минимум 3 минуты и прошла минимум 3 пипса.
+                            </>
+                          )},
+                          {k:'Торговые аккаунты', v:'Только 1 счёт клиента'},
+                        ].map(renderField)}
+                      </div>
+                      {divider}
+                      <div style={sectionGrid}>
+                        {[
+                          {k:'Призовой фонд', v: `$${prizeTotal.toLocaleString('en-US')}`, editStep: 4},
+                          {k:'Тип приза', v: prizeType === 'wallet' ? 'Денежный приз на Wallet' : 'Призы T&W', editStep: 4},
+                        ].map(renderField)}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+              <WizardFooter step={step} isFinal onPrev={prev} onSaveDraft={saveDraft} onLaunch={launchContest} />
             </div>
           )}
         </div>
 
-        <div className="preview-card">
+        <div
+          className="wizard-panel"
+          style={{
+            position: 'sticky', top: 116, alignSelf: 'start',
+            display: 'flex', flexDirection: 'column', gap: 'var(--ds-dim-3xl)',
+          }}
+        >
           <div className="preview-card__label">Предпросмотр для клиента</div>
           <ContestCard
             typeId={activeType.id}
-            name={activeType.title}
-            desc={activeType.shortDesc}
+            name={contestName}
+            desc={contestDesc}
             dates={periodString}
             participants={0}
             prize={`$${prizeTotal.toLocaleString('en-US')}`}
-            progress={0}
-            progressText="Начнётся в указанную дату"
             onAction={() => showToast('Это предпросмотр — клиент увидит такую карточку')}
             actionLabel="Участвую"
           />
@@ -2098,7 +2617,7 @@ const IBContestDetail = ({ onNavigate }) => {
       <Breadcrumb items={[{label:'Мои контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
       <div className="page-header">
         <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
-          <h1 className="rig-title-03">Весенний Volume Race</h1>
+          <h1 className="rig-title-02">Весенний Volume Race</h1>
           <Tag label="Active" variant="positive" />
           <ContestTypeInfo typeId="volume" />
         </div>
@@ -2167,7 +2686,7 @@ const ClientContestList = ({ onNavigate }) => {
 
   return (
   <div className="screen-enter">
-    <h1 className="rig-title-03" style={{marginBottom:'var(--ds-dim-5xl)'}}>Контесты</h1>
+    <h1 className="rig-title-02" style={{marginBottom:'var(--ds-dim-5xl)'}}>Контесты</h1>
     <div className="contest-grid">
       {cards.map(c => (
         <ContestCard
@@ -2342,6 +2861,9 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName }) => {
                   Баланс: <strong style={{color: low ? 'var(--ds-warning)' : 'var(--ds-text-primary)'}}>${a.balance.toLocaleString('en-US')}</strong> · {a.label}
                 </div>
               </div>
+              <span className="rig-radio-card__trail" aria-hidden="true">
+                {selectedId === a.id && <svg><use href="#ic-check-24"/></svg>}
+              </span>
             </div>
           );
         })}
@@ -2424,7 +2946,7 @@ const ClientContestTerms = ({ onNavigate }) => {
       <div style={{textAlign:'center',marginBottom:'var(--ds-dim-6xl)'}}>
         <div style={{marginBottom:'var(--ds-dim-3xl)'}}><span className="icon-circle icon-circle--primary" style={{width:64,height:64}}><svg width="32" height="32"><use href="#ic-market-watch-24"/></svg></span></div>
         <div style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)',justifyContent:'center'}}>
-          <h1 className="rig-title-03">Весенний Volume Race</h1>
+          <h1 className="rig-title-02">Весенний Volume Race</h1>
           <ContestTypeInfo typeId="volume" />
         </div>
         <p className="rig-body-01" style={{color:'var(--ds-text-muted)',marginTop:'var(--ds-dim-2xl)'}}>Наторгуйте больше лотов и выиграйте до $500!</p>
@@ -2492,7 +3014,7 @@ const ClientLeaderboard = ({ onNavigate }) => (
     <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Лидерборд'}]} />
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'var(--ds-dim-5xl)',gap:'var(--ds-dim-3xl)',flexWrap:'wrap'}}>
       <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
-        <h1 className="rig-title-03">Весенний Volume Race</h1>
+        <h1 className="rig-title-02">Весенний Volume Race</h1>
         <ContestTypeInfo typeId="volume" />
       </div>
       <span className="rig-body-02" style={{color:'var(--ds-text-muted)',display:'flex',alignItems:'center',gap:'var(--ds-dim-s)'}}><Icon name="clock" size="sm" /> Осталось 20 дней</span>
@@ -2553,7 +3075,7 @@ const AdminDashboard = ({ onNavigate }) => {
   const [filter, setFilter] = useState('all');
   return (
     <div className="screen-enter">
-      <div className="page-header"><h1 className="rig-title-03">Admin Panel — Contests</h1></div>
+      <div className="page-header"><h1 className="rig-title-02">Admin Panel — Contests</h1></div>
       <div style={{marginBottom:24}}>
         <div style={{color:'var(--ds-negative)',marginBottom:12,display:'flex',alignItems:'center',gap:6,fontSize:13,fontWeight:600}}>
           <Icon name="alert-triangle" size="sm" /> Требует внимания
@@ -2617,7 +3139,7 @@ const AdminContestDetail = ({ onNavigate }) => {
     <div className="screen-enter">
       <Breadcrumb items={[{label:'Dashboard', onClick:() => onNavigate('dashboard')}, {label:'Детали контеста'}]} />
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:24,flexWrap:'wrap'}}>
-        <h1 className="rig-title-03">Mega Contest</h1>
+        <h1 className="rig-title-02">Mega Contest</h1>
         <Tag label="Flagged" variant="negative" icon="alert-triangle" />
         <ContestTypeInfo typeId="volume" />
       </div>
@@ -2711,10 +3233,11 @@ const App = () => {
 
   return (
     <ToastProvider>
-      <TopNav role={role} onRoleChange={handleRoleChange} />
+      <RolePreviewBar role={role} onRoleChange={handleRoleChange} />
+      <AppHeader role={role} />
       <div className="app">
         {role === 'ib' && (
-          <Container>
+          <Container className={ibScreen === 'wizard' ? 'ds-container--split' : ''}>
             {ibScreen === 'list' && <IBMyContests onNavigate={navIB} />}
             {ibScreen === 'wizard' && <IBCreateContest onNavigate={navIB} />}
             {ibScreen === 'detail' && <IBContestDetail onNavigate={navIB} />}
