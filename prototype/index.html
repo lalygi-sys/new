@@ -571,27 +571,23 @@
     gap: var(--ds-dim-6xl);
   }
   .app-header__logo {
-    width: 32px; height: 32px; background: var(--ds-primary);
+    width: 32px; height: 32px; background: var(--ds-primary-content);
     border-radius: var(--ds-radius-md);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; cursor: pointer;
-  }
-  .app-header__logo-mark {
-    font-family: var(--ds-font-display); font-weight: 700; font-size: 16px;
-    color: #fff; line-height: 1; letter-spacing: -0.02em;
+    flex-shrink: 0;
   }
   .app-header__menu { display: flex; align-items: center; gap: var(--ds-dim-s); flex: 1; min-width: 0; }
   .app-header__menu-item {
     height: 32px; padding: 0 var(--ds-dim-3xl);
-    border-radius: var(--ds-radius-full);
-    border: 0; background: transparent;
+    border-radius: var(--ds-dim-l);
+    border: 1px solid transparent; background: transparent;
     font-family: var(--ds-font-body); font-weight: 400;
     font-size: 14px; line-height: 20px; letter-spacing: 0;
     color: var(--ds-text-primary);
     cursor: pointer; white-space: nowrap;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
   }
   .app-header__menu-item:hover:not(.app-header__menu-item--active) { background: var(--ds-bg-page); }
+  .app-header__menu-item:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); border-color: var(--ds-border-focus); }
   .app-header__menu-item--active {
     background: var(--ds-row-hover);
     font-weight: 600;
@@ -600,14 +596,15 @@
   .app-header__wallet {
     height: 32px; padding: 0 var(--ds-dim-3xl);
     border: 1px solid var(--ds-border);
-    border-radius: var(--ds-radius-full);
+    border-radius: var(--ds-dim-l);
     background: var(--ds-bg);
     display: inline-flex; align-items: center; gap: var(--ds-dim-l);
-    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    font-family: var(--ds-font-body); font-weight: 600; font-size: 14px; line-height: 20px;
     color: var(--ds-text-primary); cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
   }
-  .app-header__wallet:hover { background: var(--ds-bg-hover); border-color: var(--ds-border-input-hover); }
+  .app-header__wallet:hover { background: var(--ds-bg-page); border-color: var(--ds-border-input-hover); }
+  .app-header__wallet:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); border-color: var(--ds-border-focus); }
   .app-header__wallet-label { color: var(--ds-text-secondary); }
   .app-header__wallet-amount { font-weight: 600; }
   .app-header__avatar {
@@ -681,16 +678,17 @@
   .app-header__dropdown-item:hover { background: var(--ds-bg-page); }
   .app-header__dropdown-item--active { background: var(--ds-row-hover); font-weight: 600; }
 
-  /* Deposit button (client role) */
+  /* Deposit button (client role) — DS primary, S */
   .app-header__deposit {
     height: 32px; padding: 0 var(--ds-dim-3xl);
-    border: 0; border-radius: var(--ds-radius-full);
-    background: var(--ds-primary-content); color: var(--ds-on-primary-container);
+    border: 1px solid var(--ds-primary); border-radius: var(--ds-dim-l);
+    background: var(--ds-primary); color: var(--ds-on-primary);
     font-family: var(--ds-font-body); font-weight: 600;
     font-size: 14px; line-height: 20px;
-    cursor: pointer; transition: background 0.15s;
+    cursor: pointer; transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
   }
-  .app-header__deposit:hover { background: var(--ds-primary); color: var(--ds-on-primary); }
+  .app-header__deposit:hover { background: var(--ds-primary-hover, var(--ds-primary)); filter: brightness(0.95); }
+  .app-header__deposit:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); }
 
   /* Close (X) on the far right (client role) */
   .app-header__close {
@@ -784,6 +782,53 @@
   tbody tr:focus-within .row-hover-action { opacity: 1; }
   tr.highlight td { background: var(--ds-bg-selected); }
   tr.highlight td:first-child { font-weight: 600; }
+
+  .leaderboard-scroll { max-height: 560px; overflow-y: auto; border-radius: var(--ds-radius-lg); }
+  .leaderboard-scroll table { background: var(--ds-bg); }
+  .leaderboard-scroll thead th {
+    position: sticky; top: 0; z-index: 2; box-shadow: inset 0 -1px 0 var(--ds-border);
+    font-family: var(--ds-font-body); font-weight: 600; font-size: 12px; line-height: 16px;
+    letter-spacing: 0.15px; color: var(--ds-text-secondary);
+    text-transform: uppercase;
+  }
+  .leaderboard-scroll tbody td {
+    font-family: var(--ds-font-body); font-weight: 400; font-size: 14px; line-height: 20px;
+    letter-spacing: 0; color: var(--ds-text-primary);
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .leaderboard-scroll tbody td:first-child,
+  .leaderboard-scroll tbody td strong {
+    font-family: var(--ds-font-body); font-weight: 600;
+  }
+  .leaderboard-scroll tr.leaderboard-pin td {
+    position: sticky; z-index: 1;
+    background: var(--ds-bg-selected);
+  }
+  .leaderboard-scroll tr.leaderboard-pin--bottom td {
+    bottom: 0;
+    box-shadow: inset 0 1px 0 var(--ds-border), 0 -8px 16px -8px rgba(0,0,0,0.08);
+  }
+  .leaderboard-scroll tr.leaderboard-pin--top td {
+    top: 44px;
+    box-shadow: inset 0 -1px 0 var(--ds-border), 0 8px 16px -8px rgba(0,0,0,0.08);
+  }
+  .leaderboard-scroll tr.leaderboard-pin.leaderboard-pin--hidden td { display: none; }
+  .leaderboard-pin__link {
+    margin-left: var(--ds-dim-3xl);
+    background: none; border: none; padding: 0;
+    color: var(--ds-primary); cursor: pointer;
+    font: inherit; text-decoration: none;
+    transition: opacity .12s ease;
+  }
+  .leaderboard-pin__link:hover { opacity: 0.75; }
+  .leaderboard-pin__link:focus-visible { outline: 2px solid var(--ds-primary); outline-offset: 2px; border-radius: var(--ds-dim-xs); }
+
+  @keyframes leaderboard-flash {
+    0%, 100% { background: var(--ds-bg-selected); }
+    20%, 60% { background: var(--ds-primary-content); box-shadow: inset 0 0 0 9999px var(--ds-primary-content); }
+  }
+  tr.leaderboard-flash td { animation: leaderboard-flash 1.6s ease-in-out 0s 2; }
 
   /* Medal */
   .medal { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; line-height: 20px; font-weight: 600; background: transparent; color: var(--ds-text-secondary); border: 1px solid var(--ds-border); }
@@ -925,6 +970,7 @@
   .contest-card__type { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--ds-dim-l); }
   .contest-card__title { font-family: var(--ds-font-body); font-size: 20px; font-weight: 600; line-height: 24px; letter-spacing: -0.2px; color: var(--ds-text-primary); }
   .contest-card__desc { font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--ds-text-secondary); min-height: 60px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .contest-card-preview-host .contest-card__desc { min-height: 0; -webkit-line-clamp: unset; display: block; overflow: visible; }
   .contest-card__divider { height: 1px; background: var(--ds-border); border: 0; margin: 0; }
   .contest-card__meta {
     display: flex; flex-wrap: wrap; gap: var(--ds-dim-l) var(--ds-dim-4xl);
@@ -1008,7 +1054,13 @@
     padding: var(--ds-dim-7xl); color: #fff;
     margin-bottom: var(--ds-dim-6xl);
     display: flex; flex-direction: column; gap: var(--ds-dim-4xl);
+    position: relative;
   }
+  .ds-btn--on-brand {
+    background: rgba(255,255,255,0.16); color: #fff; border-color: rgba(255,255,255,0.3);
+  }
+  .ds-btn--on-brand:hover:not(:disabled) { background: rgba(255,255,255,0.26); border-color: rgba(255,255,255,0.5); color: #fff; }
+  .ds-btn--on-brand:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
   .user-progress__row {
     display: flex; align-items: flex-end; justify-content: space-between;
     gap: var(--ds-dim-5xl); flex-wrap: wrap;
@@ -1199,8 +1251,9 @@
     background: var(--ds-bg-page);
   }
   .join-rules__title {
-    font-size: 12px; font-weight: 600; letter-spacing: 0.04em;
-    text-transform: uppercase; color: var(--ds-text-muted);
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 14px; line-height: 20px; letter-spacing: 0;
+    color: var(--ds-text-primary);
     margin-bottom: var(--ds-dim-2xl);
   }
   .join-rules__grid {
@@ -1443,6 +1496,11 @@
   </symbol>
   <symbol id="ic-star-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1216 -->
     <path fill-rule="evenodd" clip-rule="evenodd" d="M9.46412 13.5485L8.65193 17.0322C8.61175 17.2045 8.79871 17.3403 8.95016 17.2487L12.0001 15.4054L15.0499 17.2487C15.2014 17.3403 15.3884 17.2045 15.3482 17.0322L14.536 13.5485L17.2468 11.2012C17.3806 11.0853 17.3091 10.8656 17.1327 10.8507L13.5802 10.5499L12.1803 7.2316C12.1116 7.06871 11.8808 7.06855 11.8119 7.23134L10.4199 10.5177L6.84661 10.8334C6.67068 10.8489 6.59977 11.0682 6.73328 11.1838L9.46412 13.5485ZM7.24224 14.2701L5.84265 20.2733C5.72212 20.7903 6.28299 21.1976 6.73733 20.923L12.0001 17.7423L17.2628 20.923C17.7171 21.1976 18.278 20.7903 18.1575 20.2733L16.7579 14.2701L21.4244 10.2293C21.8257 9.8818 21.6112 9.22265 21.0823 9.17787L14.9532 8.65901L12.5518 2.96679C12.3456 2.47812 11.6533 2.47763 11.4465 2.966L9.04693 8.63123L2.91021 9.17333C2.38244 9.21995 2.16971 9.87776 2.57024 10.2246L7.24224 14.2701Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-star-outline-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:683 (16x16 scaled 1.5) -->
+    <g transform="translate(1.856 1.893) scale(1.5)">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M6.30287 0.301798C6.47678 -0.100586 7.04729 -0.100612 7.22084 0.301798L8.87221 4.13774L13.0617 4.48539C13.5053 4.52224 13.6832 5.07623 13.3439 5.3643L12.9611 5.68852L10.1613 8.06547L11.1193 12.0909C11.215 12.4934 10.8128 12.8193 10.4494 12.6729L10.3781 12.6368L6.76284 10.4961L3.1476 12.6368C2.76793 12.8614 2.30434 12.5201 2.40639 12.0909L3.3644 8.06547L0.176898 5.36039C-0.161448 5.07294 0.0149376 4.52015 0.457171 4.48149L4.65346 4.1182L6.30287 0.301798ZM5.60659 5.44047L2.72866 5.68949L4.92494 7.55375L4.25893 10.3506L6.76284 8.8682L9.26577 10.3506L8.60073 7.55375L10.7833 5.70024L7.91909 5.46293L6.75991 2.77152L5.60659 5.44047Z" fill="currentColor"/>
+    </g>
   </symbol>
   <symbol id="ic-star-solid-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:687 (16x16 scaled 1.5) -->
     <g transform="translate(1.856 1.893) scale(1.5)">
@@ -2058,9 +2116,7 @@ const AppHeader = ({ role, activeKey: activeKeyProp }) => {
 
   return (
     <header className="app-header" role="banner">
-      <div className="app-header__logo" aria-label="Octa">
-        <span className="app-header__logo-mark">K</span>
-      </div>
+      <div className="app-header__logo" aria-label="Логотип" />
       <nav className="app-header__menu" aria-label="Главное меню">
         {menu.map(item => {
           if (item.dropdown) {
@@ -2122,9 +2178,11 @@ const AppHeader = ({ role, activeKey: activeKeyProp }) => {
           {role === 'client' && <span className="app-header__avatar-dot" aria-hidden="true" />}
         </button>
         {role === 'client' && (
-          <button className="app-header__close" type="button" aria-label="Закрыть">
+          <button className="app-header__close" type="button" aria-label="Меню">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="17" x2="20" y2="17" />
             </svg>
           </button>
         )}
@@ -2180,7 +2238,7 @@ const PrizeRank = ({ position }) => {
   const cls = position <= 3 ? `prize-rank--${position}` : 'prize-rank--default';
   return (
     <span className={`prize-rank ${cls}`} aria-label={`${position} место`}>
-      <svg><use href="#ic-star-solid-24" /></svg>
+      <svg><use href="#ic-star-outline-24" /></svg>
     </span>
   );
 };
@@ -2315,7 +2373,7 @@ const BulletList = ({ items, icon = 'dot' }) => (
 );
 
 /* Shared ContestCard — used in ClientContestList and wizard preview */
-const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Участвую', onAction, actionDisabled, prizeVariant = 'inline' }) => {
+const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Участвую', onAction, actionDisabled, prizeVariant = 'inline', footer }) => {
   const t = CONTEST_TYPES[typeId];
   const showPrizeInMeta = prize && prizeVariant === 'inline';
   return (
@@ -2375,7 +2433,12 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
           <ProgressBar value={progress} size="xs" />
         </div>
       )}
-      {onAction && (
+      {footer && (
+        <div className="contest-card__footer" onClick={e => e.stopPropagation()}>
+          {footer}
+        </div>
+      )}
+      {!footer && onAction && (
         <div className="contest-card__footer">
           <Button variant="primary" size="m" block onClick={e => { e.stopPropagation(); onAction(); }} disabled={actionDisabled}>{actionLabel}</Button>
         </div>
@@ -2762,8 +2825,8 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 const sectionGrid = {display:'grid', gridTemplateColumns:'1fr 1fr', gap:'var(--ds-dim-5xl) var(--ds-dim-6xl)'};
                 const divider = <hr style={{height:1, background:'var(--ds-border)', border:0, margin:0}} aria-hidden="true" />;
                 return (
-                  <div className="card" style={{marginBottom:'var(--ds-dim-3xl)'}}>
-                    <div className="card__body" style={{display:'flex', flexDirection:'column', gap:'var(--ds-dim-5xl)'}}>
+                  <div className="card" style={{marginBottom:'var(--ds-dim-6xl)'}}>
+                    <div className="card__body" style={{display:'flex', flexDirection:'column', gap:'var(--ds-dim-5xl)', paddingBottom:'var(--ds-dim-5xl)'}}>
                       <div style={sectionGrid}>
                         {[
                           {k:'Тип', v: activeType.title, editStep: 1},
@@ -2811,16 +2874,28 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
           }}
         >
           <div className="preview-card__label">Предпросмотр для клиента</div>
-          <ContestCard
-            typeId={activeType.id}
-            name={activeType.title}
-            desc={activeType.clientDescTemplate((parseFloat(prizes[0]?.amount) || 0).toLocaleString('en-US'))}
-            dates={periodString}
-            participants={0}
-            prize={`$${prizeTotal.toLocaleString('en-US')}`}
-            onAction={() => showToast('Это предпросмотр — клиент увидит такую карточку')}
-            actionLabel="Участвую"
-          />
+          <div className="contest-card-preview-host">
+          {(() => {
+            const totalDays = Math.max(1, Math.round((endDate - startDate) / 86400000));
+            return (
+              <ContestCard
+                typeId={activeType.id}
+                name={activeType.title}
+                statusLabel="Active"
+                statusVariant="positive"
+                desc={activeType.clientDescTemplate((parseFloat(prizes[0]?.amount) || 0).toLocaleString('en-US'))}
+                dates={periodString}
+                participants={0}
+                prize={`$${prizeTotal.toLocaleString('en-US')}`}
+                days={`${totalDays} дн.`}
+                progress={0}
+                progressText={`Прошло 0 из ${totalDays} дн.`}
+                onAction={() => showToast('Это предпросмотр — клиент увидит такую карточку')}
+                actionLabel="Участвую"
+              />
+            );
+          })()}
+          </div>
         </div>
       </div>
     </div>
@@ -2904,42 +2979,77 @@ const IBContestDetail = ({ onNavigate }) => {
    ═══════════════════════════════════════════════════════ */
 
 const CLIENT_CONTESTS = [
-  {typeId:'volume', name:'Volume Race', statusLabel:'Active', statusVariant:'positive', desc:'Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:47, prize:'$900', progressText:'Прошло 10 из 30 дней', progress:33, days:'20 дней', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'streak', name:'Streak Challenge May', statusLabel:'Starts May 1', statusVariant:'warning', desc:'Торгуйте каждый день и выиграйте! Кто удержит самый длинный streak — тот победит.', dates:'1 — 31 May 2026', period:'1 — 31 мая 2026', participants:12, prize:'$600', progressText:'Начнётся через 21 день', progress:0, days:'31 день', prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'grow', name:'Grow Challenge Q2', statusLabel:'Active', statusVariant:'positive', desc:'Покажите лучший прирост баланса в % — наши лидеры заберут до $700 бонус.', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:18, prize:'$700', progressText:'Прошло 10 из 30 дней', progress:45, days:'20 дней', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'volume', state:'active', name:'Volume Race', statusLabel:'Active', statusVariant:'positive', desc:'Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:47, prize:'$900', progressText:'Прошло 10 из 30 дней', progress:33, days:'20 дней', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'streak', state:'upcoming', startsAtLabel:'1 мая 2026', name:'Streak Challenge May', statusLabel:'Starts May 1', statusVariant:'warning', desc:'Торгуйте каждый день и выиграйте! Кто удержит самый длинный streak — тот победит.', dates:'1 — 31 May 2026', period:'1 — 31 мая 2026', participants:12, prize:'$600', progressText:'Начнётся через 21 день', progress:0, days:'31 день', prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'grow', state:'active', name:'Grow Challenge Q2', statusLabel:'Active', statusVariant:'positive', desc:'Покажите лучший прирост баланса в % — наши лидеры заберут до $700 бонус.', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:18, prize:'$700', progressText:'Прошло 10 из 30 дней', progress:45, days:'20 дней', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
 ];
 
-const ClientContestList = ({ onNavigate, onSelectContest }) => {
-  const cards = CLIENT_CONTESTS;
+const CLIENT_COMPLETED_CONTESTS = [
+  {typeId:'top',    state:'completed', name:'Турнир февраля',         dates:'1 — 28 Feb 2026', participants:32, prize:'$900', yourPlace:7,  yourReward:null,        prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'volume', state:'completed', name:'Winter Volume Race',     dates:'1 — 31 Jan 2026', participants:41, prize:'$900', yourPlace:2,  yourReward:'$300 бонус', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'streak', state:'completed', name:'December Streak',        dates:'1 — 31 Dec 2025', participants:18, prize:'$500', yourPlace:12, yourReward:null,        prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$150 бонус'},{pos:3,prize:'$50 бонус'}]},
+  {typeId:'grow',   state:'completed', name:'Autumn Grow Challenge',  dates:'1 — 30 Nov 2025', participants:27, prize:'$700', yourPlace:3,  yourReward:'$100 бонус', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
+];
 
-  const completed = [
-    {typeId:'top',       name:'Турнир февраля',        dates:'1 — 28 Feb 2026', participants:32, prize:'$900', yourPlace:7,  yourReward:null},
-    {typeId:'volume',    name:'Winter Volume Race',    dates:'1 — 31 Jan 2026', participants:41, prize:'$900', yourPlace:2,  yourReward:'$300 бонус'},
-    {typeId:'streak',    name:'December Streak',       dates:'1 — 31 Dec 2025', participants:18, prize:'$500', yourPlace:12, yourReward:null},
-    {typeId:'grow',      name:'Autumn Grow Challenge', dates:'1 — 30 Nov 2025', participants:27, prize:'$700', yourPlace:3,  yourReward:'$100 бонус'},
-  ];
+const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, onCancelContest, onJoinContest }) => {
+  const showToast = useToast();
+  const cards = CLIENT_CONTESTS;
+  const openTerms = (typeId) => { onSelectContest && onSelectContest(typeId); onNavigate('terms'); };
+  const openBoard = (typeId) => { onSelectContest && onSelectContest(typeId); onNavigate('board'); };
+  const cancel = (typeId, mode) => {
+    onCancelContest && onCancelContest(typeId);
+    showToast('Запись отменена', 'negative', {
+      label: 'Отменить',
+      onClick: () => onJoinContest && onJoinContest(typeId, mode),
+    });
+  };
+
+  const completed = CLIENT_COMPLETED_CONTESTS;
+  const openCompleted = (name) => { onSelectContest && onSelectContest(`completed:${name}`); onNavigate('board'); };
 
   return (
   <div className="screen-enter">
     <h1 className="rig-title-02" style={{marginBottom:'var(--ds-dim-5xl)'}}>Контесты</h1>
     <div className="contest-grid">
-      {cards.map(c => (
-        <ContestCard
-          key={c.name}
-          typeId={c.typeId}
-          name={c.name}
-          statusLabel={c.statusLabel}
-          statusVariant={c.statusVariant}
-          desc={c.desc}
-          dates={c.dates}
-          participants={c.participants}
-          prize={c.prize}
-          days={c.days}
-          progress={c.progress}
-          progressText={c.progressText}
-          onClick={() => { onSelectContest && onSelectContest(c.typeId); onNavigate('terms'); }}
-        />
-      ))}
+      {cards.map(c => {
+        const joinState = joinedContests[c.typeId];
+        const joined = !!joinState;
+        const isUpcoming = c.state === 'upcoming';
+        let footer;
+        if (!joined) {
+          footer = (
+            <Button variant="primary" size="m" block onClick={() => openTerms(c.typeId)}>
+              Участвовать
+            </Button>
+          );
+        } else if (isUpcoming || joinState === 'upcoming') {
+          footer = (
+            <Button variant="outline" size="m" block onClick={() => cancel(c.typeId, joinState || 'upcoming')}>Отменить запись</Button>
+          );
+        } else {
+          footer = (
+            <Button variant="outline" size="m" icon="chart" block onClick={() => openBoard(c.typeId)}>Статистика</Button>
+          );
+        }
+        return (
+          <ContestCard
+            key={c.name}
+            typeId={c.typeId}
+            name={c.name}
+            statusLabel={c.statusLabel}
+            statusVariant={c.statusVariant}
+            desc={c.desc}
+            dates={c.dates}
+            participants={c.participants}
+            prize={c.prize}
+            days={c.days}
+            progress={c.progress}
+            progressText={c.progressText}
+            onClick={() => (joined && !isUpcoming && joinState !== 'upcoming') ? openBoard(c.typeId) : openTerms(c.typeId)}
+            footer={footer}
+          />
+        );
+      })}
     </div>
 
     <div className="section-title" style={{marginTop:'var(--ds-dim-7xl)'}}>Завершённые</div>
@@ -2959,7 +3069,7 @@ const ClientContestList = ({ onNavigate, onSelectContest }) => {
           {completed.map(c => {
             const t = CONTEST_TYPES[c.typeId];
             return (
-              <tr key={c.name} style={{cursor:'pointer'}} onClick={() => onNavigate('board')}>
+              <tr key={c.name} style={{cursor:'pointer'}} onClick={() => openCompleted(c.name)}>
                 <td>
                   <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
                     <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32,flexShrink:0}}>
@@ -2976,7 +3086,7 @@ const ClientContestList = ({ onNavigate, onSelectContest }) => {
                 <td><strong>#{c.yourPlace}</strong></td>
                 <td>{c.yourReward ? <span style={{fontVariantNumeric:'tabular-nums'}}>{c.yourReward.replace(/\s*бонус$/i, '')}</span> : <span style={{color:'var(--ds-text-muted)'}}>—</span>}</td>
                 <td style={{textAlign:'right'}}>
-                  <Button className="row-hover-action" variant="outline" size="s" icon="eye" onClick={e => { e.stopPropagation(); onNavigate('board'); }}>Результаты</Button>
+                  <Button className="row-hover-action" variant="outline" size="s" icon="eye" onClick={e => { e.stopPropagation(); openCompleted(c.name); }}>Результаты</Button>
                 </td>
               </tr>
             );
@@ -2998,7 +3108,7 @@ const INITIAL_TRADING_ACCOUNTS = [
   { id: 'mt4-4298110', type: 'MT4', number: '4298110', label: 'Scalping', leverage: '1:1000', balance: 250,  currency: 'USD' },
 ];
 
-const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'volume' }) => {
+const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'volume', preregister = false, startsAtLabel }) => {
   const requiresFunding = contestRequiresFunding(contestType);
   const [accounts, setAccounts] = useState(INITIAL_TRADING_ACCOUNTS);
   const [selectedId, setSelectedId] = useState(null);
@@ -3014,7 +3124,7 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
 
   const selected = accounts.find(a => a.id === selectedId) || null;
   const deficit = selected ? Math.max(0, MIN_BALANCE_USD - selected.balance) : 0;
-  const needsDeposit = requiresFunding && !!selected && selected.balance < MIN_BALANCE_USD;
+  const needsDeposit = !preregister && requiresFunding && !!selected && selected.balance < MIN_BALANCE_USD;
   const canJoin = requiresFunding ? (!!selected || createSelected) : true;
 
   const pickAccount = (id) => { setSelectedId(id); setCreateSelected(false); };
@@ -3023,13 +3133,14 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
   const handleParticipate = () => {
     if (createSelected) {
       const num = String(5300000 + Math.floor(Math.random() * 999999));
-      const startingBalance = requiresFunding ? MIN_BALANCE_USD : 0;
+      const startingBalance = (requiresFunding && !preregister) ? MIN_BALANCE_USD : 0;
       const newAcc = { id: `new-${num}`, type: 'MT5', number: num, label: 'Новый', leverage: '1:500', balance: startingBalance, currency: 'USD' };
       setAccounts([newAcc, ...accounts]);
       setSelectedId(newAcc.id);
       onJoin(newAcc);
       return;
     }
+    if (preregister) { onJoin(selected); return; }
     if (!requiresFunding) { onJoin(selected); return; }
     if (!selected) return;
     if (selected.balance < MIN_BALANCE_USD) {
@@ -3041,15 +3152,17 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
     onJoin(selected);
   };
 
-  const participateLabel = createSelected
-    ? 'Создать торговый аккаунт и участвовать'
-    : (needsDeposit ? `Пополнить $${deficit} и участвовать` : 'Участвую');
+  const participateLabel = preregister
+    ? (createSelected ? 'Создать аккаунт и записаться' : 'Записаться на участие')
+    : (createSelected
+        ? 'Создать торговый аккаунт и участвовать'
+        : (needsDeposit ? `Пополнить $${deficit} и участвовать` : 'Участвую'));
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title="Участие в контесте"
+      title={preregister ? 'Предварительная запись' : 'Участие в контесте'}
       subtitle={contestName}
       size="l"
       footer={<>
@@ -3059,6 +3172,16 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
         </Button>
       </>}
     >
+      {preregister && (
+        <div className="info-box" style={{marginBottom:'var(--ds-dim-3xl)'}}>
+          <Icon name="clock" size="sm" style={{color:'var(--ds-primary)', marginTop:1}} />
+          <span>
+            Контест ещё не начался{startsAtLabel ? <> — стартует <strong>{startsAtLabel}</strong></> : ''}.
+            Мы автоматически включим вас в участие в момент старта.
+          </span>
+        </div>
+      )}
+
       <div className="join-rules">
         <div className="join-rules__title">Условия участия</div>
         <div className="join-rules__grid">
@@ -3097,7 +3220,7 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
       {requiresFunding && (
       <div className="rig-radio-cards">
         {accounts.map(a => {
-          const low = a.balance < MIN_BALANCE_USD;
+          const low = !preregister && a.balance < MIN_BALANCE_USD;
           return (
             <div
               key={a.id}
@@ -3110,17 +3233,12 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
               <div style={{flex:1, minWidth:0}}>
                 <div className="rig-body-02-bold">{a.type} #{a.number}</div>
                 <div className="rig-utility-01" style={{color:'var(--ds-text-muted)', marginTop:'var(--ds-dim-xs)'}}>
-                  {a.label}{a.leverage ? ` · Плечо ${a.leverage}` : ''}
+                  Баланс: <strong style={{color: low ? 'var(--ds-warning)' : 'var(--ds-text-primary)', fontVariantNumeric:'tabular-nums'}}>${a.balance.toLocaleString('en-US')}</strong> · {a.label}{a.leverage ? ` · Плечо ${a.leverage}` : ''}
                 </div>
               </div>
-              <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)',flexShrink:0}}>
-                <span className="rig-body-02-bold" style={{color: low ? 'var(--ds-warning)' : 'var(--ds-text-primary)',fontVariantNumeric:'tabular-nums'}}>
-                  ${a.balance.toLocaleString('en-US')}
-                </span>
-                {low && (
-                  <Tag label="Недостаточно средств" variant="warning" icon="alert-triangle" />
-                )}
-              </div>
+              {low && (
+                <Tag label="Недостаточно средств" variant="warning" icon="alert-triangle" />
+              )}
             </div>
           );
         })}
@@ -3128,9 +3246,11 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
         <button type="button" className={`join-create ${createSelected ? 'join-create--selected' : ''}`} onClick={pickCreate}>
           <span className="join-create__icon"><svg><use href="#ic-plus-24"/></svg></span>
           <span style={{flex:1, minWidth:0}}>
-            <span className="rig-body-02-bold">Создать аккаунт и участвовать</span>
+            <span className="rig-body-02-bold">{preregister ? 'Создать аккаунт и записаться' : 'Создать аккаунт и участвовать'}</span>
             <span className="rig-utility-01" style={{display:'block', color:'var(--ds-text-muted)', marginTop:'var(--ds-dim-xs)'}}>
-              MT5 · создаётся мгновенно, баланс ${MIN_BALANCE_USD}
+              {preregister
+                ? 'MT5 · создаётся мгновенно'
+                : `MT5 · создаётся мгновенно, баланс $${MIN_BALANCE_USD}`}
             </span>
           </span>
         </button>
@@ -3149,11 +3269,33 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
   );
 };
 
-const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume' }) => {
+const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContests = {}, onJoinContest, onCancelContest }) => {
   const showToast = useToast();
   const [joinOpen, setJoinOpen] = useState(false);
   const contest = CLIENT_CONTESTS.find(c => c.typeId === contestTypeId) || CLIENT_CONTESTS[0];
   const requiresFunding = contestRequiresFunding(contest.typeId);
+  const isUpcoming = contest.state === 'upcoming';
+  const joinedState = joinedContests[contest.typeId];
+  const alreadyJoined = !!joinedState;
+  const joinedUpcoming = alreadyJoined && (isUpcoming || joinedState === 'upcoming');
+  const ctaLabel = alreadyJoined
+    ? (joinedUpcoming ? 'Отменить запись' : 'Открыть лидерборд')
+    : (isUpcoming ? 'Записаться на участие' : 'Участвую');
+  const ctaCaption = joinedUpcoming
+    ? `Вы записаны на участие. Контест начнётся ${contest.startsAtLabel || contest.dates}.`
+    : (alreadyJoined
+        ? 'Вы уже участвуете — посмотрите своё место и статистику в лидерборде.'
+        : (isUpcoming
+            ? 'Нажимая «Записаться на участие», вы соглашаетесь с правилами контеста и условиями участия.'
+            : 'Нажимая «Участвую», вы соглашаетесь с правилами контеста и условиями участия.'));
+  const handleCancel = () => {
+    const prev = joinedState;
+    onCancelContest && onCancelContest(contest.typeId);
+    showToast('Запись отменена', 'negative', {
+      label: 'Отменить',
+      onClick: () => onJoinContest && onJoinContest(contest.typeId, prev),
+    });
+  };
   return (
     <div className="screen-enter">
       <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
@@ -3184,7 +3326,7 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume' }) => {
               ] : []),
               'Минимальный объём сделки: 0.01 лота (только сделки по правилу валидного лота)',
               'Позиция определяется суммарным объёмом в лотах',
-              `Период: ${contest.period || contest.dates}`,
+              `Период: ${contest.period || contest.dates}, 23:59 UTC`,
             ]} />
           </div>
         </div>
@@ -3207,17 +3349,33 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume' }) => {
       </div>
 
       <div style={{display:'flex', justifyContent:'center', alignItems:'center', marginTop:'var(--ds-dim-3xl)'}}>
-        <Button variant="primary" size="l" onClick={() => setJoinOpen(true)} style={{minWidth: 360, paddingLeft:'var(--ds-dim-6xl)', paddingRight:'var(--ds-dim-6xl)'}}>Участвую</Button>
+        {joinedUpcoming ? (
+          <Button variant="outline" size="l" icon="trash" onClick={handleCancel} style={{minWidth: 360, paddingLeft:'var(--ds-dim-6xl)', paddingRight:'var(--ds-dim-6xl)'}}>{ctaLabel}</Button>
+        ) : alreadyJoined ? (
+          <Button variant="primary" size="l" icon="trophy" onClick={() => onNavigate('board')} style={{minWidth: 360, paddingLeft:'var(--ds-dim-6xl)', paddingRight:'var(--ds-dim-6xl)'}}>{ctaLabel}</Button>
+        ) : (
+          <Button variant="primary" size="l" icon={isUpcoming ? 'clock' : undefined} onClick={() => setJoinOpen(true)} style={{minWidth: 360, paddingLeft:'var(--ds-dim-6xl)', paddingRight:'var(--ds-dim-6xl)'}}>{ctaLabel}</Button>
+        )}
       </div>
-      <p className="rig-utility-01" style={{color:'var(--ds-text-placeholder)',textAlign:'center',marginTop:'var(--ds-dim-3xl)'}}>Нажимая «Участвую», вы соглашаетесь с правилами контеста и условиями участия.</p>
+      <p className="rig-utility-01" style={{color:'var(--ds-text-placeholder)',textAlign:'center',marginTop:'var(--ds-dim-3xl)'}}>{ctaCaption}</p>
 
       <JoinContestModal
         open={joinOpen}
         onClose={() => setJoinOpen(false)}
         contestName={contest.name}
         contestType={contest.typeId}
+        preregister={isUpcoming}
+        startsAtLabel={contest.startsAtLabel}
         onJoin={(account) => {
           setJoinOpen(false);
+          onJoinContest && onJoinContest(contest.typeId, isUpcoming ? 'upcoming' : 'active');
+          if (isUpcoming) {
+            showToast(
+              `Запись подтверждена. Участие начнётся ${contest.startsAtLabel || contest.dates}`,
+              'positive'
+            );
+            return;
+          }
           onNavigate('board');
           showToast(
             account
@@ -3231,62 +3389,217 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume' }) => {
   );
 };
 
-const ClientLeaderboard = ({ onNavigate }) => (
+const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
+  const youRowRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const [flash, setFlash] = useState(false);
+  const [youInView, setYouInView] = useState(true);
+  const [youAbove, setYouAbove] = useState(false);
+  const flashTimerRef = useRef(null);
+  const scrollToYou = () => {
+    const row = youRowRef.current;
+    const scroller = scrollContainerRef.current;
+    if (row && scroller) {
+      const rowRect = row.getBoundingClientRect();
+      const sRect = scroller.getBoundingClientRect();
+      const offset = (rowRect.top - sRect.top) - (sRect.height / 2) + (rowRect.height / 2);
+      scroller.scrollTo({ top: scroller.scrollTop + offset, behavior: 'smooth' });
+    } else if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    setFlash(false);
+    requestAnimationFrame(() => {
+      setFlash(true);
+      flashTimerRef.current = setTimeout(() => setFlash(false), 3400);
+    });
+  };
+  useEffect(() => () => { if (flashTimerRef.current) clearTimeout(flashTimerRef.current); }, []);
+  useEffect(() => {
+    const row = youRowRef.current;
+    const scroller = scrollContainerRef.current;
+    if (!row || !scroller || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => {
+          setYouInView(e.isIntersecting);
+          if (e.boundingClientRect && e.rootBounds) {
+            setYouAbove(e.boundingClientRect.bottom < e.rootBounds.top + 44);
+          }
+        });
+      },
+      { root: scroller, threshold: 0.01, rootMargin: '-44px 0px -72px 0px' }
+    );
+    io.observe(row);
+    return () => io.disconnect();
+  }, [contestTypeId]);
+  const isCompletedRef = String(contestTypeId).startsWith('completed:');
+  const contest = isCompletedRef
+    ? (CLIENT_COMPLETED_CONTESTS.find(c => c.name === String(contestTypeId).slice('completed:'.length)) || CLIENT_COMPLETED_CONTESTS[0])
+    : (CLIENT_CONTESTS.find(c => c.typeId === contestTypeId) || CLIENT_CONTESTS[0]);
+  const isCompleted = contest.state === 'completed';
+  const ctype = CONTEST_TYPES[contest.typeId] || CONTEST_TYPES.volume;
+  const stripPrize = (s) => String(s || '').replace(/\s*бонус$/i, '');
+  const prizesTop = (contest.prizes || []).slice(0, 3).map(p => stripPrize(p.prize));
+  const total = Math.max(contest.participants || 0, isCompleted ? (contest.yourPlace || 0) : 12);
+  const yourPlace = isCompleted ? (contest.yourPlace || 0) : 12;
+  const initialsAt = (i) => {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return `${letters[i % 26]}${letters[(i * 7 + 3) % 26]}****`;
+  };
+  const valueAt = (p) => {
+    const base = 260;
+    const v = base * Math.pow(0.94, p - 1);
+    return v.toFixed(1);
+  };
+  const rows = Array.from({length: total}).map((_, i) => {
+    const p = i + 1;
+    const isYou = p === yourPlace;
+    return {
+      p,
+      isYou,
+      n: isYou ? 'Вы' : initialsAt(i + 5),
+      v: isYou && isCompleted ? '—' : valueAt(p),
+      pr: p <= 3 ? (prizesTop[p - 1] || '—')
+          : (isYou && isCompleted ? (contest.yourReward ? stripPrize(contest.yourReward) : '—') : '—'),
+    };
+  });
+  return (
   <div className="screen-enter">
     <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Лидерборд'}]} />
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'var(--ds-dim-5xl)',gap:'var(--ds-dim-3xl)',flexWrap:'wrap'}}>
       <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
-        <h1 className="rig-title-02">Volume Race</h1>
-        <ContestTypeInfo typeId="volume" />
+        <h1 className="rig-title-02">{contest.name}</h1>
+        <ContestTypeInfo typeId={contest.typeId} />
       </div>
-      <span className="rig-body-02" style={{color:'var(--ds-text-muted)',display:'flex',alignItems:'center',gap:'var(--ds-dim-s)'}}><Icon name="clock" size="sm" /> Осталось 20 дней</span>
+      {isCompleted ? (
+        <span style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+          <Tag label="Завершён" variant="neutral" />
+          <span className="rig-body-02" style={{color:'var(--ds-text-muted)'}}>{contest.dates}, 23:59 UTC</span>
+        </span>
+      ) : (
+        <span className="rig-body-02" style={{color:'var(--ds-text-muted)',display:'flex',alignItems:'center',gap:'var(--ds-dim-s)'}}>
+          <Icon name="clock" size="sm" /> Осталось {contest.days || '—'} · до {(contest.dates || '').split(' — ')[1] || contest.dates}, 23:59 UTC
+        </span>
+      )}
     </div>
 
-    <div className="user-progress">
-      <div className="user-progress__row">
-        <div className="user-progress__rank">
-          <div className="user-progress__place">#12</div>
-          <div className="user-progress__place-meta">из 47 участников • Top 25%</div>
-        </div>
-        <div className="user-progress__score">
-          <div className="user-progress__score-value">67.4 <span className="user-progress__score-unit">лот</span></div>
-          <div className="user-progress__score-meta">До 3 места: ещё 88.8 лот</div>
+    {isCompleted ? (
+      <div className="user-progress">
+        <div className="user-progress__row">
+          <div className="user-progress__rank">
+            <div className="user-progress__place">#{contest.yourPlace}</div>
+            <div className="user-progress__place-meta">из {contest.participants} участников • Финальный результат</div>
+          </div>
+          <div className="user-progress__score">
+            <div className="user-progress__score-value" style={contest.yourReward ? null : {opacity: 0.7}}>
+              {contest.yourReward ? stripPrize(contest.yourReward) : 'Без приза'}
+            </div>
+            <div className="user-progress__score-meta" style={{marginTop: 'var(--ds-dim-l)'}}>{contest.yourReward ? 'Награда зачислена на торговый счёт' : 'В этот раз не попали в призовую зону'}</div>
+          </div>
         </div>
       </div>
-      <div className="user-progress__bar">
-        <ProgressBar value={43} size="m" onBrand />
+    ) : (
+      <div className="user-progress">
+        <div className="user-progress__row">
+          <div className="user-progress__rank">
+            <div className="user-progress__place">#12</div>
+            <div className="user-progress__place-meta">из {contest.participants || '—'} участников • Top 25%</div>
+          </div>
+          <div className="user-progress__score">
+            <div className="user-progress__score-value">67.4 <span className="user-progress__score-unit">лот</span></div>
+            <div className="user-progress__score-meta">До 3 места: ещё 88.8 лот</div>
+          </div>
+        </div>
+        <div className="user-progress__bar">
+          <ProgressBar value={43} size="m" onBrand />
+        </div>
+        <div className="user-progress__caption">43% до призовой зоны</div>
       </div>
-      <div className="user-progress__caption">43% до призовой зоны</div>
-    </div>
+    )}
 
     <div className="table-header">
-      <h4 className="rig-title-04">Лидерборд</h4>
-      <span className="table-header__meta">Обновлено: 2 мин назад</span>
+      <h4 className="rig-title-04">
+        {isCompleted ? 'Финальные результаты' : 'Лидерборд'}
+        <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>· {total} участников</span>
+      </h4>
+      <span className="table-header__meta">{isCompleted ? `Подведено ${(contest.dates.split(' — ')[1] || contest.dates)}, 23:59 UTC` : 'Обновлено: 2 мин назад'}</span>
     </div>
     <div className="table-wrap">
-      <table>
-        <thead><tr><th>Место</th><th>Участник</th><th>Объём</th><th>Приз</th></tr></thead>
-        <tbody>
-          {[{p:1,n:'A****',v:'245.3',pr:'$500'},{p:2,n:'B****',v:'198.7',pr:'$300'},{p:3,n:'C****',v:'156.2',pr:'$100'}].map(r => (
-            <tr key={r.p}><td><Medal position={r.p}/></td><td><strong>{r.n}</strong></td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.pr}</td></tr>
-          ))}
-          <tr><td colSpan="4" style={{textAlign:'center',color:'var(--ds-text-placeholder)'}}>• • •</td></tr>
-          {[{p:10,n:'J****',v:'89.1'},{p:11,n:'K****',v:'74.2'}].map(r => (
-            <tr key={r.p}><td><Medal position={r.p}/></td><td>{r.n}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td>—</td></tr>
-          ))}
-          <tr className="highlight">
-            <td><span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>12</span></td>
-            <td><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы</td>
-            <td style={{fontVariantNumeric:'tabular-nums'}}>67.4</td><td>—</td>
-          </tr>
-          {[{p:13,n:'M****',v:'61.0'},{p:14,n:'N****',v:'55.3'}].map(r => (
-            <tr key={r.p}><td><Medal position={r.p}/></td><td>{r.n}</td><td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td><td>—</td></tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="leaderboard-scroll" ref={scrollContainerRef}>
+        <table>
+          <thead><tr><th>Место</th><th>Участник</th><th>{ctype.metric}</th><th>Приз</th></tr></thead>
+          <tbody>
+            {(() => {
+              const you = rows.find(r => r.isYou);
+              if (!you) return null;
+              const showTopPin = !youInView && youAbove;
+              return (
+                <tr className={`leaderboard-pin leaderboard-pin--top ${showTopPin ? '' : 'leaderboard-pin--hidden'}`}>
+                  <td>
+                    <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{you.p}</span>
+                  </td>
+                  <td>
+                    <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы
+                    <button
+                      type="button"
+                      onClick={scrollToYou}
+                      className="leaderboard-pin__link"
+                    >Показать в рейтинге</button>
+                  </td>
+                  <td style={{fontVariantNumeric:'tabular-nums'}}>{you.v}</td>
+                  <td style={{fontVariantNumeric:'tabular-nums'}}>{you.pr}</td>
+                </tr>
+              );
+            })()}
+            {rows.map(r => {
+              const cls = `${r.isYou ? 'highlight' : ''} ${r.isYou && flash ? 'leaderboard-flash' : ''}`.trim();
+              return (
+                <tr key={r.p} ref={r.isYou ? youRowRef : null} className={cls}>
+                  <td>
+                    {r.isYou
+                      ? <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{r.p}</span>
+                      : <Medal position={r.p}/>}
+                  </td>
+                  <td>
+                    {r.isYou
+                      ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы</>)
+                      : (r.p <= 3 ? <strong>{r.n}</strong> : r.n)}
+                  </td>
+                  <td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td>
+                  <td style={{fontVariantNumeric:'tabular-nums', color: r.pr === '—' ? 'var(--ds-text-muted)' : undefined}}>{r.pr}</td>
+                </tr>
+              );
+            })}
+            {(() => {
+              const you = rows.find(r => r.isYou);
+              if (!you) return null;
+              const showBottomPin = !youInView && !youAbove;
+              return (
+                <tr className={`leaderboard-pin leaderboard-pin--bottom ${showBottomPin ? '' : 'leaderboard-pin--hidden'}`}>
+                  <td>
+                    <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{you.p}</span>
+                  </td>
+                  <td>
+                    <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы
+                    <button
+                      type="button"
+                      onClick={scrollToYou}
+                      className="leaderboard-pin__link"
+                    >Показать в рейтинге</button>
+                  </td>
+                  <td style={{fontVariantNumeric:'tabular-nums'}}>{you.v}</td>
+                  <td style={{fontVariantNumeric:'tabular-nums'}}>{you.pr}</td>
+                </tr>
+              );
+            })()}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
-);
+  );
+};
 
 /* ═══════════════════════════════════════════════════════
    ADMIN PAGES
@@ -3441,6 +3754,11 @@ const App = () => {
   const [ibRows, setIbRows] = useState(IB_CONTEST_ROWS);
   const [clientScreen, setClientScreen] = useState('list');
   const [clientContestTypeId, setClientContestTypeId] = useState('volume');
+  const [joinedContests, setJoinedContests] = useState({ volume: 'active' });
+  const markContestJoined = (typeId, mode = 'active') =>
+    setJoinedContests(prev => ({ ...prev, [typeId]: mode }));
+  const cancelContest = (typeId) =>
+    setJoinedContests(prev => { const next = { ...prev }; delete next[typeId]; return next; });
   const [adminScreen, setAdminScreen] = useState('dashboard');
 
   const addIbContest = (row) => setIbRows(prev => {
@@ -3482,9 +3800,9 @@ const App = () => {
         )}
         {role === 'client' && (
           <Container>
-            {clientScreen === 'list' && <ClientContestList onNavigate={navClient} onSelectContest={setClientContestTypeId} />}
-            {clientScreen === 'terms' && <ClientContestTerms onNavigate={navClient} contestTypeId={clientContestTypeId} />}
-            {clientScreen === 'board' && <ClientLeaderboard onNavigate={navClient} />}
+            {clientScreen === 'list' && <ClientContestList onNavigate={navClient} onSelectContest={setClientContestTypeId} joinedContests={joinedContests} onCancelContest={cancelContest} onJoinContest={markContestJoined} />}
+            {clientScreen === 'terms' && <ClientContestTerms onNavigate={navClient} contestTypeId={clientContestTypeId} joinedContests={joinedContests} onJoinContest={markContestJoined} onCancelContest={cancelContest} />}
+            {clientScreen === 'board' && <ClientLeaderboard onNavigate={navClient} contestTypeId={clientContestTypeId} />}
           </Container>
         )}
         {role === 'admin' && (
