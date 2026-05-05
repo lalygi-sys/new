@@ -387,15 +387,33 @@
     position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 50;
     background: var(--ds-bg); border: 1px solid var(--ds-border);
     border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-dropdown);
-    max-height: 280px; overflow-y: auto; padding: var(--ds-dim-s) 0;
+    max-height: 320px; overflow-y: auto; padding: var(--ds-dim-s) 0;
   }
   .ds-dropdown__option {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-dim-l);
     padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
     font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
     color: var(--ds-text-primary); cursor: pointer; transition: background 0.12s;
+    position: relative;
+  }
+  .ds-dropdown__option-label {
+    flex: 1 1 auto;
+    min-width: 0;
   }
   .ds-dropdown__option:hover { background: var(--ds-bg-hover); }
   .ds-dropdown__option--selected { background: var(--ds-primary-content); color: var(--ds-primary); font-weight: 600; }
+  .ds-dropdown__option--selected::after {
+    content: '';
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-left: var(--ds-dim-m);
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") no-repeat center / 16px 16px;
+            mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>") no-repeat center / 16px 16px;
+  }
 
   /* ── DS Toggle ── */
   .ds-toggle { position: relative; display: inline-block; cursor: pointer; }
@@ -667,7 +685,7 @@
   .app-header__dropdown-item {
     display: flex; align-items: center; justify-content: space-between;
     gap: var(--ds-dim-l);
-    height: 36px; padding: 0 var(--ds-dim-2xl);
+    height: 36px; padding: 0 var(--ds-dim-3xl);
     border: 0; border-radius: var(--ds-radius-md);
     background: transparent; cursor: pointer;
     font-family: var(--ds-font-body); font-weight: 400;
@@ -677,6 +695,23 @@
   }
   .app-header__dropdown-item:hover { background: var(--ds-bg-page); }
   .app-header__dropdown-item--active { background: var(--ds-row-hover); font-weight: 600; }
+  .app-header__dropdown-item__label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-dim-m);
+    min-width: 0;
+  }
+  /* DS: `--ds-warning` — маркерный оранжевый; `--ds-warning-bg` — мягкое кольцо для контраста */
+  .app-header__dropdown-notify-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--ds-radius-full);
+    flex-shrink: 0;
+    background: var(--ds-warning);
+    box-shadow:
+      0 0 0 1px var(--ds-bg),
+      0 0 0 2px var(--ds-warning-bg);
+  }
 
   /* Deposit button (client role) — DS primary, S */
   .app-header__deposit {
@@ -702,7 +737,7 @@
   .app-header__close:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
 
   /* Page layout */
-  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--ds-dim-5xl); gap: var(--ds-dim-3xl); }
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--ds-dim-6xl); gap: var(--ds-dim-3xl); }
   /* DS Breadcrumb — semantic <nav><ol>, Body 02 (14/20) */
   .breadcrumb { margin-bottom: var(--ds-dim-3xl); }
   .breadcrumb__list {
@@ -747,6 +782,9 @@
   .stat-label { font-family: var(--ds-font-body); font-weight: 400; font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-secondary); margin-top: var(--ds-dim-l); }
   /* DS Utility 01 Bold (12/16, weight 600) */
   .stat-value-row { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: var(--ds-dim-m); white-space: nowrap; }
+  /* Иначе flex может растянуть вложенный svg по высоте строки со значением */
+  .stat-value-row .stat-trend .icon { height: 12px; width: 12px; overflow: hidden; flex-shrink: 0; }
+  .stat-value-row .stat-trend .icon svg { width: 12px; height: 12px; display: block; }
   .stat-trend { display: inline-flex; flex-shrink: 0; align-items: center; gap: var(--ds-dim-xs); font-size: 12px; line-height: 16px; font-weight: 600; white-space: nowrap; }
   .stat-trend--up { color: var(--ds-positive); }
   .stat-trend--down { color: var(--ds-negative); }
@@ -759,6 +797,30 @@
   }
   .table-header__meta { font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); font-weight: 400; }
   .table-wrap { border: 1px solid var(--ds-border); border-radius: var(--ds-radius-lg); overflow: hidden; background: var(--ds-bg); }
+  /* IB «Мои контесты»: блок таблицы заполняет оставшуюся высоту окна */
+  .table-wrap--stretch {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .table-wrap--stretch > table {
+    flex: 0 0 auto;
+  }
+  .table-wrap__filler {
+    flex: 1 1 auto;
+    min-height: var(--ds-dim-7xl);
+    background: var(--ds-bg);
+  }
+  .ib-my-contests-screen {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 100px - var(--ds-dim-3xl) - var(--ds-dim-6xl) - var(--ds-dim-7xl) - var(--ds-dim-7xl));
+  }
+  .ib-my-contests-screen > .page-header,
+  .ib-my-contests-screen > div:not(.table-wrap--stretch) {
+    flex-shrink: 0;
+  }
   table { width: 100%; border-collapse: collapse; }
   /* th uses Utility 01 from DS Foundations (12/16, regular, 0.15 tracking) */
   th {
@@ -777,6 +839,22 @@
   .td-actions { opacity: 0; transition: opacity .15s; display: inline-flex; gap: var(--ds-dim-s); align-items: center; justify-content: flex-end; min-width: 184px; }
   .td-actions > .ds-btn { min-width: 144px; justify-content: center; }
   tbody tr:hover .td-actions { opacity: 1; }
+  /* Action-cell stack: meta info shown by default, action buttons on hover.
+     Both layers share the same space so the row height never jumps. */
+  .row-action-stack { position: relative; display: inline-flex; align-items: center; justify-content: flex-end; min-height: 32px; min-width: 184px; }
+  .row-action-stack > .row-meta,
+  .row-action-stack > .td-actions { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
+  .row-meta {
+    transition: opacity .15s;
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    color: var(--ds-text-muted);
+    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: var(--ds-dim-s);
+  }
+  .row-meta strong { font-weight: 600; color: var(--ds-text-secondary); font-variant-numeric: tabular-nums; }
+  tbody tr:hover .row-meta,
+  tbody tr:focus-within .row-meta { opacity: 0; }
   .row-hover-action { opacity: 0; transition: opacity .15s; }
   tbody tr:hover .row-hover-action,
   tbody tr:focus-within .row-hover-action { opacity: 1; }
@@ -787,20 +865,27 @@
   .leaderboard-scroll table { background: var(--ds-bg); }
   .leaderboard-scroll thead th {
     position: sticky; top: 0; z-index: 2; box-shadow: inset 0 -1px 0 var(--ds-border);
-    font-family: var(--ds-font-body); font-weight: 600; font-size: 12px; line-height: 16px;
-    letter-spacing: 0.15px; color: var(--ds-text-secondary);
-    text-transform: uppercase;
   }
   .leaderboard-scroll tbody td {
-    font-family: var(--ds-font-body); font-weight: 400; font-size: 14px; line-height: 20px;
-    letter-spacing: 0; color: var(--ds-text-primary);
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
   }
-  .leaderboard-scroll tbody td:first-child,
-  .leaderboard-scroll tbody td strong {
-    font-family: var(--ds-font-body); font-weight: 600;
-  }
+  /* Full-width leaderboard with evenly distributed columns. All columns are
+     left-aligned (including numerical metric/prize) so values sit immediately
+     next to the participant name instead of being right-anchored across a
+     wide cell — that's what created the "torn apart" feeling on the prior
+     iteration. The participant column gets the largest share so long names
+     and the "Вы · Показать в рейтинге" pin row never wrap. */
+  .leaderboard-scroll table { table-layout: fixed; width: 100%; }
+  .leaderboard-scroll th, .leaderboard-scroll td { white-space: nowrap; }
+  .leaderboard-scroll th.lb-col-place,
+  .leaderboard-scroll td.lb-col-place { width: 72px; text-align: left; }
+  .leaderboard-scroll th.lb-col-name,
+  .leaderboard-scroll td.lb-col-name  { width: 38%; text-align: left; }
+  .leaderboard-scroll th.lb-col-score,
+  .leaderboard-scroll td.lb-col-score { width: 31%; text-align: left; }
+  .leaderboard-scroll th.lb-col-prize,
+  .leaderboard-scroll td.lb-col-prize { width: 31%; text-align: left; }
   .leaderboard-scroll tr.leaderboard-pin td {
     position: sticky; z-index: 1;
     background: var(--ds-bg-selected);
@@ -849,6 +934,24 @@
   /* Prize-row — grid row in IB Create-Contest step 3.
      Compacts the embedded Input by zeroing its margin. */
   .prize-row .ds-input-wrap { margin-bottom: 0; }
+
+  /* Prize pool — IB wizard step 3: сетка как у .prize-row, сумма по правому краю колонки инпута */
+  .prize-pool-toolbar {
+    display: grid;
+    grid-template-columns: 40px 1fr 180px 40px;
+    gap: var(--ds-dim-3xl);
+    align-items: center;
+    margin-top: var(--ds-dim-4xl);
+    margin-bottom: var(--ds-dim-6xl);
+  }
+  .prize-pool-toolbar__cell--lead { min-width: 0; }
+  .prize-pool-toolbar__cell--action { min-width: 0; }
+  .prize-pool-toolbar__total {
+    text-align: right;
+    justify-self: stretch;
+    min-width: 0;
+  }
+  .prize-pool-toolbar__cell--trail { min-width: 0; }
 
   /* Review-field — clickable cell in IB review summary card.
      Editable fields turn into hoverable buttons with subtle bg + reveal pencil.
@@ -957,6 +1060,7 @@
   /* Contest card (shared between client list and wizard preview) */
   .contest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--ds-dim-4xl); }
   .contest-card {
+    position: relative;
     background: var(--ds-bg); border-radius: var(--ds-radius-xl);
     border: 1px solid var(--ds-border); padding: var(--ds-dim-5xl);
     transition: box-shadow 0.2s, border-color 0.2s;
@@ -1048,39 +1152,66 @@
   }
   .contest-card__footer { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-dim-3xl); flex-wrap: wrap; }
 
-  /* User progress (client leaderboard hero) */
+  /* User progress (client leaderboard hero) — dark brand surface */
   .user-progress {
-    background: var(--ds-primary); border-radius: var(--ds-radius-xl);
-    padding: var(--ds-dim-7xl); color: #fff;
-    margin-bottom: var(--ds-dim-6xl);
-    display: flex; flex-direction: column; gap: var(--ds-dim-4xl);
+    background:
+      linear-gradient(135deg,
+        var(--ds-primary) 0%,
+        var(--ds-on-primary-container) 100%);
+    border-radius: var(--ds-radius-lg);
+    padding: var(--ds-dim-5xl) var(--ds-dim-6xl);
+    color: var(--ds-on-primary);
+    margin-bottom: var(--ds-dim-5xl);
+    display: flex; flex-direction: column; gap: var(--ds-dim-3xl);
+    box-shadow: 0 8px 24px -16px color-mix(in srgb, var(--ds-on-primary-container) 70%, transparent);
     position: relative;
   }
-  .ds-btn--on-brand {
-    background: rgba(255,255,255,0.16); color: #fff; border-color: rgba(255,255,255,0.3);
-  }
-  .ds-btn--on-brand:hover:not(:disabled) { background: rgba(255,255,255,0.26); border-color: rgba(255,255,255,0.5); color: #fff; }
-  .ds-btn--on-brand:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
   .user-progress__row {
-    display: flex; align-items: flex-end; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     gap: var(--ds-dim-5xl); flex-wrap: wrap;
   }
-  .user-progress__rank { min-width: 0; }
-  /* DS Title 01 (40/44, weight 600) */
+  .user-progress__rank {
+    display: flex; align-items: baseline; gap: var(--ds-dim-2xl); min-width: 0; flex-wrap: wrap;
+  }
   .user-progress__place {
-    font-family: var(--ds-font-body); font-weight: 600;
-    font-size: 40px; line-height: 44px; letter-spacing: -1px;
-  }
-  .user-progress__place-meta { font-size: 14px; line-height: 20px; opacity: 0.85; margin-top: var(--ds-dim-m); }
-  .user-progress__score { text-align: right; }
-  .user-progress__score-value {
-    font-family: var(--ds-font-body); font-weight: 600;
+    font-family: var(--ds-font-body); font-weight: 700;
     font-size: 28px; line-height: 32px; letter-spacing: -0.4px;
+    color: var(--ds-on-primary);
+    font-variant-numeric: tabular-nums;
   }
-  .user-progress__score-unit { font-size: 16px; font-weight: 400; opacity: 0.85; }
-  .user-progress__score-meta { font-size: 14px; line-height: 20px; opacity: 0.85; margin-top: var(--ds-dim-xs); }
+  .user-progress__place-meta {
+    font-family: var(--ds-font-body); font-weight: 500;
+    font-size: 14px; line-height: 20px;
+    color: color-mix(in srgb, var(--ds-on-primary) 80%, transparent);
+  }
+  .user-progress__score { text-align: right; display: flex; flex-direction: column; gap: var(--ds-dim-xs); }
+  .user-progress__score-value {
+    font-family: var(--ds-font-body); font-weight: 700;
+    font-size: 20px; line-height: 24px; letter-spacing: -0.2px;
+    color: var(--ds-on-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .user-progress__score-unit {
+    font-size: 14px; font-weight: 500; margin-left: 2px;
+    color: color-mix(in srgb, var(--ds-on-primary) 75%, transparent);
+  }
+  .user-progress__score-meta {
+    font-family: var(--ds-font-body); font-weight: 400;
+    font-size: 13px; line-height: 16px;
+    color: color-mix(in srgb, var(--ds-on-primary) 75%, transparent);
+  }
   .user-progress__bar { margin-top: var(--ds-dim-s); }
-  .user-progress__caption { font-size: 14px; line-height: 20px; opacity: 0.85; text-align: right; }
+  .user-progress__caption {
+    font-family: var(--ds-font-body); font-weight: 500;
+    font-size: 13px; line-height: 16px;
+    color: color-mix(in srgb, var(--ds-on-primary) 80%, transparent);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .user-progress__caption strong {
+    font-family: var(--ds-font-body); font-weight: 700;
+    font-size: 14px; line-height: 20px; color: var(--ds-on-primary);
+    font-variant-numeric: tabular-nums;
+  }
 
   /* Wizard */
   .wizard-layout { display: grid; grid-template-columns: 1fr 380px; gap: var(--ds-dim-5xl); }
@@ -1151,8 +1282,8 @@
   /* DS Toast — built on .ds-notification visual pattern (no left accent bar,
      same treatment as InfoBox). Fixed-positioned, top-centered. */
   .toast {
-    /* Top offset = role-bar (36) + app-header (64) + 16 buffer = 116 */
-    position: fixed; top: 116px; left: 50%;
+    /* Flush under fixed chrome: role-bar (36) + app-header (64) = 100 */
+    position: fixed; top: 100px; left: 50%;
     transform: translateX(-50%) translateY(-100px);
     z-index: 3000;
     display: flex; align-items: center; gap: var(--ds-dim-5xl);
@@ -1574,7 +1705,7 @@
 <div id="root"></div>
 
 <script type="text/babel">
-const { useState, useCallback, useRef, useEffect, createContext, useContext } = React;
+const { useState, useCallback, useRef, useEffect, useMemo, createContext, useContext } = React;
 
 /* ═══════════════════════════════════════════════════════
    DS COMPONENTS — matching RIG v2.51.0 Storybook
@@ -1730,7 +1861,7 @@ const Select = ({ label, value, onChange, options = [], placeholder, description
             <div key={opt.value}
                  className={`ds-dropdown__option ${opt.value === value ? 'ds-dropdown__option--selected' : ''}`}
                  onClick={() => { onChange && onChange(opt.value); setOpen(false); }}>
-              {opt.label}
+              <span className="ds-dropdown__option-label">{opt.label}</span>
             </div>
           ))}
         </div>
@@ -1858,8 +1989,8 @@ const CONTEST_TYPES = {
     id: 'volume',
     title: 'Volume Race',
     desc: 'Кто наторгует больше лотов за период',
-    shortDesc: 'Наторгуйте больше лотов и выиграйте!',
-    clientDescTemplate: (topPrize) => `Наторгуйте больше лотов и выиграйте до $${topPrize} бонус на торговый счёт!`,
+    shortDesc: 'Кто наторгует больший объём в лотах — побеждает.',
+    clientDescTemplate: (topPrize) => `Кто наторгует больший объём в лотах за период — заберёт до $${topPrize} бонус на торговый счёт.`,
     icon: 'chart',
     circle: 'primary',
     typeIcon: 'volume',
@@ -1879,8 +2010,8 @@ const CONTEST_TYPES = {
     id: 'streak',
     title: 'Trading Streak',
     desc: 'Кто торгует больше дней подряд',
-    shortDesc: 'Торгуйте каждый день и покажите дисциплину!',
-    clientDescTemplate: (topPrize) => `Торгуйте каждый день и выиграйте до $${topPrize}! Кто удержит самый длинный streak — тот победит.`,
+    shortDesc: 'Кто удержит самый длинный streak — побеждает.',
+    clientDescTemplate: (topPrize) => `Кто удержит самый длинный streak торговых дней подряд — заберёт до $${topPrize} бонус.`,
     icon: 'flame',
     circle: 'warning',
     typeIcon: 'streak',
@@ -1900,8 +2031,8 @@ const CONTEST_TYPES = {
     id: 'top',
     title: 'Top Trader',
     desc: 'Комбинация объёма и частоты',
-    shortDesc: 'Покажите лучшую комбинацию объёма и стабильности!',
-    clientDescTemplate: (topPrize) => `Покажите лучшую комбинацию объёма и стабильности — заберите до $${topPrize} бонус на торговый счёт!`,
+    shortDesc: 'Кто лучше совмещает объём и стабильность — побеждает.',
+    clientDescTemplate: (topPrize) => `Кто покажет лучшую комбинацию объёма и стабильности — заберёт до $${topPrize} бонус на торговый счёт.`,
     icon: 'trophy',
     circle: 'positive',
     typeIcon: 'top',
@@ -1920,10 +2051,10 @@ const CONTEST_TYPES = {
   },
   grow: {
     id: 'grow',
-    title: 'Grow your account',
+    title: 'Grow account',
     desc: 'Кто больше нарастит баланс в процентах',
-    shortDesc: 'Нарастите баланс в процентах и победите!',
-    clientDescTemplate: (topPrize) => `Покажите лучший прирост баланса в % — наши лидеры заберут до $${topPrize} бонус.`,
+    shortDesc: 'Кто больше нарастит баланс в % — побеждает.',
+    clientDescTemplate: (topPrize) => `Кто больше нарастит баланс в процентах за период — заберёт до $${topPrize} бонус.`,
     icon: 'trending-up',
     circle: 'grow',
     typeIcon: 'grow',
@@ -2084,7 +2215,7 @@ const HEADER_MENUS = {
     {key: 'rewards',       label: 'Elev8 Rewards'},
     {key: 'reward-points', label: 'Reward points', badge: '0.00'},
     {key: 'partner',       label: 'My partner', dropdown: [
-      {key: 'contests',      label: 'Contests', badge: '3'},
+      {key: 'contests',      label: 'Contests'},
       {key: 'about-partner', label: 'About partner'},
     ]},
   ],
@@ -2099,7 +2230,7 @@ const HEADER_MENUS = {
    IB:    Logo + Menu + Wallet + Avatar
    Client: Logo + Menu (with badges & dropdowns) + Deposit + Avatar + Close
    Admin:  Logo + Menu + Wallet + Avatar */
-const AppHeader = ({ role, activeKey: activeKeyProp }) => {
+const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0 }) => {
   const menu = HEADER_MENUS[role] || HEADER_MENUS.ib;
   const [internalKey, setInternalKey] = useState(activeKeyProp || menu[0].key);
   const activeKey = activeKeyProp || internalKey;
@@ -2141,8 +2272,22 @@ const AppHeader = ({ role, activeKey: activeKeyProp }) => {
                       className={`app-header__dropdown-item ${activeKey === d.key ? 'app-header__dropdown-item--active' : ''}`}
                       onClick={() => setActiveKey(d.key)}
                     >
-                      <span>{d.label}</span>
-                      {d.badge && <Tag label={d.badge} variant="brand" />}
+                      {d.key === 'contests' && role === 'client' ? (
+                        <>
+                          <span className="app-header__dropdown-item__label">
+                            <span>{d.label}</span>
+                            {clientNewContestsCount > 0 && (
+                              <span className="app-header__dropdown-notify-dot" aria-hidden="true" title="Есть новые контесты" />
+                            )}
+                          </span>
+                          <Tag label={String(clientContestsTotal)} variant="brand" />
+                        </>
+                      ) : (
+                        <>
+                          <span>{d.label}</span>
+                          {d.badge ? <Tag label={d.badge} variant="brand" /> : null}
+                        </>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -2372,8 +2517,17 @@ const BulletList = ({ items, icon = 'dot' }) => (
   </ul>
 );
 
+/* "No participants yet" illustration — sourced from Figma Graphic assets
+   (Brand 1) node 2881:89. Vector path inlined so the prototype stays a
+   single self-contained file. */
+const IllNoParticipants = ({ size = 100 }) => (
+  <svg width={size} height={size * 0.79} viewBox="0 0 100 79" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M87.7619 0.00670858C88.0435 0.0379775 88.3049 0.177028 88.4916 0.398043C88.5441 0.460227 88.5898 0.527319 88.6277 0.598182L92.8797 4.43437C93.1688 4.69532 93.3057 5.08924 93.2429 5.47756L88.8823 32.4103C88.9609 32.5221 89.0222 32.6487 89.0578 32.7882C91.5422 42.5121 96.6482 61.8413 99.9242 70.4457C100.058 70.7977 100.013 71.1941 99.8035 71.5057C99.5941 71.8173 99.247 72.0043 98.8763 72.0043H82.4741L81.4964 78.0421C81.4314 78.4425 81.1627 78.7785 80.7909 78.9242C80.4558 79.0554 80.0823 79.0135 79.7836 78.8191L79.7814 78.8202C57.9874 78.9557 11.0535 79.1465 4.11372 78.8191C3.80208 78.8043 3.50999 78.6581 3.30831 78.4155C2.53321 77.4833 1.01132 75.916 0.333575 75.2367C0.329697 75.2329 0.326415 75.2284 0.322602 75.2244C0.301964 75.2032 0.281334 75.1815 0.262251 75.1585C0.252615 75.1468 0.245048 75.1336 0.235916 75.1216C0.227397 75.1104 0.218753 75.0995 0.210679 75.088C0.18594 75.053 0.163171 75.0169 0.142647 74.9796C0.138871 74.9727 0.134208 74.9664 0.130577 74.9595C0.110037 74.9202 0.0915581 74.88 0.0757126 74.8387L0.0658371 74.8119C0.0631057 74.8042 0.0618229 74.7961 0.0592534 74.7884C0.0468965 74.7512 0.0359806 74.7137 0.0274321 74.6755C0.0239986 74.6602 0.020374 74.645 0.0175566 74.6296C0.0105192 74.5909 0.00637733 74.5516 0.00329185 74.5122C0.00257618 74.5032 0.000507939 74.4944 0 74.4854V74.3534L0.00219457 74.3177C0.00331541 74.3049 0.00613618 74.2924 0.00768099 74.2797C0.0097702 74.2625 0.0114064 74.2453 0.0142647 74.2282C0.014362 74.2276 0.0140836 74.2249 0.0142647 74.2238C0.0146448 74.2215 0.0157483 74.2179 0.0164593 74.2137C0.0179663 74.2047 0.0201092 74.1909 0.023043 74.1734C0.0289863 74.1381 0.0377557 74.0857 0.0493778 74.0169C0.0728252 73.8781 0.108051 73.6719 0.15362 73.4042C0.244771 72.8686 0.378679 72.0844 0.550837 71.0897C0.895187 69.1002 1.39186 66.2676 2.00035 62.8952C3.21715 56.1513 4.88232 47.242 6.67698 38.5922C8.46436 29.9775 10.1257 20.5732 11.3404 13.3177C11.9476 9.69115 12.4432 6.60372 12.7867 4.42319C12.9584 3.33297 13.092 2.46898 13.1828 1.8784C13.2282 1.58322 13.2626 1.35616 13.2859 1.20307C13.2975 1.12666 13.3064 1.06862 13.3123 1.02977C13.3152 1.0106 13.3174 0.995894 13.3188 0.986162C13.3196 0.981337 13.3207 0.977393 13.321 0.974981V0.971626C13.4051 0.413072 13.877 0.000350335 14.4315 0H87.6401L87.7619 0.00670858ZM88.4291 3.4784C86.7176 14.9499 84.2023 31.2372 81.8366 45.3556C80.5775 52.8698 79.3588 59.7782 78.3264 65.0218C77.8105 67.6419 77.339 69.8583 76.9295 71.5314C76.8055 72.0383 76.684 72.4997 76.5696 72.9111C76.5489 73.0225 76.5297 73.1335 76.5093 73.2432L79.5894 75.7432L90.9243 5.72913L88.4291 3.4784ZM15.0054 4.78546C14.6609 6.97191 14.1645 10.0671 13.5559 13.7023C12.3389 20.9709 10.6721 30.4091 8.87594 39.0663C7.087 47.6885 5.42521 56.5754 4.21028 63.3089C3.60297 66.6748 3.10763 69.5017 2.76406 71.4866C2.64157 72.1943 2.53887 72.7957 2.45682 73.2756H74.1073C74.14 73.181 74.1764 73.073 74.2148 72.9502C74.2682 72.7799 74.3232 72.5906 74.3816 72.3834C77.4603 55.8344 83.7302 20.879 86.2499 2.28986H15.3938C15.3029 2.88094 15.1721 3.72679 15.0054 4.78546ZM74.7635 6.86959C75.3838 6.86988 75.8871 7.38237 75.8871 8.01452C75.8871 8.1976 75.9608 8.6222 76.1768 9.21424C76.3834 9.78053 76.6893 10.415 77.0755 11.0032C77.8916 12.2462 78.8507 12.9754 79.7748 12.9755C80.1114 12.9755 80.4304 13.1296 80.6438 13.3948C80.8573 13.6603 80.9427 14.0099 80.8765 14.3463C80.3775 16.8796 78.6289 27.0257 76.7452 37.4808C74.8718 47.8791 72.8554 58.6384 71.8337 62.2691C71.6956 62.7599 71.2551 63.0985 70.754 63.0987C70.4349 63.0987 70.0267 63.2252 69.5327 63.5381C69.044 63.8477 68.5361 64.2986 68.0382 64.8373C67.0406 65.917 66.1919 67.2323 65.7252 68.1011C65.5281 68.4677 65.1501 68.6957 64.7398 68.6959H14.1199C13.7739 68.6958 13.4472 68.5332 13.2344 68.2553C13.0215 67.9773 12.9461 67.6146 13.0303 67.2725C13.2126 66.532 13.1219 65.4321 12.6374 64.5466C12.1891 63.7273 11.4171 63.0987 10.1104 63.0987C9.72098 63.0986 9.35933 62.8928 9.15465 62.5553C8.95012 62.2175 8.9318 61.7954 9.10637 61.4405C9.15005 61.3518 9.23961 61.1089 9.36971 60.6545C9.49318 60.2232 9.63665 59.6624 9.79656 58.9841C10.1161 57.6285 10.4945 55.8403 10.9125 53.7503C11.748 49.5723 12.7334 44.2229 13.704 38.7868C14.6744 33.352 15.6293 27.8365 16.4044 23.3291C17.1785 18.8276 17.7746 15.3208 18.0262 13.9158L18.0734 13.7369C18.2139 13.3343 18.5667 13.0386 18.9929 12.9845C20.1516 12.8374 21.0699 12.068 21.7789 10.9808C22.4891 9.89185 22.8933 8.61984 23.0386 7.80879L23.0605 7.70928C23.1937 7.21734 23.6346 6.86967 24.1436 6.86959H74.7635ZM25.0291 9.15945C24.7641 10.1011 24.319 11.2243 23.6509 12.2488C22.8691 13.4474 21.7122 14.6086 20.1066 15.0798C19.8102 16.776 19.2791 19.8787 18.6176 23.7249C17.8422 28.2337 16.8856 33.7542 15.9139 39.196C14.9425 44.6366 13.9551 50.0054 13.1147 54.2076C12.6948 56.3075 12.3097 58.1251 11.9813 59.5185C11.8486 60.0814 11.7206 60.5807 11.6049 61.0056C13.0004 61.3949 13.9937 62.323 14.6005 63.4319C15.1091 64.3617 15.3491 65.4208 15.362 66.406H64.0924C64.6495 65.4662 65.458 64.2893 66.4022 63.2675C66.9816 62.6404 67.639 62.042 68.3466 61.5937C68.8064 61.3024 69.3174 61.0571 69.863 60.9218C70.8978 56.852 72.7647 46.8946 74.5353 37.0672C76.1984 27.8362 77.7703 18.7621 78.4559 15.0451C77.0298 14.568 75.9343 13.3846 75.2068 12.2767C74.7162 11.5294 74.3332 10.7329 74.07 10.0114C73.9666 9.72792 73.8766 9.44004 73.8056 9.15945H25.0291ZM47.5388 60.0508C48.1539 60.1338 48.587 60.7097 48.5055 61.3366C48.4256 61.9505 48.3599 62.5353 48.308 63.0819C48.2479 63.711 47.6987 64.1715 47.0812 64.1106C46.4638 64.0494 46.012 63.4897 46.0717 62.8605C46.1263 62.2862 46.1948 61.6751 46.278 61.0358C46.3595 60.4092 46.9239 59.9681 47.5388 60.0508ZM33.9566 61.0917C34.0783 60.4718 34.6704 60.07 35.2788 60.1939C35.8873 60.3179 36.2827 60.9212 36.161 61.5412C36.044 62.1374 35.9198 62.7058 35.7934 63.2396C35.6479 63.8542 35.0415 64.2319 34.4383 64.0837C33.8351 63.9355 33.4634 63.3175 33.6087 62.7029C33.728 62.1992 33.8451 61.6596 33.9566 61.0917ZM64.4315 57.3573C64.5482 56.7363 65.1366 56.3294 65.746 56.4482C66.3554 56.5672 66.7548 57.1667 66.6381 57.7877C66.5196 58.4185 66.3942 59.0415 66.2661 59.6505C66.1358 60.2684 65.5384 60.6617 64.9318 60.5293C64.3255 60.3965 63.9395 59.7877 64.0694 59.1697C64.1945 58.5744 64.3165 57.9688 64.4315 57.3573ZM14.9768 57.0867C15.1212 56.4719 15.7274 56.0923 16.3309 56.2392C16.9343 56.3861 17.3067 57.004 17.1626 57.6189C17.0444 58.123 16.9319 58.6162 16.8236 59.0948C16.6841 59.7108 16.0806 60.0954 15.4761 59.9535C14.8715 59.8113 14.4941 59.1965 14.6334 58.5805C14.7424 58.099 14.8567 57.5989 14.9768 57.0867ZM35.9591 53.4428C36.5786 53.4761 37.0548 54.0146 37.0224 54.6459C36.9615 55.8237 36.853 56.9901 36.7119 58.1109C36.6329 58.7379 36.0698 59.1818 35.4544 59.1015C34.839 59.021 34.4035 58.4471 34.4822 57.8201C34.6169 56.7502 34.7208 55.6411 34.7784 54.5262C34.8111 53.8949 35.3396 53.4097 35.9591 53.4428ZM47.6595 53.8319C47.8164 53.2202 48.4307 52.8536 49.0311 53.0135C49.6312 53.1735 49.9901 53.7994 49.8332 54.4111C49.5359 55.5703 49.2809 56.7284 49.0662 57.8503C48.9474 58.4709 48.3574 58.877 47.7483 58.756C47.1397 58.6349 46.7423 58.0334 46.8606 57.4132C47.0836 56.2481 47.3491 55.042 47.6595 53.8319ZM16.5997 51.1149C16.7947 50.5147 17.4305 50.1896 18.0196 50.3882C18.6085 50.5868 18.9285 51.2337 18.7339 51.8339C18.4256 52.7832 18.1466 53.7458 17.8912 54.6984C17.7276 55.3083 17.1094 55.6678 16.5108 55.5012C15.9123 55.3345 15.5595 54.7046 15.723 54.0947C15.9864 53.1122 16.2764 52.1105 16.5997 51.1149ZM66.3989 48.9816C67.0192 48.9895 67.5159 49.5089 67.5082 50.1411C67.493 51.4059 67.3905 52.7087 67.2328 54.0074C67.1566 54.6348 66.5954 55.0812 65.9797 55.0037C65.3641 54.9259 64.9261 54.3541 65.002 53.7268C65.1522 52.4903 65.247 51.274 65.261 50.1131C65.2686 49.4809 65.7785 48.9739 66.3989 48.9816ZM35.3699 46.694C35.9803 46.5805 36.5652 46.9922 36.6767 47.6142C36.8804 48.7508 36.9974 49.9401 37.0476 51.1429C37.074 51.7745 36.5932 52.3088 35.9734 52.3359C35.3534 52.3627 34.8289 51.8719 34.8026 51.2401C34.7559 50.122 34.6474 49.0399 34.4657 48.0256C34.3543 47.4036 34.7594 46.8075 35.3699 46.694ZM50.0669 46.8471C50.3307 46.275 50.9998 46.0284 51.5614 46.297C52.1231 46.5658 52.364 47.2487 52.1002 47.821C51.6323 48.8363 51.2085 49.9225 50.8273 51.0467C50.6247 51.6442 49.9851 51.9619 49.3987 51.7556C48.8124 51.5491 48.5007 50.8973 48.703 50.2998C49.1057 49.112 49.5595 47.9482 50.0669 46.8471ZM19.0478 45.3098C19.355 44.7604 20.0415 44.5684 20.5807 44.8815C21.1197 45.1947 21.3081 45.8942 21.0009 46.4435C20.5454 47.2579 20.1293 48.1372 19.7478 49.0599C19.5069 49.6426 18.8471 49.9169 18.2753 49.6715C17.7035 49.4259 17.4353 48.7537 17.6762 48.171C18.0854 47.1812 18.54 46.2177 19.0478 45.3098ZM64.144 41.97C64.6572 41.6148 65.3556 41.7512 65.7043 42.2741C66.4645 43.4144 66.9336 44.7531 67.2021 46.1741C67.3194 46.795 66.9205 47.3962 66.3111 47.5158C65.702 47.6351 65.113 47.2284 64.9955 46.6079C64.7672 45.3999 64.3887 44.3758 63.8455 43.5611C63.4968 43.0381 63.6308 42.3254 64.144 41.97ZM33.6032 39.9228C33.9263 39.3833 34.6174 39.2127 35.1471 39.5415C35.6768 39.8705 35.845 40.5748 35.5224 41.1147C35.2392 41.5881 35.0037 42.0555 34.8168 42.5C35.1426 43.0054 35.4262 43.5455 35.6683 44.1123C35.916 44.692 35.6557 45.3671 35.0868 45.6195C34.5178 45.8718 33.8553 45.6055 33.6076 45.0258C33.1866 44.0403 32.656 43.2322 32.0111 42.6219C31.5564 42.1916 31.5296 41.4662 31.9518 41.0029C32.2706 40.6531 32.754 40.5532 33.1676 40.7099C33.3024 40.4481 33.4466 40.1846 33.6032 39.9228ZM53.0559 39.1982C53.6314 38.9618 54.2865 39.2458 54.5186 39.8322C54.6113 40.0665 54.69 40.2944 54.7611 40.5109C55.2198 40.31 55.7704 40.4394 56.091 40.8597C56.4717 41.3591 56.3824 42.0785 55.8924 42.4664C55.1328 43.0678 54.416 43.8755 53.7472 44.8569C53.3932 45.3759 52.6932 45.5048 52.1836 45.1443C51.6742 44.7837 51.548 44.0703 51.9016 43.551C52.2232 43.079 52.5639 42.6298 52.9231 42.2093C52.8867 42.1337 52.8573 42.0531 52.8375 41.9678C52.7566 41.6191 52.6271 41.1775 52.4337 40.6887C52.2019 40.1023 52.4806 39.4348 53.0559 39.1982ZM23.3392 40.3812C23.8608 40.0391 24.5558 40.1921 24.8919 40.7233C25.228 41.2548 25.0777 41.964 24.5561 42.3066C23.8468 42.7723 23.1894 43.38 22.5788 44.1112C22.1767 44.5927 21.467 44.6506 20.9943 44.2409C20.5222 43.8311 20.4653 43.1089 20.8671 42.6274C21.5938 41.7572 22.4132 40.9892 23.3392 40.3812ZM58.2472 38.9959C58.9169 38.9022 59.6094 38.9041 60.3221 39.0082C61.0561 39.1154 61.7354 39.296 62.3587 39.5471C62.9353 39.7798 63.2176 40.4441 62.9896 41.0319C62.7614 41.6197 62.1094 41.9081 61.5324 41.6759C61.0869 41.4965 60.5801 41.3587 60.0039 41.2746C59.4918 41.1998 59.0087 41.2006 58.5522 41.2645C57.9378 41.3501 57.3717 40.9121 57.287 40.2862C57.2027 39.6598 57.6325 39.0819 58.2472 38.9959ZM28.1969 38.9277C28.8623 38.9277 29.4925 38.994 30.0875 39.1244C30.694 39.2575 31.0803 39.8661 30.95 40.4841C30.8195 41.1022 30.2213 41.4959 29.6146 41.3629C29.1866 41.2691 28.7156 41.2176 28.1969 41.2175C27.7473 41.2175 27.3205 41.2593 26.9153 41.3372C26.3055 41.4543 25.718 41.045 25.6029 40.4237C25.4881 39.8025 25.8888 39.2038 26.4983 39.0864C27.044 38.9816 27.6108 38.9277 28.1969 38.9277ZM48.8127 35.0311C49.1395 34.4937 49.8324 34.3281 50.3599 34.661C51.3903 35.3115 52.2109 36.1035 52.8595 36.9263C53.2481 37.4193 53.171 38.1392 52.6872 38.5352C52.2034 38.9312 51.4968 38.8527 51.1082 38.3597C50.5991 37.7139 49.9642 37.1052 49.1759 36.6076C48.6485 36.2746 48.4859 35.5686 48.8127 35.0311ZM39.5417 34.3055C40.0989 34.027 40.7728 34.2622 41.0461 34.8298C41.3192 35.3975 41.0885 36.0832 40.5315 36.3616C39.4876 36.8834 38.5408 37.5792 37.7148 38.3697C37.2624 38.8026 36.5508 38.7803 36.1259 38.3194C35.7014 37.8585 35.7242 37.1343 36.1764 36.7015C37.1448 35.7747 38.2728 34.9397 39.5417 34.3055ZM57.9663 34.4363C58.3997 33.9839 59.1111 33.9746 59.5551 34.4161C60.2141 35.0718 61.1381 35.4051 62.1656 35.3632C62.7855 35.3378 63.3091 35.8295 63.3342 36.4611C63.3588 37.0928 62.8755 37.6266 62.2555 37.6519C60.6974 37.7155 59.1445 37.209 57.9849 36.0553C57.5411 35.6136 57.5331 34.8887 57.9663 34.4363ZM32.8264 33.7475C33.2289 33.2663 33.9386 33.2088 34.4108 33.6189C34.8829 34.0291 34.9394 34.7512 34.537 35.2324C33.5081 36.4626 32.2831 37.2503 30.9994 37.5904C30.3989 37.7494 29.7862 37.3828 29.63 36.7709C29.4738 36.1589 29.8337 35.5335 30.4343 35.3744C31.2258 35.1646 32.0643 34.6585 32.8264 33.7475ZM24.7065 32.0637C25.2943 31.8613 25.932 32.1825 26.1307 32.7815C26.4758 33.8217 27.0939 34.5666 27.8151 35.0065C28.3474 35.3312 28.521 36.0338 28.2024 36.5763C27.8837 37.1189 27.1932 37.2957 26.6607 36.971C25.4547 36.2353 24.5077 35.0396 24.002 33.515C23.8033 32.916 24.1186 32.2662 24.7065 32.0637ZM66.8839 31.8568C67.1554 31.2887 67.8272 31.0518 68.385 31.328C68.943 31.6046 69.1754 32.29 68.904 32.8586C68.6307 33.4311 68.2984 33.9895 67.9022 34.5224C67.4465 35.1351 66.9272 35.6621 66.366 36.0989C65.8729 36.4824 65.1669 36.3854 64.7903 35.8831C64.4141 35.3807 64.5093 34.6624 65.002 34.2786C65.4022 33.9672 65.7772 33.5872 66.1103 33.1393C66.416 32.7282 66.6733 32.2979 66.8839 31.8568ZM43.5446 33.1314C44.2242 33.0636 44.925 33.0569 45.6437 33.1214C46.2146 33.1726 46.7567 33.2607 47.2699 33.3808C47.8746 33.5223 48.2524 34.1366 48.1137 34.7527C47.9749 35.3689 47.3721 35.7537 46.7674 35.6125C46.3578 35.5167 45.9182 35.4446 45.4473 35.4023C44.8687 35.3504 44.3069 35.3559 43.7641 35.4101C43.1466 35.4718 42.5969 35.0118 42.5362 34.3826C42.4758 33.7534 42.9272 33.1932 43.5446 33.1314ZM56.553 28.0396C56.6783 27.4204 57.2729 27.022 57.8807 27.1496C58.4882 27.2776 58.8794 27.8834 58.7541 28.5025C58.6591 28.9721 58.575 29.4778 58.5039 30.0209C58.4226 30.6425 58.4081 31.1999 58.4458 31.6947C58.4935 32.325 58.0307 32.8757 57.4121 32.9246C56.7939 32.9732 56.2535 32.5023 56.2051 31.8725C56.1541 31.2018 56.1766 30.4827 56.2764 29.719C56.3539 29.1267 56.4463 28.5668 56.553 28.0396ZM35.834 26.7807C36.4527 26.7317 36.9941 27.2035 37.0421 27.8339C37.0851 28.3987 37.089 28.9883 37.052 29.5994C37.0483 29.661 37.0402 29.7226 37.0268 29.7827C36.8755 30.461 36.6938 31.0952 36.4858 31.6858C36.2761 32.2808 35.6324 32.5903 35.0484 32.3767C34.4645 32.1631 34.1608 31.5071 34.3702 30.912C34.5365 30.44 34.6846 29.9257 34.8125 29.3679C34.8376 28.8918 34.8341 28.4388 34.8015 28.0106C34.7535 27.3803 35.2155 26.8298 35.834 26.7807ZM24.7767 25.7576C25.0288 25.18 25.6922 24.9195 26.2591 25.1762C26.8261 25.4331 27.0818 26.1101 26.8297 26.6879C26.645 27.1111 26.4703 27.5745 26.3096 28.0799C26.1297 28.6459 26.0069 29.1818 25.9321 29.6855C25.8393 30.3107 25.2663 30.7405 24.6527 30.6459C24.0392 30.5513 23.6174 29.9684 23.7101 29.3433C23.8043 28.7091 23.9568 28.0517 24.1721 27.3744C24.3554 26.7978 24.5578 26.2591 24.7767 25.7576ZM42.3903 26.7315C42.8576 26.3156 43.5676 26.3638 43.9759 26.8399C44.6085 27.5779 45.4202 28.1065 46.2977 28.3482C46.8966 28.5134 47.2508 29.1423 47.0889 29.7526C46.9267 30.3626 46.3096 30.7237 45.7107 30.5587C44.3769 30.1912 43.1883 29.4034 42.2828 28.3471C41.8746 27.8709 41.923 27.1475 42.3903 26.7315ZM51.0654 26.6275C51.4662 26.145 52.1751 26.084 52.6488 26.4922C53.1225 26.9007 53.1814 27.6241 52.7805 28.1067C52.4201 28.5406 52.0157 28.9376 51.568 29.2841C51.0012 29.7227 50.4103 30.0634 49.8068 30.3083C49.2304 30.542 48.577 30.255 48.3475 29.6676C48.1181 29.0802 48.3998 28.4144 48.9762 28.1805C49.3819 28.0159 49.7957 27.781 50.2085 27.4616C50.5164 27.2233 50.8031 26.9432 51.0654 26.6275ZM68.0284 24.5288C68.6188 24.3343 69.2518 24.664 69.4428 25.2656C69.8175 26.4466 69.9811 27.7692 69.885 29.1175C69.8397 29.7477 69.302 30.2218 68.6834 30.1763C68.0647 30.1305 67.5985 29.5813 67.6432 28.9509C67.7186 27.8923 67.5895 26.8658 67.3052 25.97C67.1143 25.3685 67.4381 24.7235 68.0284 24.5288ZM59.8613 21.738C60.3609 21.363 61.0645 21.4716 61.4326 21.9807C61.8005 22.4897 61.694 23.2068 61.1945 23.5818C60.6409 23.9976 60.0976 24.6559 59.6275 25.6793C59.3643 26.2516 58.6949 26.4985 58.133 26.2306C57.5713 25.9626 57.3296 25.2813 57.5921 24.7088C58.1882 23.4109 58.9489 22.4233 59.8613 21.738ZM53.9787 20.8492C54.5983 20.8837 55.0736 21.4231 55.0398 22.0545C54.9818 23.1364 54.7629 24.222 54.3946 25.2399C54.1797 25.8329 53.5337 26.1361 52.9517 25.9175C52.3696 25.6986 52.0721 25.0404 52.2867 24.4472C52.5766 23.646 52.75 22.7856 52.7959 21.9292C52.8299 21.2981 53.3593 20.8147 53.9787 20.8492ZM32.1888 21.7951C32.521 21.2613 33.2152 21.1024 33.7393 21.4406C34.7519 22.0942 35.5856 23.0943 36.1643 24.3354C36.4306 24.9064 36.1925 25.589 35.6321 25.8605C35.0717 26.1317 34.4018 25.8891 34.1354 25.3182C33.7133 24.4128 33.1439 23.7668 32.5367 23.3749C32.0124 23.0366 31.8568 22.3293 32.1888 21.7951ZM40.7027 21.0292C40.8193 20.4082 41.4078 20.0003 42.0172 20.119C42.6267 20.2379 43.0259 20.8386 42.9093 21.4596C42.8294 21.8851 42.7661 22.336 42.7206 22.8114C42.6727 23.3124 42.693 23.7976 42.7711 24.2594C42.8764 24.8825 42.4663 25.4747 41.8548 25.5821C41.2434 25.6893 40.6621 25.2715 40.5567 24.6484C40.4448 23.9866 40.4167 23.2957 40.4843 22.5889C40.536 22.0487 40.6089 21.5284 40.7027 21.0292ZM29.8681 20.7373C30.4732 20.5977 31.075 20.984 31.2123 21.6005C31.3495 22.217 30.9701 22.8302 30.3652 22.9702C29.7177 23.1198 29.0037 23.5208 28.3078 24.294C27.8883 24.76 27.1773 24.7918 26.72 24.3645C26.2628 23.9371 26.2326 23.2125 26.6519 22.7466C27.6064 21.6861 28.7071 21.0056 29.8681 20.7373ZM63.5306 20.5931C64.1378 20.6033 64.745 20.6903 65.34 20.8324C66.0754 21.0081 66.7346 21.3702 67.3009 21.8521C67.7771 22.2574 67.8401 22.9802 67.4424 23.4655C67.0446 23.9501 66.3362 24.0147 65.8601 23.6097C65.5274 23.3266 65.1787 23.146 64.8265 23.0619C64.3605 22.9506 63.9146 22.89 63.4933 22.883C62.873 22.8725 62.3784 22.351 62.3883 21.719C62.3985 21.0868 62.9102 20.5828 63.5306 20.5931ZM51.4945 15.7137C51.952 15.2866 52.663 15.3181 53.0822 15.7842C53.8557 16.6442 54.3809 17.6824 54.6931 18.7818C54.8655 19.3892 54.5221 20.0238 53.9261 20.1995C53.33 20.3752 52.7071 20.0254 52.5347 19.418C52.3038 18.6048 51.931 17.8939 51.4253 17.3316C51.0061 16.8655 51.0371 16.141 51.4945 15.7137ZM43.7092 15.2531C44.1873 14.85 44.8959 14.918 45.2915 15.4051C45.687 15.8922 45.6202 16.6143 45.1423 17.0174C44.5802 17.4914 44.0901 18.1312 43.695 18.9551C43.4224 19.523 42.7502 19.7581 42.1928 19.4806C41.6354 19.2031 41.4038 18.518 41.676 17.9499C42.1921 16.8737 42.8692 15.9614 43.7092 15.2531ZM48.5362 13.6162C49.1193 13.6646 49.6695 13.7715 50.1843 13.9326C50.7772 14.1185 51.1104 14.7595 50.9283 15.3638C50.7459 15.968 50.1169 16.3075 49.5237 16.1218C49.1843 16.0156 48.8089 15.9409 48.3946 15.9038C47.9796 15.9068 47.5922 15.9464 47.2315 16.0201C46.6231 16.1444 46.0302 15.7422 45.9082 15.1223C45.7863 14.5024 46.1809 13.8993 46.7893 13.775C47.3203 13.6665 47.8729 13.6129 48.444 13.6128C48.4744 13.6128 48.5059 13.6137 48.5362 13.6162Z" fill="var(--ds-text-primary)"/>
+  </svg>
+);
+
 /* Shared ContestCard — used in ClientContestList and wizard preview */
-const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Участвую', onAction, actionDisabled, prizeVariant = 'inline', footer }) => {
+const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Участвую', onAction, actionDisabled, prizeVariant = 'inline', footer, showNewBadge }) => {
   const t = CONTEST_TYPES[typeId];
   const showPrizeInMeta = prize && prizeVariant === 'inline';
   return (
@@ -2384,11 +2538,19 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
         </div>
         <div className="contest-card__type">
           <div>
-            <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-m)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-m)',flexWrap:'wrap'}}>
               <div className="contest-card__title">{name}</div>
               <ContestTypeInfo typeId={typeId} />
             </div>
-            {statusLabel && <div style={{marginTop:'var(--ds-dim-m)'}}><Tag label={statusLabel} variant={statusVariant} /></div>}
+            {(showNewBadge || statusLabel) && (
+              <div
+                className="contest-card__status-row"
+                style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-m)',flexWrap:'wrap',marginTop:'var(--ds-dim-m)'}}
+              >
+                {showNewBadge && <Tag label="New" variant="warning" />}
+                {statusLabel && <Tag label={statusLabel} variant={statusVariant} />}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -2453,12 +2615,12 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
 
 const IB_CONTEST_ROWS = [
   {name:'Volume Race', subtitle:'Идёт сейчас · до 30 апр', typeId:'volume', status:'Active', statusTag:'positive', count:47, period:'1 — 30 Apr 2026', progress:33, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
-  {name:'Streak Challenge May', subtitle:'Черновик · не запущен', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'Не задан', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
-  {name:'Grow Challenge Q2', subtitle:'Идёт сейчас · до 30 апр', typeId:'grow', status:'Active', statusTag:'positive', count:18, period:'1 — 30 Apr 2026', progress:45, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
-  {name:'Турнир февраля', subtitle:'Завершён · итоги опубликованы', typeId:'top', status:'Completed', statusTag:'neutral', count:32, period:'1 — 28 Feb 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'Trading Streak', subtitle:'Черновик · не запущен', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'Не задан', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
+  {name:'Grow account', subtitle:'Идёт сейчас · до 30 апр', typeId:'grow', status:'Active', statusTag:'positive', count:18, period:'1 — 30 Apr 2026', progress:45, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
+  {name:'Top Trader', subtitle:'Завершён · итоги опубликованы', typeId:'top', status:'Completed', statusTag:'neutral', count:32, period:'1 — 28 Feb 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
 ];
 
-const IBMyContests = ({ onNavigate, rows, setRows }) => {
+const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   const showToast = useToast();
 
   const deleteRow = (row) => {
@@ -2476,12 +2638,12 @@ const IBMyContests = ({ onNavigate, rows, setRows }) => {
   };
 
   return (
-    <div className="screen-enter">
-      <div className="page-header">
-        <h1 className="rig-title-02">Мои контесты</h1>
-        <Button variant="primary" size="s" icon="plus" onClick={() => onNavigate('wizard')}>Создать контест</Button>
-      </div>
-      <div style={{marginBottom:24}}>
+  <div className="screen-enter ib-my-contests-screen">
+    <div className="page-header">
+      <h1 className="rig-title-02">Контесты для клиентов</h1>
+      <Button variant="primary" size="s" icon="plus" onClick={() => onNavigate('wizard')}>Создать контест</Button>
+    </div>
+    <div style={{marginBottom:24}}>
         <div className="stats">
           <StatCard value={String(rows.length)} label="Всего контестов" />
           <StatCard value={String(rows.filter(r => r.status === 'Active').length)} label="Активных" />
@@ -2489,14 +2651,14 @@ const IBMyContests = ({ onNavigate, rows, setRows }) => {
           <StatCard value="$2,400" label="Призовой фонд" />
         </div>
       </div>
-      <div className="table-wrap">
+      <div className="table-wrap table-wrap--stretch">
         <table>
           <thead><tr><th>Название</th><th>Тип</th><th>Статус</th><th>Участники</th><th>Период</th><th></th></tr></thead>
           <tbody>
             {rows.map(r => {
               const t = CONTEST_TYPES[r.typeId];
               return (
-                <tr key={r.name} style={{cursor:'pointer'}} onClick={() => onNavigate(r.nav)}>
+                <tr key={r.name} style={{cursor:'pointer'}} onClick={() => { onSelectContest && onSelectContest(r.name); onNavigate(r.nav); }}>
                   <td>
                     <strong>{r.name}</strong>
                     {r.subtitle && <div className="rig-utility-01" style={{color:'var(--ds-text-tertiary)', marginTop:'var(--ds-dim-xs)'}}>{r.subtitle}</div>}
@@ -2515,10 +2677,24 @@ const IBMyContests = ({ onNavigate, rows, setRows }) => {
                     {r.progress != null && <div style={{marginTop:'var(--ds-dim-m)'}}><ProgressBar value={r.progress} size="xs" /></div>}
                   </td>
                   <td style={{textAlign:'right'}}>
-                    <div className="td-actions">
-                      <Button variant="outline" size="s" icon={r.actionIcon} onClick={e => { e.stopPropagation(); onNavigate(r.nav); }}>{r.action}</Button>
-                      {r.share && <IconButton icon="link" size="s" onClick={e => { e.stopPropagation(); showToast('Ссылка скопирована!', 'positive'); }} title="Поделиться" />}
-                      {r.status === 'Draft' && <IconButton icon="trash" size="s" onClick={e => { e.stopPropagation(); deleteRow(r); }} title="Удалить черновик" />}
+                    <div className="row-action-stack">
+                      <div className="row-meta" aria-hidden="true">
+                        {r.status === 'Active' && (<>
+                          <span style={{display:'inline-flex',alignItems:'center',gap:4}}>
+                            <span style={{width:6,height:6,borderRadius:'50%',background:'var(--ds-positive)'}} />
+                            Обновлено 2 мин назад
+                          </span>
+                        </>)}
+                        {r.status === 'Draft' && <>Сохранён сегодня</>}
+                        {r.status === 'Completed' && (<>
+                          <Icon name="trophy" size="xs" /> Победитель: <strong>AB****</strong>
+                        </>)}
+                      </div>
+                      <div className="td-actions">
+                        <Button variant="outline" size="s" icon={r.actionIcon} onClick={e => { e.stopPropagation(); onSelectContest && onSelectContest(r.name); onNavigate(r.nav); }}>{r.action}</Button>
+                        {r.share && <IconButton icon="link" size="s" onClick={e => { e.stopPropagation(); showToast('Ссылка скопирована!', 'positive'); }} title="Поделиться" />}
+                        {r.status === 'Draft' && <IconButton icon="trash" size="s" onClick={e => { e.stopPropagation(); deleteRow(r); }} title="Удалить черновик" />}
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -2526,17 +2702,33 @@ const IBMyContests = ({ onNavigate, rows, setRows }) => {
             })}
           </tbody>
         </table>
+        <div className="table-wrap__filler" aria-hidden="true" />
       </div>
     </div>
   );
 };
 
 const TIMEZONES = [
+  {value: 'UTC-12', label: '(UTC−12:00) International Date Line West — Baker Island, Howland Island'},
+  {value: 'UTC-10', label: '(UTC−10:00) Hawaii-Aleutian Standard Time — Honolulu, Papeete'},
+  {value: 'UTC-08', label: '(UTC−08:00) Pacific Time — Los Angeles, San Francisco, Vancouver'},
+  {value: 'UTC-07', label: '(UTC−07:00) Mountain Time — Denver, Phoenix, Calgary'},
+  {value: 'UTC-06', label: '(UTC−06:00) Central Time — Chicago, Mexico City, Winnipeg'},
   {value: 'UTC-05', label: '(UTC−05:00) Eastern Time — New York, Toronto, Washington D.C.'},
+  {value: 'UTC-04', label: '(UTC−04:00) Atlantic Time — Halifax, Caracas, Santiago'},
+  {value: 'UTC-03', label: '(UTC−03:00) Argentina, Brazil, Uruguay — Buenos Aires, São Paulo, Montevideo'},
   {value: 'UTC+00', label: '(UTC+00:00) Greenwich Mean Time — Dublin, Edinburgh, Lisbon, London'},
   {value: 'UTC+01', label: '(UTC+01:00) Central European Time — Amsterdam, Berlin, Bern, Rome, Vienna'},
-  {value: 'UTC+03', label: '(UTC+03:00) Moscow Standard Time — Moscow, St. Petersburg, Volgograd'},
+  {value: 'UTC+02', label: '(UTC+02:00) Eastern European Time — Athens, Bucharest, Helsinki, Riga'},
+  {value: 'UTC+03', label: '(UTC+03:00) Moscow Standard Time — Moscow, St. Petersburg, Istanbul, Riyadh'},
+  {value: 'UTC+04', label: '(UTC+04:00) Gulf Standard Time — Dubai, Abu Dhabi, Tbilisi, Yerevan'},
+  {value: 'UTC+05', label: '(UTC+05:00) Pakistan Standard Time — Karachi, Islamabad, Tashkent'},
+  {value: 'UTC+05:30', label: '(UTC+05:30) India Standard Time — New Delhi, Mumbai, Colombo'},
+  {value: 'UTC+07', label: '(UTC+07:00) Indochina Time — Bangkok, Hanoi, Jakarta, Phnom Penh'},
   {value: 'UTC+08', label: '(UTC+08:00) China Standard Time — Beijing, Hong Kong, Singapore, Taipei'},
+  {value: 'UTC+09', label: '(UTC+09:00) Japan Standard Time — Tokyo, Osaka, Seoul, Pyongyang'},
+  {value: 'UTC+10', label: '(UTC+10:00) Australian Eastern Time — Sydney, Melbourne, Brisbane'},
+  {value: 'UTC+12', label: '(UTC+12:00) New Zealand Standard Time — Auckland, Wellington, Suva'},
 ];
 
 /* WizardFooter — sticky-bottom action row used across all wizard steps.
@@ -2624,7 +2816,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
 
   const buildContest = (status) => {
     const isActive = status === 'Active';
-    const generatedName = `${activeType.title} · ${MONTHS[startDate.getMonth()]} ${startDate.getFullYear()}`;
+    const generatedName = activeType.title;
     const subtitle = isActive
       ? `Идёт сейчас · до ${endDate.getDate()} ${MONTHS_SHORT[endDate.getMonth()]}`
       : 'Черновик · не запущен';
@@ -2659,7 +2851,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
     <div className="screen-enter">
       <div className="wizard-layout">
         <div className="wizard-panel">
-          <Breadcrumb items={[{label: 'Мои контесты', onClick: () => onNavigate('list')}, {label: 'Создание контеста'}]} />
+          <Breadcrumb items={[{label: 'Контесты для клиентов', onClick: () => onNavigate('list')}, {label: 'Создание контеста'}]} />
           <WizardStepper currentStep={step} totalSteps={4} />
 
           {step === 1 && (
@@ -2770,10 +2962,22 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                   </div>
                 ))}
               </div>
-              <div style={{marginTop:'var(--ds-dim-5xl)', marginBottom:'var(--ds-dim-6xl)'}}>
-                <Button variant="text" size="s" icon="plus" onClick={addPrize}>Добавить место</Button>
+              <div
+                className="prize-pool-toolbar"
+                role="status"
+                aria-live="polite"
+                aria-label={`Призовой фонд ${prizeTotal} долларов США`}
+              >
+                <div className="prize-pool-toolbar__cell prize-pool-toolbar__cell--lead" aria-hidden="true" />
+                <div className="prize-pool-toolbar__cell prize-pool-toolbar__cell--action">
+                  <Button variant="text" size="s" icon="plus" onClick={addPrize}>Добавить место</Button>
+                </div>
+                <span className="prize-pool-toolbar__total rig-body-02" style={{color:'var(--ds-text-primary)'}}>
+                  Призовой фонд:{' '}
+                  <span className="rig-body-02-bold" style={{fontVariantNumeric:'tabular-nums'}}>${prizeTotal.toLocaleString('en-US')}</span>
+                </span>
+                <div className="prize-pool-toolbar__cell prize-pool-toolbar__cell--trail" aria-hidden="true" />
               </div>
-              <InfoBox icon="lightbulb"><strong>Общий призовой фонд: ${prizeTotal.toLocaleString('en-US')}</strong></InfoBox>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
             </div>
           )}
@@ -2902,74 +3106,138 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
   );
 };
 
-const IBContestDetail = ({ onNavigate }) => {
+const IBContestDetail = ({ onNavigate, contest }) => {
   const showToast = useToast();
-  const rows = [
-    {pos:1,name:'Client_A****',vol:'245.3',prize:'$500'},
-    {pos:2,name:'Client_B****',vol:'198.7',prize:'$300'},
-    {pos:3,name:'Client_C****',vol:'156.2',prize:'$100'},
-    {pos:4,name:'Client_D****',vol:'134.0'},{pos:5,name:'Client_E****',vol:'112.8'},
-    {pos:6,name:'Client_F****',vol:'98.4'},{pos:7,name:'Client_G****',vol:'87.1'},
-  ];
+  // Resolve which contest is being viewed. Falls back to the canonical
+  // populated Volume Race mock so the page is never empty when reached
+  // outside the IB list (e.g. via Admin or direct nav).
+  const ctype = CONTEST_TYPES[contest?.typeId] || CONTEST_TYPES.volume;
+  const name = contest?.name || 'Volume Race';
+  const period = contest?.period || '1 — 30 Apr 2026';
+  const statusLabel = contest?.status || 'Active';
+  const statusTag = contest?.statusTag || 'positive';
+  const participantCount = contest
+    ? (typeof contest.count === 'number' ? contest.count : 0)
+    : 47;
+  // "Just created" / fresh state — contest exists but has no participants
+  // (or no period yet, e.g. a draft was opened from the list).
+  const isFresh = !!contest && (
+    participantCount === 0 ||
+    contest.count === '—' ||
+    contest.status === 'Draft' ||
+    contest.status === 'Pending'
+  );
+  const totalParticipants = isFresh ? 0 : participantCount;
+  const isCompleted = contest?.status === 'Completed';
+  const periodWithTime = period && period !== 'Не задан' ? `${period}, 23:59 UTC` : period;
+  const leaderboardMetaText = isCompleted
+    ? `Обновлено: ${(period.includes(' — ') ? period.split(' — ')[1] : period).trim()}, 23:59 UTC`
+    : 'Обновлено: 4 мая 2026, 14:32 UTC';
+  const prizes = ['$500', '$300', '$100'];
+  const initialsAt = (i) => {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return `Client_${letters[i % 26]}${letters[(i * 7 + 3) % 26]}****`;
+  };
+  const valueAt = (p) => (260 * Math.pow(0.94, p - 1)).toFixed(1);
+  const rows = Array.from({length: totalParticipants}).map((_, i) => {
+    const p = i + 1;
+    return {
+      pos: p,
+      name: initialsAt(i),
+      vol: valueAt(p),
+      prize: p <= 3 ? prizes[p - 1] : null,
+    };
+  });
   return (
     <div className="screen-enter">
-      <Breadcrumb items={[{label:'Мои контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
-      <div className="page-header" style={{marginBottom:'var(--ds-dim-l)'}}>
+      <Breadcrumb items={[{label:'Контесты для клиентов', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
+      <div className="page-header" style={{marginTop:'var(--ds-dim-6xl)', marginBottom:'var(--ds-dim-l)'}}>
         <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
-          <h1 className="rig-title-02">Volume Race</h1>
-          <ContestTypeInfo typeId="volume" />
+          <h1 className="rig-title-02">{name}</h1>
+          <ContestTypeInfo typeId={ctype.id} />
         </div>
       </div>
-      <p className="rig-body-02" style={{color:'var(--ds-text-secondary)', marginBottom:'var(--ds-dim-5xl)', maxWidth:'72ch'}}>
-        Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!
+      <p className="rig-body-02" style={{color:'var(--ds-text-secondary)', marginBottom:'var(--ds-dim-5xl)', whiteSpace:'nowrap'}}>
+        {ctype.clientDescTemplate ? ctype.clientDescTemplate(500) : ctype.desc}
       </p>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12}}>
         <div style={{display:'flex',gap:'var(--ds-dim-5xl)',color:'var(--ds-text-muted)',fontSize:14,alignItems:'center',flexWrap:'wrap'}}>
           <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-            <span className="type-icon type-icon--volume" style={{width:24,height:24}}><svg width="14" height="14"><use href="#ic-market-watch-24"/></svg></span>
-            <span style={{color:'var(--ds-text-primary)',fontWeight:500}}>Volume Race</span>
+            <span className={`type-icon type-icon--${ctype.typeIcon}`} style={{width:24,height:24}}><svg width="14" height="14"><use href={dsIc(ctype.icon)}/></svg></span>
+            <span style={{color:'var(--ds-text-primary)',fontWeight:500}}>{ctype.title}</span>
           </span>
           <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-            <Icon name="calendar" size="sm" /><span>1 — 30 Apr 2026</span>
+            <Icon name="calendar" size="sm" /><span>{periodWithTime}</span>
           </span>
-          <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-            <Icon name="clock" size="sm" /><span>Осталось: 20 дней</span>
-          </span>
-          <Tag label="Active" variant="positive" />
+          {!isFresh && !isCompleted && (
+            <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
+              <Icon name="clock" size="sm" /><span>Осталось: 20 дней</span>
+            </span>
+          )}
+          <Tag label={statusLabel} variant={statusTag} />
         </div>
         <div style={{display:'flex',gap:8}}>
           <Button variant="outline" size="s" icon="link" onClick={() => showToast('Ссылка скопирована!', 'positive')}>Поделиться</Button>
-          <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Контест приостановлен', 'negative', { label:'Отменить', onClick:() => showToast('Контест возобновлён', 'positive') })}>Приостановить</Button>
-          <Button variant="outline" size="s" icon="download">Экспорт</Button>
+          {!isCompleted && (
+            <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Контест приостановлен', 'negative', { label:'Отменить', onClick:() => showToast('Контест возобновлён', 'positive') })}>Приостановить</Button>
+          )}
+          <Button variant="outline" size="s" icon="download" disabled={isFresh}>Экспорт</Button>
         </div>
       </div>
       <div style={{marginBottom:24}}>
         <div className="stats">
-          <StatCard value="47" label="Участников" trend={{dir:'up', text:'3 / день', title:'Прирост к предыдущему дню'}} />
-          <StatCard value="1,234" label="Лотов наторговано" trend={{dir:'up', text:'82 / день', title:'Прирост к предыдущему дню'}} />
+          <StatCard value={String(totalParticipants)} label="Участников" trend={isFresh || isCompleted ? null : {dir:'up', text:'3 / день', title:'Прирост к предыдущему дню'}} />
+          <StatCard value={isFresh ? '0' : '1,234'} label={ctype.metric} trend={isFresh || isCompleted ? null : {dir:'up', text:'82 / день', title:'Прирост к предыдущему дню'}} />
           <StatCard value="$900" label="Призовой фонд" />
-          <StatCard value="+23%" label="Рост объёма за весь период" />
+          <StatCard value={isFresh ? '—' : '+23%'} label="Динамика за период" />
         </div>
       </div>
-      <div className="table-header">
-        <h4 className="rig-title-04">Лидерборд</h4>
-        <span className="table-header__meta">Обновлено: 3 мин назад</span>
-      </div>
-      <div className="table-wrap">
-        <table>
-          <thead><tr><th>Место</th><th>Участник</th><th>Объём (лоты)</th><th>Приз</th></tr></thead>
-          <tbody>
-            {rows.map(r => (
-              <tr key={r.pos}>
-                <td><Medal position={r.pos} /></td>
-                <td>{r.pos <= 3 ? <strong>{r.name}</strong> : r.name}</td>
-                <td style={{fontVariantNumeric:'tabular-nums'}}>{r.vol}</td>
-                <td style={{fontVariantNumeric:'tabular-nums'}}>{r.prize || '—'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {isFresh ? (
+        <div className="table-wrap table-wrap--leaderboard">
+          <div className="empty-state">
+            <div style={{width:120,height:120,marginBottom:'var(--ds-dim-3xl)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+              <IllNoParticipants />
+            </div>
+            <h4 className="rig-title-03" style={{marginBottom:'var(--ds-dim-2xl)'}}>Пока никто не участвует</h4>
+            <p className="rig-body-02" style={{color:'var(--ds-text-secondary)', maxWidth:'52ch', marginBottom:'var(--ds-dim-5xl)'}}>
+              Здесь появятся участники, как только клиенты присоединятся к контесту. Поделитесь ссылкой, чтобы ускорить старт.
+            </p>
+            <Button variant="primary" size="m" icon="link" onClick={() => showToast('Ссылка скопирована!', 'positive')}>Скопировать ссылку</Button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="table-header leaderboard-table-header">
+            <h4 className="rig-title-04">
+              Лидерборд
+              <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>{totalParticipants} участников</span>
+            </h4>
+            <span className="table-header__meta">{leaderboardMetaText}</span>
+          </div>
+          <div className="table-wrap table-wrap--leaderboard">
+            <div className="leaderboard-scroll">
+              <table>
+                <thead><tr>
+                  <th className="lb-col-place">Место</th>
+                  <th className="lb-col-name">Участник</th>
+                  <th className="lb-col-score">{ctype.metric}</th>
+                  <th className="lb-col-prize">Приз</th>
+                </tr></thead>
+                <tbody>
+                  {rows.map(r => (
+                    <tr key={r.pos}>
+                      <td className="lb-col-place"><Medal position={r.pos} /></td>
+                      <td className="lb-col-name">{r.pos <= 3 ? <strong>{r.name}</strong> : r.name}</td>
+                      <td className="lb-col-score">{r.vol}</td>
+                      <td className="lb-col-prize" style={{color: r.prize ? undefined : 'var(--ds-text-muted)'}}>{r.prize || '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -2979,24 +3247,38 @@ const IBContestDetail = ({ onNavigate }) => {
    ═══════════════════════════════════════════════════════ */
 
 const CLIENT_CONTESTS = [
-  {typeId:'volume', state:'active', name:'Volume Race', statusLabel:'Active', statusVariant:'positive', desc:'Наторгуйте больше лотов и выиграйте до $500 бонус на торговый счёт!', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:47, prize:'$900', progressText:'Прошло 10 из 30 дней', progress:33, days:'20 дней', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'streak', state:'upcoming', startsAtLabel:'1 мая 2026', name:'Streak Challenge May', statusLabel:'Starts May 1', statusVariant:'warning', desc:'Торгуйте каждый день и выиграйте! Кто удержит самый длинный streak — тот победит.', dates:'1 — 31 May 2026', period:'1 — 31 мая 2026', participants:12, prize:'$600', progressText:'Начнётся через 21 день', progress:0, days:'31 день', prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'grow', state:'active', name:'Grow Challenge Q2', statusLabel:'Active', statusVariant:'positive', desc:'Покажите лучший прирост баланса в % — наши лидеры заберут до $700 бонус.', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:18, prize:'$700', progressText:'Прошло 10 из 30 дней', progress:45, days:'20 дней', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'volume', state:'active', name:'Volume Race', statusLabel:'Active', statusVariant:'positive', desc:'Кто наторгует больший объём в лотах за период — заберёт до $500 бонус на торговый счёт.', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:47, prize:'$900', progressText:'Прошло 10 из 30 дней', progress:33, days:'20 дней', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'streak', isNew:true, state:'upcoming', startsAtLabel:'1 мая 2026', name:'Trading Streak', statusLabel:'Coming soon', statusVariant:'neutral', desc:'Кто удержит самый длинный streak торговых дней подряд — заберёт до $300 бонус.', dates:'1 — 31 May 2026', period:'1 — 31 мая 2026', participants:12, prize:'$600', progressText:'Начнётся через 21 день', progress:0, days:'31 день', prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'grow', state:'active', name:'Grow account', statusLabel:'Active', statusVariant:'positive', desc:'Кто больше нарастит баланс в процентах за период — заберёт до $400 бонус.', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:18, prize:'$700', progressText:'Прошло 10 из 30 дней', progress:45, days:'20 дней', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
 ];
 
 const CLIENT_COMPLETED_CONTESTS = [
-  {typeId:'top',    state:'completed', name:'Турнир февраля',         dates:'1 — 28 Feb 2026', participants:32, prize:'$900', yourPlace:7,  yourReward:null,        prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'volume', state:'completed', name:'Winter Volume Race',     dates:'1 — 31 Jan 2026', participants:41, prize:'$900', yourPlace:2,  yourReward:'$300 бонус', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'streak', state:'completed', name:'December Streak',        dates:'1 — 31 Dec 2025', participants:18, prize:'$500', yourPlace:12, yourReward:null,        prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$150 бонус'},{pos:3,prize:'$50 бонус'}]},
-  {typeId:'grow',   state:'completed', name:'Autumn Grow Challenge',  dates:'1 — 30 Nov 2025', participants:27, prize:'$700', yourPlace:3,  yourReward:'$100 бонус', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'top',    state:'completed', name:'Top Trader',     dates:'1 — 28 Feb 2026', participants:32, prize:'$900', yourPlace:7,  yourReward:null,        prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'volume', state:'completed', name:'Volume Race',    dates:'1 — 31 Jan 2026', participants:41, prize:'$900', yourPlace:2,  yourReward:'$300 бонус', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'streak', state:'completed', name:'Trading Streak', dates:'1 — 31 Dec 2025', participants:18, prize:'$500', yourPlace:12, yourReward:null,        prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$150 бонус'},{pos:3,prize:'$50 бонус'}]},
+  {typeId:'grow',   state:'completed', name:'Grow account',   dates:'1 — 30 Nov 2025', participants:27, prize:'$700', yourPlace:3,  yourReward:'$100 бонус', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
 ];
 
-const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, onCancelContest, onJoinContest }) => {
+const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, onCancelContest, onJoinContest, seenContestTypes, onMarkContestSeen }) => {
   const showToast = useToast();
   const cards = CLIENT_CONTESTS;
-  const openTerms = (typeId) => { onSelectContest && onSelectContest(typeId); onNavigate('terms'); };
-  const openBoard = (typeId) => { onSelectContest && onSelectContest(typeId); onNavigate('board'); };
+  const seen = seenContestTypes || new Set();
+  const markIfNew = (typeId) => {
+    const row = CLIENT_CONTESTS.find(x => x.typeId === typeId);
+    if (row?.isNew && onMarkContestSeen) onMarkContestSeen(typeId);
+  };
+  const openTerms = (typeId) => {
+    markIfNew(typeId);
+    onSelectContest && onSelectContest(typeId);
+    onNavigate('terms');
+  };
+  const openBoard = (typeId) => {
+    markIfNew(typeId);
+    onSelectContest && onSelectContest(typeId);
+    onNavigate('board');
+  };
   const cancel = (typeId, mode) => {
+    markIfNew(typeId);
     onCancelContest && onCancelContest(typeId);
     showToast('Запись отменена', 'negative', {
       label: 'Отменить',
@@ -3006,10 +3288,34 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
 
   const completed = CLIENT_COMPLETED_CONTESTS;
   const openCompleted = (name) => { onSelectContest && onSelectContest(`completed:${name}`); onNavigate('board'); };
+  // Deterministic winner alias per contest — gives the empty action cell a
+  // useful piece of competitive context until the row's hover button appears.
+  const winnerOf = (name) => {
+    const sum = [...String(name)].reduce((a, c) => a + c.charCodeAt(0), 0);
+    const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return `${A[sum % 26]}${A[(sum * 7 + 3) % 26]}****`;
+  };
+
+  const completedTotal = completed.length;
+  const prizePlacesCount = completed.filter(c => c.yourPlace >= 1 && c.yourPlace <= 3).length;
+  const contestsGenitiveAfterIz = (n) => {
+    const mod10 = n % 10, mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return 'контеста';
+    return 'контестов';
+  };
+
+  const activeTotal = cards.length;
+  const participatingCount = cards.filter(c => !!joinedContests[c.typeId]).length;
 
   return (
   <div className="screen-enter">
-    <h1 className="rig-title-02" style={{marginBottom:'var(--ds-dim-5xl)'}}>Контесты</h1>
+    <h1 className="rig-title-02" style={{marginBottom:'var(--ds-dim-8xl)'}}>Контесты от партнёра</h1>
+    <div className="table-header">
+      <h4 className="rig-title-04">Активные</h4>
+      <span className="table-header__meta">
+        Вы принимаете участие в {participatingCount} из {activeTotal} {contestsGenitiveAfterIz(activeTotal)}
+      </span>
+    </div>
     <div className="contest-grid">
       {cards.map(c => {
         const joinState = joinedContests[c.typeId];
@@ -3045,6 +3351,7 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
             days={c.days}
             progress={c.progress}
             progressText={c.progressText}
+            showNewBadge={!!c.isNew && !seen.has(c.typeId)}
             onClick={() => (joined && !isUpcoming && joinState !== 'upcoming') ? openBoard(c.typeId) : openTerms(c.typeId)}
             footer={footer}
           />
@@ -3052,7 +3359,12 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
       })}
     </div>
 
-    <div className="section-title" style={{marginTop:'var(--ds-dim-7xl)'}}>Завершённые</div>
+    <div className="table-header" style={{marginTop:'var(--ds-dim-7xl)'}}>
+      <h4 className="rig-title-04">Завершённые</h4>
+      <span className="table-header__meta">
+        Вы заняли призовое место в {prizePlacesCount} из {completedTotal} {contestsGenitiveAfterIz(completedTotal)}
+      </span>
+    </div>
     <div className="table-wrap">
       <table>
         <thead>
@@ -3086,7 +3398,14 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
                 <td><strong>#{c.yourPlace}</strong></td>
                 <td>{c.yourReward ? <span style={{fontVariantNumeric:'tabular-nums'}}>{c.yourReward.replace(/\s*бонус$/i, '')}</span> : <span style={{color:'var(--ds-text-muted)'}}>—</span>}</td>
                 <td style={{textAlign:'right'}}>
-                  <Button className="row-hover-action" variant="outline" size="s" icon="eye" onClick={e => { e.stopPropagation(); openCompleted(c.name); }}>Результаты</Button>
+                  <div className="row-action-stack">
+                    <span className="row-meta" aria-hidden="true">
+                      <Icon name="trophy" size="xs" /> Победитель: <strong>{winnerOf(c.name)}</strong>
+                    </span>
+                    <span className="td-actions">
+                      <Button className="row-hover-action" variant="outline" size="s" icon="eye" onClick={e => { e.stopPropagation(); openCompleted(c.name); }}>Результаты</Button>
+                    </span>
+                  </div>
                 </td>
               </tr>
             );
@@ -3269,7 +3588,7 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
   );
 };
 
-const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContests = {}, onJoinContest, onCancelContest }) => {
+const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContests = {}, onJoinContest, onCancelContest, onMarkContestSeen }) => {
   const showToast = useToast();
   const [joinOpen, setJoinOpen] = useState(false);
   const contest = CLIENT_CONTESTS.find(c => c.typeId === contestTypeId) || CLIENT_CONTESTS[0];
@@ -3296,6 +3615,11 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
       onClick: () => onJoinContest && onJoinContest(contest.typeId, prev),
     });
   };
+  useEffect(() => {
+    if (!onMarkContestSeen || !contest?.typeId) return;
+    const meta = CLIENT_CONTESTS.find(c => c.typeId === contest.typeId);
+    if (meta?.isNew) onMarkContestSeen(contest.typeId);
+  }, [contest.typeId, onMarkContestSeen]);
   return (
     <div className="screen-enter">
       <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
@@ -3389,7 +3713,7 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
   );
 };
 
-const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
+const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContestSeen }) => {
   const youRowRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const [flash, setFlash] = useState(false);
@@ -3433,12 +3757,18 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
     io.observe(row);
     return () => io.disconnect();
   }, [contestTypeId]);
-  const isCompletedRef = String(contestTypeId).startsWith('completed:');
-  const contest = isCompletedRef
+  const isCompletedRoute = String(contestTypeId).startsWith('completed:');
+  const contest = isCompletedRoute
     ? (CLIENT_COMPLETED_CONTESTS.find(c => c.name === String(contestTypeId).slice('completed:'.length)) || CLIENT_COMPLETED_CONTESTS[0])
     : (CLIENT_CONTESTS.find(c => c.typeId === contestTypeId) || CLIENT_CONTESTS[0]);
-  const isCompleted = contest.state === 'completed';
+  /* Переход с «Результаты» в списке завершённых всегда с префиксом completed: — фиксируем экран как итоговый, даже при рассинхроне данных */
+  const isCompleted = isCompletedRoute || contest.state === 'completed';
   const ctype = CONTEST_TYPES[contest.typeId] || CONTEST_TYPES.volume;
+  useEffect(() => {
+    if (!onMarkContestSeen || !contest?.typeId) return;
+    const meta = CLIENT_CONTESTS.find(c => c.typeId === contest.typeId);
+    if (meta?.isNew) onMarkContestSeen(contest.typeId);
+  }, [contest.typeId, onMarkContestSeen]);
   const stripPrize = (s) => String(s || '').replace(/\s*бонус$/i, '');
   const prizesTop = (contest.prizes || []).slice(0, 3).map(p => stripPrize(p.prize));
   const total = Math.max(contest.participants || 0, isCompleted ? (contest.yourPlace || 0) : 12);
@@ -3466,7 +3796,17 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
   });
   return (
   <div className="screen-enter">
-    <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Лидерборд'}]} />
+    <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label: isCompleted ? 'Результаты' : 'Лидерборд'}]} />
+    {isCompleted && (
+      <div style={{marginBottom:'var(--ds-dim-4xl)'}}>
+        <Notification
+          variant="neutral"
+          icon="trophy"
+          title="Контест завершён"
+          description="Вы на странице итогов: рейтинг и призы зафиксированы на дату окончания и больше не обновляются."
+        />
+      </div>
+    )}
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'var(--ds-dim-5xl)',gap:'var(--ds-dim-3xl)',flexWrap:'wrap'}}>
       <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
         <h1 className="rig-title-02">{contest.name}</h1>
@@ -3478,8 +3818,11 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
           <span className="rig-body-02" style={{color:'var(--ds-text-muted)'}}>{contest.dates}, 23:59 UTC</span>
         </span>
       ) : (
-        <span className="rig-body-02" style={{color:'var(--ds-text-muted)',display:'flex',alignItems:'center',gap:'var(--ds-dim-s)'}}>
-          <Icon name="clock" size="sm" /> Осталось {contest.days || '—'} · до {(contest.dates || '').split(' — ')[1] || contest.dates}, 23:59 UTC
+        <span style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+          <Tag label="Active" variant="positive" />
+          <span className="rig-body-02" style={{color:'var(--ds-text-muted)'}}>
+            Завершается {(contest.dates || '').split(' — ')[1] || contest.dates}, 23:59 UTC
+          </span>
         </span>
       )}
     </div>
@@ -3487,15 +3830,20 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
     {isCompleted ? (
       <div className="user-progress">
         <div className="user-progress__row">
-          <div className="user-progress__rank">
-            <div className="user-progress__place">#{contest.yourPlace}</div>
-            <div className="user-progress__place-meta">из {contest.participants} участников • Финальный результат</div>
+          <div className="user-progress__rank" style={{flexDirection:'column',alignItems:'flex-start',gap:'var(--ds-dim-m)'}}>
+            <div style={{display:'flex',alignItems:'baseline',gap:'var(--ds-dim-2xl)',flexWrap:'wrap'}}>
+              <span className="user-progress__place">#{contest.yourPlace}</span>
+              <span className="user-progress__place-meta">из {contest.participants} участников</span>
+            </div>
+            <div className="user-progress__place-meta">
+              Финальный результат: <strong style={{color:'var(--ds-on-primary)',fontWeight:700,fontVariantNumeric:'tabular-nums',marginLeft:4}}>{valueAt(contest.yourPlace)}</strong> <span style={{opacity:0.7}}>{ctype.metric}</span>
+            </div>
           </div>
           <div className="user-progress__score">
-            <div className="user-progress__score-value" style={contest.yourReward ? null : {opacity: 0.7}}>
+            <span className="user-progress__score-value">
               {contest.yourReward ? stripPrize(contest.yourReward) : 'Без приза'}
-            </div>
-            <div className="user-progress__score-meta" style={{marginTop: 'var(--ds-dim-l)'}}>{contest.yourReward ? 'Награда зачислена на торговый счёт' : 'В этот раз не попали в призовую зону'}</div>
+            </span>
+            <span className="user-progress__score-meta">{contest.yourReward ? 'Награда зачислена на торговый счёт' : 'В этот раз не попали в призовую зону'}</span>
           </div>
         </div>
       </div>
@@ -3503,52 +3851,68 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
       <div className="user-progress">
         <div className="user-progress__row">
           <div className="user-progress__rank">
-            <div className="user-progress__place">#12</div>
-            <div className="user-progress__place-meta">из {contest.participants || '—'} участников • Top 25%</div>
+            <span className="user-progress__place">#12</span>
+            <span className="user-progress__place-meta">из {contest.participants || '—'} участников · Top 25%</span>
           </div>
           <div className="user-progress__score">
-            <div className="user-progress__score-value">67.4 <span className="user-progress__score-unit">лот</span></div>
-            <div className="user-progress__score-meta">До 3 места: ещё 88.8 лот</div>
+            <span className="user-progress__score-value">67.4 <span className="user-progress__score-unit">лот</span></span>
+            <span className="user-progress__score-meta">До 3 места: ещё 88.8 лот</span>
           </div>
         </div>
         <div className="user-progress__bar">
           <ProgressBar value={43} size="m" onBrand />
         </div>
-        <div className="user-progress__caption">43% до призовой зоны</div>
+        <div className="user-progress__caption">
+          <span>До призовой зоны <strong>43%</strong></span>
+          <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+            <Icon name="clock" size="sm" /> Осталось {contest.days || '—'} 4 ч
+          </span>
+        </div>
       </div>
     )}
 
-    <div className="table-header">
+    <div className="table-header leaderboard-table-header">
       <h4 className="rig-title-04">
         {isCompleted ? 'Финальные результаты' : 'Лидерборд'}
         <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>· {total} участников</span>
       </h4>
       <span className="table-header__meta">{isCompleted ? `Подведено ${(contest.dates.split(' — ')[1] || contest.dates)}, 23:59 UTC` : 'Обновлено: 2 мин назад'}</span>
     </div>
-    <div className="table-wrap">
+    <div className="table-wrap table-wrap--leaderboard">
       <div className="leaderboard-scroll" ref={scrollContainerRef}>
         <table>
-          <thead><tr><th>Место</th><th>Участник</th><th>{ctype.metric}</th><th>Приз</th></tr></thead>
+          <thead><tr>
+            <th className="lb-col-place">Место</th>
+            <th className="lb-col-name">Участник</th>
+            <th className="lb-col-score">{ctype.metric}</th>
+            <th className="lb-col-prize">Приз</th>
+          </tr></thead>
           <tbody>
             {(() => {
               const you = rows.find(r => r.isYou);
               if (!you) return null;
               const showTopPin = !youInView && youAbove;
               return (
-                <tr className={`leaderboard-pin leaderboard-pin--top ${showTopPin ? '' : 'leaderboard-pin--hidden'}`}>
-                  <td>
+                <tr
+                  className={`leaderboard-pin leaderboard-pin--top ${showTopPin ? '' : 'leaderboard-pin--hidden'}`}
+                  style={{cursor:'pointer'}}
+                  onClick={scrollToYou}
+                >
+                  <td className="lb-col-place">
                     <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{you.p}</span>
                   </td>
-                  <td>
+                  <td className="lb-col-name">
                     <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы
-                    <button
-                      type="button"
-                      onClick={scrollToYou}
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => { e.stopPropagation(); scrollToYou(); }}
+                      onKeyDown={(e) => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); e.stopPropagation(); scrollToYou(); } }}
                       className="leaderboard-pin__link"
-                    >Показать в рейтинге</button>
+                    >Показать в рейтинге</span>
                   </td>
-                  <td style={{fontVariantNumeric:'tabular-nums'}}>{you.v}</td>
-                  <td style={{fontVariantNumeric:'tabular-nums'}}>{you.pr}</td>
+                  <td className="lb-col-score">{you.v}</td>
+                  <td className="lb-col-prize">{you.pr}</td>
                 </tr>
               );
             })()}
@@ -3556,18 +3920,18 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
               const cls = `${r.isYou ? 'highlight' : ''} ${r.isYou && flash ? 'leaderboard-flash' : ''}`.trim();
               return (
                 <tr key={r.p} ref={r.isYou ? youRowRef : null} className={cls}>
-                  <td>
+                  <td className="lb-col-place">
                     {r.isYou
                       ? <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{r.p}</span>
                       : <Medal position={r.p}/>}
                   </td>
-                  <td>
+                  <td className="lb-col-name">
                     {r.isYou
                       ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы</>)
                       : (r.p <= 3 ? <strong>{r.n}</strong> : r.n)}
                   </td>
-                  <td style={{fontVariantNumeric:'tabular-nums'}}>{r.v}</td>
-                  <td style={{fontVariantNumeric:'tabular-nums', color: r.pr === '—' ? 'var(--ds-text-muted)' : undefined}}>{r.pr}</td>
+                  <td className="lb-col-score">{r.v}</td>
+                  <td className="lb-col-prize" style={{color: r.pr === '—' ? 'var(--ds-text-muted)' : undefined}}>{r.pr}</td>
                 </tr>
               );
             })}
@@ -3576,20 +3940,26 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume' }) => {
               if (!you) return null;
               const showBottomPin = !youInView && !youAbove;
               return (
-                <tr className={`leaderboard-pin leaderboard-pin--bottom ${showBottomPin ? '' : 'leaderboard-pin--hidden'}`}>
-                  <td>
+                <tr
+                  className={`leaderboard-pin leaderboard-pin--bottom ${showBottomPin ? '' : 'leaderboard-pin--hidden'}`}
+                  style={{cursor:'pointer'}}
+                  onClick={scrollToYou}
+                >
+                  <td className="lb-col-place">
                     <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{you.p}</span>
                   </td>
-                  <td>
+                  <td className="lb-col-name">
                     <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы
-                    <button
-                      type="button"
-                      onClick={scrollToYou}
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => { e.stopPropagation(); scrollToYou(); }}
+                      onKeyDown={(e) => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); e.stopPropagation(); scrollToYou(); } }}
                       className="leaderboard-pin__link"
-                    >Показать в рейтинге</button>
+                    >Показать в рейтинге</span>
                   </td>
-                  <td style={{fontVariantNumeric:'tabular-nums'}}>{you.v}</td>
-                  <td style={{fontVariantNumeric:'tabular-nums'}}>{you.pr}</td>
+                  <td className="lb-col-score">{you.v}</td>
+                  <td className="lb-col-prize">{you.pr}</td>
                 </tr>
               );
             })()}
@@ -3646,11 +4016,11 @@ const AdminDashboard = ({ onNavigate }) => {
           <thead><tr><th>Контест</th><th>IB Partner</th><th>Статус</th><th>Участники</th><th></th></tr></thead>
           <tbody>
             {[
-              {name:'Volume Race Apr',partner:'Partner_A',status:'Active',tag:'positive',count:47,action:'Статистика',actionIcon:'chart'},
-              {name:'Streak May',partner:'Partner_A',status:'Pending',tag:'warning',count:0,action:'Обзор',actionIcon:'eye'},
-              {name:'Mega Contest',partner:'Partner_X',status:'Flagged',tag:'negative',count:23,flagged:true,action:'Проверить',actionVariant:'negative'},
-              {name:'Top Trader Q1',partner:'Partner_B',status:'Done',tag:'neutral',count:32,action:'Результаты',actionIcon:'eye'},
-              {name:'Spring Challenge',partner:'Partner_C',status:'Active',tag:'positive',count:18,action:'Статистика',actionIcon:'chart'},
+              {name:'Volume Race',partner:'Partner_A',status:'Active',tag:'positive',count:47,action:'Статистика',actionIcon:'chart'},
+              {name:'Trading Streak',partner:'Partner_A',status:'Pending',tag:'warning',count:0,action:'Обзор',actionIcon:'eye'},
+              {name:'Grow account',partner:'Partner_X',status:'Flagged',tag:'negative',count:23,flagged:true,action:'Проверить',actionVariant:'negative'},
+              {name:'Top Trader',partner:'Partner_B',status:'Done',tag:'neutral',count:32,action:'Результаты',actionIcon:'eye'},
+              {name:'Volume Race',partner:'Partner_C',status:'Active',tag:'positive',count:18,action:'Статистика',actionIcon:'chart'},
             ].map(r => (
               <tr key={r.name} style={{cursor:'pointer', background: r.flagged ? 'var(--ds-negative-bg)' : undefined}} onClick={() => onNavigate('detail')}>
                 <td><strong>{r.name}</strong></td><td>{r.partner}</td>
@@ -3752,6 +4122,7 @@ const App = () => {
   const [role, setRole] = useState('ib');
   const [ibScreen, setIbScreen] = useState('list');
   const [ibRows, setIbRows] = useState(IB_CONTEST_ROWS);
+  const [selectedIbContestName, setSelectedIbContestName] = useState(null);
   const [clientScreen, setClientScreen] = useState('list');
   const [clientContestTypeId, setClientContestTypeId] = useState('volume');
   const [joinedContests, setJoinedContests] = useState({ volume: 'active' });
@@ -3760,6 +4131,24 @@ const App = () => {
   const cancelContest = (typeId) =>
     setJoinedContests(prev => { const next = { ...prev }; delete next[typeId]; return next; });
   const [adminScreen, setAdminScreen] = useState('dashboard');
+
+  /* Прототип: «просмотренные» не сохраняем — после F5 снова видны New и точка */
+  const [seenContestTypes, setSeenContestTypes] = useState(() => new Set());
+  const markContestTypeSeen = useCallback((typeId) => {
+    if (!typeId) return;
+    setSeenContestTypes(prev => {
+      if (prev.has(typeId)) return prev;
+      const n = new Set(prev);
+      n.add(typeId);
+      return n;
+    });
+  }, []);
+  const clientNewContestsCount = useMemo(
+    () => (role === 'client'
+      ? CLIENT_CONTESTS.filter(c => c.isNew && !seenContestTypes.has(c.typeId)).length
+      : 0),
+    [role, seenContestTypes]
+  );
 
   const addIbContest = (row) => setIbRows(prev => {
     const base = row.name;
@@ -3789,20 +4178,22 @@ const App = () => {
         activeKey={
           role === 'admin' && adminScreen === 'dashboard' ? 'dashboard' : 'contests'
         }
+        clientNewContestsCount={clientNewContestsCount}
+        clientContestsTotal={CLIENT_CONTESTS.length}
       />
       <div className="app">
         {role === 'ib' && (
           <Container className={ibScreen === 'wizard' ? 'ds-container--split' : ''}>
-            {ibScreen === 'list' && <IBMyContests onNavigate={navIB} rows={ibRows} setRows={setIbRows} />}
+            {ibScreen === 'list' && <IBMyContests onNavigate={navIB} rows={ibRows} setRows={setIbRows} onSelectContest={setSelectedIbContestName} />}
             {ibScreen === 'wizard' && <IBCreateContest onNavigate={navIB} onCreateContest={addIbContest} />}
-            {ibScreen === 'detail' && <IBContestDetail onNavigate={navIB} />}
+            {ibScreen === 'detail' && <IBContestDetail onNavigate={navIB} contest={ibRows.find(r => r.name === selectedIbContestName)} />}
           </Container>
         )}
         {role === 'client' && (
           <Container>
-            {clientScreen === 'list' && <ClientContestList onNavigate={navClient} onSelectContest={setClientContestTypeId} joinedContests={joinedContests} onCancelContest={cancelContest} onJoinContest={markContestJoined} />}
-            {clientScreen === 'terms' && <ClientContestTerms onNavigate={navClient} contestTypeId={clientContestTypeId} joinedContests={joinedContests} onJoinContest={markContestJoined} onCancelContest={cancelContest} />}
-            {clientScreen === 'board' && <ClientLeaderboard onNavigate={navClient} contestTypeId={clientContestTypeId} />}
+            {clientScreen === 'list' && <ClientContestList onNavigate={navClient} onSelectContest={setClientContestTypeId} joinedContests={joinedContests} onCancelContest={cancelContest} onJoinContest={markContestJoined} seenContestTypes={seenContestTypes} onMarkContestSeen={markContestTypeSeen} />}
+            {clientScreen === 'terms' && <ClientContestTerms onNavigate={navClient} contestTypeId={clientContestTypeId} joinedContests={joinedContests} onJoinContest={markContestJoined} onCancelContest={cancelContest} onMarkContestSeen={markContestTypeSeen} />}
+            {clientScreen === 'board' && <ClientLeaderboard onNavigate={navClient} contestTypeId={clientContestTypeId} onMarkContestSeen={markContestTypeSeen} />}
           </Container>
         )}
         {role === 'admin' && (
