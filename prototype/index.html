@@ -797,30 +797,6 @@
   }
   .table-header__meta { font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); font-weight: 400; }
   .table-wrap { border: 1px solid var(--ds-border); border-radius: var(--ds-radius-lg); overflow: hidden; background: var(--ds-bg); }
-  /* IB «Мои контесты»: блок таблицы заполняет оставшуюся высоту окна */
-  .table-wrap--stretch {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-  }
-  .table-wrap--stretch > table {
-    flex: 0 0 auto;
-  }
-  .table-wrap__filler {
-    flex: 1 1 auto;
-    min-height: var(--ds-dim-7xl);
-    background: var(--ds-bg);
-  }
-  .ib-my-contests-screen {
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - 100px - var(--ds-dim-3xl) - var(--ds-dim-6xl) - var(--ds-dim-7xl) - var(--ds-dim-7xl));
-  }
-  .ib-my-contests-screen > .page-header,
-  .ib-my-contests-screen > div:not(.table-wrap--stretch) {
-    flex-shrink: 0;
-  }
   table { width: 100%; border-collapse: collapse; }
   /* th uses Utility 01 from DS Foundations (12/16, regular, 0.15 tracking) */
   th {
@@ -2638,7 +2614,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   };
 
   return (
-  <div className="screen-enter ib-my-contests-screen">
+  <div className="screen-enter">
     <div className="page-header">
       <h1 className="rig-title-02">Контесты для клиентов</h1>
       <Button variant="primary" size="s" icon="plus" onClick={() => onNavigate('wizard')}>Создать контест</Button>
@@ -2651,7 +2627,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           <StatCard value="$2,400" label="Призовой фонд" />
         </div>
       </div>
-      <div className="table-wrap table-wrap--stretch">
+      <div className="table-wrap">
         <table>
           <thead><tr><th>Название</th><th>Тип</th><th>Статус</th><th>Участники</th><th>Период</th><th></th></tr></thead>
           <tbody>
@@ -2702,7 +2678,6 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
             })}
           </tbody>
         </table>
-        <div className="table-wrap__filler" aria-hidden="true" />
       </div>
     </div>
   );
@@ -3153,6 +3128,9 @@ const IBContestDetail = ({ onNavigate, contest }) => {
       <Breadcrumb items={[{label:'Контесты для клиентов', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
       <div className="page-header" style={{marginTop:'var(--ds-dim-6xl)', marginBottom:'var(--ds-dim-l)'}}>
         <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+          <span className={`type-icon type-icon--${ctype.typeIcon}`} style={{width:24,height:24,flexShrink:0}}>
+            <svg width="14" height="14"><use href={dsIc(ctype.icon)}/></svg>
+          </span>
           <h1 className="rig-title-02">{name}</h1>
           <ContestTypeInfo typeId={ctype.id} />
         </div>
@@ -3162,10 +3140,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
       </p>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12}}>
         <div style={{display:'flex',gap:'var(--ds-dim-5xl)',color:'var(--ds-text-muted)',fontSize:14,alignItems:'center',flexWrap:'wrap'}}>
-          <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-            <span className={`type-icon type-icon--${ctype.typeIcon}`} style={{width:24,height:24}}><svg width="14" height="14"><use href={dsIc(ctype.icon)}/></svg></span>
-            <span style={{color:'var(--ds-text-primary)',fontWeight:500}}>{ctype.title}</span>
-          </span>
+          <Tag label={statusLabel} variant={statusTag} />
           <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
             <Icon name="calendar" size="sm" /><span>{periodWithTime}</span>
           </span>
@@ -3174,7 +3149,6 @@ const IBContestDetail = ({ onNavigate, contest }) => {
               <Icon name="clock" size="sm" /><span>Осталось: 20 дней</span>
             </span>
           )}
-          <Tag label={statusLabel} variant={statusTag} />
         </div>
         <div style={{display:'flex',gap:8}}>
           <Button variant="outline" size="s" icon="link" onClick={() => showToast('Ссылка скопирована!', 'positive')}>Поделиться</Button>
