@@ -6,7 +6,7 @@
 
 ---
 
-## 2026-06-01 — мобильная адаптация (<640px) для трёх персон · [`245859e`](https://github.com/tkapkaeva-create/disko/commit/245859e)
+## 2026-06-01 — мобильная адаптация (<640px) для трёх персон · [`9780653`](https://github.com/tkapkaeva-create/disko/commit/9780653)
 
 ### Что изменилось
 
