@@ -114,9 +114,20 @@
     /* DS Typography */
     --ds-font-display: 'Sprig Sans', 'Inter', sans-serif;
     --ds-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* DS breakpoints (Guides) */
+    --ds-bp-mobile:  640px;
+    --ds-bp-tablet:  1024px;
+
+    /* Mobile chrome heights — used to offset content from fixed header & tab bar */
+    --ds-mobile-header-h: 88px;  /* role-bar 32 + app-header 56 */
+    --ds-mobile-tabbar-h: 64px;
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  /* Mobile-friendly base: kill grey tap flash on touch */
+  *, *::before, *::after { -webkit-tap-highlight-color: transparent; }
+  html, body { overflow-x: hidden; }
 
   /* DS Body 02: 14/20 */
   body {
@@ -126,6 +137,10 @@
     font-size: 14px;
     line-height: 20px;
   }
+
+  /* Visibility utilities for responsive rendering. Default = desktop visible. */
+  .is-mobile-only { display: none !important; }
+  /* .is-desktop-only is visible by default; hidden inside the mobile media query */
 
   /* ═════════════════════════════════════════════════
      RIG Foundations — Product Typography (Brand 1)
@@ -1463,8 +1478,10 @@
   /* Prize row */
   .prize-row { display: grid; grid-template-columns: 48px 1fr 120px; gap: var(--ds-dim-2xl); align-items: center; margin-bottom: var(--ds-dim-2xl); }
 
-  /* Responsive */
-  /* DS breakpoints (Guides): tablet < 1024px, mobile < 640px */
+  /* ═══════════════════════════════════════════════════════════════════
+     RESPONSIVE — DS breakpoints (Guides): tablet < 1024px, mobile < 640px
+     ═══════════════════════════════════════════════════════════════════ */
+
   @media (max-width: 1023px) {
     .ds-container { margin: var(--ds-dim-5xl); padding: var(--ds-dim-5xl); }
     .wizard-layout { grid-template-columns: 1fr; }
@@ -1472,12 +1489,483 @@
     .stats { flex-wrap: wrap; padding: var(--ds-dim-3xl); }
     .stat-card { flex: 1 1 40%; min-width: 120px; }
   }
+
+  /* ── Mobile bottom-sheet, drawer & tab-bar baseline (always present in DOM,
+       only visible inside the mobile media query) ──────────────────────────── */
+
+  .mobile-tab-bar { display: none; }
+  .mobile-drawer-backdrop { display: none; }
+  .mobile-drawer { display: none; }
+
+  /* ═══════════════════════════════════════════════════════════════════
+     MOBILE (< 640px)
+     ═══════════════════════════════════════════════════════════════════ */
+
   @media (max-width: 639px) {
-    .ds-container { margin: var(--ds-dim-3xl); padding: var(--ds-dim-3xl); border-radius: var(--ds-radius-lg); }
-    .stats { flex-direction: column; padding: var(--ds-dim-l); }
-    .stat-card { padding: var(--ds-dim-2xl) var(--ds-dim-3xl); }
-    .stat-card:not(:last-child) { border-right: none; border-bottom: 1px solid var(--ds-border); padding-bottom: var(--ds-dim-2xl); }
+    /* Visibility utilities */
+    .is-mobile-only { display: revert !important; }
+    .is-desktop-only { display: none !important; }
+
+    /* === App shell & containers === */
+    .app {
+      padding-top: var(--ds-mobile-header-h);
+      padding-bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px));
+      min-height: 100vh;
+    }
+    .ds-container {
+      margin: var(--ds-dim-2xl);
+      padding: var(--ds-dim-3xl);
+      border-radius: var(--ds-radius-lg);
+    }
+    /* Wizard: drop white frame so steps feel full-bleed */
+    .ds-container--split { padding: 0; margin: 0; border: 0; background: transparent; }
+
+    /* === Role preview bar — collapse to compact pill === */
+    .role-bar {
+      height: 32px;
+      padding: 0 var(--ds-dim-3xl);
+      justify-content: flex-start;
+      gap: var(--ds-dim-l);
+    }
+    .role-bar__label { display: none; }
+    .role-bar > .ds-button-group { display: none; }
+    .role-bar__pill {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--ds-dim-s);
+      height: 24px;
+      padding: 0 var(--ds-dim-2xl);
+      border-radius: var(--ds-radius-full);
+      background: var(--ds-bg);
+      border: 1px solid var(--ds-border);
+      font-family: var(--ds-font-body);
+      font-size: 12px; line-height: 16px; font-weight: 600;
+      color: var(--ds-text-primary);
+      cursor: pointer;
+    }
+    .role-bar__pill svg { width: 14px; height: 14px; color: var(--ds-text-muted); }
+
+    /* === Product header — compact 56px on mobile === */
+    .app-header {
+      top: 32px; height: 56px;
+      padding: 0 var(--ds-dim-3xl);
+      gap: var(--ds-dim-2xl);
+    }
+    .app-header__logo { width: 28px; height: 28px; }
+    .app-header__menu { display: none; }
+    .app-header__wallet { display: none; }
+    .app-header__deposit { height: 36px; padding: 0 var(--ds-dim-3xl); }
+    .app-header__avatar { width: 36px; height: 36px; }
+    /* Burger on right for all roles, replacing close icon for client */
+    .app-header__close { display: none; }
+    .app-header__burger {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: var(--ds-radius-full);
+      background: transparent; color: var(--ds-text-primary);
+      border: 0; cursor: pointer; flex-shrink: 0;
+    }
+    .app-header__burger:hover { background: var(--ds-bg-page); }
+    .app-header__burger svg { width: 22px; height: 22px; }
+
+    /* === Mobile drawer (top-down, headers + nav) === */
+    .mobile-drawer-backdrop {
+      display: block;
+      position: fixed; inset: 0; z-index: 1500;
+      background: rgba(10, 10, 10, 0.45);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .mobile-drawer-backdrop--open { opacity: 1; pointer-events: auto; }
+    .mobile-drawer {
+      display: block;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1600;
+      background: var(--ds-bg);
+      border-radius: 0 0 var(--ds-radius-xl) var(--ds-radius-xl);
+      transform: translateY(-100%);
+      transition: transform 0.25s ease;
+      box-shadow: var(--ds-shadow-04);
+      max-height: 92vh; overflow-y: auto;
+      padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl);
+    }
+    .mobile-drawer--open { transform: translateY(0); }
+    .mobile-drawer__header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--ds-dim-2xl) 0 var(--ds-dim-3xl);
+    }
+    .mobile-drawer__title {
+      font-family: var(--ds-font-body); font-weight: 600;
+      font-size: 18px; line-height: 24px;
+    }
+    .mobile-drawer__menu {
+      display: flex; flex-direction: column; gap: var(--ds-dim-xs);
+    }
+    .mobile-drawer__item {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--ds-dim-2xl); width: 100%;
+      min-height: 48px; padding: 0 var(--ds-dim-3xl);
+      border-radius: var(--ds-radius-md);
+      border: 0; background: transparent;
+      font-family: inherit; font-size: 15px; line-height: 20px;
+      color: var(--ds-text-primary); text-align: left;
+      cursor: pointer;
+    }
+    .mobile-drawer__item:hover { background: var(--ds-bg-page); }
+    .mobile-drawer__item--active { background: var(--ds-row-hover); font-weight: 600; }
+
+    /* === Mobile tab bar (fixed bottom) === */
+    .mobile-tab-bar {
+      display: flex;
+      position: fixed; left: 0; right: 0; bottom: 0;
+      z-index: 990;
+      background: var(--ds-bg);
+      border-top: 1px solid var(--ds-border);
+      padding: 4px 4px calc(4px + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .mobile-tab-bar__item {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 2px;
+      min-height: 56px;
+      border: 0; background: transparent;
+      color: var(--ds-text-muted);
+      font-family: var(--ds-font-body); font-size: 11px; line-height: 14px; font-weight: 500;
+      cursor: pointer;
+    }
+    .mobile-tab-bar__item svg { width: 22px; height: 22px; }
+    .mobile-tab-bar__item--active { color: var(--ds-primary); font-weight: 600; }
+
+    /* === Modal → bottom-sheet on mobile === */
+    .ds-modal-overlay {
+      align-items: flex-end;
+      padding: 0;
+    }
+    .ds-modal {
+      width: 100% !important;
+      max-width: 100% !important;
+      max-height: 92vh;
+      border-radius: var(--ds-radius-xl) var(--ds-radius-xl) 0 0;
+      animation: bottom-sheet-in 0.28s cubic-bezier(0.2, 0, 0, 1);
+    }
+    .ds-modal::before {
+      content: '';
+      display: block;
+      width: 36px; height: 4px;
+      border-radius: 2px;
+      background: var(--ds-border-input);
+      margin: var(--ds-dim-l) auto 0;
+    }
+    .ds-modal__header {
+      padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-2xl);
+    }
+    .ds-modal__body {
+      padding: 0 var(--ds-dim-3xl) var(--ds-dim-3xl);
+    }
+    .ds-modal__footer {
+      padding: var(--ds-dim-3xl);
+      gap: var(--ds-dim-l);
+      flex-direction: column-reverse;
+      border-top: 1px solid var(--ds-border);
+      position: sticky; bottom: 0; background: var(--ds-bg);
+    }
+    .ds-modal__footer .ds-btn { width: 100%; }
+    @keyframes bottom-sheet-in {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+
+    /* === Page header === */
+    .page-header {
+      gap: var(--ds-dim-2xl);
+      margin-bottom: var(--ds-dim-5xl);
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .rig-title-02 { font-size: 24px; line-height: 28px; letter-spacing: -0.3px; }
+
+    /* === Stats — 2x2 grid, left-aligned === */
+    .stats {
+      flex-wrap: wrap; flex-direction: row;
+      padding: var(--ds-dim-3xl);
+      gap: var(--ds-dim-3xl);
+    }
+    .stat-card {
+      flex: 1 1 calc(50% - var(--ds-dim-3xl));
+      padding: var(--ds-dim-2xl) var(--ds-dim-l);
+      text-align: left;
+      align-items: flex-start;
+    }
+    .stat-card:not(:last-child) {
+      border-right: none;
+      border-bottom: none;
+      padding-bottom: var(--ds-dim-2xl);
+    }
+    .stat-value-row { justify-content: flex-start; }
+
+    /* === Contest cards / grid === */
+    .contest-grid { grid-template-columns: 1fr; gap: var(--ds-dim-3xl); }
+    .contest-card { padding: var(--ds-dim-3xl); gap: var(--ds-dim-3xl); }
+    .contest-card__title { font-size: 18px; line-height: 24px; }
+    .contest-card__desc {
+      font-size: 13px; line-height: 18px;
+      min-height: 0; -webkit-line-clamp: 3;
+    }
+    .contest-card__meta {
+      gap: var(--ds-dim-l) var(--ds-dim-3xl);
+      flex-wrap: wrap;
+    }
+    .contest-card__footer { width: 100%; }
+    .contest-card__footer > .ds-btn,
+    .contest-card__footer > .ds-btn--block { width: 100%; }
+
+    /* === Tables hidden when an .is-mobile-only card list is provided === */
+    .table-wrap--cards > .table-wrap-table { display: none; }
+
+    /* === IB & Client list cards (mobile) === */
+    .row-card-list { display: flex; flex-direction: column; gap: var(--ds-dim-3xl); }
+    .row-card {
+      border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius-lg);
+      background: var(--ds-bg);
+      padding: var(--ds-dim-3xl);
+      display: flex; flex-direction: column; gap: var(--ds-dim-2xl);
+    }
+    .row-card__head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: var(--ds-dim-2xl);
+    }
+    .row-card__title-block { min-width: 0; flex: 1 1 auto; }
+    .row-card__title {
+      font-family: var(--ds-font-body); font-weight: 600;
+      font-size: 16px; line-height: 22px;
+      color: var(--ds-text-primary);
+    }
+    .row-card__sub {
+      font-size: 12px; line-height: 16px; color: var(--ds-text-muted);
+      margin-top: 2px;
+    }
+    .row-card__meta {
+      display: flex; flex-wrap: wrap;
+      gap: var(--ds-dim-l) var(--ds-dim-3xl);
+      font-size: 13px; color: var(--ds-text-secondary);
+    }
+    .row-card__meta-item {
+      display: inline-flex; align-items: center; gap: var(--ds-dim-s);
+    }
+    .row-card__meta-item svg { width: 14px; height: 14px; color: var(--ds-text-muted); }
+    .row-card__actions {
+      display: flex; gap: var(--ds-dim-l); flex-wrap: wrap;
+      margin-top: var(--ds-dim-l);
+    }
+    .row-card__actions > .ds-btn { flex: 1 1 auto; min-height: 40px; }
+    .row-card__actions > .ds-icon-btn { flex: 0 0 auto; min-height: 40px; min-width: 40px; }
+
+    /* === Wizard (mobile chrome) === */
+    .wizard-layout { grid-template-columns: 1fr; gap: var(--ds-dim-3xl); }
+    .wizard-panel { padding: var(--ds-dim-3xl); border-radius: var(--ds-radius-lg); }
+    .wizard-steps {
+      background: var(--ds-bg);
+      padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+      border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius-md);
+      margin-bottom: var(--ds-dim-3xl);
+      gap: var(--ds-dim-l);
+    }
+    .wizard-connector { display: none; }
+
+    /* Inline grid overrides (set via inline style on JSX) — collapse via classes */
+    .wizard-period-grid { grid-template-columns: 1fr !important; }
+    .wizard-review-grid { grid-template-columns: 1fr !important; }
+    .prize-row { grid-template-columns: 32px 1fr 32px !important; gap: var(--ds-dim-2xl) !important; }
+    .prize-row__label { display: none; }
+    .prize-pool-toolbar {
+      display: flex !important; flex-direction: column !important;
+      align-items: stretch !important; gap: var(--ds-dim-2xl) !important;
+    }
+    .prize-pool-toolbar__cell { display: none; }
+    .prize-pool-toolbar__total { text-align: left !important; }
+
+    /* Wizard sticky footer (mobile) — sits above the tab bar (or replaces it) */
+    .wizard-footer-mobile {
+      position: fixed; left: 0; right: 0;
+      bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px));
+      z-index: 985;
+      padding: var(--ds-dim-3xl);
+      background: var(--ds-bg);
+      border-top: 1px solid var(--ds-border);
+      display: flex; gap: var(--ds-dim-l);
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+    }
+    .wizard-footer-mobile .ds-btn {
+      flex: 1; min-height: 44px;
+      justify-content: center;
+    }
+    /* Wizard preview button row — full width, above sticky footer */
+    .wizard-preview-row {
+      display: flex; gap: var(--ds-dim-l);
+      margin-top: var(--ds-dim-3xl);
+    }
+    .wizard-preview-row > .ds-btn { flex: 1; }
+
+    /* Add 100px scroll padding so sticky footer never covers content */
+    .ds-container--split {
+      padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* === Detail page (IB / Client / Admin) === */
+    .contest-detail-desc { white-space: normal !important; }
+    .contest-detail-action-bar {
+      gap: var(--ds-dim-l) !important;
+      flex-wrap: wrap !important;
+      width: 100%;
+    }
+    .contest-detail-action-bar > .ds-btn { flex: 1 1 calc(50% - var(--ds-dim-l)); }
+
+    /* === Client terms === */
+    .terms-grid { grid-template-columns: 1fr !important; }
+    /* Sticky CTA on terms */
+    .client-terms-cta {
+      position: fixed; left: 0; right: 0;
+      bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px));
+      z-index: 985;
+      padding: var(--ds-dim-3xl);
+      background: var(--ds-bg);
+      border-top: 1px solid var(--ds-border);
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+      display: flex; flex-direction: column; gap: var(--ds-dim-s);
+      margin: 0 !important;
+    }
+    .client-terms-cta .ds-btn {
+      width: 100% !important;
+      min-width: 0 !important;
+      padding-left: var(--ds-dim-3xl) !important;
+      padding-right: var(--ds-dim-3xl) !important;
+    }
+    .client-terms-cta__caption {
+      text-align: center;
+      font-size: 11px; line-height: 14px;
+      color: var(--ds-text-placeholder);
+      margin: 0 !important;
+    }
+    /* Reserve room above tab bar so the static CTA copy is visible */
+    .client-terms-spacer { height: 140px; }
+
+    /* === Leaderboard (table -> card list) === */
+    .leaderboard-scroll { max-height: none; overflow: visible; border: 0; }
+    .leaderboard-scroll table { display: none; }
+    .lb-card-list { display: flex; flex-direction: column; gap: var(--ds-dim-l); }
+    .lb-card {
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: var(--ds-dim-2xl);
+      align-items: center;
+      padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+      border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius-lg);
+      background: var(--ds-bg);
+      min-height: 56px;
+    }
+    .lb-card--top1 { box-shadow: inset 4px 0 0 0 #c2a341; }
+    .lb-card--top2 { box-shadow: inset 4px 0 0 0 #b9bcc1; }
+    .lb-card--top3 { box-shadow: inset 4px 0 0 0 #c69468; }
+    .lb-card--you {
+      background: var(--ds-primary-content);
+      border-color: var(--ds-primary);
+    }
+    .lb-card__name {
+      font-family: var(--ds-font-body); font-weight: 600;
+      font-size: 14px; line-height: 18px;
+      color: var(--ds-text-primary);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .lb-card__sub {
+      font-size: 12px; line-height: 16px;
+      color: var(--ds-text-muted);
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .lb-card__prize {
+      font-family: var(--ds-font-body); font-weight: 600;
+      font-size: 14px; line-height: 18px;
+      color: var(--ds-text-primary);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+    .lb-card__prize--empty { color: var(--ds-text-muted); font-weight: 400; }
+
+    /* User progress hero — compact on mobile */
+    .user-progress { padding: var(--ds-dim-4xl); }
+    .user-progress__row {
+      flex-direction: column; align-items: stretch;
+      gap: var(--ds-dim-3xl);
+    }
+    .user-progress__rank { flex-direction: column; align-items: flex-start; gap: var(--ds-dim-s); }
+    .user-progress__score { text-align: left; }
+
+    /* Sticky "you" chip above leaderboard list */
+    .lb-sticky-you {
+      position: sticky; top: var(--ds-mobile-header-h);
+      z-index: 5;
+      background: var(--ds-primary-content);
+      color: var(--ds-on-primary-container);
+      border: 1px solid var(--ds-primary);
+      border-radius: var(--ds-radius-lg);
+      padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+      margin-bottom: var(--ds-dim-3xl);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--ds-dim-2xl);
+      font-family: var(--ds-font-body); font-weight: 600; font-size: 14px;
+      box-shadow: var(--ds-shadow-01);
+    }
+    .lb-sticky-you__metric {
+      font-weight: 400; font-size: 12px; opacity: 0.85;
+    }
+
+    /* === Admin === */
+    .admin-mobile-banner {
+      display: flex; align-items: flex-start; gap: var(--ds-dim-2xl);
+      padding: var(--ds-dim-3xl);
+      background: var(--ds-warning-bg);
+      color: var(--ds-warning-text);
+      border-radius: var(--ds-radius-md);
+      font-size: 13px; line-height: 18px;
+      margin-bottom: var(--ds-dim-3xl);
+    }
+    .admin-mobile-banner svg { flex-shrink: 0; width: 16px; height: 16px; margin-top: 2px; }
+    .admin-table-scroll {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .admin-table-scroll table { min-width: 640px; }
+    .admin-detail-grid { grid-template-columns: 1fr !important; }
+
+    /* === Toasts above tab bar === */
+    .toast {
+      top: auto !important;
+      bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px) + var(--ds-dim-2xl)) !important;
+      left: var(--ds-dim-3xl) !important;
+      right: var(--ds-dim-3xl) !important;
+      transform: translateY(120px) !important;
+      white-space: normal !important;
+    }
+    .toast--visible { transform: translateY(0) !important; }
+
+    /* Tap targets & iOS zoom prevention */
+    .ds-input-shell input { font-size: 16px; }
+    .ds-btn--m { min-height: 44px; }
+    .ds-btn--l { min-height: 48px; }
+    .ds-icon-btn--s { width: 36px; height: 36px; min-width: 36px; }
+
+    /* Hover-only actions: always visible on touch */
     .td-actions { opacity: 1; }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .ds-modal { animation: none; }
+    .toast,
+    .mobile-drawer,
+    .mobile-drawer-backdrop { transition: none; }
   }
 </style>
 </head>
@@ -1682,6 +2170,33 @@
 
 <script type="text/babel">
 const { useState, useCallback, useRef, useEffect, useMemo, createContext, useContext } = React;
+
+/* useMediaQuery — minimal hook on top of window.matchMedia.
+   Used to switch DOM rendering between desktop tables and mobile
+   card lists. CSS handles all "is-mobile-only / is-desktop-only"
+   visibility — JS-mode is reserved for cases where DOM structure
+   itself must change (table → cards). */
+const useMediaQuery = (query) => {
+  const get = () =>
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+      ? window.matchMedia(query).matches
+      : false;
+  const [matches, setMatches] = useState(get);
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const mq = window.matchMedia(query);
+    const onChange = () => setMatches(mq.matches);
+    setMatches(mq.matches);
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else mq.addListener(onChange);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', onChange);
+      else mq.removeListener(onChange);
+    };
+  }, [query]);
+  return matches;
+};
+const useIsMobile = () => useMediaQuery('(max-width: 639px)');
 
 /* ═══════════════════════════════════════════════════════
    DS COMPONENTS — matching RIG v2.51.0 Storybook
@@ -2157,8 +2672,13 @@ const useToast = () => useContext(ToastContext);
 
 /* RolePreviewBar — demo control above the real product header.
    Lets the prototype reviewer switch between role mockups. NOT part of
-   the production interface. */
-const RolePreviewBar = ({ role, onRoleChange }) => (
+   the production interface.
+   Desktop:  shows a 3-segment ButtonGroup.
+   Mobile:   ButtonGroup is hidden via CSS; a compact pill is shown that
+             opens a bottom-sheet picker. */
+const ROLE_LABELS = { ib: 'IB Partner', client: 'Client', admin: 'Admin' };
+
+const RolePreviewBar = ({ role, onRoleChange, onPillTap }) => (
   <div className="role-bar" role="region" aria-label="Demo: переключение роли">
     <span className="role-bar__label">Demo preview:</span>
     <ButtonGroup
@@ -2172,6 +2692,17 @@ const RolePreviewBar = ({ role, onRoleChange }) => (
       size="s"
       ariaLabel="Роль для предпросмотра"
     />
+    <button
+      type="button"
+      className="role-bar__pill is-mobile-only"
+      onClick={onPillTap}
+      aria-label="Сменить роль для предпросмотра"
+    >
+      <span>Demo: вы — {ROLE_LABELS[role] || role}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </button>
   </div>
 );
 
@@ -2205,8 +2736,10 @@ const HEADER_MENUS = {
 /* AppHeader — adaptive header per role.
    IB:    Logo + Menu + Wallet + Avatar
    Client: Logo + Menu (with badges & dropdowns) + Deposit + Avatar + Close
-   Admin:  Logo + Menu + Wallet + Avatar */
-const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0 }) => {
+   Admin:  Logo + Menu + Wallet + Avatar
+   Mobile: horizontal Menu + Wallet are hidden via CSS; a burger button
+           opens the slide-down drawer (managed by App). */
+const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0, onMenuOpen }) => {
   const menu = HEADER_MENUS[role] || HEADER_MENUS.ib;
   const [internalKey, setInternalKey] = useState(activeKeyProp || menu[0].key);
   const activeKey = activeKeyProp || internalKey;
@@ -2307,10 +2840,170 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
             </svg>
           </button>
         )}
+        {/* Mobile burger — opens drawer (CSS-hidden on >=640px) */}
+        <button
+          type="button"
+          className="app-header__burger is-mobile-only"
+          onClick={onMenuOpen}
+          aria-label="Открыть меню"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <line x1="4" y1="7" x2="20" y2="7" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="4" y1="17" x2="20" y2="17" />
+          </svg>
+        </button>
       </div>
     </header>
   );
 };
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE NAV — drawer, persona sheet, bottom tab bar
+   ═══════════════════════════════════════════════════════ */
+
+/* MobileDrawer — slide-down sheet anchored to the top of the viewport.
+   Used for the role-specific menu when the screen is too narrow for the
+   horizontal AppHeader. Renders only on mobile via CSS; on desktop the
+   element is `display: none`. Locks body scroll while open. */
+const MobileDrawer = ({ open, onClose, title, items = [], activeKey, onSelect }) => {
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => { document.body.style.overflow = prev; document.removeEventListener('keydown', onKey); };
+  }, [open, onClose]);
+
+  return (
+    <>
+      <div
+        className={`mobile-drawer-backdrop ${open ? 'mobile-drawer-backdrop--open' : ''}`}
+        onClick={onClose}
+        aria-hidden={!open}
+      />
+      <div
+        className={`mobile-drawer ${open ? 'mobile-drawer--open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+      >
+        <div className="mobile-drawer__header">
+          <span className="mobile-drawer__title">{title}</span>
+          <button
+            type="button"
+            className="ds-icon-btn ds-icon-btn--ghost ds-icon-btn--m"
+            onClick={onClose}
+            aria-label="Закрыть"
+          >
+            <svg><use href="#ic-cross-24"/></svg>
+          </button>
+        </div>
+        <div className="mobile-drawer__menu" role="menu">
+          {items.map(item => (
+            <button
+              key={item.key}
+              type="button"
+              role="menuitem"
+              className={`mobile-drawer__item ${activeKey === item.key ? 'mobile-drawer__item--active' : ''}`}
+              onClick={() => { onSelect && onSelect(item); onClose && onClose(); }}
+            >
+              <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+                {item.icon && (
+                  <svg width="20" height="20" style={{color:'var(--ds-text-secondary)'}}><use href={dsIc(item.icon)}/></svg>
+                )}
+                <span>{item.label}</span>
+              </span>
+              {item.badge && <Tag label={item.badge} variant="brand" />}
+            </button>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+/* MobileTabBar — fixed bottom navigation, 4 tabs per role.
+   Reuses DS sprite icons that already exist in this file's <svg> sprite. */
+const TAB_BARS = {
+  ib: [
+    { key: 'dashboard', label: 'Главная',  icon: 'market-watch' },
+    { key: 'contests',  label: 'Контесты', icon: 'cup' },
+    { key: 'wallet',    label: 'Кошелёк',  icon: 'pattern-trend' },
+    { key: 'profile',   label: 'Профиль',  icon: 'users' },
+  ],
+  client: [
+    { key: 'dashboard', label: 'Главная',  icon: 'market-watch' },
+    { key: 'contests',  label: 'Контесты', icon: 'cup' },
+    { key: 'bonuses',   label: 'Бонусы',   icon: 'gift' },
+    { key: 'profile',   label: 'Профиль',  icon: 'users' },
+  ],
+  admin: [
+    { key: 'dashboard', label: 'Главная',  icon: 'market-watch' },
+    { key: 'contests',  label: 'Контесты', icon: 'cup' },
+    { key: 'users',     label: 'Юзеры',    icon: 'users' },
+    { key: 'audit',     label: 'Аудит',    icon: 'document' },
+  ],
+};
+
+const MobileTabBar = ({ role, activeKey, onSelect }) => {
+  const tabs = TAB_BARS[role] || TAB_BARS.ib;
+  return (
+    <nav className="mobile-tab-bar" role="navigation" aria-label="Главное меню">
+      {tabs.map(tab => (
+        <button
+          key={tab.key}
+          type="button"
+          className={`mobile-tab-bar__item ${activeKey === tab.key ? 'mobile-tab-bar__item--active' : ''}`}
+          onClick={() => onSelect && onSelect(tab)}
+          aria-current={activeKey === tab.key ? 'page' : undefined}
+        >
+          <svg><use href={dsIc(tab.icon)}/></svg>
+          <span>{tab.label}</span>
+        </button>
+      ))}
+    </nav>
+  );
+};
+
+/* MobilePersonaSheet — bottom sheet picker for the demo persona switcher.
+   Reuses Modal (which becomes a bottom sheet on mobile via CSS). */
+const MobilePersonaSheet = ({ open, onClose, role, onChange }) => (
+  <Modal
+    open={open}
+    onClose={onClose}
+    title="Демо-режим"
+    subtitle="Выберите, чьим интерфейсом смотреть прототип"
+    size="m"
+  >
+    <div className="rig-radio-cards">
+      {[
+        { id: 'ib',     title: 'IB Partner', desc: 'Создаёт и ведёт контесты для своих клиентов' },
+        { id: 'client', title: 'Client',     desc: 'Участвует в контестах и видит лидерборд' },
+        { id: 'admin',  title: 'Admin',      desc: 'Модерирует контесты, реагирует на алерты' },
+      ].map(opt => {
+        const isSelected = role === opt.id;
+        return (
+          <button
+            key={opt.id}
+            type="button"
+            className={`rig-radio-card ${isSelected ? 'rig-radio-card--selected' : ''}`}
+            onClick={() => { onChange(opt.id); onClose(); }}
+          >
+            <div style={{flex:1, minWidth:0, textAlign:'left'}}>
+              <div className="rig-body-02-bold">{opt.title}</div>
+              <div className="rig-utility-01" style={{color:'var(--ds-text-muted)', marginTop:'var(--ds-dim-xs)'}}>{opt.desc}</div>
+            </div>
+            <span className="rig-radio-card__trail" aria-hidden="true">
+              {isSelected && <svg><use href="#ic-check-24"/></svg>}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  </Modal>
+);
 
 const Breadcrumb = ({ items }) => (
   <nav className="breadcrumb" aria-label="Breadcrumb">
@@ -2598,6 +3291,7 @@ const IB_CONTEST_ROWS = [
 
 const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   const showToast = useToast();
+  const isMobile = useIsMobile();
 
   const deleteRow = (row) => {
     const idx = rows.findIndex(r => r.name === row.name);
@@ -2613,6 +3307,8 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
     });
   };
 
+  const goToContest = (r) => { onSelectContest && onSelectContest(r.name); onNavigate(r.nav); };
+
   return (
   <div className="screen-enter">
     <div className="page-header">
@@ -2627,6 +3323,43 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           <StatCard value="$2,400" label="Призовой фонд" />
         </div>
       </div>
+      {isMobile ? (
+        <div className="row-card-list">
+          {rows.map(r => {
+            const t = CONTEST_TYPES[r.typeId];
+            return (
+              <div key={r.name} className="row-card" onClick={() => goToContest(r)} role="button" tabIndex={0}>
+                <div className="row-card__head">
+                  <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)',flex:'1 1 auto',minWidth:0}}>
+                    <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32,flexShrink:0}}>
+                      <svg width="16" height="16"><use href={dsIc(t.icon)}/></svg>
+                    </span>
+                    <div className="row-card__title-block">
+                      <div className="row-card__title">{r.name}</div>
+                      <div className="row-card__sub">{t.title}{r.subtitle ? ` · ${r.subtitle}` : ''}</div>
+                    </div>
+                  </div>
+                  <Tag label={r.status} variant={r.statusTag} />
+                </div>
+                <div className="row-card__meta">
+                  <span className="row-card__meta-item"><svg><use href="#ic-calendar-24"/></svg>{r.period}</span>
+                  <span className="row-card__meta-item"><svg><use href="#ic-users-24"/></svg>{r.count} участников</span>
+                </div>
+                {r.progress != null && <ProgressBar value={r.progress} size="xs" />}
+                <div className="row-card__actions" onClick={e => e.stopPropagation()}>
+                  <Button variant="outline" size="m" icon={r.actionIcon} onClick={() => goToContest(r)}>{r.action}</Button>
+                  {r.share && (
+                    <IconButton icon="link" size="m" onClick={() => showToast('Ссылка скопирована!', 'positive')} title="Поделиться" />
+                  )}
+                  {r.status === 'Draft' && (
+                    <IconButton icon="trash" size="m" className="ds-icon-btn--danger" onClick={() => deleteRow(r)} title="Удалить черновик" />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
       <div className="table-wrap">
         <table>
           <thead><tr><th>Название</th><th>Тип</th><th>Статус</th><th>Участники</th><th>Период</th><th></th></tr></thead>
@@ -2679,6 +3412,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           </tbody>
         </table>
       </div>
+      )}
     </div>
   );
 };
@@ -2706,13 +3440,14 @@ const TIMEZONES = [
   {value: 'UTC+12', label: '(UTC+12:00) New Zealand Standard Time — Auckland, Wellington, Suva'},
 ];
 
-/* WizardFooter — sticky-bottom action row used across all wizard steps.
+/* WizardFooter — desktop sticky-bottom action row used across wizard steps.
    Layout:
      [Назад] ........... [Сохранить черновик] [Далее / Запустить]
    "Сохранить черновик" is available on every step. The right-most button
-   becomes the launch CTA on the final step. */
+   becomes the launch CTA on the final step.
+   On mobile, the wizard renders <WizardFooterMobile /> instead — see below. */
 const WizardFooter = ({ step, isFinal = false, onPrev, onNext, onSaveDraft, onLaunch, nextDisabled }) => (
-  <div style={{
+  <div className="is-desktop-only" style={{
     marginTop: 'var(--ds-dim-5xl)',
     display: 'flex', justifyContent: 'space-between',
     gap: 'var(--ds-dim-2xl)', flexWrap: 'wrap', alignItems: 'center',
@@ -2733,9 +3468,64 @@ const WizardFooter = ({ step, isFinal = false, onPrev, onNext, onSaveDraft, onLa
   </div>
 );
 
+/* WizardFooterMobile — fixed-bottom sticky action bar used on mobile.
+   Hidden on desktop via .is-mobile-only. The "Save draft" action moves
+   into the chevron-row above (not duplicated in the sticky footer to
+   keep the two primary actions thumb-reachable). */
+const WizardFooterMobile = ({ step, isFinal = false, onPrev, onNext, onLaunch, nextDisabled }) => (
+  <div className="wizard-footer-mobile is-mobile-only" role="group" aria-label="Навигация мастера">
+    {step > 1 ? (
+      <Button variant="outline" size="m" icon="arrow-left" onClick={onPrev}>Назад</Button>
+    ) : (
+      <span style={{flex:1}} aria-hidden="true" />
+    )}
+    {isFinal ? (
+      <Button variant="primary" size="m" icon="rocket" onClick={onLaunch}>Запустить</Button>
+    ) : (
+      <Button variant="primary" size="m" iconRight="arrow-right" onClick={onNext} disabled={nextDisabled}>Далее</Button>
+    )}
+  </div>
+);
+
+/* Compact mobile stepper — hides the long connector line, shows
+   "Шаг N из M: <label>" with a tiny dots progress indicator. */
+const WIZARD_STEP_LABELS = ['Тип', 'Период', 'Призы', 'Запуск'];
+const WizardStepperMobile = ({ currentStep, totalSteps }) => (
+  <div className="is-mobile-only" style={{
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: 'var(--ds-dim-2xl) var(--ds-dim-3xl)',
+    border: '1px solid var(--ds-border)', borderRadius: 'var(--ds-radius-md)',
+    background: 'var(--ds-bg)',
+    marginBottom: 'var(--ds-dim-3xl)',
+  }}>
+    <div>
+      <div className="rig-utility-01" style={{color:'var(--ds-text-muted)'}}>
+        Шаг {currentStep} из {totalSteps}
+      </div>
+      <div className="rig-body-02-bold" style={{marginTop:2}}>
+        {WIZARD_STEP_LABELS[currentStep - 1] || ''}
+      </div>
+    </div>
+    <div style={{display:'flex', gap:'var(--ds-dim-s)'}}>
+      {Array.from({length: totalSteps}).map((_, i) => (
+        <span key={i} style={{
+          width: 8, height: 8, borderRadius: '50%',
+          background: i + 1 === currentStep
+            ? 'var(--ds-primary)'
+            : i + 1 < currentStep
+              ? 'var(--ds-positive)'
+              : 'var(--ds-border-input)',
+        }} />
+      ))}
+    </div>
+  </div>
+);
+
 const IBCreateContest = ({ onNavigate, onCreateContest }) => {
   const showToast = useToast();
+  const isMobile = useIsMobile();
   const [step, setStep] = useState(1);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [contestType, setContestType] = useState('volume');
   const [startDate, setStartDate] = useState(new Date(2026, 3, 15));
   const [endDate, setEndDate] = useState(new Date(2026, 4, 15));
@@ -2827,7 +3617,10 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
       <div className="wizard-layout">
         <div className="wizard-panel">
           <Breadcrumb items={[{label: 'Контесты для клиентов', onClick: () => onNavigate('list')}, {label: 'Создание контеста'}]} />
-          <WizardStepper currentStep={step} totalSteps={4} />
+          <div className="is-desktop-only">
+            <WizardStepper currentStep={step} totalSteps={4} />
+          </div>
+          <WizardStepperMobile currentStep={step} totalSteps={4} />
 
           {step === 1 && (
             <div>
@@ -2878,6 +3671,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 })}
               </div>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
+              <WizardFooterMobile step={step} onPrev={prev} onNext={next} />
             </div>
           )}
 
@@ -2885,14 +3679,14 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
             <div>
               <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Период проведения</h3>
               <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Укажите даты, время и часовой пояс</p>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
+              <div className="wizard-period-grid" style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
                 <CalendarInput label="Дата начала" value={startDate} onChange={setStartDate} />
                 <div className="time-with-meridiem">
                   <Input label="Время начала" rightIcon="clock" value={startTime} onChange={e => setStartTime(e.target.value)} />
                   <MeridiemToggle value={startMeridiem} onChange={setStartMeridiem} />
                 </div>
               </div>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
+              <div className="wizard-period-grid" style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
                 <CalendarInput label="Дата окончания" value={endDate} onChange={setEndDate} />
                 <div className="time-with-meridiem">
                   <Input label="Время окончания" rightIcon="clock" value={endTime} onChange={e => setEndTime(e.target.value)} />
@@ -2904,6 +3698,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 <InfoBox icon="lightbulb"><span><strong>Рекомендация:</strong> оптимальная длительность для {activeType.title} — {contestType === 'grow' ? '2–8 недель, чтобы прирост был значимым' : contestType === 'streak' ? '3–6 недель для демонстрации дисциплины' : '1–4 недели'}</span></InfoBox>
               </div>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
+              <WizardFooterMobile step={step} onPrev={prev} onNext={next} />
             </div>
           )}
 
@@ -2929,7 +3724,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 {prizes.map(p => (
                   <div key={p.id} className="prize-row" style={{display:'grid',gridTemplateColumns:'40px 1fr 180px 40px',gap:'var(--ds-dim-3xl)',alignItems:'center'}}>
                     <PrizeRank position={p.pos} />
-                    <div className="rig-body-01-bold">{p.pos} место</div>
+                    <div className="rig-body-01-bold prize-row__label">{p.pos} место</div>
                     <Input prefix="$" value={p.amount} onChange={e => updatePrize(p.id, e.target.value)} placeholder="0" />
                     {prizes.length > 1 && (
                       <IconButton icon="close" size="s" className="ds-icon-btn--danger" onClick={() => removePrize(p.id)} title="Удалить место" />
@@ -2954,6 +3749,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 <div className="prize-pool-toolbar__cell prize-pool-toolbar__cell--trail" aria-hidden="true" />
               </div>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
+              <WizardFooterMobile step={step} onPrev={prev} onNext={next} />
             </div>
           )}
 
@@ -3006,14 +3802,14 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 return (
                   <div className="card" style={{marginBottom:'var(--ds-dim-6xl)'}}>
                     <div className="card__body" style={{display:'flex', flexDirection:'column', gap:'var(--ds-dim-5xl)', paddingBottom:'var(--ds-dim-5xl)'}}>
-                      <div style={sectionGrid}>
+                      <div className="wizard-review-grid" style={sectionGrid}>
                         {[
                           {k:'Тип', v: activeType.title, editStep: 1},
                           {k:'Описание', v: activeType.clientDescTemplate(prizes[0]?.amount ? parseFloat(prizes[0].amount).toLocaleString('en-US') : '0'), span: 2},
                         ].map(renderField)}
                       </div>
                       {divider}
-                      <div style={sectionGrid}>
+                      <div className="wizard-review-grid" style={sectionGrid}>
                         {[
                           {k:'Период', v: periodString, editStep: 2},
                           {k:'Время', v: `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}, ${timezone}`, editStep: 2},
@@ -3030,7 +3826,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                         ].map(renderField)}
                       </div>
                       {divider}
-                      <div style={sectionGrid}>
+                      <div className="wizard-review-grid" style={sectionGrid}>
                         {[
                           {k:'Призовой фонд', v: `$${prizeTotal.toLocaleString('en-US')}`, editStep: 3},
                           {k:'Тип приза', v: prizeType === 'wallet' ? 'Денежный приз на Wallet' : 'Призы T&W', editStep: 3},
@@ -3041,12 +3837,21 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 );
               })()}
               <WizardFooter step={step} isFinal onPrev={prev} onSaveDraft={saveDraft} onLaunch={launchContest} />
+              <WizardFooterMobile step={step} isFinal onPrev={prev} onLaunch={launchContest} />
             </div>
           )}
+
+          {/* Mobile-only: open preview as a bottom-sheet modal. Hidden on desktop because the sidebar is already visible. */}
+          <div className="wizard-preview-row is-mobile-only">
+            <Button variant="outline" size="m" icon="show" block onClick={() => setPreviewOpen(true)}>
+              Посмотреть глазами клиента
+            </Button>
+          </div>
         </div>
 
+        {/* Desktop-only sticky preview sidebar */}
         <div
-          className="wizard-panel"
+          className="wizard-panel is-desktop-only"
           style={{
             position: 'sticky', top: 116, alignSelf: 'start',
             display: 'flex', flexDirection: 'column', gap: 'var(--ds-dim-3xl)',
@@ -3077,12 +3882,45 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
           </div>
         </div>
       </div>
+
+      {/* Mobile-only: same preview rendered inside a bottom-sheet modal */}
+      <Modal
+        open={previewOpen}
+        onClose={() => setPreviewOpen(false)}
+        title="Предпросмотр"
+        subtitle="Так увидит клиент карточку контеста"
+        size="m"
+        footer={<Button variant="primary" size="m" onClick={() => setPreviewOpen(false)}>Закрыть</Button>}
+      >
+        <div className="contest-card-preview-host">
+          {(() => {
+            const totalDays = Math.max(1, Math.round((endDate - startDate) / 86400000));
+            return (
+              <ContestCard
+                typeId={activeType.id}
+                name={activeType.title}
+                statusLabel="Active"
+                statusVariant="positive"
+                desc={activeType.clientDescTemplate((parseFloat(prizes[0]?.amount) || 0).toLocaleString('en-US'))}
+                dates={periodString}
+                participants={0}
+                prize={`$${prizeTotal.toLocaleString('en-US')}`}
+                days={`${totalDays} дн.`}
+                progress={0}
+                progressText={`Прошло 0 из ${totalDays} дн.`}
+                actionLabel="Участвую"
+              />
+            );
+          })()}
+        </div>
+      </Modal>
     </div>
   );
 };
 
 const IBContestDetail = ({ onNavigate, contest }) => {
   const showToast = useToast();
+  const isMobile = useIsMobile();
   // Resolve which contest is being viewed. Falls back to the canonical
   // populated Volume Race mock so the page is never empty when reached
   // outside the IB list (e.g. via Admin or direct nav).
@@ -3135,7 +3973,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
           <ContestTypeInfo typeId={ctype.id} />
         </div>
       </div>
-      <p className="rig-body-02" style={{color:'var(--ds-text-secondary)', marginBottom:'var(--ds-dim-5xl)', whiteSpace:'nowrap'}}>
+      <p className="rig-body-02 contest-detail-desc" style={{color:'var(--ds-text-secondary)', marginBottom:'var(--ds-dim-5xl)', whiteSpace:'nowrap'}}>
         {ctype.clientDescTemplate ? ctype.clientDescTemplate(500) : ctype.desc}
       </p>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12}}>
@@ -3150,7 +3988,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
             </span>
           )}
         </div>
-        <div style={{display:'flex',gap:8}}>
+        <div className="contest-detail-action-bar" style={{display:'flex',gap:8}}>
           <Button variant="outline" size="s" icon="link" onClick={() => showToast('Ссылка скопирована!', 'positive')}>Поделиться</Button>
           {!isCompleted && (
             <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Контест приостановлен', 'negative', { label:'Отменить', onClick:() => showToast('Контест возобновлён', 'positive') })}>Приостановить</Button>
@@ -3188,6 +4026,28 @@ const IBContestDetail = ({ onNavigate, contest }) => {
             </h4>
             <span className="table-header__meta">{leaderboardMetaText}</span>
           </div>
+          {isMobile ? (
+            <div className="lb-card-list">
+              {rows.slice(0, 20).map(r => {
+                const topClass = r.pos === 1 ? 'lb-card--top1' : r.pos === 2 ? 'lb-card--top2' : r.pos === 3 ? 'lb-card--top3' : '';
+                return (
+                  <div key={r.pos} className={`lb-card ${topClass}`}>
+                    <Medal position={r.pos}/>
+                    <div style={{minWidth:0}}>
+                      <div className="lb-card__name">{r.pos <= 3 ? <strong>{r.name}</strong> : r.name}</div>
+                      <div className="lb-card__sub">{r.vol} {ctype.metric.toLowerCase()}</div>
+                    </div>
+                    <div className={`lb-card__prize ${!r.prize ? 'lb-card__prize--empty' : ''}`}>{r.prize || '—'}</div>
+                  </div>
+                );
+              })}
+              {rows.length > 20 && (
+                <div style={{display:'flex',justifyContent:'center',marginTop:'var(--ds-dim-2xl)'}}>
+                  <Button variant="outline" size="m">Загрузить ещё</Button>
+                </div>
+              )}
+            </div>
+          ) : (
           <div className="table-wrap table-wrap--leaderboard">
             <div className="leaderboard-scroll">
               <table>
@@ -3210,6 +4070,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
               </table>
             </div>
           </div>
+          )}
         </>
       )}
     </div>
@@ -3235,6 +4096,7 @@ const CLIENT_COMPLETED_CONTESTS = [
 
 const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, onCancelContest, onJoinContest, seenContestTypes, onMarkContestSeen }) => {
   const showToast = useToast();
+  const isMobile = useIsMobile();
   const cards = CLIENT_CONTESTS;
   const seen = seenContestTypes || new Set();
   const markIfNew = (typeId) => {
@@ -3339,6 +4201,41 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
         Вы заняли призовое место в {prizePlacesCount} из {completedTotal} {contestsGenitiveAfterIz(completedTotal)}
       </span>
     </div>
+    {isMobile ? (
+      <div className="row-card-list">
+        {completed.map(c => {
+          const t = CONTEST_TYPES[c.typeId];
+          return (
+            <div key={c.name} className="row-card" onClick={() => openCompleted(c.name)} role="button" tabIndex={0}>
+              <div className="row-card__head">
+                <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)',flex:'1 1 auto',minWidth:0}}>
+                  <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32,flexShrink:0}}>
+                    <svg width="16" height="16"><use href={dsIc(t.icon)}/></svg>
+                  </span>
+                  <div className="row-card__title-block">
+                    <div className="row-card__title">{c.name}</div>
+                    <div className="row-card__sub">{t.title} · {c.dates}</div>
+                  </div>
+                </div>
+                <div style={{textAlign:'right',flexShrink:0}}>
+                  <div className="rig-body-02-bold" style={{fontVariantNumeric:'tabular-nums'}}>#{c.yourPlace}</div>
+                  <div className="rig-utility-01" style={{color: c.yourReward ? 'var(--ds-positive)' : 'var(--ds-text-muted)', marginTop: 2}}>
+                    {c.yourReward ? c.yourReward.replace(/\s*бонус$/i, '') : 'без приза'}
+                  </div>
+                </div>
+              </div>
+              <div className="row-card__meta">
+                <span className="row-card__meta-item"><svg><use href="#ic-users-24"/></svg>{c.participants} участников</span>
+                <span className="row-card__meta-item"><svg><use href="#ic-cup-24"/></svg>Победитель: <strong style={{color:'var(--ds-text-primary)',fontWeight:600,marginLeft:4}}>{winnerOf(c.name)}</strong></span>
+              </div>
+              <div className="row-card__actions" onClick={e => e.stopPropagation()}>
+                <Button variant="outline" size="m" icon="eye" onClick={() => openCompleted(c.name)}>Результаты</Button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    ) : (
     <div className="table-wrap">
       <table>
         <thead>
@@ -3387,6 +4284,7 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
         </tbody>
       </table>
     </div>
+    )}
   </div>
   );
 };
@@ -3564,6 +4462,7 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
 
 const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContests = {}, onJoinContest, onCancelContest, onMarkContestSeen }) => {
   const showToast = useToast();
+  const isMobile = useIsMobile();
   const [joinOpen, setJoinOpen] = useState(false);
   const contest = CLIENT_CONTESTS.find(c => c.typeId === contestTypeId) || CLIENT_CONTESTS[0];
   const requiresFunding = contestRequiresFunding(contest.typeId);
@@ -3646,7 +4545,8 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
         </div>
       </div>
 
-      <div style={{display:'flex', justifyContent:'center', alignItems:'center', marginTop:'var(--ds-dim-3xl)'}}>
+      {isMobile && <div className="client-terms-spacer" aria-hidden="true" />}
+      <div className={`client-terms-cta ${isMobile ? '' : 'is-desktop-only'}`} style={isMobile ? undefined : {display:'flex', flexDirection:'column', alignItems:'center', gap:'var(--ds-dim-3xl)', marginTop:'var(--ds-dim-3xl)'}}>
         {joinedUpcoming ? (
           <Button variant="outline" size="l" icon="trash" onClick={handleCancel} style={{minWidth: 360, paddingLeft:'var(--ds-dim-6xl)', paddingRight:'var(--ds-dim-6xl)'}}>{ctaLabel}</Button>
         ) : alreadyJoined ? (
@@ -3654,8 +4554,8 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
         ) : (
           <Button variant="primary" size="l" icon={isUpcoming ? 'clock' : undefined} onClick={() => setJoinOpen(true)} style={{minWidth: 360, paddingLeft:'var(--ds-dim-6xl)', paddingRight:'var(--ds-dim-6xl)'}}>{ctaLabel}</Button>
         )}
+        <p className="rig-utility-01 client-terms-cta__caption" style={{color:'var(--ds-text-placeholder)',textAlign:'center'}}>{ctaCaption}</p>
       </div>
-      <p className="rig-utility-01" style={{color:'var(--ds-text-placeholder)',textAlign:'center',marginTop:'var(--ds-dim-3xl)'}}>{ctaCaption}</p>
 
       <JoinContestModal
         open={joinOpen}
@@ -3688,6 +4588,8 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
 };
 
 const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContestSeen }) => {
+  const isMobile = useIsMobile();
+  const [mobileVisibleCount, setMobileVisibleCount] = useState(20);
   const youRowRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const [flash, setFlash] = useState(false);
@@ -3771,16 +4673,6 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
   return (
   <div className="screen-enter">
     <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label: isCompleted ? 'Результаты' : 'Лидерборд'}]} />
-    {isCompleted && (
-      <div style={{marginBottom:'var(--ds-dim-4xl)'}}>
-        <Notification
-          variant="neutral"
-          icon="trophy"
-          title="Контест завершён"
-          description="Вы на странице итогов: рейтинг и призы зафиксированы на дату окончания и больше не обновляются."
-        />
-      </div>
-    )}
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'var(--ds-dim-5xl)',gap:'var(--ds-dim-3xl)',flexWrap:'wrap'}}>
       <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
         <h1 className="rig-title-02">{contest.name}</h1>
@@ -3852,6 +4744,51 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
       </h4>
       <span className="table-header__meta">{isCompleted ? `Подведено ${(contest.dates.split(' — ')[1] || contest.dates)}, 23:59 UTC` : 'Обновлено: 2 мин назад'}</span>
     </div>
+    {isMobile ? (
+      <div>
+        {(() => {
+          const you = rows.find(r => r.isYou);
+          if (!you) return null;
+          return (
+            <div className="lb-sticky-you" role="status" aria-label="Ваша позиция">
+              <span>Вы — {you.p}-е место</span>
+              <span className="lb-sticky-you__metric">
+                {you.v} {ctype.metric.toLowerCase().replace(/[^a-zа-я0-9 .]/gi, '').split(' ')[0] || ''}
+                {you.pr !== '—' ? ` · приз ${you.pr}` : ''}
+              </span>
+            </div>
+          );
+        })()}
+        <div className="lb-card-list">
+          {rows.slice(0, mobileVisibleCount).map(r => {
+            const topClass = r.p === 1 ? 'lb-card--top1' : r.p === 2 ? 'lb-card--top2' : r.p === 3 ? 'lb-card--top3' : '';
+            return (
+              <div key={r.p} className={`lb-card ${topClass} ${r.isYou ? 'lb-card--you' : ''}`}>
+                {r.isYou
+                  ? <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{r.p}</span>
+                  : <Medal position={r.p}/>}
+                <div style={{minWidth:0}}>
+                  <div className="lb-card__name">
+                    {r.isYou
+                      ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:4}} /> Вы</>)
+                      : (r.p <= 3 ? <strong>{r.n}</strong> : r.n)}
+                  </div>
+                  <div className="lb-card__sub">{r.v} {ctype.metric.toLowerCase()}</div>
+                </div>
+                <div className={`lb-card__prize ${r.pr === '—' ? 'lb-card__prize--empty' : ''}`}>{r.pr}</div>
+              </div>
+            );
+          })}
+        </div>
+        {mobileVisibleCount < rows.length && (
+          <div style={{display:'flex',justifyContent:'center',marginTop:'var(--ds-dim-3xl)'}}>
+            <Button variant="outline" size="m" onClick={() => setMobileVisibleCount(c => c + 20)}>
+              Загрузить ещё
+            </Button>
+          </div>
+        )}
+      </div>
+    ) : (
     <div className="table-wrap table-wrap--leaderboard">
       <div className="leaderboard-scroll" ref={scrollContainerRef}>
         <table>
@@ -3941,6 +4878,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
         </table>
       </div>
     </div>
+    )}
   </div>
   );
 };
@@ -3985,7 +4923,11 @@ const AdminDashboard = ({ onNavigate }) => {
           ))}
         </ChipsGroup>
       </div>
-      <div className="table-wrap">
+      <div className="admin-mobile-banner is-mobile-only" role="note">
+        <Icon name="alert-triangle" size="sm" />
+        <span><strong>Полное управление и фильтры — на компьютере.</strong> На мобильном можно посмотреть статус и открыть детали — пролистайте таблицу вбок.</span>
+      </div>
+      <div className="table-wrap admin-table-scroll">
         <table>
           <thead><tr><th>Контест</th><th>IB Partner</th><th>Статус</th><th>Участники</th><th></th></tr></thead>
           <tbody>
@@ -4039,9 +4981,9 @@ const AdminContestDetail = ({ onNavigate }) => {
           <Button variant="outline" size="s" onClick={() => showToast('Алерт отклонён')}>Ложное срабатывание</Button>
         </>}
       />
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:24}}>
+      <div className="admin-detail-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:24}}>
         <div className="card">
-          <div className="table-wrap" style={{border:'none'}}>
+          <div className="table-wrap admin-table-scroll" style={{border:'none'}}>
             <div className="table-title"><h4 className="rig-body-01-bold">Лидерборд (полный)</h4></div>
             <table>
               <thead><tr><th>Место</th><th>Клиент</th><th>Объём</th><th>Сделки</th><th>Ср. удерж.</th></tr></thead>
@@ -4105,6 +5047,9 @@ const App = () => {
   const cancelContest = (typeId) =>
     setJoinedContests(prev => { const next = { ...prev }; delete next[typeId]; return next; });
   const [adminScreen, setAdminScreen] = useState('dashboard');
+  /* Mobile chrome: drawer (header menu) and persona switcher sheet */
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const [personaSheetOpen, setPersonaSheetOpen] = useState(false);
 
   /* Прототип: «просмотренные» не сохраняем — после F5 снова видны New и точка */
   const [seenContestTypes, setSeenContestTypes] = useState(() => new Set());
@@ -4144,9 +5089,52 @@ const App = () => {
   const navClient = s => { setClientScreen(s); window.scrollTo(0, 0); };
   const navAdmin = s => { setAdminScreen(s); window.scrollTo(0, 0); };
 
+  /* Resolve which menu items the slide-down drawer should show, and which
+     tab should look active in the bottom tab bar, based on current role +
+     internal screen state. Both drawer and tab bar reuse the production
+     persona menus where possible — items without a real screen (Wallet,
+     Profile, Bonuses, Users, Audit) are wired to a friendly toast so the
+     prototype demonstrates intent without faking depth. */
+  const drawerTitle = role === 'ib' ? 'IB Partner' : role === 'client' ? 'Клиент' : 'Admin';
+  const drawerItems = HEADER_MENUS[role] || [];
+  const handleDrawerSelect = (item) => {
+    if (role === 'ib' && item.key === 'contests') navIB('list');
+    if (role === 'client' && item.key === 'partner') navClient('list');
+    if (role === 'admin' && item.key === 'contests') navAdmin('dashboard');
+    if (role === 'admin' && item.key === 'dashboard') navAdmin('dashboard');
+  };
+  const tabActiveKey = (() => {
+    if (role === 'admin') return adminScreen === 'dashboard' ? 'dashboard' : 'contests';
+    return 'contests';
+  })();
+  const handleTabSelect = (tab) => {
+    if (tab.key === 'contests') {
+      if (role === 'ib') navIB('list');
+      if (role === 'client') navClient('list');
+      if (role === 'admin') navAdmin('dashboard');
+      return;
+    }
+    if (tab.key === 'dashboard' && role === 'admin') {
+      navAdmin('dashboard');
+      return;
+    }
+    /* Other tabs — out of scope for this prototype, surface a hint */
+    showAppToast(`«${tab.label}» — раздел в разработке для прототипа`);
+  };
+  /* In-app toast helper that bubbles up through the ToastProvider via
+     a small inner component (required because useToast needs a Provider
+     above it). */
+  const [pendingToast, setPendingToast] = useState(null);
+  const showAppToast = (msg) => setPendingToast({ msg, ts: Date.now() });
+
   return (
     <ToastProvider>
-      <RolePreviewBar role={role} onRoleChange={handleRoleChange} />
+      <AppShellToastBridge pending={pendingToast} />
+      <RolePreviewBar
+        role={role}
+        onRoleChange={handleRoleChange}
+        onPillTap={() => setPersonaSheetOpen(true)}
+      />
       <AppHeader
         role={role}
         activeKey={
@@ -4154,6 +5142,21 @@ const App = () => {
         }
         clientNewContestsCount={clientNewContestsCount}
         clientContestsTotal={CLIENT_CONTESTS.length}
+        onMenuOpen={() => setMobileDrawerOpen(true)}
+      />
+      <MobileDrawer
+        open={mobileDrawerOpen}
+        onClose={() => setMobileDrawerOpen(false)}
+        title={drawerTitle}
+        items={drawerItems}
+        activeKey={role === 'admin' && adminScreen === 'dashboard' ? 'dashboard' : 'contests'}
+        onSelect={handleDrawerSelect}
+      />
+      <MobilePersonaSheet
+        open={personaSheetOpen}
+        onClose={() => setPersonaSheetOpen(false)}
+        role={role}
+        onChange={handleRoleChange}
       />
       <div className="app">
         {role === 'ib' && (
@@ -4177,8 +5180,19 @@ const App = () => {
           </Container>
         )}
       </div>
+      <MobileTabBar role={role} activeKey={tabActiveKey} onSelect={handleTabSelect} />
     </ToastProvider>
   );
+};
+
+/* Bridge that lets <App /> trigger a toast from outside ToastProvider —
+   useful for non-screen actions (tab bar taps to unimplemented sections). */
+const AppShellToastBridge = ({ pending }) => {
+  const showToast = useToast();
+  useEffect(() => {
+    if (pending && pending.msg) showToast(pending.msg, 'positive');
+  }, [pending && pending.ts]);
+  return null;
 };
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);

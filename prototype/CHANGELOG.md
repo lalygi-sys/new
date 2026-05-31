@@ -6,6 +6,67 @@
 
 ---
 
+## 2026-06-01 — мобильная адаптация (<640px) для трёх персон · [`245859e`](https://github.com/tkapkaeva-create/disko/commit/245859e)
+
+### Что изменилось
+
+#### Foundation
+- **CSS-токены и утилиты:** `--ds-bp-mobile` (640px), `--ds-bp-tablet` (1024px), `--ds-mobile-header-h` (56px), `--ds-mobile-tabbar-h` (64px). Утилитарные классы `.is-mobile-only` / `.is-desktop-only`.
+- **Глобальные правила:** `overflow-x: hidden` на `html/body`, `-webkit-tap-highlight-color: transparent`, `font-size: 16px` для инпутов (iOS zoom guard), `min-height: 44px` для CTA.
+- **JS:** добавлены хуки `useMediaQuery(query)` и `useIsMobile()` на `window.matchMedia` (без npm-пакетов, под Babel-standalone).
+- **`@media (prefers-reduced-motion: reduce)`** отключает slide/transition для `.ds-modal`, `.toast`, `.mobile-drawer`.
+
+#### Навигация
+- **Mobile header 56px:** logo + avatar + burger; меню `HEADER_MENUS` переезжает в slide-down `MobileDrawer` (поверх backdrop, открывается по burger).
+- **`MobileTabBar` 64px + safe-area:** для каждой персоны свои табы (Client: Главная / Контесты / Бонусы / Профиль; IB: Дашборд / Контесты / Кошелёк / Профиль; Admin: Дашборд / Контесты / Юзеры / Аудит).
+- **Persona-switcher:** компактная pill «Demo: вы — X» открывает `MobilePersonaSheet` (bottom-sheet выбора роли).
+
+#### Modal → bottom-sheet
+- На mobile `.ds-modal` принимает форму bottom-sheet: `border-radius: 24px 24px 0 0`, `width: 100%`, прижат снизу, slide-up анимация (`@keyframes bottom-sheet-in`), pull-bar handle, `max-height: 92vh`.
+
+#### Списки контестов
+- **`IBMyContests`:** stats 4-col → 2×2; таблица заменена на `row-card-list` с card-визуалом (название + статус + тип + период + участники + призовой фонд) и actions (Статистика / Поделиться).
+- **`ClientContestList`:** премиальный card stack для активных контестов; «Завершённые» — также card list вместо таблицы на mobile.
+
+#### Wizard (`IBCreateContest`)
+- **Компактный stepper** на mobile: точки `1·2·3·4` + лейбл текущего шага (`WizardStepperMobile`) вместо полного `WizardStepper`.
+- **Single-column body:** `wizard-period-grid`, `wizard-review-grid` коллапсируются в одну колонку.
+- **Sticky bottom action bar** `WizardFooterMobile` — `[Назад] [Далее]` поверх tab bar.
+- **Preview-сайдбар** скрывается; вместо него кнопка `«Посмотреть глазами клиента»` открывает превью в bottom-sheet (`Modal` на mobile = sheet).
+- **Prize rows** компактные: 32px / 1fr / 32px; `prize-pool-toolbar` стек вертикально.
+
+#### Detail (IB / Client / Admin)
+- **`IBContestDetail`:** description без `whiteSpace: nowrap`, action-bar пилюль на flex-wrap.
+- **`ClientContestTerms`:** sticky `client-terms-cta` снизу с CTA «Участвовать» + микро-summary; `client-terms-spacer` оставляет место в скролле.
+- **`AdminContestDetail`:** `admin-detail-grid` коллапсируется в 1 колонку, leaderboard оборачивается в `admin-table-scroll`.
+
+#### Leaderboard
+- **`ClientLeaderboard`:** sticky-чип позиции пользователя + vertical card list (`lb-card`), top-3 highlighted, кнопка «Загрузить ещё» вместо длинного скролла.
+- **`IBContestDetail` (вкладка лидерборд):** табличный layout заменён на тот же `lb-card-list` на mobile.
+
+#### Admin degradation
+- **`AdminDashboard`:** добавлен `admin-mobile-banner` («Полное управление и фильтры — на компьютере»); таблица обёрнута в `admin-table-scroll` для горизонтального скролла на узких экранах.
+
+#### Polish
+- Тосты на mobile поднимаются над tab bar: `bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px) + var(--ds-dim-2xl))`.
+- Все CTA `min-height: 44px`, `--ds-btn--l: 48px`; `td-actions { opacity: 1 }` (нет hover на touch).
+- Скриншоты в `artifacts/audit-screenshots/mobile/` (3 персоны × ключевые экраны на 390×844).
+
+### Зачем
+
+Прототип контестов использовался почти исключительно на десктопе. Для встреч с клиентами IB-партнёрам нужен быстрый mobile-просмотр (quick check-in между разговорами), а для клиента контесты — это маркетинговая витрина в основном приложении (mobile-first). Admin сохраняет full-control только на десктопе, на mobile получает graceful read-only с явным баннером.
+
+### Как проверить
+
+1. Запустить `python3 -m http.server 9130` из `prototype/`, открыть `index.html`.
+2. В DevTools включить device toolbar → iPhone 12 (390×844).
+3. **Client:** persona-pill → Client → tap карточки → leaderboard со sticky-чипом «Вы — N место»; на не-присоединённом контесте видеть sticky CTA «Участвовать».
+4. **IB:** persona-pill → IB Partner → tap «Создать контест» → wizard-stepper компактный, sticky `[Далее]`, кнопка «Посмотреть глазами клиента» открывает bottom-sheet превью.
+5. **Admin:** persona-pill → Admin → видеть 2×2 stats, alert-секцию, банер «Полное управление и фильтры — на компьютере», таблицу в горизонтальном скролле.
+6. Burger в header → drawer slide-down с меню. Tab bar внизу персонозависим.
+
+---
+
 ## 2026-04-10 — буллеты в списках: иконка `ic-dot-24` из DS · [`e59469e`](https://github.com/tkapkaeva-create/disko/commit/e59469e)
 
 ### Что изменилось
