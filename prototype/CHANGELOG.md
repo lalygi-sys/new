@@ -6,6 +6,43 @@
 
 ---
 
+## 2026-06-13 — sticky head/foot и аккуратная панель date-range
+
+### Что изменилось
+
+- **Без тени:** `box-shadow` на `.dr-panel` убран — рамка `1px solid var(--ds-border)` достаточно отделяет панель от таблицы и убирает визуальный шум при «приклеенной» компоновке.
+- **Sticky head/foot:** `.dr-panel` стал `display: flex; flex-direction: column; overflow: hidden;`. Хэдер (`.dr-panel__head`) и футер (`.dr-panel__foot`) — `flex: 0 0 auto`, оба с разделителями (border-bottom / border-top). Между ними — новый враппер `.dr-panel__body` с `flex: 1 1 auto; overflow-y: auto;`, в который перенесены инпуты дат, навигация по месяцу и календарная сетка.
+- **Внутренний скролл, не внешний:** убран `overflow-y: auto` с `.contests-layout__panel > .dr-panel` — теперь скролится только середина панели; «Период проведения» и «Сбросить» всегда видны независимо от высоты контента.
+- **Mobile/tablet (≤1023px):** `.dr-panel__body { overflow: visible; padding-bottom: 0 }` — на узких экранах панель растёт под контент в стек, без вложенного скролла.
+- **Поля дат → DS Input S:** кастомные `.dr-panel__sub` / `.dr-panel__field` заменены на компонент `Input` Size S (Figma `560:5739`): лейбл Body-02, shell 32px / radius 8px, placeholder `дд.мм.гггг`, без иконок. Активное поле (start/end при пошаговом выборе) подсвечивается через `.dr-panel__input--active`.
+- **Дефолтный диапазон из таблицы:** при открытии списка `periodRange` инициализируется через `getContestTablePeriodBounds(rows)` — min start и max end среди контестов с заданным `period` (сейчас `01.02.2026 — 30.04.2026`). «Сбросить» в панели и «Сбросить фильтры» возвращают к этому диапазону; фильтр считается активным только если диапазон отличается от дефолта.
+- **Календарь cal-cell:** сетка `#cal-main` / `#cal-grid-main` — каждый день в `div.cal-cell` + `button.cal-day`; полоса диапазона на ячейке (`is-start` / `in-range` / `is-end`), круги на кнопках; хвост соседних месяцев (`out`, disabled); 6 строк × 7 колонок.
+- **Логика как Rebate (`calDayClick`):** клик при sd+ed → новый start; sd без ed → end (swap если раньше); полоса только когда обе даты и они разные; out-дни кликабельны и переключают месяц; hover-preview убран; стили `cal-wd` / `today` (inset border) / radius 8px.
+
+### Файлы
+
+- `prototype/index.html` — стили `.dr-panel` / `.dr-panel__head` / `.dr-panel__body` / `.dr-panel__foot`, обёртка `.dr-panel__body` в JSX `DateRangePanel`, DS `Input` в `.dr-panel__inputs`.
+
+---
+
+## 2026-06-12 — date-range фильтр в `IBMyContests` (+ side-panel layout)
+
+### Что изменилось
+
+#### Фильтрация по периоду
+- **`Select` → date-range picker:** на месте дропдауна с месячными бакетами теперь полноценный picker. Триггер — `Input asButton` с иконкой календаря и читаемым лейблом `06.06.2026 — 12.06.2026`.
+- **Side-panel вместо popover:** пикер открывается как боковая панель слева от таблицы, не закрывая собой данные (см. референс из Figma). Таблица сжимается, сама колонка действий остаётся sticky-right и продолжает работать через горизонтальный скролл.
+- **Архитектура:** компонент разбит на `DateRangeTrigger` (кнопка в тулбаре) и `DateRangePanel` (сам календарь). Состояние `pickerOpen` живёт в `IBMyContests`, click-outside проверяет `closest('.dr-trigger') || closest('.dr-panel')`.
+- **Layout:** новый flex-контейнер `.contests-layout` (panel 320px + main 1fr; на ≤1023px стек вертикальный). Панель `position: sticky; top: 16px;`, чтобы не уезжала при скролле длинной таблицы.
+- **Поведение пикера:** первый клик — `start` (сбрасывает `end`); второй — `end` (диапазон автоматически переворачивается, если позиция меньше старта); hover после старта показывает preview-полосу до курсора. Сетка рисует мягкую полосу между точками и солидные круги по краям.
+- **Логика фильтрации (`matchesPeriodRange`)**: контест проходит, если его `[start..end]` пересекается с фильтром. `parseContestPeriod` принимает форматы `"1 — 30 Apr 2026"` (same-month) и `"1 Mar — 30 Apr 2026"` (cross-month). Драфты без дат (`Не задан`) проходят только при пустом фильтре.
+- **Устойчивость:** `onChange` использует функциональный апдейтер `prev =>`, чтобы пара быстрых кликов в одной отрисовке корректно складывалась в диапазон (важно и для автотестов, и для нервных пальцев).
+
+#### Файлы
+- `prototype/index.html` — компоненты `DateRangeTrigger` / `DateRangePanel`, хелперы `parseContestPeriod` / `matchesPeriodRange` / `dateRangeButtonLabel`, стили `.dr-trigger`, `.dr-panel__*`, `.dr-day*`, `.contests-layout*`.
+
+---
+
 ## 2026-06-01 — мобильная адаптация (<640px) для трёх персон · [`9780653`](https://github.com/tkapkaeva-create/disko/commit/9780653)
 
 ### Что изменилось

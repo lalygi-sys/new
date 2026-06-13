@@ -54,6 +54,7 @@
     --ds-positive: #17882c;
     --ds-positive-hover: #136e24;
     --ds-positive-text: var(--ds-positive);
+    --ds-positive-content: #31865b;  /* Foundations: sentiment/positive-content */
     --ds-positive-bg: #e9f5ee;
     --ds-negative: #e72d2d;
     --ds-negative-hover: #c52020;
@@ -187,7 +188,8 @@
   }
   .ds-btn--l  { padding: 0 var(--ds-dim-3xl); height: 48px; }
   .ds-btn--m  { padding: 0 var(--ds-dim-3xl); height: 40px; }
-  .ds-btn--s  { padding: 0 var(--ds-dim-2xl); height: 32px; }
+  /* Button/S — per Figma "Button/S" (1:46977): h=32, radius 8 (button/s/radius) */
+  .ds-btn--s  { padding: 0 var(--ds-dim-2xl); height: 32px; border-radius: var(--ds-radius-md); }
 
   .ds-btn--primary { background: var(--ds-primary); color: var(--ds-on-primary); border-color: var(--ds-primary); }
   .ds-btn--primary:hover:not(:disabled) { background: var(--ds-primary-hover); border-color: var(--ds-primary-hover); }
@@ -281,7 +283,29 @@
     border-color: transparent;
   }
   .ds-chip--selected:hover { background: var(--ds-primary-content); border-color: transparent; }
-  .ds-chip--s { height: 32px; padding: 0 var(--ds-dim-3xl); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; }
+  /* Size S — per Figma "Chips/S" (1:32434): h=32, padding 8px, radius 8px,
+     label keeps Body 02 Bold 14/20.
+     Figma реализует gap между label и counter через padding на label-контейнере (px-8),
+     а flex-gap самого чипа = 0. Воспроизводим точно той же раскладкой. */
+  .ds-chip--s { height: 32px; padding: 0 var(--ds-dim-l); border-radius: var(--ds-radius-md); font-size: 14px; line-height: 20px; letter-spacing: 0; gap: 0; }
+  .ds-chip--s .ds-chip__label { display: inline-flex; align-items: center; padding: 0 var(--ds-dim-l); }
+  /* Inline counter Tag inside a chip — mirrors Figma "Tag · Mono Neutral" (8400:2227 family).
+     Unselected chip: light secondary-container pill (#f1f1f1-ish from row-hover).
+     Selected chip: blends with primary-container chip bg, only the dark digit reads. */
+  .ds-chip__count {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 18px; min-width: 20px; padding: 0 var(--ds-dim-s);
+    border-radius: 4px;
+    background: var(--ds-row-hover);
+    color: var(--ds-text-primary);
+    font-family: var(--ds-font-body);
+    font-weight: 400; font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .ds-chip--selected .ds-chip__count {
+    background: var(--ds-primary-content);
+    color: var(--ds-on-primary-container);
+  }
 
   /* ── DS Button Group (segmented control) ──
      For binary or few-option selection where all values must be visible
@@ -509,15 +533,32 @@
   .ds-notification__desc { font-size: 14px; line-height: 20px; color: var(--ds-text-secondary); }
   .ds-notification__actions { display: flex; gap: var(--ds-dim-l); margin-top: var(--ds-dim-2xl); }
 
-  /* ── DS Container ── */
+  /* ── DS Container ──
+     Заполняет высоту экрана (100vh минус две фикс-панели сверху и сохранённый
+     отступ снизу), чтобы белая рамка не «обрывалась» под короткими таблицами.
+     `display: flex; flex-direction: column` нужен, чтобы внутренние страницы
+     (`.screen-enter`) могли тянуть свои элементы по вертикали через flex-grow. */
   .ds-container {
     max-width: 1216px; margin: var(--ds-dim-3xl) auto var(--ds-dim-6xl); padding: var(--ds-dim-7xl);
     background: var(--ds-bg); border-radius: var(--ds-radius-xl);
     border: 1px solid var(--ds-border);
+    min-height: calc(100vh - 100px - var(--ds-dim-3xl) - var(--ds-dim-6xl));
+    display: flex; flex-direction: column;
   }
-  /* Wizard-page only: split the outer white frame into two standalone panels */
+  /* Контест-страница: фиксируем максимальную высоту контейнера в один экран,
+     чтобы открытая боковая панель не «толкала» рамку наружу — панель обязана
+     уложиться в ту же высоту, что и таблица (со внутренним скроллом, если
+     календарь не помещается). */
+  .ds-container:has(.contests-layout) {
+    max-height: calc(100vh - 100px - var(--ds-dim-3xl) - var(--ds-dim-6xl));
+    overflow: hidden;
+  }
+  /* Wizard-page only: split the outer white frame into two standalone panels;
+     min-height не нужен — там два самостоятельных panel-блока. */
   .ds-container--split {
     background: transparent; border: none; padding: 0;
+    min-height: 0;
+    display: block;
   }
   .wizard-panel {
     background: var(--ds-bg);
@@ -716,16 +757,10 @@
     gap: var(--ds-dim-m);
     min-width: 0;
   }
-  /* DS: `--ds-warning` — маркерный оранжевый; `--ds-warning-bg` — мягкое кольцо для контраста */
-  .app-header__dropdown-notify-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: var(--ds-radius-full);
+  /* Trailing-теги в dropdown'е (счётчик + опциональный «New»). */
+  .app-header__dropdown-item__trail {
+    display: inline-flex; align-items: center; gap: var(--ds-dim-m);
     flex-shrink: 0;
-    background: var(--ds-warning);
-    box-shadow:
-      0 0 0 1px var(--ds-bg),
-      0 0 0 2px var(--ds-warning-bg);
   }
 
   /* Deposit button (client role) — DS primary, S */
@@ -753,6 +788,44 @@
 
   /* Page layout */
   .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--ds-dim-6xl); gap: var(--ds-dim-3xl); }
+  .page-header__actions { display: flex; align-items: center; gap: var(--ds-dim-2xl); flex-shrink: 0; }
+  /* Expandable search — как Rebate (tabs-action → search-input) */
+  .search-wrap { position: relative; display: inline-flex; align-items: center; overflow: visible; }
+  .search-input {
+    display: none; align-items: center; gap: var(--ds-dim-l);
+    height: 32px; width: 320px; padding: 4px 12px;
+    background: var(--ds-bg); border: 1px solid var(--ds-border-input);
+    border-radius: var(--ds-radius-md);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+  }
+  .search-input.open { display: inline-flex; }
+  .search-input:hover { border-color: var(--ds-border-input-hover); }
+  .search-input:focus-within { border-color: var(--ds-border-focus); box-shadow: var(--ds-focus-ring); }
+  .search-input svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--ds-text-secondary); }
+  .search-input input {
+    flex: 1 1 auto; min-width: 0; border: none; background: transparent; outline: none;
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px; color: var(--ds-text-primary);
+  }
+  .search-input input::placeholder { color: var(--ds-text-placeholder); }
+  .search-clear {
+    flex-shrink: 0; width: 18px; height: 18px;
+    display: inline-grid; place-items: center;
+    border: none; background: transparent; cursor: pointer;
+    color: var(--ds-text-secondary); padding: 0; border-radius: 4px;
+  }
+  .search-clear:hover { color: var(--ds-text-primary); background: var(--ds-bg-hover); }
+  .search-wrap.is-open .tabs-action { display: none; }
+  .tabs-action {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--ds-dim-l);
+    height: 32px; padding: 0 16px; border-radius: var(--ds-radius-md);
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px; font-weight: 600;
+    color: var(--ds-text-primary); background: transparent; cursor: pointer; white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .tabs-action:hover { background: var(--ds-bg-hover); }
+  .tabs-action:active { background: var(--ds-bg-page); }
+  .tabs-action svg { width: 18px; height: 18px; flex-shrink: 0; }
   /* DS Breadcrumb — semantic <nav><ol>, Body 02 (14/20) */
   .breadcrumb { margin-bottom: var(--ds-dim-3xl); }
   .breadcrumb__list {
@@ -805,14 +878,158 @@
   .stat-trend--down { color: var(--ds-negative); }
   .stat-trend--neutral { color: var(--ds-text-placeholder); }
 
+  /* IB contest stats — compact «sports streak» banners */
+  .stat-banners {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--ds-dim-2xl);
+  }
+  .stat-banner {
+    position: relative;
+    display: flex; flex-direction: column; justify-content: space-between;
+    gap: var(--ds-dim-l);
+    min-height: 88px;
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    border-radius: var(--ds-radius-lg);
+    border: 1px solid var(--ds-border);
+    background: var(--ds-bg);
+    overflow: hidden;
+  }
+  .stat-banner__head {
+    display: flex; align-items: center; gap: var(--ds-dim-l);
+    min-height: 16px;
+  }
+  .stat-banner__icon {
+    width: 16px; height: 16px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ds-text-secondary);
+  }
+  .stat-banner__icon svg { width: 16px; height: 16px; display: block; }
+  .stat-banner__label {
+    flex: 1 1 auto; min-width: 0;
+    font-family: var(--ds-font-body); font-size: 12px; line-height: 16px;
+    letter-spacing: 0.15px; font-weight: 500; color: var(--ds-text-secondary);
+  }
+  .stat-banner__live-dot {
+    width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%;
+    background: var(--ds-positive);
+    box-shadow: 0 0 0 3px rgba(34, 168, 84, 0.2);
+  }
+  .stat-banner__value-row {
+    display: flex; align-items: baseline; gap: var(--ds-dim-l);
+    min-height: 28px;
+    margin-top: var(--ds-dim-l);
+  }
+  .stat-banner__value {
+    font-family: var(--ds-font-body); font-weight: 700;
+    font-size: 24px; line-height: 28px; letter-spacing: -0.4px;
+    color: var(--ds-text-primary); font-variant-numeric: tabular-nums;
+  }
+  .stat-banner__foot {
+    display: flex; align-items: flex-start; flex-wrap: wrap; gap: var(--ds-dim-l);
+    min-height: 18px;
+  }
+  /* Foundations: Utility 01 bold — sentiment delta справа от числа */
+  .stat-banner__delta {
+    display: inline-flex; align-items: center;
+    font-family: var(--ds-font-body); font-size: 12px; line-height: 16px;
+    font-weight: 600; letter-spacing: 0.15px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .stat-banner__delta--up { color: var(--ds-positive-content); }
+  .stat-banner__delta--down { color: var(--ds-negative); }
+  .stat-banner__delta--inflow { color: var(--ds-text-secondary); }
+  .stat-banner__delta--neutral { color: var(--ds-text-secondary); }
+  .stat-banner__hint {
+    font-size: 11px; line-height: 14px; color: var(--ds-text-tertiary);
+    min-width: 0;
+  }
+  /* Две части подписи — вторая уходит на строку ниже, если не помещается */
+  .stat-banner__hint--split {
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    column-gap: 0; row-gap: var(--ds-dim-s); flex: 1 1 auto; min-width: 0;
+  }
+  .stat-banner__hint-part { white-space: nowrap; }
+  .stat-banner__hint-sep { white-space: pre; flex-shrink: 0; }
+  .stat-banner__track {
+    height: 3px; border-radius: 999px; background: var(--ds-bg-page);
+    overflow: hidden; margin-top: 2px;
+  }
+  .stat-banner__fill {
+    height: 100%; border-radius: inherit;
+    background: var(--ds-text-tertiary);
+    transition: width 0.35s ease;
+  }
+
   /* Table */
   .table-header {
     display: flex; justify-content: space-between; align-items: baseline;
     gap: var(--ds-dim-3xl); margin-bottom: var(--ds-dim-3xl);
   }
   .table-header__meta { font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); font-weight: 400; }
+
+  /* Toolbar: search + filter chips above a data table.
+     Used in IBMyContests to slice the contest list by name and status. */
+  .table-toolbar {
+    display: flex; align-items: center; gap: var(--ds-dim-3xl);
+    margin-bottom: var(--ds-dim-3xl); flex-wrap: wrap;
+  }
+  .table-toolbar__period { flex: 0 0 auto; min-width: 320px; }
+  .dr-trigger .ds-input-shell__prefix { color: var(--ds-text-secondary); font-weight: 500; }
+  .dr-trigger .ds-input-shell__prefix::after { content: ' · '; font-weight: 400; color: var(--ds-text-tertiary); }
+  .table-toolbar__chips { flex: 0 1 auto; margin-left: auto; }
+  .table-toolbar .ds-input-wrap { margin: 0; }
+  /* Empty state inside table-wrap when filters yield no rows */
+  .table-empty {
+    padding: var(--ds-dim-7xl) var(--ds-dim-5xl);
+    text-align: center; color: var(--ds-text-muted);
+    display: flex; flex-direction: column; align-items: center; gap: var(--ds-dim-l);
+  }
+  .table-empty__title { font-family: var(--ds-font-body); font-weight: 600; font-size: 14px; line-height: 20px; color: var(--ds-text-primary); }
+  .table-empty__hint { font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); }
+
   .table-wrap { border: 1px solid var(--ds-border); border-radius: var(--ds-radius-lg); overflow: hidden; background: var(--ds-bg); }
-  table { width: 100%; border-collapse: collapse; }
+  /* border-collapse: separate нужен для корректной работы sticky-колонок
+     (с collapse cell-border'ы рисуются на таблице, и sticky-ячейки теряют рамку).
+     Визуально идентично, потому что у нас только border-bottom на ячейках. */
+  table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  /* ── Опция: горизонтальный скрол + sticky правая колонка ──
+     Применяется на IBMyContests: при нехватке ширины горизонтальный скрол,
+     последняя колонка («Действия / Статус») зафиксирована справа.
+     Тень слева подсказывает, что под колонкой есть скрытый контент.
+     min-width на таблице форсирует скрол, чтобы паттерн был виден на стандартных
+     десктоп-вьюпортах (1024–1280), а не только на узких. */
+  .table-wrap--sticky-last { overflow-x: auto; overflow-y: hidden; }
+  /* IB contests: таблица в flex-колонке — скролл по вертикали внутри wrap,
+     шапка липнет сверху, правая колонка — справа (как при горизонтальном скролле). */
+  .contests-layout .table-wrap--sticky-last {
+    flex: 1 1 auto; min-height: 0;
+    overflow-x: auto; overflow-y: auto;
+  }
+  .contests-layout .table-wrap--sticky-last thead th {
+    position: sticky; top: 0; z-index: 1;
+  }
+  .contests-layout .table-wrap--sticky-last thead th:last-child { z-index: 3; }
+  .contests-layout .table-wrap--sticky-last tbody td:last-child { z-index: 1; }
+  .contests-layout__main > .row-card-list {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto;
+  }
+  .table-wrap--sticky-last > table { min-width: 1080px; }
+  .table-wrap--sticky-last thead th:last-child,
+  .table-wrap--sticky-last tbody td:last-child {
+    position: sticky; right: 0;
+    background: var(--ds-bg);
+    z-index: 1;
+  }
+  .table-wrap--sticky-last thead th:last-child { z-index: 2; }
+  /* Тень включается только на состоянии .is-scrollable — иначе при широком вьюпорте
+     получается «плавающая» колонка с тенью на полностью вписавшейся таблице. */
+  .table-wrap--sticky-last.is-scrollable thead th:last-child,
+  .table-wrap--sticky-last.is-scrollable tbody td:last-child {
+    box-shadow: -8px 0 12px -8px rgba(20, 20, 20, 0.10);
+  }
+  .table-wrap--sticky-last tbody tr:hover td:last-child { background: var(--ds-row-hover); }
+  .table-wrap--sticky-last tbody tr.highlight td:last-child { background: var(--ds-bg-selected); }
   /* th uses Utility 01 from DS Foundations (12/16, regular, 0.15 tracking) */
   th {
     text-align: left; padding: var(--ds-dim-3xl);
@@ -821,18 +1038,49 @@
     color: var(--ds-text-muted); border-bottom: 1px solid var(--ds-border);
     white-space: nowrap; background: var(--ds-bg); text-transform: none;
   }
+  .th-sort {
+    display: inline-flex; align-items: center; gap: var(--ds-dim-s);
+    padding: 0; border: 0; background: none; cursor: pointer;
+    font: inherit; color: inherit; text-align: left;
+  }
+  .th-label {
+    display: inline-flex; align-items: baseline; gap: var(--ds-dim-s);
+  }
+  .th-label__count {
+    color: var(--ds-text-muted);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+  .th-sort:hover { color: var(--ds-text-primary); }
+  .th-sort__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; flex-shrink: 0;
+  }
+  .th-sort__icon svg { width: 16px; height: 16px; display: block; }
+  .th-sort__part { fill: currentColor; color: var(--ds-text-tertiary); opacity: 0.55; }
+  .th-sort--idle .th-sort__part { color: var(--ds-text-secondary); opacity: 1; }
+  .th-sort:hover .th-sort__part:not(.th-sort__part--active) {
+    color: var(--ds-text-secondary); opacity: 1;
+  }
+  .th-sort__part--active { color: var(--ds-text-primary); opacity: 1; }
   td { padding: var(--ds-dim-3xl); border-bottom: 1px solid var(--ds-border); font-family: var(--ds-font-body); font-weight: 400; font-size: 14px; line-height: 20px; letter-spacing: 0; color: var(--ds-text-primary); vertical-align: middle; }
   /* First column (body 2 bold from DS Foundations) */
   tbody td:first-child, td strong { font-family: var(--ds-font-body); font-weight: 600; font-size: 14px; line-height: 20px; letter-spacing: 0; color: var(--ds-text-primary); }
   tbody tr:last-child td { border-bottom: none; }
+  /* В растянутом `.table-wrap` контест-страницы под последней строкой остаётся
+     пустое пространство до низа wrap'а, поэтому возвращаем разделитель —
+     иначе строка визуально «висит в воздухе». */
+  .contests-layout tbody tr:last-child td { border-bottom: 1px solid var(--ds-border); }
   tr { transition: background .1s; }
   tbody tr:hover td { background: var(--ds-row-hover); }
-  .td-actions { opacity: 0; transition: opacity .15s; display: inline-flex; gap: var(--ds-dim-s); align-items: center; justify-content: flex-end; min-width: 184px; }
-  .td-actions > .ds-btn { min-width: 144px; justify-content: center; }
+  /* Action-cell sizing — все строки таблицы IB должны иметь action-кнопку
+     одной ширины, чтобы при наведении правая колонка не «дёргалась».
+     min-width 160px вмещает самый длинный лейбл («Редактировать» + icon). */
+  .td-actions { opacity: 0; transition: opacity .15s; display: inline-flex; gap: var(--ds-dim-s); align-items: center; justify-content: flex-end; min-width: 200px; }
+  .td-actions > .ds-btn { min-width: 160px; justify-content: center; }
   tbody tr:hover .td-actions { opacity: 1; }
   /* Action-cell stack: meta info shown by default, action buttons on hover.
      Both layers share the same space so the row height never jumps. */
-  .row-action-stack { position: relative; display: inline-flex; align-items: center; justify-content: flex-end; min-height: 32px; min-width: 184px; }
+  .row-action-stack { position: relative; display: inline-flex; align-items: center; justify-content: flex-end; min-height: 32px; min-width: 200px; }
   .row-action-stack > .row-meta,
   .row-action-stack > .td-actions { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
   .row-meta {
@@ -972,7 +1220,13 @@
 
   /* Type cell */
   .type-cell { display: flex; align-items: center; gap: var(--ds-dim-l); }
-  .type-icon { width: 32px; height: 32px; border-radius: var(--ds-radius-md); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .type-icon {
+    width: 32px; height: 32px; border-radius: var(--ds-radius-md);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .type-cell .type-icon { width: 28px; height: 28px; }
+  .type-cell .type-icon svg { width: 16px; height: 16px; display: block; }
+  .type-icon svg { width: 14px; height: 14px; display: block; }
   .type-icon--volume { background: var(--ds-primary-content); color: var(--ds-primary); }
   .type-icon--streak { background: var(--ds-warning-bg); color: var(--ds-warning); }
   .type-icon--top { background: var(--ds-positive-bg); color: var(--ds-positive); }
@@ -1037,14 +1291,16 @@
   .score-section { display: flex; flex-direction: column; gap: var(--ds-dim-2xl); }
   .score-section__title { font-family: var(--ds-font-body); font-weight: 600; font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); text-transform: none; }
 
-  /* DS ProgressBar (sizes: xs=2, s=4, m=6, l=8) */
-  .ds-progress { position: relative; width: 100%; background: #e8e8e8; border-radius: 100px; overflow: hidden; }
+  /* DS ProgressBar — Figma "Progress bar / Solid" (58829:8687, 11177:6303).
+     Track:  color/key/secondary-container = rgba(22,22,22,0.15)
+     Fill:   color/key/secondary           = #161616 (без floating label-баббла) */
+  .ds-progress { position: relative; width: 100%; background: rgba(22, 22, 22, 0.15); border-radius: 100px; overflow: hidden; }
   .ds-progress--xs { height: 2px; }
   .ds-progress--s  { height: 4px; }
   .ds-progress--m  { height: 6px; }
   .ds-progress--l  { height: 8px; }
   .ds-progress--xl { height: 10px; }
-  .ds-progress__bar { height: 100%; background: var(--ds-primary); border-radius: 100px; transition: width 0.5s ease; }
+  .ds-progress__bar { height: 100%; background: #161616; border-radius: 100px; transition: width 0.5s ease; }
   .ds-progress--on-brand { background: rgba(255,255,255,0.22); }
   .ds-progress--on-brand .ds-progress__bar { background: #fff; }
 
@@ -1236,7 +1492,8 @@
        — unselected: empty 24×24 slot (no visual indicator, preserves layout) */
   .rig-radio-cards { display: grid; grid-template-columns: 1fr; gap: var(--ds-dim-2xl); }
   .rig-radio-card {
-    padding: var(--ds-dim-3xl) var(--ds-dim-4xl);
+    /* Чуть больше воздуха под подзаголовком — 16/20/20/20 (top/right/bottom/left). */
+    padding: var(--ds-dim-3xl) var(--ds-dim-4xl) var(--ds-dim-4xl);
     border: 1px solid var(--ds-border);
     border-radius: var(--ds-radius-lg); cursor: pointer;
     transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
@@ -1269,36 +1526,196 @@
   .cal-day--today { font-weight: 700; color: var(--ds-primary); }
   .cal-day--selected { background: var(--ds-primary); color: #fff; font-weight: 600; }
 
-  /* Toast */
-  /* DS Toast — built on .ds-notification visual pattern (no left accent bar,
-     same treatment as InfoBox). Fixed-positioned, top-centered. */
+  /* Date-range side panel (DateRangePanel)
+     Рендерится в потоке слева от таблицы — не заслоняет данные, в отличие от
+     popover-варианта. Триггер в тулбаре подсвечивается синей рамкой. */
+  .dr-trigger { position: relative; }
+  .dr-trigger--open .ds-input-shell { border-color: var(--ds-primary); box-shadow: 0 0 0 2px rgba(0, 90, 255, 0.16); }
+
+  /* Панель — flex-колонка: head примагничен сверху, foot снизу, всё между ними
+     скроллится. Тень убрана: рамка достаточно отделяет панель от таблицы. */
+  .dr-panel {
+    background: var(--ds-bg);
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-lg);
+    padding: 0;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .dr-panel__head {
+    flex: 0 0 auto;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    border-bottom: 1px solid var(--ds-border);
+  }
+  .dr-panel__body {
+    flex: 1 1 auto; min-height: 0;
+    overflow-y: auto;
+    padding: var(--ds-dim-3xl) var(--ds-dim-3xl) var(--ds-dim-2xl);
+  }
+  .dr-panel__title { font-family: var(--ds-font-body); font-weight: 600; font-size: 16px; line-height: 24px; color: var(--ds-text-primary); }
+  .dr-panel__close {
+    width: 24px; height: 24px; border: 0; background: transparent; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ds-text-secondary); border-radius: var(--ds-radius-md); cursor: pointer;
+  }
+  .dr-panel__close:hover { background: var(--ds-bg-hover); color: var(--ds-text-primary); }
+  .dr-panel__close svg { width: 16px; height: 16px; }
+  .dr-panel__inputs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ds-dim-2xl); margin-bottom: var(--ds-dim-2xl); }
+  .dr-panel__inputs .ds-input-wrap { margin-bottom: 0; min-width: 0; }
+  /* Подсветка активного поля, пока пользователь выбирает вторую дату в календаре. */
+  .dr-panel__input--active .ds-input-shell { border-color: var(--ds-border-focus); box-shadow: var(--ds-focus-ring); }
+  .dr-panel__nav { display: flex; align-items: center; justify-content: space-between; padding: 0 0 var(--ds-dim-2xl); }
+  .dr-panel__navbtn {
+    width: 28px; height: 28px; border: 0; background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ds-text-secondary); border-radius: var(--ds-radius-md); cursor: pointer;
+  }
+  .dr-panel__navbtn:hover { background: var(--ds-bg-hover); color: var(--ds-text-primary); }
+  .dr-panel__navbtn:disabled { opacity: 0.35; cursor: not-allowed; background: transparent; }
+  .dr-panel__navbtn svg { width: 16px; height: 16px; }
+  .dr-panel__month { font-family: var(--ds-font-body); font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ds-text-primary); }
+
+  /* Range calendar — логика и стили как Rebate (#cal-main) */
+  .dr-panel .cal { user-select: none; }
+  .dr-panel .cal-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: var(--ds-dim-l);
+  }
+  .dr-panel .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0; gap: 0; }
+  .dr-panel .cal-wd {
+    height: 28px; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    color: var(--ds-text-secondary); font-weight: 500;
+  }
+  .dr-panel .cal-cell {
+    position: relative; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .dr-panel .cal-cell.in-range::before,
+  .dr-panel .cal-cell.is-start::before,
+  .dr-panel .cal-cell.is-end::before {
+    content: '';
+    position: absolute; top: 2px; bottom: 2px; left: 0; right: 0;
+    background: var(--ds-primary-content); pointer-events: none; z-index: 0;
+  }
+  .dr-panel .cal-cell.is-start::before { left: 50%; }
+  .dr-panel .cal-cell.is-end::before { right: 50%; }
+  .dr-panel .cal-cell.is-start.is-end::before { display: none; }
+  .dr-panel .cal-day {
+    position: relative; z-index: 1;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--ds-radius-md); border: none; background: transparent;
+    font-family: inherit; font-size: 13px; line-height: 20px;
+    color: var(--ds-text-primary); cursor: pointer; padding: 0;
+    transition: background 0.1s;
+  }
+  .dr-panel .cal-day:hover:not(:disabled) { background: var(--ds-bg-hover); }
+  .dr-panel .cal-day.out { color: var(--ds-text-tertiary); }
+  .dr-panel .cal-day.today { box-shadow: inset 0 0 0 1px var(--ds-border-input); }
+  .dr-panel .cal-day.is-start,
+  .dr-panel .cal-day.is-end { background: var(--ds-primary); color: #fff; font-weight: 600; }
+  .dr-panel .cal-day.is-start:hover,
+  .dr-panel .cal-day.is-end:hover { background: var(--ds-primary-hover, var(--ds-primary)); }
+  .dr-panel .cal-day:disabled { color: var(--ds-text-tertiary); cursor: not-allowed; background: transparent; }
+
+  .dr-panel__foot {
+    flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: var(--ds-dim-2xl);
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    border-top: 1px solid var(--ds-border);
+  }
+  .dr-panel__count { font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-secondary); }
+  .dr-panel__reset {
+    height: 32px; padding: 0 var(--ds-dim-3xl);
+    border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-md);
+    background: var(--ds-bg); color: var(--ds-text-primary);
+    font-family: inherit; font-weight: 600; font-size: 14px; line-height: 20px; cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .dr-panel__reset:hover:not(:disabled) { background: var(--ds-bg-hover); }
+  .dr-panel__reset:disabled { color: var(--ds-text-placeholder); cursor: not-allowed; }
+
+  /* Layout: side-panel слева + таблица справа.
+     При закрытом пикере — таблица занимает всю ширину (flex с одним ребёнком).
+     `align-items: stretch` + `overflow: hidden` гарантируют, что панель и
+     таблица всегда одной высоты и не «толкают» родителя наружу. */
+  .contests-layout {
+    display: flex; gap: var(--ds-dim-3xl); align-items: stretch;
+    flex: 1 1 auto; min-height: 0;
+    overflow: hidden;
+  }
+  /* Панель — flex-колонка, чтобы её внутренний `.dr-panel` мог брать
+     `flex: 1 1 auto` и при необходимости скроллить календарь внутри себя. */
+  .contests-layout__panel {
+    flex: 0 0 320px; min-height: 0;
+    display: flex; flex-direction: column;
+  }
+  .contests-layout__panel > .dr-panel {
+    flex: 1 1 auto; min-height: 0;
+  }
+  .contests-layout__main {
+    flex: 1 1 auto; min-width: 0;
+    display: flex; flex-direction: column; min-height: 0;
+  }
+  .contests-layout__stats { flex: 0 0 auto; margin-bottom: var(--ds-dim-5xl); }
+  .contests-layout__body {
+    flex: 1 1 auto; min-height: 0;
+    display: flex; flex-direction: column;
+  }
+  .contests-layout__body > .table-wrap,
+  .contests-layout__body > .row-card-list { flex: 1 1 auto; min-height: 0; }
+  @media (max-width: 1023px) {
+    .contests-layout { flex-direction: column; gap: var(--ds-dim-2xl); overflow: visible; }
+    .contests-layout__panel { flex: 0 0 auto; width: 100%; }
+    .contests-layout__panel > .dr-panel { flex: 0 0 auto; overflow: visible; }
+    .dr-panel__body { overflow: visible; padding-bottom: 0; }
+    /* На планшете контейнер может расти под контент, иначе пикер съест таблицу. */
+    .ds-container:has(.contests-layout) { max-height: none; }
+  }
+
+  /* Toast / Snackbar — Figma DS Components / Snackbar (60132:14999).
+     Dark inverse-surface, white text, status-coloured leading icon,
+     text-link action, optional close button on the trailing side. */
   .toast {
     /* Flush under fixed chrome: role-bar (36) + app-header (64) = 100 */
     position: fixed; top: 100px; left: 50%;
     transform: translateX(-50%) translateY(-100px);
     z-index: 3000;
-    display: flex; align-items: center; gap: var(--ds-dim-5xl);
-    padding: var(--ds-dim-3xl) var(--ds-dim-4xl);
+    display: flex; align-items: flex-start; gap: var(--ds-dim-l);
+    width: 360px; max-width: calc(100vw - var(--ds-dim-5xl) * 2);
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
     border-radius: var(--ds-radius-lg);
+    background: #161616;                            /* color/surface/inverse */
+    color: #ffffff;                                  /* color/content/inverse */
     font-size: 14px; line-height: 20px; font-weight: 400;
-    color: var(--ds-text-primary);
-    box-shadow: var(--ds-shadow-03);
-    opacity: 0; white-space: nowrap;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 6px 16px rgba(0,0,0,0.20);
+    opacity: 0; overflow: clip;
     transition: transform 0.3s ease, opacity 0.3s ease;
   }
   .toast--visible { transform: translateX(-50%) translateY(0); opacity: 1; }
-  .toast--positive { background: var(--ds-positive-bg); }
-  .toast--negative { background: var(--ds-negative-bg); }
-  .toast__msg { flex: 1 1 auto; min-width: 0; }
+  .toast__icon { flex-shrink: 0; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; }
+  .toast__text { flex: 1 1 auto; min-width: 0; min-height: 24px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+  .toast__msg { word-break: break-word; }
   .toast__action {
-    flex-shrink: 0;
-    height: 32px; padding: 0 var(--ds-dim-3xl);
-    border-radius: var(--ds-dim-l); border: 0;
-    background: rgba(22, 22, 22, 0.15); color: var(--ds-text-primary);
-    font-family: inherit; font-weight: 600; font-size: 14px; line-height: 20px;
+    flex-shrink: 0; align-self: center;
+    height: 24px; padding: 0; border: 0; background: transparent;
+    color: #8dc1ff;                                  /* color/content/link-inverse */
+    font-family: inherit; font-weight: 400; font-size: 14px; line-height: 20px;
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .toast__action:hover { opacity: 0.8; }
+  .toast__close {
+    flex-shrink: 0; align-self: center;
+    width: 24px; height: 24px; padding: 0; border: 0;
+    background: transparent; color: #ffffff;
+    border-radius: var(--ds-radius-md);
+    display: inline-flex; align-items: center; justify-content: center;
     cursor: pointer; transition: background 0.15s;
   }
-  .toast__action:hover { background: rgba(22, 22, 22, 0.25); }
+  .toast__close:hover { background: rgba(255, 255, 255, 0.10); }
+  .toast__close svg { width: 16px; height: 16px; display: block; }
 
   /* DS Inline-message (default = info; variants via modifier) */
   /* Info-box — inherits DS Notification visual treatment, no left accent bar */
@@ -1473,7 +1890,21 @@
 
   /* Screen animation */
   @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .screen-enter { animation: fadeInUp 0.25s ease-out forwards; }
+  .screen-enter {
+    animation: fadeInUp 0.25s ease-out forwards;
+    /* Тянемся в вертикальное пространство, отданное .ds-container'ом, чтобы
+       страница могла распределять оставшуюся высоту через flex-grow внутри. */
+    flex: 1 1 auto; min-height: 0;
+  }
+  /* Только для страниц с .contests-layout: разворачиваем .screen-enter
+     в колонку и даём `.contests-layout` забрать остаток высоты (так таблица
+     дотягивается до низа белой рамки). */
+  .screen-enter:has(> .contests-layout) { display: flex; flex-direction: column; overflow: hidden; }
+  /* Место под focus ring (4px) у поиска в шапке — иначе обрезается overflow родителя */
+  .screen-enter:has(> .contests-layout) > .page-header {
+    padding-top: 4px; padding-bottom: 4px;
+    overflow: visible;
+  }
 
   /* Prize row */
   .prize-row { display: grid; grid-template-columns: 48px 1fr 120px; gap: var(--ds-dim-2xl); align-items: center; margin-bottom: var(--ds-dim-2xl); }
@@ -1483,7 +1914,10 @@
      ═══════════════════════════════════════════════════════════════════ */
 
   @media (max-width: 1023px) {
-    .ds-container { margin: var(--ds-dim-5xl); padding: var(--ds-dim-5xl); }
+    .ds-container {
+      margin: var(--ds-dim-5xl); padding: var(--ds-dim-5xl);
+      min-height: calc(100vh - 100px - 2 * var(--ds-dim-5xl));
+    }
     .wizard-layout { grid-template-columns: 1fr; }
     .contest-grid { grid-template-columns: 1fr; }
     .stats { flex-wrap: wrap; padding: var(--ds-dim-3xl); }
@@ -1516,9 +1950,11 @@
       margin: var(--ds-dim-2xl);
       padding: var(--ds-dim-3xl);
       border-radius: var(--ds-radius-lg);
+      /* На мобиле учитываем фикс. tab-bar снизу и safe-area, плюс свои margin'ы */
+      min-height: calc(100vh - var(--ds-mobile-header-h) - var(--ds-mobile-tabbar-h) - env(safe-area-inset-bottom, 0px) - 2 * var(--ds-dim-2xl));
     }
     /* Wizard: drop white frame so steps feel full-bleed */
-    .ds-container--split { padding: 0; margin: 0; border: 0; background: transparent; }
+    .ds-container--split { padding: 0; margin: 0; border: 0; background: transparent; min-height: 0; }
 
     /* === Role preview bar — collapse to compact pill === */
     .role-bar {
@@ -1684,6 +2120,12 @@
     .rig-title-02 { font-size: 24px; line-height: 28px; letter-spacing: -0.3px; }
 
     /* === Stats — 2x2 grid, left-aligned === */
+    .stat-banners {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--ds-dim-2xl);
+    }
+    .stat-banner { min-height: 80px; padding: var(--ds-dim-2xl); }
+    .stat-banner__value { font-size: 20px; line-height: 24px; }
     .stats {
       flex-wrap: wrap; flex-direction: row;
       padding: var(--ds-dim-3xl);
@@ -1720,6 +2162,12 @@
 
     /* === Tables hidden when an .is-mobile-only card list is provided === */
     .table-wrap--cards > .table-wrap-table { display: none; }
+
+    /* === Table toolbar on mobile: stack period above chips === */
+    .table-toolbar { flex-direction: column; align-items: stretch; gap: var(--ds-dim-2xl); }
+    .table-toolbar__period { flex: 0 0 auto; min-width: 0; width: 100%; }
+    .table-toolbar__chips { flex: 0 0 auto; width: 100%; margin-left: 0; }
+    .table-toolbar__chips .ds-chips-group { width: 100%; flex-wrap: wrap; }
 
     /* === IB & Client list cards (mobile) === */
     .row-card-list { display: flex; flex-direction: column; gap: var(--ds-dim-3xl); }
@@ -1945,8 +2393,9 @@
       bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px) + var(--ds-dim-2xl)) !important;
       left: var(--ds-dim-3xl) !important;
       right: var(--ds-dim-3xl) !important;
+      width: auto !important;
+      max-width: none !important;
       transform: translateY(120px) !important;
-      white-space: normal !important;
     }
     .toast--visible { transform: translateY(0) !important; }
 
@@ -2007,6 +2456,12 @@
   <symbol id="ic-globe-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:477 (16x16 scaled 1.5) -->
     <g transform="translate(1.5 1.5) scale(1.5)">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M7 0C10.866 0 14 3.13401 14 7C14 10.866 10.866 14 7 14C3.13401 14 0 10.866 0 7C0 3.13401 3.13401 0 7 0ZM7 9.7002C6.53423 9.70021 6.08203 9.7196 5.64746 9.75488C5.77308 10.4219 5.93858 11.0134 6.13477 11.5039C6.34434 12.0278 6.56594 12.3821 6.75586 12.5938C6.83681 12.5972 6.91819 12.5996 7 12.5996C7.08148 12.5996 7.16253 12.5972 7.24316 12.5938C7.43326 12.3822 7.65647 12.0283 7.86621 11.5039C8.06236 11.0135 8.22693 10.4218 8.35254 9.75488C7.91814 9.71961 7.46568 9.70021 7 9.7002ZM4.45312 9.89941C3.73464 10.0167 3.08696 10.181 2.53418 10.3789C3.19654 11.253 4.1102 11.925 5.16699 12.291C4.86467 11.6358 4.62112 10.821 4.45312 9.89941ZM9.5459 9.89844C9.37789 10.8205 9.13448 11.6355 8.83203 12.291C9.88901 11.9251 10.8023 11.253 11.4648 10.3789C10.9121 10.1811 10.2646 10.0157 9.5459 9.89844ZM1.90918 4.66699C1.58315 5.37732 1.40039 6.16719 1.40039 7C1.40039 7.8325 1.58338 8.62191 1.90918 9.33203C2.59994 9.06393 3.40592 8.85212 4.28711 8.70996C4.23213 8.16261 4.2002 7.58998 4.2002 7C4.2002 6.40967 4.23207 5.8367 4.28711 5.28906C3.40584 5.14688 2.59997 4.93514 1.90918 4.66699ZM12.0898 4.66699C11.3989 4.93513 10.5931 5.14699 9.71191 5.28906C9.76695 5.83672 9.7998 6.40965 9.7998 7C9.7998 7.59 9.76689 8.1626 9.71191 8.70996C10.593 8.85201 11.3989 9.06394 12.0898 9.33203C12.4157 8.62181 12.5996 7.83264 12.5996 7C12.5996 6.16704 12.416 5.37742 12.0898 4.66699ZM8.52051 5.43457C8.02751 5.47669 7.5185 5.49999 7 5.5C6.48098 5.49999 5.97191 5.47677 5.47852 5.43457C5.42944 5.93121 5.40039 6.45527 5.40039 7C5.40039 7.54437 5.42951 8.0681 5.47852 8.56445C5.97188 8.52226 6.48101 8.50001 7 8.5C7.51847 8.50001 8.02753 8.52234 8.52051 8.56445C8.56954 8.06805 8.60059 7.54441 8.60059 7C8.60059 6.45523 8.5696 5.93126 8.52051 5.43457ZM6.75586 1.40527C6.56583 1.61684 6.34452 1.97172 6.13477 2.49609C5.93867 2.98635 5.77306 3.57751 5.64746 4.24414C6.08206 4.27943 6.5342 4.29979 7 4.2998C7.46571 4.29979 7.91811 4.27941 8.35254 4.24414C8.22695 3.57759 8.06226 2.9863 7.86621 2.49609C7.65629 1.97128 7.43337 1.61678 7.24316 1.40527C7.16254 1.40183 7.08147 1.40039 7 1.40039C6.9182 1.40039 6.8368 1.4018 6.75586 1.40527ZM8.83203 1.70801C9.13454 2.36342 9.37783 3.17858 9.5459 4.10059C10.2646 3.98334 10.912 3.81799 11.4648 3.62012C10.8023 2.74623 9.88888 2.07377 8.83203 1.70801ZM5.16699 1.70801C4.11032 2.07391 3.19656 2.74624 2.53418 3.62012C3.08699 3.81805 3.73457 3.98235 4.45312 4.09961C4.62119 3.17808 4.8646 2.36318 5.16699 1.70801Z" fill="currentColor"/>
+    </g>
+  </symbol>
+  <symbol id="ic-sort-24" viewBox="0 0 24 24" fill="none"><!-- Material unfold_more -->
+    <g transform="scale(0.025) translate(0, 960)">
+      <path d="M480-120 300-300l58-58 122 122 122-122 58 58-180 180" fill="currentColor"/>
+      <path d="M358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z" fill="currentColor"/>
     </g>
   </symbol>
   <symbol id="ic-upward-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1272 -->
@@ -2164,6 +2619,12 @@
   <symbol id="ic-dot-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:966 -->
     <path d="M9 12C9 9.52951 9.52951 9 12 9C14.4705 9 15 9.52951 15 12C15 14.4705 14.4705 15 12 15C9.52951 15 9 14.4705 9 12Z" fill="currentColor"/>
   </symbol>
+
+  <!-- Custom: search magnifier (not in DS sprite yet — kept here for IB contests filter) -->
+  <symbol id="ic-search-24" viewBox="0 0 24 24" fill="none">
+    <circle cx="11" cy="11" r="6.25" stroke="currentColor" stroke-width="1.5"/>
+    <path d="m20 20-4.2-4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>
 </svg>
 
 <div id="root"></div>
@@ -2197,6 +2658,24 @@ const useMediaQuery = (query) => {
   return matches;
 };
 const useIsMobile = () => useMediaQuery('(max-width: 639px)');
+
+/* useIsHorizontallyScrollable — true когда у элемента scrollWidth > clientWidth.
+   Используется для подсветки тени sticky-колонки только при реальном overflow.
+   Слушает ResizeObserver и на wrap, и на дочерней таблице (она может расти по контенту). */
+const useIsHorizontallyScrollable = (ref) => {
+  const [scrollable, setScrollable] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const update = () => setScrollable(el.scrollWidth - el.clientWidth > 1);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    if (el.firstElementChild) ro.observe(el.firstElementChild);
+    return () => ro.disconnect();
+  }, [ref]);
+  return scrollable;
+};
 
 /* ═══════════════════════════════════════════════════════
    DS COMPONENTS — matching RIG v2.51.0 Storybook
@@ -2253,7 +2732,7 @@ const Tag = ({ label, variant = 'neutral', icon }) => (
   </span>
 );
 
-const Chips = ({ label, selected, onClick, size }) => (
+const Chips = ({ label, selected, onClick, size, count }) => (
   <button
     type="button"
     role="checkbox"
@@ -2261,7 +2740,10 @@ const Chips = ({ label, selected, onClick, size }) => (
     className={`ds-chip ${selected ? 'ds-chip--selected' : ''} ${size ? `ds-chip--${size}` : ''}`}
     onClick={onClick}
   >
-    {label}
+    <span className="ds-chip__label">{label}</span>
+    {count !== undefined && count !== null && (
+      <span className="ds-chip__count" aria-hidden="true">{count}</span>
+    )}
   </button>
 );
 
@@ -2328,7 +2810,7 @@ const Input = ({
 };
 
 /* DS Dropdown (Select) — DS Input trigger + options popover */
-const Select = ({ label, value, onChange, options = [], placeholder, description, error, leftIcon }) => {
+const Select = ({ label, value, onChange, options = [], placeholder, description, error, leftIcon, size }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
   useEffect(() => {
@@ -2341,7 +2823,7 @@ const Select = ({ label, value, onChange, options = [], placeholder, description
     <div ref={ref} style={{position:'relative'}}>
       <Input
         asButton label={label} leftIcon={leftIcon} rightIcon="chevron-down"
-        description={description} error={error}
+        description={description} error={error} size={size}
         onClick={() => setOpen(v => !v)}
       >
         {selected ? selected.label : (placeholder || '')}
@@ -2647,20 +3129,33 @@ const ToastProvider = ({ children }) => {
     if (toast?.action?.onClick) toast.action.onClick();
     setToast(null);
   };
+  const handleClose = () => {
+    clearTimeout(timerRef.current);
+    setToast(null);
+  };
 
+  /* Status icons reuse the same hue as the legacy notification — green check for
+     positive, red exclamation for negative. Sized & coloured for inverse surface. */
   const iconSvg = toast?.type === 'positive'
-    ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{flexShrink:0}}><path d="M10.7396 15.77L17.0416 9.46788L16.4752 8.90148C16.1173 8.5435 15.5369 8.5435 15.1789 8.90148L10.7396 13.3408L8.82108 11.4223C8.4631 11.0643 7.8827 11.0643 7.52472 11.4223L6.95831 11.9887L10.7396 15.77Z" fill="#31865B"/><path fillRule="evenodd" clipRule="evenodd" d="M21.1666 12C21.1666 17.0626 17.0626 21.1666 12 21.1666C6.93737 21.1666 2.83331 17.0626 2.83331 12C2.83331 6.93737 6.93737 2.83331 12 2.83331C17.0626 2.83331 21.1666 6.93737 21.1666 12ZM19.3333 12C19.3333 16.0501 16.0501 19.3333 12 19.3333C7.94989 19.3333 4.66665 16.0501 4.66665 12C4.66665 7.94989 7.94989 4.66665 12 4.66665C16.0501 4.66665 19.3333 7.94989 19.3333 12Z" fill="#31865B"/></svg>
-    : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{flexShrink:0}}><circle cx="12" cy="12" r="9.17" stroke="#e72d2d" strokeWidth="1.83"/><path d="M12 8v4M12 16h.01" stroke="#e72d2d" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+    ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M21.1666 12C21.1666 17.0626 17.0626 21.1666 12 21.1666C6.93737 21.1666 2.83331 17.0626 2.83331 12C2.83331 6.93737 6.93737 2.83331 12 2.83331C17.0626 2.83331 21.1666 6.93737 21.1666 12Z" fill="#3dd680"/><path d="M10.7396 15.77L17.0416 9.46788L16.4752 8.90148C16.1173 8.5435 15.5369 8.5435 15.1789 8.90148L10.7396 13.3408L8.82108 11.4223C8.4631 11.0643 7.8827 11.0643 7.52472 11.4223L6.95831 11.9887L10.7396 15.77Z" fill="#161616"/></svg>
+    : <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#ff6464"/><path d="M12 7v6M12 17h.01" stroke="#161616" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
   return (
     <ToastContext.Provider value={showToast}>
       {children}
-      <div className={`toast toast--${toast?.type || 'negative'} ${toast ? 'toast--visible' : ''}`}>
-        {toast && iconSvg}
-        <span className="toast__msg">{toast?.msg}</span>
+      <div className={`toast toast--${toast?.type || 'negative'} ${toast ? 'toast--visible' : ''}`} role="status" aria-live="polite">
+        {toast && <span className="toast__icon">{iconSvg}</span>}
+        <div className="toast__text">
+          <span className="toast__msg">{toast?.msg}</span>
+        </div>
         {toast?.action && (
           <button type="button" className="toast__action" onClick={handleAction}>
             {toast.action.label}
+          </button>
+        )}
+        {toast && (
+          <button type="button" className="toast__close" onClick={handleClose} aria-label="Закрыть">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="#ic-cross-24" /></svg>
           </button>
         )}
       </div>
@@ -2712,8 +3207,10 @@ const HEADER_MENUS = {
   ib: [
     {key: 'dashboard', label: 'IB Dashboard'},
     {key: 'revenue',   label: 'Revenue statistics'},
-    {key: 'promo',     label: 'Promo materials'},
-    {key: 'contests',  label: 'Contests'},
+    {key: 'growth',    label: 'Увеличение показателей', dropdown: [
+      {key: 'promo',    label: 'Promo materials'},
+      {key: 'contests', label: 'Contests'},
+    ]},
   ],
   client: [
     {key: 'dashboard',     label: 'Dashboard'},
@@ -2732,6 +3229,10 @@ const HEADER_MENUS = {
     {key: 'users',     label: 'Пользователи'},
   ],
 };
+
+/* Drawer показывает плоский список — раскрываем dropdown-пункты шапки. */
+const flattenHeaderMenuForDrawer = (items = []) =>
+  items.flatMap(item => (item.dropdown ? item.dropdown : [item]));
 
 /* AppHeader — adaptive header per role.
    IB:    Logo + Menu + Wallet + Avatar
@@ -2785,11 +3286,13 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
                         <>
                           <span className="app-header__dropdown-item__label">
                             <span>{d.label}</span>
+                          </span>
+                          <span className="app-header__dropdown-item__trail">
+                            <Tag label={String(clientContestsTotal)} variant="brand" />
                             {clientNewContestsCount > 0 && (
-                              <span className="app-header__dropdown-notify-dot" aria-hidden="true" title="Есть новые контесты" />
+                              <Tag label="New" variant="warning" />
                             )}
                           </span>
-                          <Tag label={String(clientContestsTotal)} variant="brand" />
                         </>
                       ) : (
                         <>
@@ -3041,6 +3544,171 @@ const StatCard = ({ value, label, color, trend }) => (
   </div>
 );
 
+/* Компактные KPI-баннеры для списка контестов IB — «спортивная» мотивация + деловые метрики. */
+/* Подпись из двух частей: «·» только на одной строке, при переносе — без разделителя */
+const StatBannerHintSplit = ({ parts }) => {
+  const wrapRef = useRef(null);
+  const firstRef = useRef(null);
+  const secondRef = useRef(null);
+  const [wrapped, setWrapped] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      if (!firstRef.current || !secondRef.current) return;
+      setWrapped(firstRef.current.offsetTop !== secondRef.current.offsetTop);
+    };
+    check();
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(check) : null;
+    if (wrapRef.current && ro) ro.observe(wrapRef.current);
+    window.addEventListener('resize', check);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener('resize', check);
+    };
+  }, [parts]);
+
+  if (!parts?.length) return null;
+  if (parts.length === 1) {
+    return <span className="stat-banner__hint">{parts[0]}</span>;
+  }
+
+  return (
+    <span ref={wrapRef} className="stat-banner__hint stat-banner__hint--split">
+      <span ref={firstRef} className="stat-banner__hint-part">{parts[0]}</span>
+      {!wrapped && parts.length > 1 && (
+        <span className="stat-banner__hint-sep" aria-hidden="true"> · </span>
+      )}
+      {parts.slice(1).map((part, i) => (
+        <span key={i} ref={i === 0 ? secondRef : undefined} className="stat-banner__hint-part">{part}</span>
+      ))}
+    </span>
+  );
+};
+
+const StatBanner = ({ variant, icon, label, value, hint, hintParts, delta, progress, live }) => (
+  <div className={`stat-banner stat-banner--${variant}`}>
+    <div className="stat-banner__head">
+      <span className="stat-banner__icon"><svg><use href={dsIc(icon)} /></svg></span>
+      <span className="stat-banner__label">{label}</span>
+      {live && <span className="stat-banner__live-dot" aria-hidden="true" title="Идёт сейчас" />}
+    </div>
+    <div className="stat-banner__value-row">
+      <div className="stat-banner__value">{value}</div>
+      {delta && (
+        <span className={`stat-banner__delta stat-banner__delta--${delta.dir || 'neutral'}`}>
+          {delta.dir === 'up' && '↑ '}
+          {delta.dir === 'down' && '↓ '}
+          {delta.text}
+        </span>
+      )}
+    </div>
+    {(hint || hintParts?.length) && (
+      <div className="stat-banner__foot">
+        {hintParts?.length ? (
+          <StatBannerHintSplit parts={hintParts} />
+        ) : hint ? (
+          <span className="stat-banner__hint">{hint}</span>
+        ) : null}
+      </div>
+    )}
+    {progress != null && (
+      <div className="stat-banner__track" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
+        <div className="stat-banner__fill" style={{ width: `${progress}%` }} />
+      </div>
+    )}
+  </div>
+);
+
+const formatUsdCompact = (n) => '$' + Math.round(n).toLocaleString('en-US');
+
+const computeIBContestStats = (rows) => {
+  const activeRows = rows.filter(r => r.status === 'Active');
+  const completedRows = rows.filter(r => r.status === 'Completed');
+  const activeCount = activeRows.length;
+  const activeParticipants = activeRows.reduce(
+    (sum, r) => sum + (typeof r.count === 'number' ? r.count : 0), 0
+  );
+  const activeProfit = activeRows.reduce((sum, r) => sum + (r.ibProfit || 0), 0);
+  const completedProfit = completedRows.reduce((sum, r) => sum + (r.ibProfit || 0), 0);
+  const totalProfit = activeProfit + completedProfit;
+  const prizePoolActive = activeRows.reduce((sum, r) => sum + (r.prizePool || 0), 0);
+  const prizesGifted = completedRows.reduce((sum, r) => sum + (r.prizesGifted ?? r.prizePool ?? 0), 0);
+  const prizePoolTotal = prizePoolActive + prizesGifted;
+  const activationReturned = activeRows.reduce((sum, r) => sum + (r.activationReturned || 0), 0);
+  const activationNew = activeRows.reduce((sum, r) => sum + (r.activationNew || 0), 0);
+  const activationTotal = activationReturned + activationNew;
+  const avgReach = activeCount ? Math.round(activeParticipants / activeCount) : 0;
+  const reachCounts = activeRows.map(r => r.count).filter(n => typeof n === 'number');
+  const minReach = reachCounts.length ? Math.min(...reachCounts) : 0;
+  const maxReach = reachCounts.length ? Math.max(...reachCounts) : 0;
+  return {
+    activeCount, activeParticipants, avgReach, minReach, maxReach,
+    activeProfit, completedProfit, totalProfit,
+    prizePoolActive, prizesGifted, prizePoolTotal,
+    activationReturned, activationNew, activationTotal,
+  };
+};
+
+const IBContestStatsBanners = ({ rows }) => {
+  const {
+    avgReach, minReach, maxReach,
+    activeProfit, completedProfit, totalProfit,
+    prizePoolActive, prizesGifted, prizePoolTotal,
+    activationReturned, activationNew, activationTotal,
+  } = computeIBContestStats(rows);
+  const profitHintParts = totalProfit
+    ? [`${formatUsdCompact(activeProfit)} активные`, `${formatUsdCompact(completedProfit)} завершённые`]
+    : null;
+  const prizeHintParts = prizePoolTotal
+    ? [`${formatUsdCompact(prizePoolActive)} в активных`, `${formatUsdCompact(prizesGifted)} выплачено`]
+    : null;
+  const activationHint = activationTotal
+    ? `${activationReturned} вернулись · ${activationNew} новые клиенты`
+    : null;
+  const engageHintParts = avgReach && minReach && maxReach
+    ? [`мин ${minReach}`, `макс ${maxReach}`]
+    : null;
+  return (
+    <div className="stat-banners" aria-label="Показатели контестов">
+      <StatBanner
+        variant="profit"
+        icon="trending-up"
+        label="Прибыль IB"
+        value={formatUsdCompact(totalProfit)}
+        delta={totalProfit ? { dir: 'inflow', text: '+$85 за нед' } : undefined}
+        hint={profitHintParts ? undefined : 'начнёт начисляться после запуска'}
+        hintParts={profitHintParts || undefined}
+      />
+      <StatBanner
+        variant="reach"
+        icon="users"
+        label="Клиенты в торговле"
+        value={String(activationTotal)}
+        delta={activationTotal ? { dir: 'up', text: '6 к пр. нед' } : undefined}
+        hint={activationHint || 'клиенты после запуска контестов'}
+      />
+      <StatBanner
+        variant="engage"
+        icon="chart"
+        label="Участников на контест"
+        value={String(avgReach)}
+        delta={avgReach ? { dir: 'down', text: '4 к пр. нед' } : undefined}
+        hint={engageHintParts ? undefined : 'среднее по активным контестам'}
+        hintParts={engageHintParts || undefined}
+      />
+      <StatBanner
+        variant="prize"
+        icon="trophy"
+        label="Призовой фонд"
+        value={formatUsdCompact(prizePoolTotal)}
+        delta={prizePoolTotal ? { dir: 'inflow', text: '+$300 за нед' } : undefined}
+        hint={prizeHintParts ? undefined : 'появится после запуска контестов'}
+        hintParts={prizeHintParts || undefined}
+      />
+    </div>
+  );
+};
+
 const Medal = ({ position }) => {
   const cls = position <= 3 ? `medal--${position}` : '';
   return <span className={`medal ${cls}`}>{position}</span>;
@@ -3174,6 +3842,239 @@ const CalendarInput = ({ value, onChange, label }) => {
   );
 };
 
+/* DateRangeTrigger — кнопка-триггер в тулбаре. Управляется снаружи: открытое
+   состояние (`isOpen`) и выбранный диапазон (`range`). Используется в паре
+   с `DateRangePanel`, который рендерится рядом с таблицей. */
+const fmtDay = d => d ? `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}` : '';
+
+/* 6-недельная сетка от понедельника недели, содержащей 1-е число (как calRender в Rebate). */
+const buildMonthGridCells = (viewYear, viewMonth) => {
+  const first = new Date(viewYear, viewMonth, 1);
+  const dow = (first.getDay() + 6) % 7;
+  const gridStart = new Date(viewYear, viewMonth, 1 - dow);
+  gridStart.setHours(0, 0, 0, 0);
+  return Array.from({ length: 42 }, (_, i) => {
+    const date = new Date(gridStart);
+    date.setDate(gridStart.getDate() + i);
+    return {
+      date,
+      label: date.getDate(),
+      out: date.getMonth() !== viewMonth,
+    };
+  });
+};
+
+const dayDiffInclusive = (a, b) => {
+  const ms = 86400000;
+  const s = new Date(a.getFullYear(), a.getMonth(), a.getDate());
+  const e = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+  return Math.round((e - s) / ms) + 1;
+};
+
+const dateRangeButtonLabel = (range) => {
+  if (range?.start && range?.end) return `${fmtDay(range.start)} — ${fmtDay(range.end)}`;
+  if (range?.start) return `от ${fmtDay(range.start)}`;
+  return '';
+};
+
+const SearchIcon18 = () => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+    <circle cx="8" cy="8" r="5.25"/><path d="M12 12l3.5 3.5"/>
+  </svg>
+);
+
+/* Раскрывающийся поиск — как Rebate (Search client → inline field + close). */
+const TableSearchToggle = ({ value, onChange, open, onOpenChange, triggerLabel = 'Поиск контестов', placeholder = 'Поиск по названию или типу' }) => {
+  const inputRef = useRef(null);
+
+  const openSearch = () => {
+    onOpenChange(true);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
+  const closeSearch = () => {
+    onOpenChange(false);
+    onChange('');
+  };
+
+  return (
+    <div className={`search-wrap ${open ? 'is-open' : ''}`}>
+      <div
+        className="tabs-action"
+        role="button"
+        tabIndex={0}
+        onClick={openSearch}
+        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSearch(); } }}
+      >
+        <SearchIcon18 />
+        {triggerLabel}
+      </div>
+      <div className={`search-input ${open ? 'open' : ''}`} role="search">
+        <SearchIcon18 />
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder={placeholder}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Escape') closeSearch(); }}
+          aria-label={placeholder}
+        />
+        <button type="button" className="search-clear" aria-label="Закрыть поиск" onClick={closeSearch}>
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+            <path d="M5 5l8 8M13 5l-8 8"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const DateRangeTrigger = ({ range, isOpen, onClick, placeholder = 'Все периоды', fieldLabel = 'Период проведения' }) => {
+  const label = dateRangeButtonLabel(range);
+  return (
+    <div className={`dr-trigger ${isOpen ? 'dr-trigger--open' : ''}`}>
+      <Input size="S" asButton leftIcon="calendar" prefix={fieldLabel} onClick={onClick}>
+        {label || placeholder}
+      </Input>
+    </div>
+  );
+};
+
+/* DateRangePanel — календарь как Rebate (#cal-main / calDayClick):
+     • sd && ed → новый клик сбрасывает диапазон (start=день, end=null)
+     • sd && !ed → второй клик ставит end (swap если раньше start)
+     • полоса is-start/in-range/is-end только когда обе даты и они разные
+     • out-дни соседних месяцев кликабельны и переключают видимый месяц */
+const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null, end: null } }) => {
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const initRef = range?.start || range?.end || today;
+  const [viewYear, setViewYear] = useState(initRef.getFullYear());
+  const [viewMonth, setViewMonth] = useState(initRef.getMonth());
+
+  const gridCells = buildMonthGridCells(viewYear, viewMonth);
+  const sd = range?.start || null;
+  const ed = range?.end || null;
+  const sameDay = sameCalendarDay;
+
+  const navMonth = dir => {
+    let m = viewMonth + dir, y = viewYear;
+    if (m > 11) { m = 0; y++; } else if (m < 0) { m = 11; y--; }
+    setViewMonth(m); setViewYear(y);
+  };
+
+  const handlePickDate = (dt) => {
+    onChange(prev => {
+      const ps = prev?.start, pe = prev?.end;
+      if (ps && pe) return { start: dt, end: null };
+      if (ps && !pe) return dt < ps ? { start: dt, end: ps } : { start: ps, end: dt };
+      return { start: dt, end: null };
+    });
+    if (dt.getMonth() !== viewMonth || dt.getFullYear() !== viewYear) {
+      setViewMonth(dt.getMonth());
+      setViewYear(dt.getFullYear());
+    }
+  };
+
+  const reset = () => {
+    onChange(defaultRange);
+    const ref = defaultRange?.start || defaultRange?.end || today;
+    setViewYear(ref.getFullYear());
+    setViewMonth(ref.getMonth());
+  };
+
+  const daysSelected = (sd && ed) ? dayDiffInclusive(sd, ed) : 0;
+  const daysWord = (n) => {
+    const m100 = n % 100; if (m100 >= 11 && m100 <= 14) return 'дней';
+    const m10 = n % 10;
+    if (m10 === 1) return 'день';
+    if (m10 >= 2 && m10 <= 4) return 'дня';
+    return 'дней';
+  };
+
+  const activeBound = !sd ? 'start' : (!ed ? 'end' : null);
+  const rangeSpan = sd && ed && !sameDay(sd, ed);
+
+  return (
+    <div className="dr-panel" role="dialog" aria-label="Период проведения">
+      <div className="dr-panel__head">
+        <span className="dr-panel__title">Период проведения</span>
+        <button type="button" className="dr-panel__close" onClick={onClose} aria-label="Закрыть">
+          <svg viewBox="0 0 24 24" fill="none"><use href="#ic-cross-24"/></svg>
+        </button>
+      </div>
+      <div className="dr-panel__body">
+        <div className="dr-panel__inputs">
+          <Input
+            size="S"
+            label="Дата начала"
+            value={range?.start ? fmtDay(range.start) : ''}
+            placeholder="дд.мм.гггг"
+            readOnly
+            className={activeBound === 'start' ? 'dr-panel__input--active' : ''}
+          />
+          <Input
+            size="S"
+            label="Дата окончания"
+            value={range?.end ? fmtDay(range.end) : ''}
+            placeholder="дд.мм.гггг"
+            readOnly
+            className={activeBound === 'end' ? 'dr-panel__input--active' : ''}
+          />
+        </div>
+        <div className="cal" id="cal-main">
+          <div className="cal-nav">
+            <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(-1)} aria-label="Предыдущий месяц">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span className="dr-panel__month" id="cal-title-main">{MONTHS[viewMonth]} {viewYear}</span>
+            <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(1)} aria-label="Следующий месяц">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div className="cal-grid" id="cal-wd-main">
+            {DOW.map(d => <div key={d} className="cal-wd">{d}</div>)}
+          </div>
+          <div className="cal-grid" id="cal-grid-main">
+            {gridCells.map((cell, i) => {
+              const dt = cell.date;
+              const isStart = sd && sameDay(dt, sd);
+              const isEnd = ed && sameDay(dt, ed);
+              const inRange = sd && ed && dt > sd && dt < ed;
+              const cellCls = ['cal-cell'];
+              if (inRange) cellCls.push('in-range');
+              if (isStart && ed && rangeSpan) cellCls.push('is-start');
+              if (isEnd && sd && rangeSpan) cellCls.push('is-end');
+              const btnCls = ['cal-day'];
+              if (cell.out) btnCls.push('out');
+              if (sameDay(dt, today)) btnCls.push('today');
+              if (isStart) btnCls.push('is-start');
+              if (isEnd) btnCls.push('is-end');
+              return (
+                <div key={i} className={cellCls.join(' ')}>
+                  <button
+                    type="button"
+                    className={btnCls.join(' ')}
+                    onClick={() => handlePickDate(dt)}
+                  >{cell.label}</button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      <div className="dr-panel__foot">
+        <span className="dr-panel__count">
+          {daysSelected > 0
+            ? `${daysSelected} ${daysWord(daysSelected)} выбрано`
+            : sd ? 'Выберите дату окончания' : 'Выберите даты'}
+        </span>
+        <button type="button" className="dr-panel__reset" onClick={reset} disabled={isSamePeriodRange(range, defaultRange)}>Сбросить</button>
+      </div>
+    </div>
+  );
+};
+
 /* DS Bulleted list (triangle bullets from brand assets) */
 const BulletList = ({ items, icon = 'dot' }) => (
   <ul className="rig-bullet-list">
@@ -3283,15 +4184,239 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
    ═══════════════════════════════════════════════════════ */
 
 const IB_CONTEST_ROWS = [
-  {name:'Volume Race', subtitle:'Идёт сейчас · до 30 апр', typeId:'volume', status:'Active', statusTag:'positive', count:47, period:'1 — 30 Apr 2026', progress:33, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
-  {name:'Trading Streak', subtitle:'Черновик · не запущен', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'Не задан', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
-  {name:'Grow account', subtitle:'Идёт сейчас · до 30 апр', typeId:'grow', status:'Active', statusTag:'positive', count:18, period:'1 — 30 Apr 2026', progress:45, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
-  {name:'Top Trader', subtitle:'Завершён · итоги опубликованы', typeId:'top', status:'Completed', statusTag:'neutral', count:32, period:'1 — 28 Feb 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'Volume Race', typeId:'volume', status:'Active', statusTag:'positive', count:47, ibProfit:420, prizePool:420, activationReturned:14, activationNew:18, period:'15 Mar — 30 Apr 2026', progress:33, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
+  {name:'Grow account', typeId:'grow', status:'Active', statusTag:'positive', count:18, ibProfit:180, prizePool:300, activationReturned:6, activationNew:8, period:'1 — 15 May 2026', progress:45, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
+  {name:'April Top Traders', typeId:'top', status:'Active', statusTag:'positive', count:24, ibProfit:95, prizePool:180, activationReturned:5, activationNew:9, period:'5 Apr — 20 May 2026', progress:52, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
+  {name:'Trading Streak', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'1 — 31 May 2026', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
+  {name:'Summer Volume Open', typeId:'volume', status:'Draft', statusTag:'neutral', count:'—', period:'15 Jun — 15 Jul 2026', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
+  {name:'June Grow Push', typeId:'grow', status:'Draft', statusTag:'neutral', count:'—', period:'Не задан', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
+  {name:'Top Trader', typeId:'top', status:'Completed', statusTag:'neutral', count:32, ibProfit:240, prizePool:400, prizesGifted:400, period:'1 — 28 Feb 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'March Volume Cup', typeId:'volume', status:'Completed', statusTag:'neutral', count:41, ibProfit:310, prizePool:500, prizesGifted:500, period:'10 — 31 Mar 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'Winter Streak Challenge', typeId:'streak', status:'Completed', statusTag:'neutral', count:18, ibProfit:120, prizePool:300, prizesGifted:300, period:'1 — 31 Dec 2025', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'Q1 Grow Sprint', typeId:'grow', status:'Completed', statusTag:'neutral', count:27, ibProfit:195, prizePool:300, prizesGifted:300, period:'1 Jan — 31 Mar 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
 ];
+
+const MONTH_KEY_TO_INDEX = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+
+/* Parse contest's period string into a {start, end} Date pair.
+   Supported shapes:
+     "1 — 30 Apr 2026"            (same-month) → Apr 1 .. Apr 30
+     "1 Mar — 30 Apr 2026"        (cross-month) → Mar 1 .. Apr 30
+     "Не задан" / null            → null (drafts) */
+const parseContestPeriod = (period) => {
+  if (!period || period === 'Не задан') return null;
+  const m1 = period.match(/^(\d+)\s+([A-Z][a-z]{2})\s*[—-]\s*(\d+)\s+([A-Z][a-z]{2})\s+(\d{4})$/);
+  if (m1) {
+    const y = +m1[5];
+    const ms = MONTH_KEY_TO_INDEX[m1[2]];
+    const me = MONTH_KEY_TO_INDEX[m1[4]];
+    if (ms == null || me == null) return null;
+    return { start: new Date(ms > me ? y - 1 : y, ms, +m1[1]), end: new Date(y, me, +m1[3]) };
+  }
+  const m2 = period.match(/^(\d+)\s*[—-]\s*(\d+)\s+([A-Z][a-z]{2})\s+(\d{4})$/);
+  if (m2) {
+    const y = +m2[4];
+    const mi = MONTH_KEY_TO_INDEX[m2[3]];
+    if (mi == null) return null;
+    return { start: new Date(y, mi, +m2[1]), end: new Date(y, mi, +m2[2]) };
+  }
+  return null;
+};
+
+const sameCalendarDay = (a, b) => a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+const isSamePeriodRange = (a, b) => sameCalendarDay(a?.start, b?.start) && sameCalendarDay(a?.end, b?.end);
+
+/* Минимальный start и максимальный end среди контестов с заданным period. */
+const getContestTablePeriodBounds = (rows) => {
+  let minStart = null, maxEnd = null;
+  for (const r of rows) {
+    const parsed = parseContestPeriod(r.period);
+    if (!parsed) continue;
+    const s = new Date(parsed.start); s.setHours(0, 0, 0, 0);
+    const e = new Date(parsed.end); e.setHours(0, 0, 0, 0);
+    if (!minStart || s < minStart) minStart = s;
+    if (!maxEnd || e > maxEnd) maxEnd = e;
+  }
+  return minStart && maxEnd ? { start: minStart, end: maxEnd } : { start: null, end: null };
+};
+
+/* Range-overlap test: contest [cs..ce] vs filter [fs..fe].
+   Любой край фильтра может быть null — тогда соответствующая граница не ограничивает.
+   Черновики без дат всегда видны — IB не должен терять их из списка при фильтре периода. */
+const matchesPeriodRange = (contestRange, fStart, fEnd) => {
+  if (!fStart && !fEnd) return true;
+  if (!contestRange) return true;
+  if (fStart && contestRange.end < fStart) return false;
+  if (fEnd && contestRange.start > fEnd) return false;
+  return true;
+};
+
+/* Вторая строка под названием — метрики, которых нет в других колонках. */
+const getContestRowMeta = (row) => {
+  if (row.status === 'Active') {
+    const parts = [];
+    const activated = (row.activationReturned || 0) + (row.activationNew || 0);
+    if (activated) parts.push(`${activated} в торговле`);
+    if (row.ibProfit) parts.push(`${formatUsdCompact(row.ibProfit)} IB`);
+    return parts.join(' · ') || null;
+  }
+  if (row.status === 'Draft') {
+    if (row.period === 'Не задан') return 'Укажите период проведения';
+    const parsed = parseContestPeriod(row.period);
+    if (!parsed) return 'Не опубликован';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const start = new Date(parsed.start);
+    start.setHours(0, 0, 0, 0);
+    const days = Math.ceil((start - today) / 86400000);
+    if (days > 0) {
+      const dayLabel = days === 1 ? 'день' : days < 5 ? 'дня' : 'дней';
+      return `Старт через ${days} ${dayLabel} · не опубликован`;
+    }
+    if (row.prizePool) return `Приз ${formatUsdCompact(row.prizePool)} · не опубликован`;
+    return 'Не опубликован';
+  }
+  if (row.status === 'Completed') {
+    const parts = [];
+    if (row.ibProfit) parts.push(`${formatUsdCompact(row.ibProfit)} IB`);
+    const paid = row.prizesGifted ?? row.prizePool;
+    if (paid) parts.push(`${formatUsdCompact(paid)} выплачено`);
+    return parts.join(' · ') || null;
+  }
+  return null;
+};
+
+const getContestCountSortValue = (row) => typeof row.count === 'number' ? row.count : null;
+
+const getContestPeriodSortValue = (row) => {
+  const parsed = parseContestPeriod(row.period);
+  return parsed ? parsed.start.getTime() : null;
+};
+
+const sortContestRows = (rows, sort) => {
+  if (!sort?.key) return rows;
+  const dir = sort.dir === 'desc' ? -1 : 1;
+  const getValue = sort.key === 'count' ? getContestCountSortValue : getContestPeriodSortValue;
+  return [...rows].sort((a, b) => {
+    const va = getValue(a);
+    const vb = getValue(b);
+    if (va == null && vb == null) return a.name.localeCompare(b.name, 'ru');
+    if (va == null) return 1;
+    if (vb == null) return -1;
+    if (va === vb) return a.name.localeCompare(b.name, 'ru');
+    return va < vb ? -dir : dir;
+  });
+};
+
+const SORT_ICON_PATHS = {
+  up: 'M480-120 300-300l58-58 122 122 122-122 58 58-180 180',
+  down: 'M358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z',
+};
+
+const SortableTh = ({ label, sortKey, sort, onSort, count }) => {
+  const active = sort.key === sortKey;
+  const btnCls = [
+    'th-sort',
+    active && sort.dir === 'asc' ? 'th-sort--asc' : '',
+    active && sort.dir === 'desc' ? 'th-sort--desc' : '',
+    !active ? 'th-sort--idle' : '',
+  ].filter(Boolean).join(' ');
+  const upActive = active && sort.dir === 'asc';
+  const downActive = active && sort.dir === 'desc';
+  return (
+    <th aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}>
+      <button type="button" className={btnCls} onClick={() => onSort(sortKey)}>
+        <span className="th-label">
+          {label}
+          {count != null && <span className="th-label__count">{count}</span>}
+        </span>
+        <span className="th-sort__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <g transform="scale(0.025) translate(0, 960)">
+              <path className={`th-sort__part${upActive ? ' th-sort__part--active' : ''}`} d={SORT_ICON_PATHS.up} />
+              <path className={`th-sort__part${downActive ? ' th-sort__part--active' : ''}`} d={SORT_ICON_PATHS.down} />
+            </g>
+          </svg>
+        </span>
+      </button>
+    </th>
+  );
+};
 
 const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   const showToast = useToast();
   const isMobile = useIsMobile();
+  const [query, setQuery] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('all');
+  /* periodRange — фильтр периода: { start: Date|null, end: Date|null }.
+     По умолчанию — от начала самого раннего контеста до конца самого позднего. */
+  const defaultPeriodRange = useMemo(() => getContestTablePeriodBounds(rows), [rows]);
+  const [periodRange, setPeriodRange] = useState(defaultPeriodRange);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [sort, setSort] = useState({ key: null, dir: 'asc' });
+  /* Sticky-колонка получает тень только когда таблица реально скролится. */
+  const tableWrapRef = useRef(null);
+  const tableScrollable = useIsHorizontallyScrollable(tableWrapRef);
+
+  /* Закрываем боковую панель пикера, если клик прошёл мимо триггера и панели. */
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const handler = e => {
+      if (e.target.closest('.dr-trigger') || e.target.closest('.dr-panel')) return;
+      setPickerOpen(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [pickerOpen]);
+
+  /* Counts driven by the full row set so chips read like sticky tabs even when
+     the current view is empty. Filtered rows below honour all active filters. */
+  const statusCounts = useMemo(() => ({
+    all: rows.length,
+    Active: rows.filter(r => r.status === 'Active').length,
+    Draft: rows.filter(r => r.status === 'Draft').length,
+    Completed: rows.filter(r => r.status === 'Completed').length,
+  }), [rows]);
+
+  const filteredRows = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return rows.filter(r => {
+      if (statusFilter !== 'all' && r.status !== statusFilter) return false;
+      if (!matchesPeriodRange(parseContestPeriod(r.period), periodRange.start, periodRange.end)) return false;
+      if (q) {
+        const t = CONTEST_TYPES[r.typeId]?.title || '';
+        const hay = `${r.name} ${t}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [rows, query, statusFilter, periodRange]);
+
+  const sortedRows = useMemo(() => sortContestRows(filteredRows, sort), [filteredRows, sort]);
+  const tableParticipantsTotal = useMemo(
+    () => sortedRows.reduce((sum, r) => sum + (typeof r.count === 'number' ? r.count : 0), 0),
+    [sortedRows]
+  );
+
+  const toggleSort = (key) => {
+    setSort(prev => {
+      if (prev.key !== key) return { key, dir: 'asc' };
+      if (prev.dir === 'asc') return { key, dir: 'desc' };
+      return { key: null, dir: 'asc' };
+    });
+  };
+
+  const periodActive = defaultPeriodRange.start && defaultPeriodRange.end
+    ? !isSamePeriodRange(periodRange, defaultPeriodRange)
+    : !!(periodRange.start || periodRange.end);
+  const filterActive = query.trim() !== '' || statusFilter !== 'all' || periodActive;
+  const resetFilters = () => {
+    setQuery('');
+    setSearchOpen(false);
+    setStatusFilter('all');
+    setPeriodRange(defaultPeriodRange);
+  };
 
   const deleteRow = (row) => {
     const idx = rows.findIndex(r => r.name === row.name);
@@ -3309,23 +4434,76 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
 
   const goToContest = (r) => { onSelectContest && onSelectContest(r.name); onNavigate(r.nav); };
 
+  const STATUS_FILTERS = [
+    {id: 'all',       label: 'Все'},
+    {id: 'Active',    label: 'Активные'},
+    {id: 'Draft',     label: 'Черновики'},
+    {id: 'Completed', label: 'Завершённые'},
+  ];
+
   return (
   <div className="screen-enter">
     <div className="page-header">
-      <h1 className="rig-title-02">Контесты для клиентов</h1>
-      <Button variant="primary" size="s" icon="plus" onClick={() => onNavigate('wizard')}>Создать контест</Button>
+      <h1 className="rig-title-03">Контесты для клиентов</h1>
+      <div className="page-header__actions">
+        <TableSearchToggle
+          value={query}
+          onChange={setQuery}
+          open={searchOpen}
+          onOpenChange={setSearchOpen}
+        />
+        <Button variant="primary" size="s" onClick={() => onNavigate('wizard')}>Создать контест</Button>
+      </div>
     </div>
-    <div style={{marginBottom:24}}>
-        <div className="stats">
-          <StatCard value={String(rows.length)} label="Всего контестов" />
-          <StatCard value={String(rows.filter(r => r.status === 'Active').length)} label="Активных" />
-          <StatCard value="79" label="Участников" trend={{dir:'up', text:'5 / день', title:'Прирост к предыдущему дню'}} />
-          <StatCard value="$2,400" label="Призовой фонд" />
+
+      <div className="table-toolbar" role="toolbar" aria-label="Фильтры контестов">
+        <div className="table-toolbar__period">
+          <DateRangeTrigger range={periodRange} isOpen={pickerOpen} onClick={() => setPickerOpen(v => !v)} />
+        </div>
+        <div className="table-toolbar__chips">
+          <ChipsGroup>
+            {STATUS_FILTERS.map(f => (
+              <Chips
+                key={f.id}
+                size="s"
+                label={f.label}
+                count={statusCounts[f.id] ?? 0}
+                selected={statusFilter === f.id}
+                onClick={() => setStatusFilter(f.id)}
+              />
+            ))}
+          </ChipsGroup>
         </div>
       </div>
-      {isMobile ? (
+
+      <div className="contests-layout">
+        {pickerOpen && (
+          <aside className="contests-layout__panel">
+            <DateRangePanel range={periodRange} onChange={setPeriodRange} onClose={() => setPickerOpen(false)} defaultRange={defaultPeriodRange} />
+          </aside>
+        )}
+        <div className="contests-layout__main">
+          <div className="contests-layout__stats">
+            <IBContestStatsBanners rows={rows} />
+          </div>
+          <div className="contests-layout__body">
+      {filteredRows.length === 0 ? (
+        <div className="table-wrap">
+          <div className="table-empty" role="status">
+            <div className="table-empty__title">Ничего не нашли</div>
+            <div className="table-empty__hint">
+              {filterActive
+                ? 'Сбросьте фильтры или попробуйте другой запрос.'
+                : 'Пока нет ни одного контеста. Создайте первый.'}
+            </div>
+            {filterActive && (
+              <Button variant="outline" size="s" icon="close" onClick={resetFilters}>Сбросить фильтры</Button>
+            )}
+          </div>
+        </div>
+      ) : isMobile ? (
         <div className="row-card-list">
-          {rows.map(r => {
+          {sortedRows.map(r => {
             const t = CONTEST_TYPES[r.typeId];
             return (
               <div key={r.name} className="row-card" onClick={() => goToContest(r)} role="button" tabIndex={0}>
@@ -3336,7 +4514,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                     </span>
                     <div className="row-card__title-block">
                       <div className="row-card__title">{r.name}</div>
-                      <div className="row-card__sub">{t.title}{r.subtitle ? ` · ${r.subtitle}` : ''}</div>
+                      <div className="row-card__sub">{getContestRowMeta(r) || t.title}</div>
                     </div>
                   </div>
                   <Tag label={r.status} variant={r.statusTag} />
@@ -3360,21 +4538,38 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           })}
         </div>
       ) : (
-      <div className="table-wrap">
+      <div ref={tableWrapRef} className={`table-wrap table-wrap--sticky-last${tableScrollable ? ' is-scrollable' : ''}`}>
         <table>
-          <thead><tr><th>Название</th><th>Тип</th><th>Статус</th><th>Участники</th><th>Период</th><th></th></tr></thead>
+          <thead><tr>
+            <th>
+              <span className="th-label">
+                Контесты
+                <span className="th-label__count">{sortedRows.length}</span>
+              </span>
+            </th>
+            <th>Тип</th>
+            <th>Статус</th>
+            <SortableTh label="Участники" count={tableParticipantsTotal} sortKey="count" sort={sort} onSort={toggleSort} />
+            <SortableTh label="Период" sortKey="period" sort={sort} onSort={toggleSort} />
+            <th></th>
+          </tr></thead>
           <tbody>
-            {rows.map(r => {
+            {sortedRows.map(r => {
               const t = CONTEST_TYPES[r.typeId];
+              const rowMeta = getContestRowMeta(r);
               return (
                 <tr key={r.name} style={{cursor:'pointer'}} onClick={() => { onSelectContest && onSelectContest(r.name); onNavigate(r.nav); }}>
                   <td>
                     <strong>{r.name}</strong>
-                    {r.subtitle && <div className="rig-utility-01" style={{color:'var(--ds-text-tertiary)', marginTop:'var(--ds-dim-xs)'}}>{r.subtitle}</div>}
+                    {rowMeta && (
+                      <div className="rig-utility-01" style={{color:'var(--ds-text-tertiary)', marginTop:'var(--ds-dim-xs)'}}>
+                        {rowMeta}
+                      </div>
+                    )}
                   </td>
                   <td>
                     <div className="type-cell">
-                      <span className={`type-icon type-icon--${t.typeIcon}`}><svg width="14" height="14"><use href={dsIc(t.icon)}/></svg></span>
+                      <span className={`type-icon type-icon--${t.typeIcon}`}><svg><use href={dsIc(t.icon)}/></svg></span>
                       <span>{t.title}</span>
                       <ContestTypeInfo typeId={t.id} />
                     </div>
@@ -3389,7 +4584,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                     <div className="row-action-stack">
                       <div className="row-meta" aria-hidden="true">
                         {r.status === 'Active' && (<>
-                          <span style={{display:'inline-flex',alignItems:'center',gap:4}}>
+                          <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-l)'}}>
                             <span style={{width:6,height:6,borderRadius:'50%',background:'var(--ds-positive)'}} />
                             Обновлено 2 мин назад
                           </span>
@@ -3413,7 +4608,10 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
         </table>
       </div>
       )}
-    </div>
+          </div>
+        </div>
+      </div>
+  </div>
   );
 };
 
@@ -3582,12 +4780,8 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
   const buildContest = (status) => {
     const isActive = status === 'Active';
     const generatedName = activeType.title;
-    const subtitle = isActive
-      ? `Идёт сейчас · до ${endDate.getDate()} ${MONTHS_SHORT[endDate.getMonth()]}`
-      : 'Черновик · не запущен';
     return {
       name: generatedName,
-      subtitle,
       typeId: contestType,
       status,
       statusTag: isActive ? 'positive' : 'neutral',
@@ -5096,10 +6290,11 @@ const App = () => {
      Profile, Bonuses, Users, Audit) are wired to a friendly toast so the
      prototype demonstrates intent without faking depth. */
   const drawerTitle = role === 'ib' ? 'IB Partner' : role === 'client' ? 'Клиент' : 'Admin';
-  const drawerItems = HEADER_MENUS[role] || [];
+  const drawerItems = flattenHeaderMenuForDrawer(HEADER_MENUS[role] || []);
   const handleDrawerSelect = (item) => {
     if (role === 'ib' && item.key === 'contests') navIB('list');
-    if (role === 'client' && item.key === 'partner') navClient('list');
+    if (role === 'ib' && item.key === 'promo') showAppToast('«Promo materials» — раздел в разработке для прототипа');
+    if (role === 'client' && item.key === 'contests') navClient('list');
     if (role === 'admin' && item.key === 'contests') navAdmin('dashboard');
     if (role === 'admin' && item.key === 'dashboard') navAdmin('dashboard');
   };
