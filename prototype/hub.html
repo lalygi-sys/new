@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>IB Prototypes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -105,7 +108,7 @@
         class="hub__frame"
         id="hub-frame"
         title="IB prototype"
-        src="./prototype/ib-dashboard/index.html"
+        src="./prototype/ib-dashboard/index.html?v=808ed4d"
         allow="clipboard-read; clipboard-write"
       ></iframe>
     </div>
@@ -116,6 +119,7 @@
     </nav>
   </div>
   <script>
+    const BUILD = '808ed4d';
     const SCREENS = {
       contests: './prototype/index.html#contests',
       rebate: './prototype/rebate/index.html',
@@ -124,6 +128,14 @@
     const DEFAULT_SCREEN = 'dashboard';
     const DESKTOP_MQ = window.matchMedia('(min-width: 768px)');
 
+    function withBuild(url) {
+      const hashIdx = url.indexOf('#');
+      const path = hashIdx >= 0 ? url.slice(0, hashIdx) : url;
+      const hash = hashIdx >= 0 ? url.slice(hashIdx) : '';
+      const join = path.includes('?') ? '&' : '?';
+      return path + join + 'v=' + BUILD + hash;
+    }
+
     function screenFromHash() {
       const hash = (location.hash || '').replace(/^#/, '');
       return SCREENS[hash] ? hash : DEFAULT_SCREEN;
@@ -131,7 +143,7 @@
 
     function redirectDesktopToPrototype() {
       if (!DESKTOP_MQ.matches) return false;
-      window.location.replace(SCREENS[screenFromHash()]);
+      window.location.replace(withBuild(SCREENS[screenFromHash()]));
       return true;
     }
 
@@ -149,7 +161,7 @@
           tab.setAttribute('aria-selected', active ? 'true' : 'false');
         });
         loading.classList.remove('is-hidden');
-        frame.src = SCREENS[id];
+        frame.src = withBuild(SCREENS[id]);
         if (pushHash !== false) {
           const next = '#' + id;
           if (location.hash !== next) history.replaceState(null, '', next);
