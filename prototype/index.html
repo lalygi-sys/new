@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+(function () {
+  var hash = (location.hash || '').replace(/^#/, '');
+  if (hash === 'contests' || hash === 'client') return;
+  location.replace('ib-dashboard/index.html');
+})();
+</script>
 <title>IB Contest Platform — React Prototype</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
@@ -883,6 +890,14 @@
     border: 0; position: relative;
   }
   .app-header__avatar:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); }
+  .app-header__avatar--static {
+    pointer-events: none;
+    cursor: default;
+  }
+  .app-header__avatar--static:hover {
+    background: var(--ds-row-hover);
+    color: var(--ds-text-secondary);
+  }
   .app-header__avatar-dot {
     position: absolute; top: 2px; right: 2px;
     width: 8px; height: 8px; border-radius: 50%;
@@ -1317,7 +1332,14 @@
     margin-bottom: var(--ds-dim-3xl); flex-wrap: wrap;
   }
   .table-toolbar__period { flex: 0 0 auto; min-width: 320px; }
-  .date-range-wrap { position: relative; }
+  /* 4px inset so DS focus ring (box-shadow) is not clipped by overflow:hidden ancestors */
+  .date-range-wrap {
+    position: relative;
+    padding: 4px;
+    margin: -4px;
+    overflow: visible;
+    box-sizing: border-box;
+  }
   .date-range {
     display: inline-flex; align-items: center; gap: 8px;
     height: 32px; padding: 0 12px;
@@ -1330,12 +1352,15 @@
     text-align: left;
   }
   .date-range:hover { background: var(--ds-bg-page); }
+  .date-range:focus-visible,
   .date-range[aria-expanded="true"] {
+    outline: none;
     background: var(--ds-bg);
     border-color: #3b71ff;
-    box-shadow: 0 0 0 4px rgba(59, 113, 255, 0.5);
+    box-shadow: var(--ds-focus-ring);
   }
-  .date-range[aria-expanded="true"]:hover { background: var(--ds-bg); border-color: #3b71ff; }
+  .date-range[aria-expanded="true"]:hover,
+  .date-range:focus-visible:hover { background: var(--ds-bg); border-color: #3b71ff; }
   .date-range svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--ds-text-secondary); }
   .date-range .dr-label { color: var(--ds-text-secondary); font-weight: 400; }
   .date-range .dr-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
@@ -2658,6 +2683,10 @@
     padding-top: 4px; padding-bottom: 4px;
     overflow: visible;
   }
+  .screen-enter:has(> .contests-layout) > .table-toolbar {
+    padding-top: 4px; padding-bottom: 4px;
+    overflow: visible;
+  }
 
   /* Prize row — layout via .prize-row-grid (step 3 wizard) */
 
@@ -3277,7 +3306,7 @@
       margin-bottom: var(--ds-dim-l);
     }
     .contest-detail-actions {
-      margin-bottom: var(--ds-dim-3xl);
+      margin-bottom: var(--ds-dim-7xl);
     }
     .contest-detail-action-bar {
       gap: var(--ds-dim-l) !important;
@@ -3285,6 +3314,10 @@
       width: 100%;
     }
     .contest-detail-action-bar > .ds-btn { flex: 1 1 calc(50% - var(--ds-dim-l)); }
+    .contest-detail-action-bar > .contest-detail-action-bar__share {
+      flex: 1 1 100%;
+      min-height: 44px;
+    }
 
     /* === Client terms === */
     .terms-grid { grid-template-columns: 1fr !important; }
@@ -3768,6 +3801,12 @@
     <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5014 8.49861C15.1109 8.10808 14.4778 8.10808 14.0872 8.49861L7.79292 14.7929L8.50003 15.5C8.89055 15.8905 9.52372 15.8905 9.91424 15.5L16.2086 9.20571L15.5014 8.49861Z" fill="currentColor"/>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2929 4.22184C13.6361 1.87869 17.435 1.87869 19.7782 4.22184C22.1213 6.56498 22.1213 10.364 19.7782 12.7071L17.2782 15.2071L16.8539 14.7829C16.3072 14.2361 16.3072 13.3497 16.8539 12.803L18.364 11.2929C19.9261 9.73081 19.9261 7.19815 18.364 5.63605C16.8019 4.07395 14.2692 4.07395 12.7071 5.63605L11.1971 7.1461C10.6503 7.69284 9.7639 7.69284 9.21717 7.1461L8.7929 6.72184L11.2929 4.22184ZM11.2929 18.364L12.803 16.8539C13.3497 16.3072 14.2361 16.3072 14.7829 16.8539L15.2071 17.2782L12.7071 19.7782C10.364 22.1213 6.56498 22.1213 4.22184 19.7782C1.87869 17.435 1.87869 13.6361 4.22184 11.2929L6.72181 8.79293L7.14607 9.2172C7.69281 9.76393 7.69281 10.6504 7.14607 11.1971L5.63605 12.7071C4.07395 14.2692 4.07395 16.8019 5.63605 18.364C7.19815 19.9261 9.73081 19.9261 11.2929 18.364Z" fill="currentColor"/>
   </symbol>
+  <symbol id="ic-share-alt-16" viewBox="0 0 16 16" fill="none"><!-- node 16084:647 -->
+    <path d="M7.0472 1.31844C7.3138 1.19629 7.62781 1.24026 7.84993 1.43172L13.8724 6.62508C14.0237 6.75551 14.1735 6.88431 14.2894 7.00301C14.4104 7.12704 14.5502 7.29449 14.6322 7.52352C14.7426 7.8322 14.7427 8.16993 14.6322 8.47859C14.5502 8.70753 14.4104 8.87512 14.2894 8.9991C14.1735 9.11778 14.0237 9.24663 13.8724 9.37703L7.84993 14.5684C7.62779 14.7599 7.31381 14.8039 7.0472 14.6817C6.7808 14.5595 6.6097 14.2932 6.6097 14.0001V10.8634C6.03444 10.9852 5.46328 11.1885 4.91145 11.4532C3.98059 11.8998 3.2103 12.4151 2.60384 13.1456C2.40198 13.3888 2.06906 13.4795 1.7718 13.3721C1.47478 13.2648 1.27682 12.9829 1.27669 12.6671V12.3673L1.2845 12.0362C1.3612 10.3876 2.00333 8.81167 3.10774 7.57625C4.042 6.53122 5.25979 5.76554 6.6097 5.39949V2.00008C6.6097 1.70694 6.7808 1.44069 7.0472 1.31844ZM8.1097 6.00008C8.1097 6.36435 7.84836 6.67646 7.48958 6.73934C6.23938 6.95805 5.08618 7.61394 4.22591 8.57625C3.6459 9.22509 3.22638 9.99222 2.99251 10.8165C3.39853 10.5459 3.82454 10.311 4.26302 10.1007C5.19646 9.65291 6.23084 9.32522 7.30891 9.25203C7.51617 9.23797 7.72061 9.3104 7.87239 9.45223C8.02403 9.59404 8.1097 9.79245 8.1097 10.0001V12.3634L12.8929 8.24031C13.0207 8.13015 13.1032 8.05643 13.1624 8.00106C13.1031 7.9456 13.021 7.87126 12.8929 7.76082L8.1097 3.6368V6.00008Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-share-alt-24" viewBox="0 0 16 16" fill="none"><!-- node 16084:647 @24 -->
+    <path d="M7.0472 1.31844C7.3138 1.19629 7.62781 1.24026 7.84993 1.43172L13.8724 6.62508C14.0237 6.75551 14.1735 6.88431 14.2894 7.00301C14.4104 7.12704 14.5502 7.29449 14.6322 7.52352C14.7426 7.8322 14.7427 8.16993 14.6322 8.47859C14.5502 8.70753 14.4104 8.87512 14.2894 8.9991C14.1735 9.11778 14.0237 9.24663 13.8724 9.37703L7.84993 14.5684C7.62779 14.7599 7.31381 14.8039 7.0472 14.6817C6.7808 14.5595 6.6097 14.2932 6.6097 14.0001V10.8634C6.03444 10.9852 5.46328 11.1885 4.91145 11.4532C3.98059 11.8998 3.2103 12.4151 2.60384 13.1456C2.40198 13.3888 2.06906 13.4795 1.7718 13.3721C1.47478 13.2648 1.27682 12.9829 1.27669 12.6671V12.3673L1.2845 12.0362C1.3612 10.3876 2.00333 8.81167 3.10774 7.57625C4.042 6.53122 5.25979 5.76554 6.6097 5.39949V2.00008C6.6097 1.70694 6.7808 1.44069 7.0472 1.31844ZM8.1097 6.00008C8.1097 6.36435 7.84836 6.67646 7.48958 6.73934C6.23938 6.95805 5.08618 7.61394 4.22591 8.57625C3.6459 9.22509 3.22638 9.99222 2.99251 10.8165C3.39853 10.5459 3.82454 10.311 4.26302 10.1007C5.19646 9.65291 6.23084 9.32522 7.30891 9.25203C7.51617 9.23797 7.72061 9.3104 7.87239 9.45223C8.02403 9.59404 8.1097 9.79245 8.1097 10.0001V12.3634L12.8929 8.24031C13.0207 8.13015 13.1032 8.05643 13.1624 8.00106C13.1031 7.9456 13.021 7.87126 12.8929 7.76082L8.1097 3.6368V6.00008Z" fill="currentColor"/>
+  </symbol>
 
   <!-- Trading -->
   <symbol id="ic-market-watch-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1078 -->
@@ -3983,10 +4022,12 @@ const DS_ICON_ALIAS = {
   'lightbulb':       'lightbulb',
   'protip':          'lightbulb',
   'rocket':          'flame',
+  'share':           'share-alt',
 };
 const dsIc = (name, btnSize) => {
   const base = DS_ICON_ALIAS[name] || name;
   if (btnSize === 's' && base === 'trash') return '#ic-trash-16';
+  if (base === 'share-alt') return btnSize === 's' ? '#ic-share-alt-16' : '#ic-share-alt-24';
   return `#ic-${base}-24`;
 };
 
@@ -4001,14 +4042,14 @@ const Button = ({ children, variant = 'primary', size = 'm', icon, iconRight, bl
     className={`ds-btn ds-btn--${size} ds-btn--${variant}${eyebrow ? ' ds-btn--stacked' : ''} ${block ? 'ds-btn--block' : ''} ${className}`}
     onClick={onClick} disabled={disabled} style={style}
   >
-    {icon && <svg><use href={dsIc(icon)} /></svg>}
+    {icon && <svg><use href={dsIc(icon, size)} /></svg>}
     {eyebrow ? (
       <span className="ds-btn__stack">
         <span className="ds-btn__stack-eyebrow">{eyebrow}</span>
         <span className="ds-btn__stack-label">{children}</span>
       </span>
     ) : children}
-    {iconRight && <svg><use href={dsIc(iconRight)} /></svg>}
+    {iconRight && <svg><use href={dsIc(iconRight, size)} /></svg>}
   </button>
 );
 
@@ -4823,12 +4864,18 @@ const IbProfileMenu = ({ open, onClose, onAction }) => {
   );
 };
 
+const AppHeaderAvatarIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
+  </svg>
+);
+
 /* AppHeader — adaptive header per role.
    IB:    Logo + Menu + Wallet + Avatar
    Client: Logo + Menu (with badges & dropdowns) + Deposit + Avatar + Close
    Admin:  Logo + Menu + Wallet + Avatar
-   Mobile: horizontal Menu + Wallet are hidden via CSS; compact balance chip,
-           avatar and burger open the slide-down drawer (managed by App). */
+   Mobile: balance chip + decorative avatar (non-interactive) + burger drawer. */
 const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0, onMenuOpen, onMenuSelect, onProfileAction }) => {
   const menu = HEADER_MENUS[role] || HEADER_MENUS.ib;
   const [internalKey, setInternalKey] = useState(activeKeyProp || menu[0].key);
@@ -4933,35 +4980,39 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
           $0.00
         </button>
         {role === 'ib' ? (
-          <div className="app-header__profile is-desktop-only">
-            <button
-              type="button"
-              className="app-header__avatar"
-              id="ib-profile-trigger"
-              aria-label="Profile"
-              aria-haspopup="dialog"
-              aria-expanded={profileOpen}
-              aria-controls="ib-profile-menu"
-              onClick={(e) => { e.stopPropagation(); setProfileOpen(v => !v); }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-            </button>
-            <IbProfileMenu
-              open={profileOpen}
-              onClose={() => setProfileOpen(false)}
-              onAction={onProfileAction}
-            />
-          </div>
+          <>
+            <div className="app-header__profile is-desktop-only">
+              <button
+                type="button"
+                className="app-header__avatar"
+                id="ib-profile-trigger"
+                aria-label="Profile"
+                aria-haspopup="dialog"
+                aria-expanded={profileOpen}
+                aria-controls="ib-profile-menu"
+                onClick={(e) => { e.stopPropagation(); setProfileOpen(v => !v); }}
+              >
+                <AppHeaderAvatarIcon />
+              </button>
+              <IbProfileMenu
+                open={profileOpen}
+                onClose={() => setProfileOpen(false)}
+                onAction={onProfileAction}
+              />
+            </div>
+            <span className="app-header__avatar app-header__avatar--static is-mobile-only" aria-hidden="true">
+              <AppHeaderAvatarIcon />
+            </span>
+          </>
         ) : (
-          <button className="app-header__avatar" type="button" aria-label="Profile">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-          </button>
+          <>
+            <button className="app-header__avatar is-desktop-only" type="button" aria-label="Profile">
+              <AppHeaderAvatarIcon />
+            </button>
+            <span className="app-header__avatar app-header__avatar--static is-mobile-only" aria-hidden="true">
+              <AppHeaderAvatarIcon />
+            </span>
+          </>
         )}
         {role === 'client' && (
           <button className="app-header__close" type="button" aria-label="Menu">
@@ -6679,7 +6730,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                 <div className="row-card__actions" onClick={e => e.stopPropagation()}>
                   <Button variant="outline" size="m" icon={r.actionIcon} onClick={() => goToContest(r)}>{r.action}</Button>
                   {r.share && (
-                    <IconButton icon="link" size="m" onClick={() => showToast('Link copied!', 'positive')} title="Share" />
+                    <IconButton icon="share" size="m" onClick={() => showToast('Link copied!', 'positive')} title="Share" />
                   )}
                   {r.status === 'Draft' && (
                     <IconButton icon="trash" size="m" className="ds-icon-btn--danger" onClick={() => deleteRow(r)} title="Delete draft" />
@@ -6748,7 +6799,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                       </div>
                       <div className="td-actions">
                         <Button variant="outline" size="s" icon={r.actionIcon} onClick={e => { e.stopPropagation(); onSelectContest && onSelectContest(r.name); onNavigate(r.nav); }}>{r.action}</Button>
-                        {r.share && <IconButton icon="link" size="s" onClick={e => { e.stopPropagation(); showToast('Link copied!', 'positive'); }} title="Share" />}
+                        {r.share && <IconButton icon="share" size="s" onClick={e => { e.stopPropagation(); showToast('Link copied!', 'positive'); }} title="Share" />}
                         {r.status === 'Draft' && <IconButton icon="trash" size="s" onClick={e => { e.stopPropagation(); deleteRow(r); }} title="Delete draft" />}
                       </div>
                     </div>
@@ -7270,7 +7321,7 @@ const IBContestDetailStatsBanners = ({ totalParticipants, metricLabel, prizePool
         title={`Invite clients to join — ${formatUsdCompact(prizePool || 0)} prize pool`}
         description="Share the contest link with clients. Participants and metrics will appear here once they register and start trading."
         actions={
-          <Button variant="outline" size="s" icon="link" onClick={onInvite}>
+          <Button variant="outline" size="s" icon="share" onClick={onInvite}>
             Copy link
           </Button>
         }
@@ -7389,11 +7440,23 @@ const IBContestDetail = ({ onNavigate, contest }) => {
         {ctype.clientDescTemplate ? ctype.clientDescTemplate(500) : ctype.desc}
       </p>
       <div className="contest-detail-actions contest-detail-action-bar">
-        <Button variant="outline" size="s" icon="link" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
-        {!isCompleted && (
-          <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
+        {isMobile ? (
+          <>
+            <Button variant="outline" size="s" icon="download" disabled={isFresh}>Export</Button>
+            {!isCompleted && (
+              <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
+            )}
+            <Button variant="primary" size="s" icon="share" className="contest-detail-action-bar__share" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
+          </>
+        ) : (
+          <>
+            <Button variant="outline" size="s" icon="share" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
+            {!isCompleted && (
+              <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
+            )}
+            <Button variant="outline" size="s" icon="download" disabled={isFresh}>Export</Button>
+          </>
         )}
-        <Button variant="outline" size="s" icon="download" disabled={isFresh}>Export</Button>
       </div>
       <div style={{marginBottom:24}}>
         <IBContestDetailStatsBanners

@@ -1,7 +1,8 @@
 (function () {
   var script = document.currentScript;
   var activeKey = (script && script.dataset.active) || 'rebate';
-  var contestsHref = (script && script.dataset.contestsHref) || '../index.html';
+  var contestsHref = (script && script.dataset.contestsHref) || '../index.html#contests';
+  var contestsBase = contestsHref.split('#')[0];
   var dashboardHref = (script && script.dataset.dashboardHref) || '../ib-dashboard/index.html';
   var rebateHref = (script && script.dataset.rebateHref) || '../rebate/index.html';
   var growthActive = activeKey === 'contests' || activeKey === 'rebate';
@@ -105,6 +106,12 @@
             '</div>' +
           '</div>' +
         '</div>' +
+        '<span class="app-header__avatar app-header__avatar--static" aria-hidden="true">' +
+          '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>' +
+            '<circle cx="12" cy="7" r="4"></circle>' +
+          '</svg>' +
+        '</span>' +
         '<button type="button" class="app-header__burger" aria-label="Open menu">' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
             '<line x1="4" y1="7" x2="20" y2="7"></line>' +
@@ -267,7 +274,7 @@
       }
       var picked = roleBtn.dataset.demoRole;
       if (picked === 'client' && activeKey === 'contests') {
-        window.location.assign(contestsHref + '#client');
+        window.location.assign(contestsBase + '#client');
       }
       return;
     }
@@ -326,7 +333,7 @@
       return;
     }
     if (key === 'contests') {
-      window.location.assign(contestsHref);
+      window.location.assign(contestsBase + '#contests');
       return;
     }
     if (key === 'rebate') {

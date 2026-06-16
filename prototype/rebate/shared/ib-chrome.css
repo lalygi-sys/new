@@ -322,6 +322,17 @@ body.has-ib-chrome .screen {
   color: var(--ds-text-primary);
 }
 
+.app-header__avatar--static {
+  display: none;
+  pointer-events: none;
+  cursor: default;
+}
+
+.app-header__avatar--static:hover {
+  background: var(--ds-row-hover);
+  color: var(--ds-text-secondary);
+}
+
 .app-header__profile {
   position: relative;
   flex-shrink: 0;
@@ -776,6 +787,18 @@ body.has-ib-chrome .screen {
 
   .app-header__profile {
     display: none;
+  }
+
+  .app-header__avatar--static {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--ds-dim-l);
+    background: var(--ds-row-hover);
+    color: var(--ds-text-secondary);
+    flex-shrink: 0;
   }
 
   .app-header__avatar {
