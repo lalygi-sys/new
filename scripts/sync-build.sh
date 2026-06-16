@@ -11,21 +11,14 @@ else
   echo "$BUILD" > "$BUILD_FILE"
 fi
 
-HUB="$ROOT/prototype/hub.html"
-sed -i '' "s/const BUILD = '[^']*'/const BUILD = '$BUILD'/" "$HUB"
-sed -i '' "s|index\\.html?v=[^\"']*|index.html?v=$BUILD|g" "$HUB"
-
-DASH="$ROOT/prototype/ib-dashboard/index.html"
-sed -i '' "s|\\.\\./shared/ib-chrome\\.css\\(\\?v=[^\"']*\\)\\?|../shared/ib-chrome.css?v=$BUILD|g" "$DASH"
-sed -i '' "s|styles\\.css\\(\\?v=[^\"']*\\)\\?\"|styles.css?v=$BUILD\"|g" "$DASH"
-sed -i '' "s|\\.\\./shared/ib-chrome\\.js\\(\\?v=[^\"']*\\)\\?|../shared/ib-chrome.js?v=$BUILD|g" "$DASH"
-sed -i '' "s|app\\.js\\(\\?v=[^\"']*\\)\\?\"|app.js?v=$BUILD\"|g" "$DASH"
-
-REBATE="$ROOT/prototype/rebate/index.html"
-sed -i '' "s|shared/ib-chrome\\.css\\(\\?v=[^\"']*\\)\\?|shared/ib-chrome.css?v=$BUILD|g" "$REBATE"
-sed -i '' "s|shared/ib-chrome\\.js\\(\\?v=[^\"']*\\)\\?|shared/ib-chrome.js?v=$BUILD|g" "$REBATE"
-
-CONTESTS="$ROOT/prototype/index.html"
-sed -i '' "s|shared/ib-chrome\\.css\\(\\?v=[^\"']*\\)\\?|shared/ib-chrome.css?v=$BUILD|g" "$CONTESTS"
+for file in \
+  "$ROOT/prototype/hub.html" \
+  "$ROOT/prototype/ib-dashboard/index.html" \
+  "$ROOT/prototype/rebate/index.html" \
+  "$ROOT/prototype/index.html"
+do
+  sed -i '' "s/const BUILD = '[^']*'/const BUILD = '$BUILD'/" "$file"
+  sed -i '' "s/?v=[^\"']*/?v=$BUILD/g" "$file"
+done
 
 echo "BUILD=$BUILD synced"
