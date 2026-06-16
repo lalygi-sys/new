@@ -2414,11 +2414,11 @@
 
   /* Toast / Snackbar — Figma Components Snackbar (60132:14999).
      Web screen location (60503:5551): bottom-left stack, 30px / 90px inset.
-     Mobile screen location (60462:53351): top stack, 16px inset, y=54.
+     Mobile: bottom stack, 16px inset + safe-area (above hub tab bar in iframe).
      Behaviour (60462:7057): max 2 on Web, max 1 on mobile; queue overflow. */
   .toast-stack {
     position: fixed;
-    bottom: 90px;
+    bottom: var(--ds-dim-13xl);
     left: 30px;
     z-index: 3000;
     display: flex;
@@ -3551,10 +3551,10 @@
     .admin-table-scroll table { min-width: 640px; }
     .admin-detail-grid { grid-template-columns: 1fr !important; }
 
-    /* === Snackbar stack (mobile) — Figma 60462:53351: top, 16px inset === */
+    /* === Snackbar stack (mobile) — bottom, 16px inset + safe-area === */
     .toast-stack {
-      top: calc(env(safe-area-inset-top, 0px) + 54px) !important;
-      bottom: auto !important;
+      top: auto !important;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + var(--ds-dim-3xl)) !important;
       left: var(--ds-dim-3xl) !important;
       right: var(--ds-dim-3xl) !important;
       max-width: none !important;
@@ -3563,10 +3563,6 @@
     .toast-stack .toast {
       width: 100% !important;
       max-width: none !important;
-      transform: translateY(calc(-100% - var(--ds-dim-3xl)));
-    }
-    .toast-stack .toast.toast--visible {
-      transform: translateY(0);
     }
 
     /* Tap targets & iOS zoom prevention */

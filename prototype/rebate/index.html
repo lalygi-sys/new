@@ -1366,10 +1366,9 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .row-action-menu{min-width:220px}
   .ram-item{height:44px}
 
-  /* Snackbar — mobile top stack (Figma 60462:53351): 54px from top, 16px inset */
-  .toast-stack{top:calc(env(safe-area-inset-top,0px) + 54px);bottom:auto;left:16px;right:16px;max-width:none;width:auto}
-  .toast-stack .toast{width:100%;max-width:none;transform:translateY(calc(-100% - 16px))}
-  .toast-stack .toast.toast--visible{transform:translateY(0)}
+  /* Snackbar — mobile bottom stack: 16px inset + safe-area */
+  .toast-stack{bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:16px;right:16px;max-width:none;width:auto}
+  .toast-stack .toast{width:100%;max-width:none}
 
   /* Tooltip — anchor to the tap target; max-width narrower to
      stay inside the viewport on small screens. */
