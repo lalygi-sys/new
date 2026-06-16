@@ -711,7 +711,7 @@ body.has-ib-chrome .screen {
   .role-bar {
     height: 32px;
     padding: 0 var(--ds-dim-3xl);
-    justify-content: flex-start;
+    justify-content: center;
     gap: var(--ds-dim-l);
   }
 
@@ -720,23 +720,11 @@ body.has-ib-chrome .screen {
   }
 
   .role-bar > .ds-button-group {
-    display: none;
+    display: inline-flex;
   }
 
   .role-bar__pill {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--ds-dim-s);
-    height: 24px;
-    padding: 0 var(--ds-dim-2xl);
-    border-radius: var(--ds-radius-full);
-    background: var(--ds-bg);
-    border: 1px solid var(--ds-border);
-    font-family: var(--ds-font-body);
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 600;
-    color: var(--ds-text-primary);
+    display: none;
   }
 
   .app-header {

@@ -6,14 +6,18 @@
   var rebateHref = (script && script.dataset.rebateHref) || '../rebate/index.html';
   var growthActive = activeKey === 'contests' || activeKey === 'rebate';
 
+  var roleGroupHtml =
+      '<div class="ds-button-group ds-button-group--s" role="radiogroup" aria-label="Preview role">' +
+        '<button type="button" class="ds-button-group__segment ds-button-group__segment--active" data-demo-role="ib" aria-pressed="true">IB Partner</button>' +
+        (activeKey === 'contests'
+          ? '<button type="button" class="ds-button-group__segment" data-demo-role="client" aria-pressed="false">Client</button>'
+          : '') +
+      '</div>';
+
   var html =
     '<div class="role-bar" role="region" aria-label="Demo: role preview">' +
       '<span class="role-bar__label">Demo preview:</span>' +
-      '<div class="ds-button-group ds-button-group--s" role="radiogroup" aria-label="Preview role">' +
-        '<button type="button" class="ds-button-group__segment ds-button-group__segment--active" aria-pressed="true">IB Partner</button>' +
-        '<button type="button" class="ds-button-group__segment" aria-pressed="false">Client</button>' +
-      '</div>' +
-      '<span class="role-bar__pill">Demo: you are IB Partner</span>' +
+      roleGroupHtml +
     '</div>' +
     '<header class="app-header" role="banner">' +
       '<div class="app-header__brand">' +
@@ -251,6 +255,23 @@
   });
 
   document.body.addEventListener('click', function (event) {
+    var roleBtn = event.target.closest('[data-demo-role]');
+    if (roleBtn && !roleBtn.disabled) {
+      var group = roleBtn.closest('.ds-button-group');
+      if (group) {
+        group.querySelectorAll('[data-demo-role]').forEach(function (btn) {
+          var active = btn === roleBtn;
+          btn.classList.toggle('ds-button-group__segment--active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      }
+      var picked = roleBtn.dataset.demoRole;
+      if (picked === 'client' && activeKey === 'contests') {
+        window.location.assign(contestsHref + '#client');
+      }
+      return;
+    }
+
     var profileAction = event.target.closest('[data-profile-action]');
     if (profileAction) {
       var action = profileAction.dataset.profileAction;

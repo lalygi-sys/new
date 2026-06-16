@@ -2724,30 +2724,16 @@
     /* Wizard: drop white frame so steps feel full-bleed */
     .ds-container--split { padding: 0; margin: 0; border: 0; background: transparent; min-height: 0; }
 
-    /* === Role preview bar — collapse to compact pill === */
+    /* === Role preview bar — IB / Client segments on mobile (same as desktop) === */
     .role-bar {
       height: 32px;
       padding: 0 var(--ds-dim-3xl);
-      justify-content: flex-start;
+      justify-content: center;
       gap: var(--ds-dim-l);
     }
     .role-bar__label { display: none; }
-    .role-bar > .ds-button-group { display: none; }
-    .role-bar__pill {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--ds-dim-s);
-      height: 24px;
-      padding: 0 var(--ds-dim-2xl);
-      border-radius: var(--ds-radius-full);
-      background: var(--ds-bg);
-      border: 1px solid var(--ds-border);
-      font-family: var(--ds-font-body);
-      font-size: 12px; line-height: 16px; font-weight: 600;
-      color: var(--ds-text-primary);
-      cursor: pointer;
-    }
-    .role-bar__pill svg { width: 14px; height: 14px; color: var(--ds-text-muted); }
+    .role-bar > .ds-button-group { display: inline-flex; }
+    .role-bar__pill { display: none !important; }
 
     /* === Product header — Figma Navigation IB Cabinet (node 1:37534) === */
     .app-header {
@@ -4683,12 +4669,7 @@ const useToast = () => useContext(ToastContext);
 
 /* RolePreviewBar — demo control above the real product header.
    Lets the prototype reviewer switch between role mockups. NOT part of
-   the production interface.
-   Desktop:  shows a 3-segment ButtonGroup.
-   Mobile:   ButtonGroup is hidden via CSS; a compact pill is shown that
-             opens a bottom-sheet picker. */
-const ROLE_LABELS = { ib: 'IB Partner', client: 'Client', admin: 'Admin' };
-/* Admin kept for demo routing; hidden from persona picker until ready. */
+   the production interface. IB / Client segments on desktop and mobile. */
 const DEMO_PERSONA_OPTIONS = [
   { id: 'ib',     label: 'IB Partner', title: 'IB Partner', desc: 'Creates and runs contests for their clients' },
   { id: 'client', label: 'Client',     title: 'Client',     desc: 'Joins contests and views the leaderboard' },
@@ -4696,7 +4677,7 @@ const DEMO_PERSONA_OPTIONS = [
 ];
 const VISIBLE_DEMO_PERSONAS = DEMO_PERSONA_OPTIONS.filter(opt => !opt.hidden);
 
-const RolePreviewBar = ({ role, onRoleChange, onPillTap }) => (
+const RolePreviewBar = ({ role, onRoleChange }) => (
   <div className="role-bar" role="region" aria-label="Demo: role switch">
     <span className="role-bar__label">Demo preview:</span>
     <ButtonGroup
@@ -4706,17 +4687,6 @@ const RolePreviewBar = ({ role, onRoleChange, onPillTap }) => (
       size="s"
       ariaLabel="Preview role"
     />
-    <button
-      type="button"
-      className="role-bar__pill is-mobile-only"
-      onClick={onPillTap}
-      aria-label="Change preview role"
-    >
-      <span>Demo: you are {ROLE_LABELS[role] || role}</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
-    </button>
   </div>
 );
 
@@ -5166,41 +5136,7 @@ const MobileDrawer = ({
   );
 };
 
-/* MobilePersonaSheet — bottom sheet picker for the demo persona switcher.
-   Reuses Modal (which becomes a bottom sheet on mobile via CSS). */
-const MobilePersonaSheet = ({ open, onClose, role, onChange }) => (
-  <Modal
-    open={open}
-    onClose={onClose}
-    title="Demo mode"
-    subtitle="Choose whose interface to preview"
-    size="m"
-  >
-    <div className="rig-radio-cards">
-      {VISIBLE_DEMO_PERSONAS.map(opt => {
-        const isSelected = role === opt.id;
-        return (
-          <button
-            key={opt.id}
-            type="button"
-            className={`rig-radio-card ${isSelected ? 'rig-radio-card--selected' : ''}`}
-            onClick={() => { onChange(opt.id); onClose(); }}
-          >
-            <div style={{flex:1, minWidth:0, textAlign:'left'}}>
-              <div className="rig-body-02-bold">{opt.title}</div>
-              <div className="rig-utility-01" style={{color:'var(--ds-text-muted)', marginTop:'var(--ds-dim-xs)'}}>{opt.desc}</div>
-            </div>
-            <span className="rig-radio-card__trail" aria-hidden="true">
-              {isSelected && <svg><use href="#ic-check-24"/></svg>}
-            </span>
-          </button>
-        );
-      })}
-    </div>
-  </Modal>
-);
-
-const Breadcrumb = ({ items }) => (
+/* Drawer uses the same hierarchical menu as AppHeader (Figma Navigation IB Cabinet 1:37196). */
   <nav className="breadcrumb" aria-label="Breadcrumb">
     <ol className="breadcrumb__list">
       {items.map((item, i) => {
@@ -8539,7 +8475,10 @@ const AdminContestDetail = ({ onNavigate }) => {
    ═══════════════════════════════════════════════════════ */
 
 const App = () => {
-  const [role, setRole] = useState('ib');
+  const [role, setRole] = useState(() => {
+    const hash = (window.location.hash || '').replace(/^#/, '');
+    return hash === 'client' ? 'client' : 'ib';
+  });
   const [ibScreen, setIbScreen] = useState('list');
   const [ibRows, setIbRows] = useState(IB_CONTEST_ROWS);
   const [selectedIbContestName, setSelectedIbContestName] = useState(null);
@@ -8551,9 +8490,8 @@ const App = () => {
   const cancelContest = (typeId) =>
     setJoinedContests(prev => { const next = { ...prev }; delete next[typeId]; return next; });
   const [adminScreen, setAdminScreen] = useState('dashboard');
-  /* Mobile chrome: drawer (header menu) and persona switcher sheet */
+  /* Mobile chrome: drawer (header menu) */
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const [personaSheetOpen, setPersonaSheetOpen] = useState(false);
 
   /* Прототип: «просмотренные» не сохраняем — после F5 снова видны New и точка */
   const [seenContestTypes, setSeenContestTypes] = useState(() => new Set());
@@ -8586,6 +8524,8 @@ const App = () => {
     if (r === 'ib') setIbScreen('list');
     if (r === 'client') setClientScreen('list');
     if (r === 'admin') setAdminScreen('dashboard');
+    if (r === 'client') history.replaceState(null, '', '#client');
+    else if (window.location.hash === '#client') history.replaceState(null, '', window.location.pathname + window.location.search);
     window.scrollTo(0, 0);
   };
 
@@ -8657,7 +8597,6 @@ const App = () => {
       <RolePreviewBar
         role={role}
         onRoleChange={handleRoleChange}
-        onPillTap={() => setPersonaSheetOpen(true)}
       />
       <AppHeader
         role={role}
@@ -8679,12 +8618,6 @@ const App = () => {
         role={role}
         clientNewContestsCount={clientNewContestsCount}
         clientContestsTotal={CLIENT_CONTESTS.length}
-      />
-      <MobilePersonaSheet
-        open={personaSheetOpen}
-        onClose={() => setPersonaSheetOpen(false)}
-        role={role}
-        onChange={handleRoleChange}
       />
       <div className="app">
         {role === 'ib' && (
