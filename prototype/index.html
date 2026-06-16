@@ -5136,7 +5136,7 @@ const MobileDrawer = ({
   );
 };
 
-/* Drawer uses the same hierarchical menu as AppHeader (Figma Navigation IB Cabinet 1:37196). */
+const Breadcrumb = ({ items }) => (
   <nav className="breadcrumb" aria-label="Breadcrumb">
     <ol className="breadcrumb__list">
       {items.map((item, i) => {
