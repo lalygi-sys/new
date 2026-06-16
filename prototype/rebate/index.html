@@ -271,13 +271,24 @@ button{font-family:inherit;cursor:pointer}
 .tbl td{padding:16px 12px;font-size:14px;line-height:20px;border-bottom:1px solid var(--c-border);vertical-align:middle}
 .tbl tbody tr:last-child td{border-bottom:none}
 .tbl tbody tr{cursor:pointer;transition:background .12s}
-.tbl tbody tr:hover{background:var(--c-surface-container)}
+@media (hover:hover) and (pointer:fine){
+  .tbl tbody tr:hover{background:var(--c-surface-container)}
+  body.dp-open #tbl-main tbody tr:hover td:nth-child(3),
+  body.dp-open #tbl-main tbody tr:hover td:nth-child(4){background-color:rgba(22,22,22,.08)}
+  .tbl tbody tr.row-affected:hover td{background-color:rgba(227,45,45,.08)}
+  .tbl tbody tr:hover .row-actions,
+  .tbl tbody tr.menu-open .row-actions{display:flex}
+  .tbl tbody tr:hover .status-default,
+  .tbl tbody tr.menu-open .status-default{display:none}
+  .table-card.is-scrolled-x .tbl tbody tr:hover .row-actions .row-action-more,
+  .table-card.is-scrolled-x .tbl tbody tr.menu-open .row-actions .row-action-more{display:inline-flex}
+  .tbl tbody tr:hover td:last-child{background:var(--c-surface-container)}
+  .tbl tbody tr.row-affected:hover td:last-child{background:#f9e6e6}
+}
 body.dp-open #tbl-main thead th:nth-child(3),
 body.dp-open #tbl-main thead th:nth-child(4){background:var(--c-surface-container);transition:background .2s}
 body.dp-open #tbl-main tbody td:nth-child(3),
 body.dp-open #tbl-main tbody td:nth-child(4){background-color:var(--c-surface-container);transition:background-color .2s}
-body.dp-open #tbl-main tbody tr:hover td:nth-child(3),
-body.dp-open #tbl-main tbody tr:hover td:nth-child(4){background-color:rgba(22,22,22,.08)}
 /* Selected row — very light neutral gray. Opaque so the sticky last cell matches the rest of the row. */
 .tbl tbody tr.selected{background:var(--c-row-selected)}
 .tbl .col-cb{width:4%}
@@ -336,7 +347,6 @@ body.dp-open #tbl-main tbody tr:hover td:nth-child(4){background-color:rgba(22,2
 .client-name .alert-badge:hover{background:rgba(227,45,45,.08)}
 
 .tbl tbody tr.row-affected td{background-color:rgba(227,45,45,.04)}
-.tbl tbody tr.row-affected:hover td{background-color:rgba(227,45,45,.08)}
 .tbl tbody tr.row-affected.selected td{background-color:var(--c-row-selected)}
 
 .tbl tbody tr.pinned-divider td{padding:6px 0 4px;background:transparent;border-bottom:1px dashed var(--c-border);cursor:default}
@@ -372,17 +382,11 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .row-actions .row-action-icons{display:inline-flex;align-items:center;gap:4px}
 #s-manage .row-actions .row-action-icons{gap:8px}
 .row-actions .row-action-more{display:none}
-.tbl tbody tr:hover .row-actions,
-.tbl tbody tr.menu-open .row-actions{display:flex}
-.tbl tbody tr:hover .status-default,
-.tbl tbody tr.menu-open .status-default{display:none}
 
 /* Compressed mode: only the secondary icon cluster (info + statistics) collapses into a single kebab (...). Primary button stays visible. */
 /* In compressed mode the last td is pinned to 196px (≈ row-actions width + side padding), so we right-align the row-actions inside it for symmetry with the right edge of the table. In full-width mode the td is wider than the buttons, and right-aligning would dump them in the far-right corner — there we let them sit at the natural start of the td so they line up where the status tag normally renders. */
 .table-card.is-scrolled-x .row-actions{margin-left:auto}
 .table-card.is-scrolled-x .row-actions .row-action-icons{display:none}
-.table-card.is-scrolled-x .tbl tbody tr:hover .row-actions .row-action-more,
-.table-card.is-scrolled-x .tbl tbody tr.menu-open .row-actions .row-action-more{display:inline-flex}
 /* Compressed mode: switch table to fixed layout. Pin every column except client to absolute pixel widths so the status column stays exactly 196px (row-actions 172 + cell padding 24). The client column has no width set, so all extra horizontal space goes there instead of being distributed to the status column. */
 .table-card.is-scrolled-x .tbl{table-layout:fixed;min-width:960px}
 .table-card.is-scrolled-x .tbl .col-cb{width:48px}
@@ -409,9 +413,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .tbl th:last-child,
 .tbl td:last-child{position:sticky;right:0;background:var(--c-surface);z-index:1}
 .tbl thead th:last-child{z-index:3}
-.tbl tbody tr:hover td:last-child{background:var(--c-surface-container)}
 .tbl tbody tr.row-affected td:last-child{background:#fdf6f6}
-.tbl tbody tr.row-affected:hover td:last-child{background:#f9e6e6}
 /* Selected row: sticky cell uses the same opaque gray as the rest of the row. */
 .tbl tbody tr.selected td:last-child{background:var(--c-row-selected)}
 /* Left-edge shadow when table is horizontally scrollable — same token as contests .table-wrap--sticky-last.is-scrollable */
@@ -1036,7 +1038,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .date-range-wrap--table .date-range .dr-text{display:inline-flex;align-items:center;min-width:0;flex:1 1 auto;gap:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
   .date-range-wrap--table .date-range .dr-label,
   .date-range-wrap--table .date-range .dr-value{flex:0 1 auto;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  /* Toolbar controls — DS Size S (Figma Button Tertiary/S 885:24656, Input/S 560:5739) */
+  /* Toolbar controls — DS Button Tertiary/M on mobile (h=40, px=16, radius=12) */
   .sort-btn{
     display:inline-flex;
     align-items:center;
@@ -1044,10 +1046,10 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     gap:8px;
     min-width:0;
     width:100%;
-    height:32px;
+    height:40px;
     padding:0 16px;
     border:1px solid var(--c-border);
-    border-radius:8px;
+    border-radius:12px;
     cursor:pointer;
     font-size:14px;
     font-weight:600;
@@ -1062,8 +1064,9 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .toolbar .filter-btn{
     min-width:0;
     width:100%;
-    height:32px;
+    height:40px;
     padding:0 16px;
+    border-radius:12px;
     font-size:14px;
     line-height:20px;
     font-weight:600;
@@ -1147,9 +1150,14 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     border-radius:12px;
     position:relative;
     cursor:pointer;
+    transition:none;
     -webkit-tap-highlight-color:transparent;
   }
-  .tbl tbody tr:active{background:var(--c-surface-container)}
+  /* Touch scroll: no sticky :hover/:active gray — only .selected changes background. */
+  .tbl tbody tr:hover,
+  .tbl tbody tr:active{background:var(--c-surface)}
+  .tbl tbody tr.selected:hover,
+  .tbl tbody tr.selected:active{background:var(--c-row-selected)}
   /* Selected — background only; border stays the same as unselected card. */
   .tbl tbody tr.selected{background:var(--c-row-selected)}
   .tbl tbody tr.row-affected{border-color:rgba(227,45,45,.4)}

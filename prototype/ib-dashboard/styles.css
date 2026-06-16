@@ -1019,6 +1019,7 @@ body.has-ib-chrome.dashboard-body {
   border-radius: var(--c-radius-lg);
   border: 1px solid var(--c-border-02);
   background: var(--c-surface);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   overflow: hidden;
 }
 
@@ -1111,10 +1112,11 @@ body.has-ib-chrome.dashboard-body {
 
 .stat-banner__value {
   flex-shrink: 0;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
-  letter-spacing: -0.2px;
+  font-family: var(--ds-font-body);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.4px;
   color: var(--c-text-primary);
   font-variant-numeric: tabular-nums;
 }
@@ -1753,6 +1755,9 @@ body.has-ib-chrome.dashboard-body {
   .commission-card--basic::before {
     bottom: auto;
     height: var(--commission-mobile-hero-height);
+    border-radius: inherit;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
     background-image:
       linear-gradient(
         180deg,
@@ -1806,7 +1811,7 @@ body.has-ib-chrome.dashboard-body {
 
   .stat-banner { padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl); }
 
-  .stat-banner__value { font-size: 18px; line-height: 22px; }
+  .stat-banner__value { font-size: 20px; line-height: 24px; letter-spacing: -0.2px; }
 
   .dashboard-side { grid-template-columns: 1fr; }
 

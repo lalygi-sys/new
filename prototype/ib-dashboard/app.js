@@ -505,13 +505,52 @@
   });
 
   var clientTabs = document.querySelector('.clients-card__tabs');
+  var clientsList = document.querySelector('.clients-list');
   var metricLabel = document.getElementById('clients-metric-label');
   var viewAllBtn = document.getElementById('clients-view-all');
   var clientLabels = {
+    new: { metric: 'Joined', cta: 'View all New clients' },
     profit: { metric: 'Profit', cta: 'View all Top profit clients' },
-    active: { metric: 'Activity', cta: 'View all Top active clients' },
-    volume: { metric: 'New', cta: 'View all New clients' }
+    active: { metric: 'Lots', cta: 'View all Top active clients' }
   };
+  var clientRankings = {
+    new: [
+      { name: 'Olivia Bennett', value: '03.06.26' },
+      { name: 'Ethan Walker', value: '28.05.26' },
+      { name: 'Sophia Nguyen', value: '21.05.26' },
+      { name: 'Liam Carter', value: '15.05.26' },
+      { name: 'Ava Mitchell', value: '08.05.26' }
+    ],
+    profit: [
+      { name: 'Olivia Bennett', value: '$4,820' },
+      { name: 'Ethan Walker', value: '$3,960' },
+      { name: 'Sophia Nguyen', value: '$2,740' },
+      { name: 'Liam Carter', value: '$2,110' },
+      { name: 'Ava Mitchell', value: '$1,880' }
+    ],
+    active: [
+      { name: 'Ethan Walker', value: '52.4' },
+      { name: 'Olivia Bennett', value: '48.1' },
+      { name: 'Liam Carter', value: '39.8' },
+      { name: 'Sophia Nguyen', value: '31.2' },
+      { name: 'Ava Mitchell', value: '24.6' }
+    ]
+  };
+
+  function renderClientsList(tab) {
+    if (!clientsList || !clientRankings[tab]) return;
+    clientsList.querySelectorAll('.clients-list__row').forEach(function (row) {
+      row.remove();
+    });
+    clientRankings[tab].forEach(function (item) {
+      var row = document.createElement('div');
+      row.className = 'clients-list__row';
+      row.innerHTML =
+        '<span class="clients-list__name">' + item.name + '</span>' +
+        '<span class="clients-list__value">' + item.value + '</span>';
+      clientsList.appendChild(row);
+    });
+  }
 
   if (clientTabs) {
     clientTabs.addEventListener('click', function (e) {
@@ -527,6 +566,7 @@
       chip.setAttribute('aria-selected', 'true');
       if (metricLabel) metricLabel.textContent = clientLabels[tab].metric;
       if (viewAllBtn) viewAllBtn.textContent = clientLabels[tab].cta;
+      renderClientsList(tab);
     });
   }
 
