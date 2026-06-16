@@ -528,10 +528,44 @@
   .ds-notification--info::before { background: var(--ds-primary); }
   .ds-notification--neutral { background: var(--ds-neutral-bg); }
   .ds-notification__icon { flex-shrink: 0; width: 20px; height: 20px; }
-  .ds-notification__content { flex: 1; }
+  .ds-notification__icon svg { width: 20px; height: 20px; display: block; }
+  .ds-notification__content { flex: 1; min-width: 0; }
   .ds-notification__title { font-weight: 600; font-size: 14px; line-height: 20px; margin-bottom: var(--ds-dim-s); color: var(--ds-text-primary); }
   .ds-notification__desc { font-size: 14px; line-height: 20px; color: var(--ds-text-secondary); }
   .ds-notification__actions { display: flex; gap: var(--ds-dim-l); margin-top: var(--ds-dim-2xl); }
+  /* Notification / Horizontal / Info — Figma Components 54764:12874 */
+  .ds-notification--horizontal {
+    align-items: center; gap: var(--ds-dim-3xl);
+    padding: var(--ds-dim-3xl); border-radius: var(--ds-radius-xl);
+  }
+  .ds-notification--horizontal::before { display: none; }
+  .ds-notification--horizontal .ds-notification__icon { width: 24px; height: 24px; }
+  .ds-notification--horizontal .ds-notification__icon svg { width: 24px; height: 24px; }
+  .ds-notification--horizontal .ds-notification__content {
+    display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0;
+  }
+  .ds-notification--horizontal .ds-notification__title { margin-bottom: 0; padding: 2px 0; }
+  .ds-notification--horizontal .ds-notification__actions {
+    margin-top: 0; flex-shrink: 0; align-self: stretch;
+    align-items: center; gap: var(--ds-dim-s);
+  }
+  .ds-notification--horizontal .ds-notification__actions .ds-btn--secondary {
+    background: rgba(22, 22, 22, 0.15); color: var(--ds-text-primary); border-color: transparent;
+  }
+  .ds-notification--horizontal .ds-notification__actions .ds-btn--secondary:hover:not(:disabled) {
+    background: rgba(22, 22, 22, 0.22);
+  }
+  .ds-notification--info.ds-notification--horizontal .ds-notification__actions .ds-btn--tertiary {
+    color: var(--ds-primary); font-weight: 600;
+  }
+  .ds-notification--info.ds-notification--horizontal .ds-notification__actions .ds-btn--tertiary:hover:not(:disabled) {
+    color: var(--ds-primary-hover); background: rgba(25, 69, 255, 0.08);
+  }
+  @media (max-width: 639px) {
+    .ds-notification--horizontal { flex-wrap: wrap; align-items: flex-start; }
+    .ds-notification--horizontal .ds-notification__actions { width: 100%; align-self: auto; }
+    .ds-notification--horizontal .ds-notification__actions .ds-btn { width: 100%; justify-content: center; }
+  }
 
   /* ── DS Container ──
      Заполняет высоту экрана (100vh минус две фикс-панели сверху и сохранённый
@@ -883,13 +917,26 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--ds-dim-2xl);
+    align-items: stretch;
   }
+  .stat-banners-note {
+    margin: 0 0 var(--ds-dim-l);
+    font-family: var(--ds-font-body); font-size: 12px; line-height: 16px;
+    letter-spacing: 0.15px; color: var(--ds-text-muted);
+  }
+  .stat-banners-placeholder {
+    display: flex; align-items: center; gap: var(--ds-dim-l);
+    min-height: 88px; padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    border-radius: var(--ds-radius-lg); border: 1px solid var(--ds-border);
+    background: var(--ds-bg); color: var(--ds-text-secondary);
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+  }
+  .stat-banners-placeholder .icon { color: var(--ds-text-tertiary); flex-shrink: 0; }
   .stat-banner {
     position: relative;
-    display: flex; flex-direction: column; justify-content: space-between;
-    gap: var(--ds-dim-l);
-    min-height: 88px;
-    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    display: flex; flex-direction: column;
+    min-width: 0;
+    padding: var(--ds-dim-3xl);
     border-radius: var(--ds-radius-lg);
     border: 1px solid var(--ds-border);
     background: var(--ds-bg);
@@ -916,25 +963,29 @@
     box-shadow: 0 0 0 3px rgba(34, 168, 84, 0.2);
   }
   .stat-banner__value-row {
-    display: flex; align-items: baseline; gap: var(--ds-dim-l);
-    min-height: 28px;
-    margin-top: var(--ds-dim-l);
+    display: flex; align-items: baseline; flex-wrap: nowrap;
+    gap: var(--ds-dim-l);
+    min-height: 28px; min-width: 0; overflow: hidden;
+    margin-top: var(--ds-dim-3xl);
   }
   .stat-banner__value {
+    flex-shrink: 0;
     font-family: var(--ds-font-body); font-weight: 700;
     font-size: 24px; line-height: 28px; letter-spacing: -0.4px;
     color: var(--ds-text-primary); font-variant-numeric: tabular-nums;
   }
   .stat-banner__foot {
-    display: flex; align-items: flex-start; flex-wrap: wrap; gap: var(--ds-dim-l);
-    min-height: 18px;
+    display: flex; align-items: flex-start; align-self: stretch;
+    width: 100%; min-width: 0;
+    margin-top: var(--ds-dim-s);
   }
   /* Foundations: Utility 01 bold — sentiment delta справа от числа */
   .stat-banner__delta {
-    display: inline-flex; align-items: center;
+    display: block;
     font-family: var(--ds-font-body); font-size: 12px; line-height: 16px;
     font-weight: 600; letter-spacing: 0.15px;
-    white-space: nowrap; flex-shrink: 0;
+    white-space: nowrap; flex: 1 1 auto; min-width: 0; max-width: 100%;
+    overflow: hidden; text-overflow: ellipsis;
   }
   .stat-banner__delta--up { color: var(--ds-positive-content); }
   .stat-banner__delta--down { color: var(--ds-negative); }
@@ -942,18 +993,19 @@
   .stat-banner__delta--neutral { color: var(--ds-text-secondary); }
   .stat-banner__hint {
     font-size: 11px; line-height: 14px; color: var(--ds-text-tertiary);
-    min-width: 0;
+    min-width: 0; width: 100%; max-width: 100%;
   }
-  /* Две части подписи — вторая уходит на строку ниже, если не помещается */
+  /* Две части: в одну строку с «·», вторая уходит ниже без разделителя */
   .stat-banner__hint--split {
-    display: flex; flex-wrap: wrap; align-items: baseline;
-    column-gap: 0; row-gap: var(--ds-dim-s); flex: 1 1 auto; min-width: 0;
+    display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start;
+    column-gap: 0; row-gap: var(--ds-dim-s);
+    min-width: 0; width: 100%; max-width: 100%;
   }
-  .stat-banner__hint-part { white-space: nowrap; }
+  .stat-banner__hint-part { white-space: nowrap; max-width: 100%; }
   .stat-banner__hint-sep { white-space: pre; flex-shrink: 0; }
   .stat-banner__track {
     height: 3px; border-radius: 999px; background: var(--ds-bg-page);
-    overflow: hidden; margin-top: 2px;
+    overflow: hidden; margin-top: var(--ds-dim-l);
   }
   .stat-banner__fill {
     height: 100%; border-radius: inherit;
@@ -1030,6 +1082,8 @@
   }
   .table-wrap--sticky-last tbody tr:hover td:last-child { background: var(--ds-row-hover); }
   .table-wrap--sticky-last tbody tr.highlight td:last-child { background: var(--ds-bg-selected); }
+  .table-cell-period { white-space: nowrap; }
+  .table-cell-period__label { white-space: nowrap; }
   /* th uses Utility 01 from DS Foundations (12/16, regular, 0.15 tracking) */
   th {
     text-align: left; padding: var(--ds-dim-3xl);
@@ -2124,7 +2178,7 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--ds-dim-2xl);
     }
-    .stat-banner { min-height: 80px; padding: var(--ds-dim-2xl); }
+    .stat-banner { padding: var(--ds-dim-3xl); }
     .stat-banner__value { font-size: 20px; line-height: 24px; }
     .stats {
       flex-wrap: wrap; flex-direction: row;
@@ -2482,6 +2536,9 @@
     <path d="M13 15.4C13 15.9601 13 16.2401 12.891 16.454C12.7951 16.6422 12.6422 16.7951 12.454 16.891C12.2401 17 11.9601 17 11.4 17H11V13H10V12.6C10 12.0399 10 11.7599 10.109 11.546C10.2049 11.3578 10.3578 11.2049 10.546 11.109C10.6648 11.0485 10.832 11.0117 11.0547 11.0039L13 11V15.4Z" fill="currentColor"/>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" fill="currentColor"/>
   </symbol>
+  <symbol id="ic-lightbulb-24" viewBox="0 0 24 24" fill="none"><!-- pro tip -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C8.68629 2 6 4.68629 6 8C6 10.0152 7.03215 11.7921 8.59808 12.832V15C8.59808 15.5523 9.0458 16 9.59808 16H14.4019C14.9542 16 15.4019 15.5523 15.4019 15V12.832C16.9678 11.7921 18 10.0152 18 8C18 4.68629 15.3137 2 12 2ZM10.5981 14V13H13.4019V14H10.5981ZM10 20H14V18H10V20Z" fill="currentColor"/>
+  </symbol>
   <symbol id="ic-cross-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:916 -->
     <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5857 12L5.29285 6.70706L5.99995 5.99995C6.39048 5.60943 7.02364 5.60943 7.41417 5.99995L12 10.5857L17.2928 5.29285L18.7071 6.70706L13.4142 12L18.7071 17.2928L18 18C17.6094 18.3905 16.9763 18.3905 16.5857 18L12 13.4142L6.70706 18.7071L5.29285 17.2928L10.5857 12Z" fill="currentColor"/>
   </symbol>
@@ -2630,7 +2687,7 @@
 <div id="root"></div>
 
 <script type="text/babel">
-const { useState, useCallback, useRef, useEffect, useMemo, createContext, useContext } = React;
+const { useState, useCallback, useRef, useEffect, useLayoutEffect, useMemo, createContext, useContext } = React;
 
 /* useMediaQuery — minimal hook on top of window.matchMedia.
    Used to switch DOM rendering between desktop tables and mobile
@@ -2697,7 +2754,8 @@ const DS_ICON_ALIAS = {
   'x-circle':        'cross-round',
   'eye':             'show',
   'eye-off':         'hide',
-  'lightbulb':       'info',
+  'lightbulb':       'lightbulb',
+  'protip':          'lightbulb',
   'rocket':          'flame',
 };
 const dsIc = (name) => `#ic-${DS_ICON_ALIAS[name] || name}-24`;
@@ -2905,18 +2963,24 @@ const ButtonGroup = ({ value, onChange, options, size = 'm', ariaLabel }) => (
   </div>
 );
 
-const Notification = ({ variant = 'negative', title, description, actions, icon }) => (
-  <div className={`ds-notification ds-notification--${variant}`}>
-    {icon && <span className="ds-notification__icon" style={{color: variant === 'negative' ? 'var(--ds-negative)' : variant === 'warning' ? 'var(--ds-warning)' : 'var(--ds-primary)'}}>
-      <svg width="20" height="20"><use href={dsIc(icon)} /></svg>
-    </span>}
-    <div className="ds-notification__content">
-      {title && <div className="ds-notification__title" style={{color: variant === 'negative' ? 'var(--ds-negative-text)' : undefined}}>{title}</div>}
-      {description && <div className="ds-notification__desc">{description}</div>}
-      {actions && <div className="ds-notification__actions">{actions}</div>}
+const Notification = ({ variant = 'negative', title, description, actions, icon, layout = 'vertical' }) => {
+  const isHorizontal = layout === 'horizontal';
+  return (
+    <div className={`ds-notification ds-notification--${variant}${isHorizontal ? ' ds-notification--horizontal' : ''}`}>
+      {icon && (
+        <span className="ds-notification__icon" style={{color: variant === 'negative' ? 'var(--ds-negative)' : variant === 'warning' ? 'var(--ds-warning)' : 'var(--ds-primary)'}}>
+          <svg width={isHorizontal ? 24 : 20} height={isHorizontal ? 24 : 20}><use href={dsIc(icon)} /></svg>
+        </span>
+      )}
+      <div className="ds-notification__content">
+        {title && <div className="ds-notification__title" style={{color: variant === 'negative' ? 'var(--ds-negative-text)' : undefined}}>{title}</div>}
+        {description && <div className="ds-notification__desc">{description}</div>}
+        {!isHorizontal && actions && <div className="ds-notification__actions">{actions}</div>}
+      </div>
+      {isHorizontal && actions && <div className="ds-notification__actions">{actions}</div>}
     </div>
-  </div>
-);
+  );
+};
 
 const Container = ({ children, style, className = '' }) => (
   <div className={`ds-container ${className}`} style={style}>{children}</div>
@@ -3545,17 +3609,17 @@ const StatCard = ({ value, label, color, trend }) => (
 );
 
 /* Компактные KPI-баннеры для списка контестов IB — «спортивная» мотивация + деловые метрики. */
-/* Подпись из двух частей: «·» только на одной строке, при переносе — без разделителя */
+/* Подпись из двух частей: в ширину карточки; «·» только если обе части на одной строке */
 const StatBannerHintSplit = ({ parts }) => {
   const wrapRef = useRef(null);
   const firstRef = useRef(null);
   const secondRef = useRef(null);
-  const [wrapped, setWrapped] = useState(false);
+  const [inline, setInline] = useState(true);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const check = () => {
       if (!firstRef.current || !secondRef.current) return;
-      setWrapped(firstRef.current.offsetTop !== secondRef.current.offsetTop);
+      setInline(firstRef.current.offsetTop === secondRef.current.offsetTop);
     };
     check();
     const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(check) : null;
@@ -3575,7 +3639,7 @@ const StatBannerHintSplit = ({ parts }) => {
   return (
     <span ref={wrapRef} className="stat-banner__hint stat-banner__hint--split">
       <span ref={firstRef} className="stat-banner__hint-part">{parts[0]}</span>
-      {!wrapped && parts.length > 1 && (
+      {inline && parts.length > 1 && (
         <span className="stat-banner__hint-sep" aria-hidden="true"> · </span>
       )}
       {parts.slice(1).map((part, i) => (
@@ -3595,7 +3659,10 @@ const StatBanner = ({ variant, icon, label, value, hint, hintParts, delta, progr
     <div className="stat-banner__value-row">
       <div className="stat-banner__value">{value}</div>
       {delta && (
-        <span className={`stat-banner__delta stat-banner__delta--${delta.dir || 'neutral'}`}>
+        <span
+          className={`stat-banner__delta stat-banner__delta--${delta.dir || 'neutral'}`}
+          title={`${delta.dir === 'up' ? '↑ ' : delta.dir === 'down' ? '↓ ' : ''}${delta.text}`}
+        >
           {delta.dir === 'up' && '↑ '}
           {delta.dir === 'down' && '↓ '}
           {delta.text}
@@ -3649,21 +3716,77 @@ const computeIBContestStats = (rows) => {
   };
 };
 
+const hasMeasurableContests = (rows) =>
+  rows.some(r => r.status === 'Active' || r.status === 'Completed');
+
+const estimateDraftPotentialProfit = (draftRows, allRows) => {
+  const typeAvg = {};
+  for (const r of allRows) {
+    if (r.status !== 'Active' || !r.ibProfit) continue;
+    if (!typeAvg[r.typeId]) typeAvg[r.typeId] = { sum: 0, n: 0 };
+    typeAvg[r.typeId].sum += r.ibProfit;
+    typeAvg[r.typeId].n += 1;
+  }
+  const fallback = 150;
+  return draftRows.reduce((sum, r) => {
+    const avg = typeAvg[r.typeId];
+    return sum + (avg ? Math.round(avg.sum / avg.n) : fallback);
+  }, 0);
+};
+
+const IBContestDraftLaunchPanel = ({ draftRows, allRows, onLaunchDraft }) => {
+  const potentialProfit = estimateDraftPotentialProfit(draftRows, allRows);
+  const targetDraft = draftRows.find(r => r.period && r.period !== 'Не задан') || draftRows[0];
+
+  return (
+    <Notification
+      variant="info"
+      layout="horizontal"
+      icon="protip"
+      title={`${formatUsdCompact(potentialProfit)} — возможная прибыль за неопубликованные контесты. Опубликуйте, чтобы начать зарабатывать.`}
+      description="Оценка на основе похожих активных контестов. Продолжите публикацию черновиков."
+      actions={targetDraft && (
+        <Button variant="tertiary" size="s" onClick={() => onLaunchDraft(targetDraft)}>
+          Опубликовать
+        </Button>
+      )}
+    />
+  );
+};
+
 const IBContestStatsBanners = ({ rows }) => {
+  if (!rows.length) {
+    return (
+      <div className="stat-banners-placeholder" role="status">
+        <Icon name="info" size="sm" />
+        <span>Опубликуйте контест — здесь появятся прибыль, участники и активация клиентов.</span>
+      </div>
+    );
+  }
+
   const {
     avgReach, minReach, maxReach,
     activeProfit, completedProfit, totalProfit,
     prizePoolActive, prizesGifted, prizePoolTotal,
     activationReturned, activationNew, activationTotal,
   } = computeIBContestStats(rows);
-  const profitHintParts = totalProfit
-    ? [`${formatUsdCompact(activeProfit)} активные`, `${formatUsdCompact(completedProfit)} завершённые`]
+  const profitHintParts = (activeProfit || completedProfit)
+    ? [
+        activeProfit && `${formatUsdCompact(activeProfit)} активные`,
+        completedProfit && `${formatUsdCompact(completedProfit)} завершённые`,
+      ].filter(Boolean)
     : null;
-  const prizeHintParts = prizePoolTotal
-    ? [`${formatUsdCompact(prizePoolActive)} в активных`, `${formatUsdCompact(prizesGifted)} выплачено`]
+  const prizeHintParts = (prizePoolActive || prizesGifted)
+    ? [
+        prizePoolActive && `${formatUsdCompact(prizePoolActive)} в активных`,
+        prizesGifted && `${formatUsdCompact(prizesGifted)} выплачено`,
+      ].filter(Boolean)
     : null;
-  const activationHint = activationTotal
-    ? `${activationReturned} вернулись · ${activationNew} новые клиенты`
+  const activationHintParts = activationTotal
+    ? [
+        activationReturned > 0 && `${activationReturned} вернулись`,
+        activationNew > 0 && `${activationNew} новые клиенты`,
+      ].filter(Boolean)
     : null;
   const engageHintParts = avgReach && minReach && maxReach
     ? [`мин ${minReach}`, `макс ${maxReach}`]
@@ -3685,7 +3808,8 @@ const IBContestStatsBanners = ({ rows }) => {
         label="Клиенты в торговле"
         value={String(activationTotal)}
         delta={activationTotal ? { dir: 'up', text: '6 к пр. нед' } : undefined}
-        hint={activationHint || 'клиенты после запуска контестов'}
+        hint={activationHintParts ? undefined : 'клиенты после запуска контестов'}
+        hintParts={activationHintParts || undefined}
       />
       <StatBanner
         variant="engage"
@@ -4393,6 +4517,12 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
     });
   }, [rows, query, statusFilter, periodRange]);
 
+  const draftOnlyView = filteredRows.length > 0 && !hasMeasurableContests(filteredRows);
+  const draftRows = useMemo(
+    () => filteredRows.filter(r => r.status === 'Draft'),
+    [filteredRows]
+  );
+
   const sortedRows = useMemo(() => sortContestRows(filteredRows, sort), [filteredRows, sort]);
   const tableParticipantsTotal = useMemo(
     () => sortedRows.reduce((sum, r) => sum + (typeof r.count === 'number' ? r.count : 0), 0),
@@ -4484,7 +4614,15 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
         )}
         <div className="contests-layout__main">
           <div className="contests-layout__stats">
-            <IBContestStatsBanners rows={rows} />
+            {draftOnlyView ? (
+              <IBContestDraftLaunchPanel
+                draftRows={draftRows}
+                allRows={rows}
+                onLaunchDraft={goToContest}
+              />
+            ) : (
+              <IBContestStatsBanners rows={filteredRows} />
+            )}
           </div>
           <div className="contests-layout__body">
       {filteredRows.length === 0 ? (
@@ -4576,8 +4714,8 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                   </td>
                   <td><Tag label={r.status} variant={r.statusTag} /></td>
                   <td>{r.count}</td>
-                  <td>
-                    <div>{r.period}</div>
+                  <td className="table-cell-period">
+                    <div className="table-cell-period__label">{r.period}</div>
                     {r.progress != null && <div style={{marginTop:'var(--ds-dim-m)'}}><ProgressBar value={r.progress} size="xs" /></div>}
                   </td>
                   <td style={{textAlign:'right'}}>
