@@ -285,7 +285,8 @@
   .ds-btn--l svg { width: 24px; height: 24px; }
   .ds-btn--s svg { width: 16px; height: 16px; }
 
-  /* ── DS IconButton (s=32, m=40, l=48) ── */
+  /* ── DS IconButton (s=32, m=40, l=48) ──
+     Radius: S → 8 (radius-md), M/L → 12 (radius-lg) — same as Button sizes. */
   .ds-icon-btn {
     display: inline-flex; align-items: center; justify-content: center;
     border-radius: var(--ds-radius-lg); border: 1px solid var(--ds-border-input);
@@ -295,7 +296,7 @@
   .ds-icon-btn:hover { background: var(--ds-bg-page); color: var(--ds-text-primary); border-color: var(--ds-border-input-hover); }
   .ds-icon-btn--l { width: 48px; height: 48px; }
   .ds-icon-btn--m { width: 40px; height: 40px; }
-  .ds-icon-btn--s { width: 32px; height: 32px; }
+  .ds-icon-btn--s { width: 32px; height: 32px; border-radius: var(--ds-radius-md); }
   /* Icons by DS: l → 24 (ic-*-24), m → 20, s → 16 (ic-*-16) */
   .ds-icon-btn svg { width: 20px; height: 20px; }
   .ds-icon-btn--l svg { width: 24px; height: 24px; }
@@ -837,14 +838,62 @@
     height: 36px;
     background: var(--ds-bg-page);
     border-bottom: 1px solid var(--ds-border);
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: space-between;
     gap: var(--ds-dim-2xl);
-    padding: 0 var(--ds-dim-6xl);
+    padding: 0 var(--ds-dim-3xl);
     font-family: var(--ds-font-body);
+  }
+  .role-bar__start {
+    display: flex; align-items: center; gap: var(--ds-dim-l);
+    flex-shrink: 0; min-width: 0;
   }
   .role-bar__label {
     font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
     color: var(--ds-text-muted); font-weight: 400;
+  }
+  .role-bar__pages {
+    display: flex; align-items: center; justify-content: flex-start;
+    gap: 4px; min-width: 0; flex: 1 1 auto;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .role-bar__pages::-webkit-scrollbar { display: none; }
+  .role-bar__end {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: var(--ds-dim-l); flex-shrink: 0; margin-left: var(--ds-dim-2xl);
+  }
+  .role-bar__end .role-bar__label {
+    flex-shrink: 0; white-space: nowrap;
+  }
+  .role-bar__audience-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 22px; padding: 0 10px; border-radius: var(--ds-radius-full);
+    background: var(--ds-row-hover); color: var(--ds-text-secondary);
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 11px; line-height: 16px; letter-spacing: 0.1px;
+    white-space: nowrap;
+  }
+  .role-bar__end .ds-button-group { flex-shrink: 0; }
+  .role-bar__page-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 22px; padding: 0 8px; border-radius: var(--ds-radius-full);
+    border: 0; background: transparent;
+    color: var(--ds-text-secondary);
+    font-family: var(--ds-font-body); font-weight: 500;
+    font-size: 11px; line-height: 16px; letter-spacing: 0.1px;
+    text-decoration: none; white-space: nowrap; flex-shrink: 0;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .role-bar__page-chip:hover:not(.role-bar__page-chip--active) {
+    background: var(--ds-row-hover); color: var(--ds-text-primary);
+  }
+  .role-bar__page-chip:focus-visible {
+    outline: none; box-shadow: var(--ds-focus-ring);
+  }
+  .role-bar__page-chip--active {
+    background: var(--ds-primary-content); color: var(--ds-primary);
+    font-weight: 600; cursor: default; pointer-events: none;
   }
 
   /* ── App header (IB cabinet style — matches Figma 7pd3z) ──
@@ -1891,6 +1940,10 @@
     box-shadow: 0 8px 24px -16px color-mix(in srgb, var(--ds-on-primary-container) 70%, transparent);
     position: relative;
   }
+  .user-progress__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--ds-dim-5xl); flex-wrap: wrap;
+  }
   .user-progress__row {
     display: flex; align-items: center; justify-content: space-between;
     gap: var(--ds-dim-5xl); flex-wrap: wrap;
@@ -2047,6 +2100,50 @@
     color: color-mix(in srgb, var(--ds-on-primary) 75%, transparent);
   }
   .user-progress__bar { margin-top: var(--ds-dim-s); }
+  .user-progress--active .user-progress__rank-block {
+    display: flex;
+    align-items: baseline;
+    gap: var(--ds-dim-2xl);
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+  .user-progress--active .user-progress__badge { display: none; }
+  .user-progress--active .user-progress__place-meta-suffix { display: inline; }
+  .user-progress--completed .user-progress__badge { display: none; }
+  .user-progress__stats-panel { min-width: 0; text-align: right; }
+  .user-progress--active .user-progress__stats-panel {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: var(--ds-dim-3xl);
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+  }
+  .user-progress__score-primary,
+  .user-progress__score-hint {
+    margin: 0;
+    font-family: var(--ds-font-body);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: color-mix(in srgb, var(--ds-on-primary) 80%, transparent);
+  }
+  .user-progress__score-primary strong,
+  .user-progress__score-hint strong {
+    font-weight: 700;
+    color: var(--ds-on-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .user-progress--active .user-progress__score-hint { text-align: right; }
+  .user-progress__caption-time {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-dim-s);
+    flex-shrink: 0;
+  }
   .user-progress__caption {
     font-family: var(--ds-font-body); font-weight: 500;
     font-size: 13px; line-height: 16px;
@@ -2462,7 +2559,7 @@
 
   /* Toast / Snackbar — Figma Components Snackbar (60132:14999).
      Web screen location (60503:5551): bottom-left stack, 30px / 90px inset.
-     Mobile: bottom stack, 16px inset + safe-area + dynamic Chrome viewport inset.
+     Mobile: top stack below chrome, 16px inset + safe-area.
      Behaviour (60462:7057): max 2 on Web, max 1 on mobile; queue overflow. */
   .toast-stack {
     position: fixed;
@@ -2779,13 +2876,27 @@
     /* === Role preview bar — IB / Client segments on mobile (same as desktop) === */
     .role-bar {
       height: 32px;
-      padding: 0 var(--ds-dim-3xl);
-      justify-content: center;
+      padding: 0 12px;
       gap: var(--ds-dim-l);
     }
     .role-bar__label { display: none; }
-    .role-bar > .ds-button-group { display: inline-flex; }
-    .role-bar__pill { display: none !important; }
+    .role-bar__end .role-bar__label { display: none; }
+    .role-bar__pages { gap: 3px; }
+    .role-bar__end { gap: var(--ds-dim-s); margin-left: var(--ds-dim-l); }
+    .role-bar__page-chip,
+    .role-bar__audience-pill {
+      height: 20px;
+      padding: 0 7px;
+      font-size: 10px;
+      line-height: 14px;
+    }
+    .role-bar__end .ds-button-group--s { height: 24px; }
+    .role-bar__end .ds-button-group--s .ds-button-group__segment {
+      height: 20px;
+      padding: 0 8px;
+      font-size: 10px;
+      line-height: 14px;
+    }
 
     /* === Product header — Figma Navigation IB Cabinet (node 1:37534) === */
     .app-header {
@@ -2829,7 +2940,8 @@
     .app-header__balance:hover { background: var(--ds-bg-page); border-color: var(--ds-border-input-hover); }
     .app-header__balance:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); border-color: var(--ds-border-focus); }
     .app-header__right { margin-left: auto; gap: 16px; flex-shrink: 0; }
-    .app-header__avatar {
+    .app-header__avatar:not(.is-desktop-only),
+    .app-header__avatar--static {
       display: inline-flex !important;
       align-items: center;
       justify-content: center;
@@ -2842,9 +2954,6 @@
       line-height: 0;
     }
     .app-header__avatar--static {
-      display: inline-flex !important;
-      align-items: center;
-      justify-content: center;
       color: var(--ds-text-secondary);
     }
     .app-header__avatar svg {
@@ -2980,10 +3089,7 @@
       padding: 4px 0 20px;
     }
     .mobile-drawer__subitem {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      display: block;
       width: 100%;
       padding: 0;
       border: 0;
@@ -2997,12 +3103,19 @@
       text-align: left;
       cursor: pointer;
     }
+    .mobile-drawer__subitem .mobile-drawer__item-row {
+      align-items: center;
+    }
+    .mobile-drawer__subitem .mobile-drawer__item-label {
+      flex: 0 0 auto;
+    }
     .mobile-drawer__subitem:hover { color: var(--ds-text-secondary); }
     .mobile-drawer__subitem--active { color: var(--ds-primary); font-weight: 400; }
-    .mobile-drawer__subitem-trail {
+    .mobile-drawer__subitem-trail,
+    .mobile-drawer__item-row .app-header__dropdown-item__trail {
       display: inline-flex;
       align-items: center;
-      gap: var(--ds-dim-s);
+      gap: var(--ds-dim-m);
       flex-shrink: 0;
     }
 
@@ -3118,21 +3231,30 @@
       letter-spacing: -0.2px;
     }
     .stat-banner__delta { font-size: 13px; line-height: 18px; }
+    /* Stat row → static 2-col card grid (not horizontal scroll). */
     .stats {
-      flex-wrap: wrap; flex-direction: row;
-      padding: var(--ds-dim-3xl);
-      gap: var(--ds-dim-3xl);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--ds-dim-l);
+      padding: 0;
     }
     .stat-card {
-      flex: 1 1 calc(50% - var(--ds-dim-3xl));
-      padding: var(--ds-dim-2xl) var(--ds-dim-l);
+      flex: unset;
+      min-width: 0;
+      padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl);
       text-align: left;
       align-items: flex-start;
+      border: 1px solid var(--ds-border);
+      border-radius: var(--ds-radius-lg);
+      background: var(--ds-bg);
+      box-shadow: 0 1px 3px rgba(11, 11, 22, 0.06);
     }
-    .stat-card:not(:last-child) {
-      border-right: none;
+    .stat-card:not(:last-child),
+    .stat-card:first-child,
+    .stat-card:last-child {
+      border-right: 1px solid var(--ds-border);
       border-bottom: none;
-      padding-bottom: var(--ds-dim-2xl);
+      padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl);
     }
     .stat-value-row { justify-content: flex-start; }
 
@@ -3244,9 +3366,15 @@
       border: 1px solid var(--ds-border);
       border-radius: var(--ds-radius-lg);
       background: var(--ds-bg);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 1px 3px rgba(11, 11, 22, 0.06);
       padding: var(--ds-dim-3xl);
       display: flex; flex-direction: column; gap: var(--ds-dim-2xl);
+      transition: box-shadow 0.15s ease, border-color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .row-card:active {
+      box-shadow: 0 1px 2px rgba(11, 11, 22, 0.04);
+      border-color: var(--ds-border-input);
     }
     .row-card__head {
       display: flex; align-items: flex-start; justify-content: space-between;
@@ -3356,7 +3484,7 @@
       margin-bottom: var(--ds-dim-l);
     }
     .contest-detail-actions {
-      margin-bottom: var(--ds-dim-7xl);
+      margin-bottom: var(--ds-dim-6xl);
     }
     .contest-detail-action-bar {
       gap: var(--ds-dim-l) !important;
@@ -3418,20 +3546,31 @@
       border-color: var(--ds-primary);
     }
     .lb-card__name {
-      font-family: var(--ds-font-body); font-weight: 600;
-      font-size: 14px; line-height: 18px;
+      font-family: var(--ds-font-body);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0;
       color: var(--ds-text-primary);
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
+    .lb-card__name strong { font-weight: 600; }
     .lb-card__sub {
-      font-size: 12px; line-height: 16px;
-      color: var(--ds-text-muted);
-      margin-top: 2px;
+      font-family: var(--ds-font-body);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0;
+      color: var(--ds-text-secondary);
+      margin-top: 0;
       font-variant-numeric: tabular-nums;
     }
     .lb-card__prize {
-      font-family: var(--ds-font-body); font-weight: 600;
-      font-size: 14px; line-height: 18px;
+      font-family: var(--ds-font-body);
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0;
       color: var(--ds-text-primary);
       font-variant-numeric: tabular-nums;
       text-align: right;
@@ -3451,99 +3590,139 @@
       row-gap: var(--ds-dim-xs);
     }
 
-    /* User progress hero — compact on mobile */
+    /* User progress hero — clean stacked layout on mobile */
     .user-progress {
       padding: var(--ds-dim-4xl);
-      gap: var(--ds-dim-2xl);
+      gap: var(--ds-dim-3xl);
     }
-    .user-progress__row {
+    .user-progress--active {
+      position: relative;
+    }
+    .user-progress--active .user-progress__head {
       flex-direction: column;
       align-items: stretch;
-      gap: 0;
+      gap: var(--ds-dim-3xl);
     }
-    .user-progress__rank {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--ds-dim-s);
+    .user-progress--active .user-progress__rank-block {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--ds-dim-2xl);
+      min-width: 0;
+      padding-right: 88px;
     }
-    .user-progress--active .user-progress__rank {
+    .user-progress--active .user-progress__place {
+      font-size: 36px;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+    .user-progress--active .user-progress__badge {
+      position: absolute;
+      top: var(--ds-dim-4xl);
+      right: var(--ds-dim-4xl);
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 10px;
+      border-radius: var(--ds-radius-full);
+      background: color-mix(in srgb, var(--ds-on-primary) 16%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ds-on-primary) 24%, transparent);
+      font-family: var(--ds-font-body);
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 600;
+      letter-spacing: 0.15px;
+      color: var(--ds-on-primary);
+    }
+    .user-progress--active .user-progress__place-meta-suffix { display: none; }
+    .user-progress--active .user-progress__place-meta {
+      font-size: 13px;
+      line-height: 18px;
+    }
+    .user-progress--active .user-progress__stats-panel {
       flex-direction: row;
       align-items: baseline;
       justify-content: space-between;
-      width: 100%;
       flex-wrap: nowrap;
-      gap: var(--ds-dim-2xl);
-    }
-    .user-progress--active .user-progress__place {
-      flex-shrink: 0;
-    }
-    .user-progress--active .user-progress__place-meta {
-      margin-left: auto;
-      text-align: right;
-      white-space: nowrap;
-      flex-shrink: 1;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .user-progress__place {
-      font-size: 24px;
-      line-height: 28px;
-    }
-    .user-progress__score {
       text-align: left;
-      align-items: flex-start;
+      gap: var(--ds-dim-3xl);
       width: 100%;
-      gap: var(--ds-dim-s);
-      margin-top: var(--ds-dim-3xl);
-      padding-top: var(--ds-dim-3xl);
-      border-top: 1px solid color-mix(in srgb, var(--ds-on-primary) 18%, transparent);
+      padding: var(--ds-dim-3xl);
+      border-radius: var(--ds-radius-md);
+      background: color-mix(in srgb, var(--ds-on-primary) 8%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ds-on-primary) 12%, transparent);
     }
-    .user-progress__score-value {
-      font-size: 18px;
-      line-height: 24px;
+    .user-progress--active .user-progress__score-primary,
+    .user-progress--active .user-progress__score-hint {
+      font-size: 14px;
+      line-height: 20px;
     }
-    .user-progress__score-meta {
+    .user-progress--active .user-progress__score-hint { text-align: right; }
+    .user-progress--active .user-progress__score-primary strong {
+      font-size: inherit;
+      line-height: inherit;
+      letter-spacing: 0;
+    }
+    .user-progress--active .user-progress__bar { margin-top: 0; }
+    .user-progress--active .user-progress__caption {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--ds-dim-2xl);
       font-size: 13px;
       line-height: 18px;
-      max-width: 100%;
-    }
-    .user-progress__score-line {
-      white-space: normal;
-    }
-    .user-progress__bar { margin-top: var(--ds-dim-2xl); }
-    .user-progress__caption {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--ds-dim-s);
     }
 
-    /* Completed hero — stacked card layout on mobile */
+    /* Completed hero — same rhythm as active on mobile */
     .user-progress--completed {
+      position: relative;
       padding: var(--ds-dim-4xl);
-      gap: 0;
+      gap: var(--ds-dim-3xl);
+    }
+    .user-progress--completed .user-progress__badge--prize {
+      position: absolute;
+      top: var(--ds-dim-4xl);
+      right: var(--ds-dim-4xl);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--ds-dim-s);
+      height: 24px;
+      padding: 0 10px;
+      border-radius: var(--ds-radius-full);
+      background: color-mix(in srgb, var(--ds-on-primary) 16%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ds-on-primary) 24%, transparent);
+      font-family: var(--ds-font-body);
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 600;
+      letter-spacing: 0.15px;
+      color: var(--ds-on-primary);
     }
     .user-progress--completed .user-progress__completed-body {
       flex-direction: column;
       align-items: stretch;
-      gap: 0;
+      gap: var(--ds-dim-3xl);
     }
     .user-progress--completed .user-progress__completed-main {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      align-items: stretch;
-      gap: var(--ds-dim-3xl);
-      width: 100%;
+      display: contents;
     }
     .user-progress--completed .user-progress__rank-block {
-      gap: var(--ds-dim-xs);
-      justify-content: center;
-      padding-top: var(--ds-dim-s);
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--ds-dim-2xl);
+      min-width: 0;
+      padding-right: 0;
+    }
+    .user-progress--completed.user-progress--won .user-progress__rank-block {
+      padding-right: 88px;
     }
     .user-progress--completed .user-progress__place {
       font-size: 36px;
-      line-height: 40px;
-      letter-spacing: -0.7px;
+      line-height: 1;
+      letter-spacing: -0.5px;
     }
     .user-progress--completed .user-progress__place-meta {
       font-size: 13px;
@@ -3554,11 +3733,10 @@
       width: 100%;
       padding: var(--ds-dim-3xl);
       border-radius: var(--ds-radius-md);
-      background: color-mix(in srgb, var(--ds-on-primary) 9%, transparent);
-      border: 1px solid color-mix(in srgb, var(--ds-on-primary) 14%, transparent);
+      background: color-mix(in srgb, var(--ds-on-primary) 8%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ds-on-primary) 12%, transparent);
       gap: var(--ds-dim-s);
-      justify-content: center;
-      min-height: 88px;
+      min-height: 0;
     }
     .user-progress--completed .user-progress__result-label {
       font-size: 11px;
@@ -3566,35 +3744,46 @@
       letter-spacing: 0.2px;
     }
     .user-progress--completed .user-progress__result-main {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px;
+      flex-direction: row;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+    .user-progress--completed .user-progress__result-metric::before {
+      content: ' · ';
     }
     .user-progress--completed .user-progress__result-value {
-      font-size: 28px;
-      line-height: 32px;
-      letter-spacing: -0.4px;
+      font-size: 20px;
+      line-height: 24px;
+      letter-spacing: -0.2px;
     }
     .user-progress--completed .user-progress__result-metric {
-      font-size: 13px;
-      line-height: 18px;
-      opacity: 0.72;
+      font-size: 14px;
+      line-height: 20px;
+      opacity: 0.8;
     }
     .user-progress--completed .user-progress__outcome {
       width: 100%;
       max-width: none;
       align-items: flex-start;
       text-align: left;
-      margin-top: var(--ds-dim-3xl);
-      padding-top: var(--ds-dim-3xl);
-      border-top: 1px solid color-mix(in srgb, var(--ds-on-primary) 16%, transparent);
+      margin-top: 0;
+      padding: var(--ds-dim-3xl);
+      border-radius: var(--ds-radius-md);
+      background: color-mix(in srgb, var(--ds-on-primary) 6%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ds-on-primary) 10%, transparent);
+      border-top: 1px solid color-mix(in srgb, var(--ds-on-primary) 10%, transparent);
+      gap: var(--ds-dim-xs);
     }
-    .user-progress--completed .user-progress__outcome-head {
-      gap: var(--ds-dim-2xl);
+    .user-progress--completed .user-progress__outcome-head { display: none; }
+    .user-progress--completed:not(.user-progress--won) .user-progress__outcome-head {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--ds-dim-l);
     }
-    .user-progress--completed .user-progress__score-value {
-      font-size: 20px;
-      line-height: 24px;
+    .user-progress--completed:not(.user-progress--won) .user-progress__score-value {
+      font-size: 16px;
+      line-height: 22px;
     }
     .user-progress--completed .user-progress__score-meta {
       font-size: 13px;
@@ -3602,7 +3791,8 @@
       color: color-mix(in srgb, var(--ds-on-primary) 68%, transparent);
     }
     .user-progress--completed.user-progress--won .user-progress__outcome {
-      border-top-color: color-mix(in srgb, var(--ds-on-primary) 22%, #7dffb8 12%);
+      border-color: color-mix(in srgb, var(--ds-on-primary) 18%, #7dffb8 10%);
+      background: color-mix(in srgb, var(--ds-on-primary) 8%, #7dffb8 6%);
     }
 
     /* Sticky "jump to your row" — Button/S stacked (Figma 12670:14365) */
@@ -3634,10 +3824,10 @@
     .admin-table-scroll table { min-width: 640px; }
     .admin-detail-grid { grid-template-columns: 1fr !important; }
 
-    /* === Snackbar stack (mobile) — bottom, 16px inset + safe-area === */
+    /* === Snackbar stack (mobile) — top, below chrome, 16px inset === */
     .toast-stack {
-      top: auto !important;
-      bottom: calc(var(--ds-fixed-bottom) + var(--ds-dim-3xl)) !important;
+      top: calc(env(safe-area-inset-top, 0px) + var(--ds-mobile-header-h) + var(--ds-dim-3xl)) !important;
+      bottom: auto !important;
       left: var(--ds-dim-3xl) !important;
       right: var(--ds-dim-3xl) !important;
       max-width: none !important;
@@ -3647,6 +3837,10 @@
       width: 100% !important;
       max-width: none !important;
     }
+    .toast {
+      transform: translateY(calc(-100% - var(--ds-dim-3xl)));
+    }
+    .toast--visible { transform: translateY(0); }
 
     /* Tap targets & iOS zoom prevention */
     .ds-input-shell input { font-size: 16px; }
@@ -4760,29 +4954,6 @@ const ToastProvider = ({ children }) => {
 
 const useToast = () => useContext(ToastContext);
 
-/* RolePreviewBar — demo control above the real product header.
-   Lets the prototype reviewer switch between role mockups. NOT part of
-   the production interface. IB / Client segments on desktop and mobile. */
-const DEMO_PERSONA_OPTIONS = [
-  { id: 'ib',     label: 'IB Partner', title: 'IB Partner', desc: 'Creates and runs contests for their clients' },
-  { id: 'client', label: 'Client',     title: 'Client',     desc: 'Joins contests and views the leaderboard' },
-  { id: 'admin',  label: 'Admin',      title: 'Admin',      desc: 'Moderates contests and responds to alerts', hidden: true },
-];
-const VISIBLE_DEMO_PERSONAS = DEMO_PERSONA_OPTIONS.filter(opt => !opt.hidden);
-
-const RolePreviewBar = ({ role, onRoleChange }) => (
-  <div className="role-bar" role="region" aria-label="Demo: role switch">
-    <span className="role-bar__label">Demo preview:</span>
-    <ButtonGroup
-      value={role}
-      onChange={onRoleChange}
-      options={VISIBLE_DEMO_PERSONAS.map(({ id, label }) => ({ value: id, label }))}
-      size="s"
-      ariaLabel="Preview role"
-    />
-  </div>
-);
-
 /* Menu items per role — keeps the header consistent with each role's
    navigation surface. IB matches Figma 7pd3z (IB cabinet). */
 const HEADER_MENUS = {
@@ -4817,7 +4988,59 @@ const HEADER_MENUS = {
 const REBATE_PROTOTYPE_HREF = 'rebate/index.html';
 const IB_DASHBOARD_PROTOTYPE_HREF = 'ib-dashboard/index.html';
 
-/* Drawer uses the same hierarchical menu as AppHeader (Figma Navigation IB Cabinet 1:37196). */
+const PROTOTYPE_PAGE_CHIPS = [
+  { id: 'dashboard', label: 'Dashboard', href: IB_DASHBOARD_PROTOTYPE_HREF },
+  { id: 'contests', label: 'Contests', href: 'index.html#contests' },
+  { id: 'rebate', label: 'Rebate', href: REBATE_PROTOTYPE_HREF },
+];
+
+const PREVIEW_AUDIENCE_OPTIONS = [
+  { value: 'ib', label: 'Partner' },
+  { value: 'client', label: 'Client' },
+];
+
+/* RolePreviewBar — demo chrome above the product header.
+   Left: page chips. Right: audience switch (Partner / Client) on Contests. */
+const RolePreviewBar = ({ role, onRoleChange, activePage = 'contests' }) => (
+  <div className="role-bar" role="region" aria-label="Prototype navigation">
+    <div className="role-bar__pages" aria-label="Available pages">
+      {PROTOTYPE_PAGE_CHIPS.map((page) => {
+        const active = activePage === page.id;
+        if (active) {
+          return (
+            <span key={page.id} className="role-bar__page-chip role-bar__page-chip--active" aria-current="page">
+              {page.label}
+            </span>
+          );
+        }
+        return (
+          <a key={page.id} className="role-bar__page-chip" href={page.href}>
+            {page.label}
+          </a>
+        );
+      })}
+    </div>
+    <div className="role-bar__end">
+      {activePage === 'contests' ? (
+        <>
+          <span className="role-bar__label">View as:</span>
+          <ButtonGroup
+            value={role === 'client' ? 'client' : 'ib'}
+            onChange={onRoleChange}
+            options={PREVIEW_AUDIENCE_OPTIONS}
+            size="s"
+            ariaLabel="Preview audience"
+          />
+        </>
+      ) : (
+        <>
+          <span className="role-bar__label">View as:</span>
+          <span className="role-bar__audience-pill">Partner</span>
+        </>
+      )}
+    </div>
+  </div>
+);
 
 const isMobileProfileMenu = () => window.matchMedia('(max-width: 639px)').matches;
 
@@ -4925,7 +5148,7 @@ const AppHeaderAvatarIcon = () => (
    IB:    Logo + Menu + Wallet + Avatar
    Client: Logo + Menu (with badges & dropdowns) + Deposit + Avatar + Close
    Admin:  Logo + Menu + Wallet + Avatar
-   Mobile: balance chip + decorative avatar (non-interactive) + burger drawer. */
+   Mobile: balance chip + avatar + burger drawer. */
 const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0, onMenuOpen, onMenuSelect, onProfileAction }) => {
   const menu = HEADER_MENUS[role] || HEADER_MENUS.ib;
   const [internalKey, setInternalKey] = useState(activeKeyProp || menu[0].key);
@@ -5030,48 +5253,33 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
           $0.00
         </button>
         {role === 'ib' ? (
-          <>
-            <div className="app-header__profile is-desktop-only">
-              <button
-                type="button"
-                className="app-header__avatar"
-                id="ib-profile-trigger"
-                aria-label="Profile"
-                aria-haspopup="dialog"
-                aria-expanded={profileOpen}
-                aria-controls="ib-profile-menu"
-                onClick={(e) => { e.stopPropagation(); setProfileOpen(v => !v); }}
-              >
-                <AppHeaderAvatarIcon />
-              </button>
-              <IbProfileMenu
-                open={profileOpen}
-                onClose={() => setProfileOpen(false)}
-                onAction={onProfileAction}
-              />
-            </div>
-            <span className="app-header__avatar app-header__avatar--static is-mobile-only" aria-hidden="true">
-              <AppHeaderAvatarIcon />
-            </span>
-          </>
-        ) : (
-          <>
-            <button className="app-header__avatar is-desktop-only" type="button" aria-label="Profile">
+          <div className="app-header__profile">
+            <button
+              type="button"
+              className="app-header__avatar"
+              id="ib-profile-trigger"
+              aria-label="Profile"
+              aria-haspopup="dialog"
+              aria-expanded={profileOpen}
+              aria-controls="ib-profile-menu"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isMobileProfileMenu()) return;
+                setProfileOpen(v => !v);
+              }}
+            >
               <AppHeaderAvatarIcon />
             </button>
-            <span className="app-header__avatar app-header__avatar--static is-mobile-only" aria-hidden="true">
-              <AppHeaderAvatarIcon />
-            </span>
-          </>
-        )}
-        {role === 'client' && (
-          <button className="app-header__close" type="button" aria-label="Menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <line x1="4" y1="7" x2="20" y2="7" />
-              <line x1="4" y1="12" x2="20" y2="12" />
-              <line x1="4" y1="17" x2="20" y2="17" />
-            </svg>
-          </button>
+            <IbProfileMenu
+              open={profileOpen}
+              onClose={() => setProfileOpen(false)}
+              onAction={onProfileAction}
+            />
+          </div>
+        ) : (
+          <span className="app-header__avatar app-header__avatar--static" aria-hidden="true">
+            <AppHeaderAvatarIcon />
+          </span>
         )}
         {/* Mobile burger — opens drawer (CSS-hidden on >=640px) */}
         <button
@@ -5102,6 +5310,10 @@ const isMobileDrawerItemDisabled = (item) => {
   if (item.key === 'revenue' || item.key === 'promo') return false;
   return !!item.disabled;
 };
+
+const shouldCloseMobileDrawerOnSelect = (item) => (
+  item.key !== 'revenue' && item.key !== 'promo'
+);
 
 const MobileDrawer = ({
   open,
@@ -5144,13 +5356,19 @@ const MobileDrawer = ({
   const renderSubTrail = (sub) => {
     if (role === 'client' && sub.key === 'contests') {
       return (
-        <span className="mobile-drawer__subitem-trail">
+        <span className="app-header__dropdown-item__trail">
           <Tag label={String(clientContestsTotal)} variant="brand" />
           {clientNewContestsCount > 0 && <Tag label="New" variant="warning" />}
         </span>
       );
     }
-    if (sub.badge) return <span className="mobile-drawer__subitem-trail"><Tag label={sub.badge} variant="brand" /></span>;
+    if (sub.badge) {
+      return (
+        <span className="app-header__dropdown-item__trail">
+          <Tag label={sub.badge} variant="brand" />
+        </span>
+      );
+    }
     return null;
   };
 
@@ -5201,10 +5419,15 @@ const MobileDrawer = ({
                           key={sub.key}
                           type="button"
                           className={`mobile-drawer__subitem ${activeKey === sub.key ? 'mobile-drawer__subitem--active' : ''}`}
-                          onClick={() => { onSelect && onSelect(sub); onClose && onClose(); }}
+                          onClick={() => {
+                            onSelect && onSelect(sub);
+                            if (shouldCloseMobileDrawerOnSelect(sub)) onClose && onClose();
+                          }}
                         >
-                          <span className="mobile-drawer__item-label">{sub.label}</span>
-                          {renderSubTrail(sub)}
+                          <span className="mobile-drawer__item-row">
+                            <span className="mobile-drawer__item-label">{sub.label}</span>
+                            {renderSubTrail(sub)}
+                          </span>
                         </button>
                       ))}
                     </div>
@@ -5223,12 +5446,12 @@ const MobileDrawer = ({
                 onClick={() => {
                   if (drawerDisabled) return;
                   onSelect && onSelect(item);
-                  onClose && onClose();
+                  if (shouldCloseMobileDrawerOnSelect(item)) onClose && onClose();
                 }}
               >
                 <span className="mobile-drawer__item-row">
                   <span className="mobile-drawer__item-label">{item.label}</span>
-                  {item.badge ? <Tag label={item.badge} variant="brand" /> : null}
+                  {item.badge ? <span className="app-header__menu-badge">{item.badge}</span> : null}
                 </span>
               </button>
             );
@@ -7494,11 +7717,11 @@ const IBContestDetail = ({ onNavigate, contest }) => {
       <div className="contest-detail-actions contest-detail-action-bar">
         {isMobile ? (
           <>
-            <Button variant="outline" size="s" icon="download" disabled={isFresh}>Export</Button>
+            <Button variant="outline" size="m" icon="download" disabled={isFresh}>Export</Button>
             {!isCompleted && (
-              <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
+              <Button variant="outline" size="m" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
             )}
-            <Button variant="primary" size="s" icon="share" className="contest-detail-action-bar__share" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
+            <Button variant="primary" size="m" icon="share" className="contest-detail-action-bar__share" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
           </>
         ) : (
           <>
@@ -8230,6 +8453,12 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
 
     {isCompleted ? (
       <div className={`user-progress user-progress--completed${contest.yourReward ? ' user-progress--won' : ''}`}>
+        {contest.yourReward && (
+          <span className="user-progress__badge user-progress__badge--prize">
+            <Icon name="gift" size="xs" />
+            {stripPrize(contest.yourReward)}
+          </span>
+        )}
         <div className="user-progress__completed-body">
           <div className="user-progress__completed-main">
             <div className="user-progress__rank-block">
@@ -8254,22 +8483,25 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
             <span className="user-progress__score-meta">
               {contest.yourReward
                 ? 'Reward credited to trading account'
-                : 'No prize this time — keep trading to improve next time.'}
+                : 'Keep trading to improve next time.'}
             </span>
           </div>
         </div>
       </div>
     ) : (
       <div className="user-progress user-progress--active">
-        <div className="user-progress__row">
-          <div className="user-progress__rank">
+        <span className="user-progress__badge">Top 25%</span>
+        <div className="user-progress__head">
+          <div className="user-progress__rank-block">
             <span className="user-progress__place">#12</span>
-            <span className="user-progress__place-meta">of {contest.participants || '—'} participants · Top 25%</span>
-          </div>
-          <div className="user-progress__score">
-            <span className="user-progress__score-line">
-              <strong>67.4</strong> lots · To 3rd place: 88.8 more lots
+            <span className="user-progress__place-meta">
+              of {contest.participants || '—'} participants
+              <span className="user-progress__place-meta-suffix"> · Top 25%</span>
             </span>
+          </div>
+          <div className="user-progress__stats-panel">
+            <p className="user-progress__score-primary"><strong>67.4</strong> lots</p>
+            <p className="user-progress__score-hint"><strong>88.8</strong> lots to 3rd place</p>
           </div>
         </div>
         <div className="user-progress__bar">
@@ -8277,7 +8509,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
         </div>
         <div className="user-progress__caption">
           <span><strong>43%</strong> to prize zone</span>
-          <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+          <span className="user-progress__caption-time">
             <Icon name="clock" size="sm" /> {contest.days || '—'} 4 h left
           </span>
         </div>
@@ -8666,12 +8898,8 @@ const App = () => {
       window.location.assign(REBATE_PROTOTYPE_HREF);
       return;
     }
-    if (role === 'ib' && item.key === 'revenue') {
-      showAppToast('“Revenue statistics” — section not implemented in this prototype');
-      return;
-    }
-    if (role === 'ib' && item.key === 'promo') {
-      showAppToast('“Promo materials” — section not implemented in this prototype');
+    if (role === 'ib' && (item.key === 'revenue' || item.key === 'promo')) {
+      showAppToast('This section will be added later. For now, use IB Dashboard, Contests, or Rebate.');
       return;
     }
     if (role === 'client' && item.key === 'contests') {
@@ -8689,7 +8917,7 @@ const App = () => {
     showAppToast(`“${item.label}” — section not implemented in this prototype`);
   };
   const handleDrawerSelect = (item) => {
-    setMobileDrawerOpen(false);
+    if (shouldCloseMobileDrawerOnSelect(item)) setMobileDrawerOpen(false);
     handleNavMenuSelect(item);
   };
   /* In-app toast helper that bubbles up through the ToastProvider via

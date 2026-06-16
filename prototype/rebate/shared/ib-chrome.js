@@ -7,18 +7,30 @@
   var rebateHref = (script && script.dataset.rebateHref) || '../rebate/index.html';
   var growthActive = activeKey === 'contests' || activeKey === 'rebate';
 
-  var roleGroupHtml =
-      '<div class="ds-button-group ds-button-group--s" role="radiogroup" aria-label="Preview role">' +
-        '<button type="button" class="ds-button-group__segment ds-button-group__segment--active" data-demo-role="ib" aria-pressed="true">IB Partner</button>' +
-        (activeKey === 'contests'
-          ? '<button type="button" class="ds-button-group__segment" data-demo-role="client" aria-pressed="false">Client</button>'
-          : '') +
-      '</div>';
+  function renderPrototypePageChip(id, label, href, isActive) {
+    if (isActive) {
+      return '<span class="role-bar__page-chip role-bar__page-chip--active" aria-current="page">' + label + '</span>';
+    }
+    return '<a class="role-bar__page-chip" href="' + href + '">' + label + '</a>';
+  }
+
+  var pageChipsHtml =
+    '<div class="role-bar__pages" aria-label="Available pages">' +
+      renderPrototypePageChip('dashboard', 'Dashboard', dashboardHref, activeKey === 'dashboard') +
+      renderPrototypePageChip('contests', 'Contests', contestsBase + '#contests', activeKey === 'contests') +
+      renderPrototypePageChip('rebate', 'Rebate', rebateHref, activeKey === 'rebate') +
+    '</div>';
+
+  var audienceHtml =
+    '<div class="role-bar__end">' +
+      '<span class="role-bar__label">View as:</span>' +
+      '<span class="role-bar__audience-pill">Partner</span>' +
+    '</div>';
 
   var html =
-    '<div class="role-bar" role="region" aria-label="Demo: role preview">' +
-      '<span class="role-bar__label">Demo preview:</span>' +
-      roleGroupHtml +
+    '<div class="role-bar" role="region" aria-label="Prototype navigation">' +
+      pageChipsHtml +
+      audienceHtml +
     '</div>' +
     '<header class="app-header" role="banner">' +
       '<div class="app-header__brand">' +
@@ -154,6 +166,57 @@
 
   document.body.classList.add('has-ib-chrome');
   document.body.insertAdjacentHTML('afterbegin', html);
+  document.body.insertAdjacentHTML('beforeend',
+    '<div class="toast-stack" id="ib-chrome-toast-stack" aria-label="Notifications"></div>'
+  );
+
+  var STUB_SECTION_TOAST_MSG =
+    'This section will be added later. For now, use IB Dashboard, Contests, or Rebate.';
+  var TOAST_ICON_INFO =
+    '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+      '<circle cx="12" cy="12" r="10" fill="#8dc1ff"/>' +
+      '<path d="M12 8v5M12 16h.01" stroke="#161616" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '</svg>';
+  var TOAST_ICON_CLOSE =
+    '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">' +
+      '<path fill-rule="evenodd" clip-rule="evenodd" d="M10.5858 12L5.29289 6.70711L6.70711 5.29289L12 10.5858L17.2929 5.29289L18.7071 6.70711L13.4142 12L18.7071 17.2929L17.2929 18.7071L12 13.4142L6.70711 18.7071L5.29289 17.2929L10.5858 12Z" fill="currentColor"/>' +
+    '</svg>';
+  var _toastTimer = null;
+
+  function showIbChromeToast(msg) {
+    var stack = document.getElementById('ib-chrome-toast-stack');
+    if (!stack) return;
+    if (_toastTimer) {
+      clearTimeout(_toastTimer);
+      _toastTimer = null;
+    }
+    stack.innerHTML = '';
+    var el = document.createElement('div');
+    el.className = 'toast';
+    el.setAttribute('role', 'status');
+    el.innerHTML =
+      '<span class="toast__icon">' + TOAST_ICON_INFO + '</span>' +
+      '<div class="toast__text"><span class="toast__msg"></span></div>' +
+      '<button type="button" class="toast__close" aria-label="Close">' + TOAST_ICON_CLOSE + '</button>';
+    el.querySelector('.toast__msg').textContent = msg;
+    el.querySelector('.toast__close').addEventListener('click', function () {
+      el.classList.remove('toast--visible');
+      window.setTimeout(function () { el.remove(); }, 300);
+      if (_toastTimer) {
+        clearTimeout(_toastTimer);
+        _toastTimer = null;
+      }
+    });
+    stack.appendChild(el);
+    requestAnimationFrame(function () {
+      el.classList.add('toast--visible');
+    });
+    _toastTimer = window.setTimeout(function () {
+      el.classList.remove('toast--visible');
+      window.setTimeout(function () { el.remove(); }, 300);
+      _toastTimer = null;
+    }, 6000);
+  }
 
   var drawer = document.getElementById('ib-mobile-drawer');
   var burger = document.querySelector('.app-header__burger');
@@ -262,23 +325,6 @@
   });
 
   document.body.addEventListener('click', function (event) {
-    var roleBtn = event.target.closest('[data-demo-role]');
-    if (roleBtn && !roleBtn.disabled) {
-      var group = roleBtn.closest('.ds-button-group');
-      if (group) {
-        group.querySelectorAll('[data-demo-role]').forEach(function (btn) {
-          var active = btn === roleBtn;
-          btn.classList.toggle('ds-button-group__segment--active', active);
-          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-        });
-      }
-      var picked = roleBtn.dataset.demoRole;
-      if (picked === 'client' && activeKey === 'contests') {
-        window.location.assign(contestsBase + '#client');
-      }
-      return;
-    }
-
     var profileAction = event.target.closest('[data-profile-action]');
     if (profileAction) {
       var action = profileAction.dataset.profileAction;
@@ -341,14 +387,8 @@
       closeDrawer();
       return;
     }
-    if (key === 'revenue') {
-      window.alert('Revenue statistics — not implemented in this prototype.');
-      closeDrawer();
-      return;
-    }
-    if (key === 'promo') {
-      window.alert('Promo materials — not implemented in this prototype.');
-      closeDrawer();
+    if (key === 'revenue' || key === 'promo') {
+      showIbChromeToast(STUB_SECTION_TOAST_MSG);
       return;
     }
     closeDrawer();
