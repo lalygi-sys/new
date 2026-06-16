@@ -35,6 +35,8 @@
 
     --ds-bg: #ffffff;
     --ds-bg-page: #f7f7f8;
+    --ds-surface-container: #f4f5f8;
+    --ib-chrome-offset: 100px;
     --ds-bg-hover: #fafafa;
     --ds-bg-selected: #eef1ff;
     --ds-row-hover: #F5F7FA;
@@ -120,9 +122,8 @@
     --ds-bp-mobile:  640px;
     --ds-bp-tablet:  1024px;
 
-    /* Mobile chrome heights — used to offset content from fixed header & tab bar */
-    --ds-mobile-header-h: 88px;  /* role-bar 32 + app-header 56 */
-    --ds-mobile-tabbar-h: 64px;
+    /* Mobile chrome heights — used to offset content from fixed header */
+    --ds-mobile-header-h: 96px;  /* role-bar 32 + app-header 64 */
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -197,8 +198,19 @@
   .ds-btn--secondary:hover:not(:disabled) { background: var(--ds-secondary-bg-hover); border-color: var(--ds-secondary-bg-hover); }
   .ds-btn--tertiary { background: transparent; border-color: transparent; color: var(--ds-text-secondary); }
   .ds-btn--tertiary:hover:not(:disabled) { color: var(--ds-text-primary); background: var(--ds-bg-page); }
-  .ds-btn--text { background: transparent; border-color: transparent; color: var(--ds-text-primary); border-radius: var(--ds-dim-l); }
-  .ds-btn--text.ds-btn--s { padding: 0 var(--ds-dim-3xl); }
+  .ds-btn--text { background: transparent; border-color: transparent; color: var(--ds-text-primary); }
+  /* Button Text/S — Figma Components 885:24670: h=32, px=16, gap=8, radius=8, Body 02 bold */
+  .ds-btn--text.ds-btn--s {
+    height: 32px;
+    padding: 0 var(--ds-dim-3xl);
+    border-radius: var(--ds-radius-md);
+    gap: var(--ds-dim-l);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  .ds-btn--text.ds-btn--s svg { width: 18px; height: 18px; }
   .ds-btn--text:hover:not(:disabled) { background: var(--ds-bg-page); }
   .ds-btn--positive { background: var(--ds-positive); color: #fff; border-color: var(--ds-positive); }
   .ds-btn--positive:hover:not(:disabled) { background: var(--ds-positive-hover); border-color: var(--ds-positive-hover); }
@@ -207,6 +219,36 @@
   /* Outline = DS secondaryVariant */
   .ds-btn--outline { background: var(--ds-bg); color: var(--ds-text-primary); border-color: var(--ds-border-input); }
   .ds-btn--outline:hover:not(:disabled) { background: var(--ds-bg-page); border-color: var(--ds-border-input-hover); }
+  .ds-btn--stacked.ds-btn--s {
+    height: auto;
+    min-height: 32px;
+    padding: var(--ds-dim-m) var(--ds-dim-3xl);
+    gap: var(--ds-dim-l);
+    white-space: normal;
+  }
+  .ds-btn--stacked.ds-btn--s svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .ds-btn--stacked.ds-btn--outline { background: var(--ds-surface-low); }
+  .ds-btn__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+  }
+  .ds-btn__stack-eyebrow {
+    font-weight: 600;
+    font-size: 10px;
+    line-height: 12px;
+    letter-spacing: 0.15px;
+  }
+  .ds-btn__stack-label {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+  }
   .ds-btn--block { width: 100%; }
   .ds-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   .ds-btn:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); }
@@ -245,6 +287,19 @@
      Default: subtle. Hover: tints red on negative-bg. */
   .ds-icon-btn--danger { border-color: transparent; background: transparent; color: var(--ds-text-secondary); }
   .ds-icon-btn--danger:hover { background: var(--ds-negative-bg); color: var(--ds-negative); border-color: transparent; }
+
+  /* Text variant — Figma IconButton Variant=Text (12670:13562): 32×32, radius 8, no border. */
+  .ds-icon-btn--text {
+    border-color: transparent;
+    background: transparent;
+    border-radius: var(--ds-radius-md);
+    color: var(--ds-text-secondary);
+  }
+  .ds-icon-btn--text:hover {
+    background: var(--ds-bg-hover);
+    color: var(--ds-text-primary);
+    border-color: transparent;
+  }
 
   /* ── DS Tag (Components: Utility 01 Bold, full radius) ── */
   .ds-tag {
@@ -415,6 +470,11 @@
   .ds-input-shell--error.ds-input-shell--focus { box-shadow: var(--ds-focus-ring-error); }
   .ds-input-shell--disabled { background: rgba(22,22,22,0.06); cursor: not-allowed; }
   .ds-input-shell--button { cursor: pointer; user-select: none; }
+  .ds-input-shell--button .ds-input-field {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   /* Size S (32/8/12/18/Body-02) */
   .ds-input-shell--s { height: 32px; padding: var(--ds-dim-s) var(--ds-dim-2xl); border-radius: var(--ds-radius-md); }
@@ -630,18 +690,21 @@
      `display: flex; flex-direction: column` нужен, чтобы внутренние страницы
      (`.screen-enter`) могли тянуть свои элементы по вертикали через flex-grow. */
   .ds-container {
-    max-width: 1216px; margin: var(--ds-dim-3xl) auto var(--ds-dim-6xl); padding: var(--ds-dim-7xl);
+    max-width: 1216px; width: 100%; margin: 0 auto; padding: var(--ds-dim-7xl);
     background: var(--ds-bg); border-radius: var(--ds-radius-xl);
     border: 1px solid var(--ds-border);
-    min-height: calc(100vh - 100px - var(--ds-dim-3xl) - var(--ds-dim-6xl));
+    min-height: calc(100vh - var(--ib-chrome-offset) - 3 * var(--ds-dim-3xl));
+    flex: 1 1 auto;
     display: flex; flex-direction: column;
+    scrollbar-gutter: stable;
+    box-sizing: border-box;
   }
   /* Контест-страница: фиксируем максимальную высоту контейнера в один экран,
      чтобы открытая боковая панель не «толкала» рамку наружу — панель обязана
      уложиться в ту же высоту, что и таблица (со внутренним скроллом, если
      календарь не помещается). */
   .ds-container:has(.contests-layout) {
-    max-height: calc(100vh - 100px - var(--ds-dim-3xl) - var(--ds-dim-6xl));
+    max-height: calc(100vh - var(--ib-chrome-offset) - 3 * var(--ds-dim-3xl));
     overflow: hidden;
   }
   /* Wizard-page only: split the outer white frame into two standalone panels;
@@ -681,9 +744,32 @@
      Close = DS IconButton M (40×40, ghost, radius-lg, icon 20). */
   .ds-modal__header {
     padding: var(--ds-dim-5xl) var(--ds-dim-5xl) var(--ds-dim-3xl);
-    display: flex; justify-content: space-between; align-items: flex-start; gap: var(--ds-dim-3xl);
+    display: flex; justify-content: space-between; align-items: center; gap: var(--ds-dim-3xl);
   }
   .ds-modal__title { flex: 1 1 auto; min-width: 0; }
+  .ds-modal__title-row {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-dim-2xl);
+    min-width: 0;
+  }
+  .ds-modal__header-meta {
+    flex: 0 0 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+  }
+  .contest-period-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ds-text-muted);
+    font-family: var(--ds-font-body);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
   .ds-modal__body { padding: 0 var(--ds-dim-5xl) var(--ds-dim-5xl); overflow-y: auto; }
   .ds-modal__footer {
     padding: var(--ds-dim-3xl) var(--ds-dim-5xl) var(--ds-dim-5xl);
@@ -703,7 +789,18 @@
   /* APP-LEVEL STYLES                                */
   /* ═══════════════════════════════════════════════ */
 
-  .app { padding-top: 100px; min-height: 100vh; }
+  .app {
+    padding: calc(var(--ib-chrome-offset) + var(--ds-dim-3xl)) var(--ds-dim-3xl) var(--ds-dim-3xl);
+    min-height: 100vh;
+    background: var(--ds-surface-container);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .app:has(.contests-layout) {
+    overflow: hidden;
+    max-height: 100vh;
+  }
 
   /* ── Role preview bar (above the real product header) ──
      Demo-only control to switch between IB / Client / Admin views.
@@ -907,6 +1004,7 @@
   }
   .search-clear:hover { color: var(--ds-text-primary); background: var(--ds-bg-hover); }
   .search-wrap.is-open .tabs-action { display: none; }
+  .page-header-search { display: none; }
   .tabs-action {
     display: inline-flex; align-items: center; justify-content: center; gap: var(--ds-dim-l);
     height: 32px; padding: 0 16px; border-radius: var(--ds-radius-md);
@@ -917,6 +1015,7 @@
   .tabs-action:hover { background: var(--ds-bg-hover); }
   .tabs-action:active { background: var(--ds-bg-page); }
   .tabs-action svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .tabs-action__label { font-size: 14px; line-height: 20px; }
   /* DS Breadcrumb — semantic <nav><ol>, Body 02 (14/20) */
   .breadcrumb { margin-bottom: var(--ds-dim-3xl); }
   .breadcrumb__list {
@@ -949,6 +1048,26 @@
     display: flex; justify-content: space-between; align-items: center;
   }
   .card__body { padding: var(--ds-dim-5xl); }
+  .wizard-review-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-dim-5xl);
+  }
+
+  .contest-detail-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-dim-3xl);
+    flex-wrap: wrap;
+    margin-bottom: var(--ds-dim-2xl);
+  }
+  .contest-detail-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-dim-l);
+    flex-wrap: wrap;
+    margin-bottom: var(--ds-dim-5xl);
+  }
 
   /* Stats row */
   /* DS statcard row: left-aligned, divider between columns */
@@ -973,7 +1092,6 @@
   .stat-banners {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-template-rows: auto auto auto;
     column-gap: var(--ds-dim-2xl);
     row-gap: var(--ds-dim-s);
     align-items: stretch;
@@ -995,25 +1113,18 @@
   .stat-banners-placeholder .icon { color: var(--ds-text-tertiary); flex-shrink: 0; }
   .stat-banner {
     position: relative;
-    display: grid;
-    grid-template-rows: subgrid;
-    grid-row: span 3;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     min-width: 0;
     padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl);
     border-radius: var(--ds-radius-lg);
     border: 1px solid var(--ds-border);
     background: var(--ds-bg);
-    overflow: hidden;
-  }
-  @supports not (grid-template-rows: subgrid) {
-    .stat-banner {
-      display: flex;
-      flex-direction: column;
-    }
+    overflow: visible;
   }
   .stat-banner__head {
-    grid-row: 1;
-    align-self: start;
+    flex: 0 0 auto;
     display: flex; align-items: flex-start; justify-content: space-between;
     gap: var(--ds-dim-s); width: 100%; min-height: 16px;
   }
@@ -1032,6 +1143,28 @@
     background: var(--ds-row-hover); color: var(--ds-text-primary);
   }
   .stat-banner__info-btn svg { width: 20px; height: 20px; display: block; }
+  .stat-banner__info-btn.info-tip {
+    position: relative;
+    cursor: help;
+  }
+  .stat-banner__info-btn.info-tip .info-tip__bubble {
+    left: auto;
+    right: 0;
+    transform: none;
+    max-width: min(260px, calc(100vw - 48px));
+    z-index: 1001;
+  }
+  .stat-banner__info-btn.info-tip.info-tip--bottom .info-tip__bubble::after {
+    left: auto;
+    right: 10px;
+    transform: none;
+  }
+  .stat-banner__info-btn.info-tip.is-open .info-tip__bubble,
+  .stat-banner__info-btn.info-tip:hover .info-tip__bubble,
+  .stat-banner__info-btn.info-tip:focus-visible .info-tip__bubble {
+    opacity: 1;
+    visibility: visible;
+  }
   .stat-banner__info-spacer {
     flex-shrink: 0; width: 32px; height: 32px; margin: -4px -4px 0 0;
   }
@@ -1046,23 +1179,17 @@
     font-family: var(--ds-font-body); font-size: 12px; line-height: 16px;
     letter-spacing: 0.15px; font-weight: 500; color: var(--ds-text-secondary);
   }
-  .stat-banner__live-dot {
-    width: 6px; height: 6px; flex-shrink: 0; margin-top: 5px;
-    border-radius: 50%;
-    background: var(--ds-positive);
-    box-shadow: 0 0 0 3px rgba(34, 168, 84, 0.2);
-  }
   .stat-banner__value-row {
-    grid-row: 2;
-    align-self: start;
-    display: flex; align-items: baseline; flex-wrap: wrap;
-    gap: var(--ds-dim-l);
-    row-gap: var(--ds-dim-xs);
+    flex: 0 0 auto;
+    display: flex; flex-direction: row; flex-wrap: nowrap;
+    align-items: baseline; gap: var(--ds-dim-l);
     min-height: 28px; min-width: 0;
-    padding-top: var(--ds-dim-l);
+    margin-top: var(--ds-dim-l);
   }
-  @supports not (grid-template-rows: subgrid) {
-    .stat-banner__value-row { margin-top: var(--ds-dim-l); padding-top: 0; }
+  /* If any card in the row needs a stacked delta, all cards stack delta under value. */
+  .stat-banners--delta-stacked .stat-banner__value-row {
+    flex-direction: column; align-items: flex-start; flex-wrap: nowrap;
+    gap: var(--ds-dim-xs); min-height: 0;
   }
   .stat-banner__value {
     flex-shrink: 0;
@@ -1071,15 +1198,15 @@
     color: var(--ds-text-primary); font-variant-numeric: tabular-nums;
   }
   .stat-banner__foot {
-    grid-row: 3;
-    align-self: start;
+    flex: 0 0 auto;
+    margin-top: var(--ds-dim-l);
+    container-type: inline-size;
+    container-name: stat-foot;
     display: flex; align-items: flex-start;
     width: 100%; min-width: 0;
-    min-height: 14px;
+    height: auto; min-height: 0;
     padding-top: 0;
-  }
-  @supports not (grid-template-rows: subgrid) {
-    .stat-banner__foot { margin-top: var(--ds-dim-xs); padding-top: 0; }
+    overflow: hidden;
   }
   /* Foundations: Utility 01 bold — sentiment delta справа от числа */
   .stat-banner__delta {
@@ -1096,14 +1223,21 @@
     font-size: 11px; line-height: 14px; color: var(--ds-text-tertiary);
     min-width: 0; width: 100%; max-width: 100%;
   }
-  /* Две части: в одну строку с «·», вторая уходит ниже без разделителя */
+  /* Две части: узкая foot — вторая метрика строкой ниже; широкая — в одну строку с «·» */
   .stat-banner__hint--split {
-    display: flex; flex-wrap: wrap; align-items: flex-start; align-content: flex-start;
-    column-gap: 0; row-gap: var(--ds-dim-s);
+    display: flex; flex-direction: column; align-items: flex-start;
+    row-gap: var(--ds-dim-s);
     min-width: 0; width: 100%; max-width: 100%;
   }
   .stat-banner__hint-part { white-space: nowrap; max-width: 100%; }
-  .stat-banner__hint-sep { white-space: pre; flex-shrink: 0; }
+  .stat-banner__hint-sep { display: none; white-space: pre; }
+  @container stat-foot (min-width: 164px) {
+    .stat-banner__hint--split {
+      flex-direction: row; flex-wrap: nowrap; align-items: baseline;
+      row-gap: 0; column-gap: 0;
+    }
+    .stat-banner__hint--split .stat-banner__hint-sep { display: inline; flex-shrink: 0; }
+  }
   .stat-banner__track {
     height: 3px; border-radius: 999px; background: var(--ds-bg-page);
     overflow: hidden; margin-top: var(--ds-dim-l);
@@ -1120,6 +1254,43 @@
     gap: var(--ds-dim-3xl); margin-bottom: var(--ds-dim-3xl);
   }
   .table-header__meta { font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); font-weight: 400; }
+  .leaderboard-table-header {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: var(--ds-dim-2xl);
+  }
+  .leaderboard-table-header .rig-title-04 {
+    display: inline-flex;
+    align-items: baseline;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    flex: 0 1 auto;
+    min-width: 0;
+    margin: 0;
+    font-family: var(--ds-font-body);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: var(--ds-text-primary);
+  }
+  .leaderboard-table-header__count {
+    margin-left: var(--ds-dim-2xl);
+    white-space: nowrap;
+    color: var(--ds-text-muted);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+  }
+  .leaderboard-table-header .table-header__meta {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
 
   /* Toolbar: search + filter chips above a data table.
      Used in IBMyContests to slice the contest list by name and status. */
@@ -1184,7 +1355,7 @@
   }
   .contests-layout .table-wrap--sticky-last thead th:last-child { z-index: 3; }
   .contests-layout .table-wrap--sticky-last tbody td:last-child { z-index: 1; }
-  .contests-layout__main > .row-card-list {
+  .contests-layout__content > .row-card-list {
     flex: 1 1 auto; min-height: 0; overflow-y: auto;
   }
   .table-wrap--sticky-last > table { min-width: 1080px; }
@@ -1328,6 +1499,7 @@
     20%, 60% { background: var(--ds-primary-content); box-shadow: inset 0 0 0 9999px var(--ds-primary-content); }
   }
   tr.leaderboard-flash td { animation: leaderboard-flash 1.6s ease-in-out 0s 2; }
+  .lb-card--flash { animation: leaderboard-flash 1.6s ease-in-out 0s 2; }
 
   /* Medal */
   .medal { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; line-height: 20px; font-weight: 600; background: transparent; color: var(--ds-text-secondary); border: 1px solid var(--ds-border); }
@@ -1375,9 +1547,23 @@
   }
   .prize-row-grid {
     display: grid;
-    grid-template-columns: 40px 1fr 180px 40px;
+    grid-template-columns: 40px 1fr 120px 40px;
     gap: var(--ds-dim-3xl);
     align-items: center;
+  }
+  .prize-row-grid .ds-input-wrap { max-width: 120px; width: 100%; }
+
+  .wizard-review-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--ds-dim-5xl);
+    width: 100%;
+  }
+  .wizard-review-grid .review-field {
+    grid-column: 1 / -1;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
   }
 
   /* Prize pool toolbar — same grid as prize rows */
@@ -1387,12 +1573,11 @@
     justify-self: start;
     min-width: 0;
   }
-  .prize-pool-toolbar__cell--action .ds-btn { padding-left: 0; }
   .prize-pool-toolbar__total {
-    grid-column: 3;
-    text-align: left;
-    justify-self: start;
-    min-width: 0;
+    grid-column: 3 / -1;
+    text-align: right;
+    justify-self: end;
+    white-space: nowrap;
   }
 
   /* Review-field — clickable cell in IB review summary card.
@@ -1463,6 +1648,28 @@
   .type-info-btn:hover { background: var(--ds-bg-page); }
   .type-info-btn:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); border-color: var(--ds-border-focus); }
   .type-info-btn svg { width: 18px; height: 18px; display: block; fill: currentColor; }
+  button.info-tip.info-tip--bottom {
+    position: relative;
+    cursor: help;
+  }
+  button.info-tip.info-tip--bottom .info-tip__bubble {
+    left: auto;
+    right: 0;
+    transform: none;
+    max-width: min(260px, calc(100vw - 48px));
+    z-index: 1001;
+  }
+  button.info-tip.info-tip--bottom .info-tip__bubble::after {
+    left: auto;
+    right: 10px;
+    transform: none;
+  }
+  button.info-tip.is-open .info-tip__bubble,
+  button.info-tip:hover .info-tip__bubble,
+  button.info-tip:focus-visible .info-tip__bubble {
+    opacity: 1;
+    visibility: visible;
+  }
 
   /* Score block in type modal */
   .score-formula {
@@ -1497,12 +1704,12 @@
   /* DS ProgressBar — Figma "Progress bar / Solid" (58829:8687, 11177:6303).
      Track:  color/key/secondary-container = rgba(22,22,22,0.15)
      Fill:   color/key/secondary           = #161616 (без floating label-баббла) */
-  .ds-progress { position: relative; width: 100%; background: rgba(22, 22, 22, 0.15); border-radius: 100px; overflow: hidden; }
-  .ds-progress--xs { height: 2px; }
-  .ds-progress--s  { height: 4px; }
-  .ds-progress--m  { height: 6px; }
-  .ds-progress--l  { height: 8px; }
-  .ds-progress--xl { height: 10px; }
+  .ds-progress { position: relative; width: 100%; height: 4px; background: rgba(22, 22, 22, 0.15); border-radius: 100px; overflow: hidden; }
+  .ds-progress--xs,
+  .ds-progress--s,
+  .ds-progress--m,
+  .ds-progress--l,
+  .ds-progress--xl { height: 4px; }
   .ds-progress__bar { height: 100%; background: #161616; border-radius: 100px; transition: width 0.5s ease; }
   .ds-progress--on-brand { background: rgba(255,255,255,0.22); }
   .ds-progress--on-brand .ds-progress__bar { background: #fff; }
@@ -1520,12 +1727,13 @@
   .contest-card__footer { margin-top: auto; }
   .contest-card--interactive { cursor: pointer; }
   .contest-card--interactive:hover { box-shadow: var(--ds-shadow-02); border-color: var(--ds-border-input); }
-  .contest-card__head { display: flex; align-items: center; gap: var(--ds-dim-3xl); }
+  .contest-card__head { display: flex; align-items: center; gap: var(--ds-dim-3xl); overflow: visible; }
   .contest-card__type { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--ds-dim-l); }
   .contest-card__title { font-family: var(--ds-font-body); font-size: 20px; font-weight: 600; line-height: 24px; letter-spacing: -0.2px; color: var(--ds-text-primary); }
   .contest-card__desc { font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--ds-text-secondary); min-height: 60px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .contest-card-preview-host .contest-card__desc { min-height: 0; -webkit-line-clamp: unset; display: block; overflow: visible; }
-  .contest-card-preview-host .ds-progress--xs { height: 4px; }
+  .contest-card-preview-host .contest-card__footer { pointer-events: none; }
+  .contest-card-preview-host .contest-card__footer .ds-btn { opacity: 1; cursor: default; }
   .contest-card__divider { height: 1px; background: var(--ds-border); border: 0; margin: 0; }
   .contest-card__meta {
     display: flex; flex-wrap: wrap; gap: var(--ds-dim-l) var(--ds-dim-4xl);
@@ -1635,7 +1843,128 @@
     font-size: 14px; line-height: 20px;
     color: color-mix(in srgb, var(--ds-on-primary) 80%, transparent);
   }
-  .user-progress__score { text-align: right; display: flex; flex-direction: column; gap: var(--ds-dim-xs); }
+  .user-progress__score {
+    text-align: right;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-dim-xs);
+    align-items: flex-end;
+  }
+  .user-progress__place-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--ds-dim-2xl);
+    flex-wrap: wrap;
+  }
+  .user-progress__result {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--ds-dim-s);
+    font-family: var(--ds-font-body);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: color-mix(in srgb, var(--ds-on-primary) 80%, transparent);
+  }
+  .user-progress__result-value {
+    color: var(--ds-on-primary);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .user-progress__result-metric {
+    opacity: 0.7;
+  }
+  .user-progress--completed .user-progress__rank {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-dim-s);
+  }
+  .user-progress--completed {
+    gap: var(--ds-dim-3xl);
+  }
+  .user-progress__completed-body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--ds-dim-5xl);
+    width: 100%;
+  }
+  .user-progress__completed-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-dim-s);
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .user-progress__rank-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-dim-xs);
+  }
+  .user-progress__result-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-dim-xs);
+    min-width: 0;
+  }
+  .user-progress__result-label {
+    font-family: var(--ds-font-body);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.15px;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--ds-on-primary) 62%, transparent);
+  }
+  .user-progress__result-main {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--ds-dim-s);
+  }
+  .user-progress__outcome {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--ds-dim-s);
+    text-align: right;
+    flex-shrink: 0;
+    min-width: 0;
+    max-width: 280px;
+  }
+  .user-progress__outcome-head {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-dim-l);
+  }
+  .user-progress__outcome-head svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    opacity: 0.9;
+  }
+  .user-progress--won .user-progress__score-value {
+    color: color-mix(in srgb, var(--ds-on-primary) 92%, #7dffb8 8%);
+  }
+  .user-progress__score-line {
+    display: block;
+    font-family: var(--ds-font-body);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    color: color-mix(in srgb, var(--ds-on-primary) 80%, transparent);
+    white-space: nowrap;
+  }
+  .user-progress__score-line strong {
+    font-weight: 700;
+    color: var(--ds-on-primary);
+    font-variant-numeric: tabular-nums;
+  }
   .user-progress__score-value {
     font-family: var(--ds-font-body); font-weight: 700;
     font-size: 20px; line-height: 24px; letter-spacing: -0.2px;
@@ -1679,6 +2008,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--ds-dim-3xl);
+    z-index: 110;
   }
   .wizard-segments {
     display: flex;
@@ -1700,11 +2030,8 @@
   .wizard-stepper-mobile {
     display: flex;
     flex-direction: column;
-    gap: var(--ds-dim-l);
-    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
-    border: 1px solid var(--ds-border);
-    border-radius: var(--ds-radius-md);
-    background: var(--ds-bg);
+    gap: var(--ds-dim-2xl);
+    padding: 0;
     margin-bottom: var(--ds-dim-3xl);
   }
   .wizard-segments--inline { margin-bottom: 0; }
@@ -1817,7 +2144,8 @@
   .time-range-dropdown .time-input__field {
     flex: 0 0 56px; width: 56px; max-width: 72px;
   }
-  .time-range-dropdown__foot {
+  .time-range-dropdown__foot,
+  .cal-dropdown--range__foot {
     display: flex; align-items: center; justify-content: space-between; gap: var(--ds-dim-2xl);
     margin-top: var(--ds-dim-s); padding-top: var(--ds-dim-2xl);
     border-top: 1px solid var(--ds-border);
@@ -1829,10 +2157,8 @@
   .cal-day--selected { background: var(--ds-primary); color: #fff; font-weight: 600; }
 
   /* Date-range side panel (DateRangePanel)
-     Рендерится в потоке слева от таблицы — не заслоняет данные, в отличие от
-     popover-варианта. Триггер в тулбаре подсвечивается синей рамкой (как Rebate).
-     Панель — flex-колонка: head примагничен сверху, foot снизу, всё между ними
-     скроллится. Тень убрана: рамка достаточно отделяет панель от таблицы. */
+     Sits in flex flow beside the table (Rebate pattern) — pushes table, does not overlay.
+     Stat banners stay full width above the panel+table row. */
   .dr-panel {
     background: var(--ds-bg);
     border: 1px solid var(--ds-border);
@@ -1935,47 +2261,142 @@
   }
   .dr-panel__reset:hover:not(:disabled) { background: var(--ds-bg-hover); }
   .dr-panel__reset:disabled { color: var(--ds-text-placeholder); cursor: not-allowed; }
+  .dr-panel__foot-actions {
+    display: flex; align-items: center; gap: var(--ds-dim-2xl); flex-shrink: 0;
+  }
+  .dr-panel__head-main { flex: 1 1 auto; min-width: 0; }
+  .dr-panel__head .ds-modal__title-row {
+    font-family: var(--ds-font-body);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--ds-text-primary);
+  }
+  .dr-panel__head .ds-modal__header-meta { flex-shrink: 0; }
+  .dr-panel__head--stacked { align-items: flex-start; }
+  .dr-panel__head--stacked .dr-panel__close { margin-top: 2px; }
+  .dr-panel__foot.ds-modal__foot--stack {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: var(--ds-dim-l);
+    padding: var(--ds-dim-3xl);
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  }
+  .dr-panel__foot.ds-modal__foot--stack .ds-btn { width: 100%; }
+  .dr-panel__foot.ds-modal__foot--stack .ds-btn--text { justify-content: center; }
 
-  /* Layout: side-panel слева + таблица справа.
-     При закрытом пикере — таблица занимает всю ширину (flex с одним ребёнком).
-     `align-items: stretch` + `overflow: hidden` гарантируют, что панель и
-     таблица всегда одной высоты и не «толкают» родителя наружу. */
+  /* Date panel backdrop — mobile bottom sheet (rebate date-panel pattern) */
+  body.sheet-scroll-lock {
+    overflow: hidden !important;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    right: 0;
+    touch-action: none;
+  }
+  .dr-panel-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    touch-action: none;
+  }
+  .dr-panel-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  /* Layout: panel left (full height from stat cards down); stats + table stack on the right. */
   .contests-layout {
-    display: flex; gap: var(--ds-dim-3xl); align-items: stretch;
+    display: flex;
     flex: 1 1 auto; min-height: 0;
     overflow: hidden;
   }
-  /* Панель — flex-колонка, чтобы её внутренний `.dr-panel` мог брать
-     `flex: 1 1 auto` и при необходимости скроллить календарь внутри себя. */
+  .contests-layout__main {
+    flex: 1 1 auto; min-width: 0; min-height: 0; width: 100%;
+    display: flex; flex-direction: row; align-items: stretch;
+  }
   .contests-layout__panel {
-    flex: 0 0 320px; min-height: 0;
+    flex: 0 0 0;
+    width: 0;
+    min-width: 0;
+    min-height: 0;
+    align-self: stretch;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    margin-right: 0;
     display: flex; flex-direction: column;
+    transition:
+      flex-basis 0.25s ease, width 0.25s ease, opacity 0.2s ease,
+      margin-right 0.25s ease, visibility 0s linear 0.25s;
+  }
+  .contests-layout__panel--open {
+    flex: 0 0 320px;
+    width: 320px;
+    min-width: 320px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    margin-right: var(--ds-dim-3xl);
+    transition:
+      flex-basis 0.25s ease, width 0.25s ease, opacity 0.2s ease,
+      margin-right 0.25s ease, visibility 0s linear 0s;
   }
   .contests-layout__panel > .dr-panel {
-    flex: 1 1 auto; min-height: 0;
+    flex: 1 1 auto; min-height: 0; height: 100%;
+    width: 320px; min-width: 320px;
   }
-  .contests-layout__main {
-    flex: 1 1 auto; min-width: 0;
-    display: flex; flex-direction: column; min-height: 0;
-  }
-  .contests-layout__stats { flex: 0 0 auto; }
-  .contests-layout__body {
-    flex: 1 1 auto; min-height: 0;
+  .contests-layout__right {
+    flex: 1 1 auto; min-width: 0; min-height: 0;
     display: flex; flex-direction: column;
   }
-  .contests-layout__body > .table-wrap,
-  .contests-layout__body > .row-card-list { flex: 1 1 auto; min-height: 0; }
+  .contests-layout__stats { flex: 0 0 auto; min-width: 0; }
+  .contests-layout__stats > .ds-notification { margin-bottom: var(--ds-dim-3xl); }
+  .contests-layout__body {
+    flex: 1 1 auto; min-height: 0; min-width: 0;
+    display: flex; flex-direction: column;
+  }
+  .contests-layout__content {
+    flex: 1 1 auto; min-width: 0; min-height: 0;
+    display: flex; flex-direction: column;
+  }
+  .contests-layout__content > .table-wrap,
+  .contests-layout__content > .row-card-list { flex: 1 1 auto; min-height: 0; }
   @media (max-width: 1023px) {
-    .contests-layout { flex-direction: column; gap: var(--ds-dim-2xl); overflow: visible; }
-    .contests-layout__panel { flex: 0 0 auto; width: 100%; }
-    .contests-layout__panel > .dr-panel { flex: 0 0 auto; overflow: visible; }
+    .contests-layout { overflow: visible; }
+    .contests-layout__main { flex-direction: column; overflow: visible; }
+    .contests-layout__panel {
+      flex: none;
+      width: 100%;
+      min-width: 0;
+      max-height: 0;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      margin-right: 0;
+      transition: max-height 0.25s ease, opacity 0.2s ease, visibility 0s linear 0.25s;
+    }
+    .contests-layout__panel--open {
+      flex: none;
+      width: 100%;
+      max-height: 520px;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      margin-right: 0;
+      transition: max-height 0.25s ease, opacity 0.2s ease, visibility 0s linear 0s;
+    }
+    .contests-layout__panel > .dr-panel { flex: 0 0 auto; min-width: 0; width: 100%; height: auto; overflow: visible; }
     .dr-panel__body { overflow: visible; padding-bottom: 0; }
-    /* На планшете контейнер может расти под контент, иначе пикер съест таблицу. */
     .ds-container:has(.contests-layout) { max-height: none; }
   }
 
   /* Toast / Snackbar — Figma Components Snackbar (60132:14999).
      Web screen location (60503:5551): bottom-left stack, 30px / 90px inset.
+     Mobile screen location (60462:53351): top stack, 16px inset, y=54.
      Behaviour (60462:7057): max 2 on Web, max 1 on mobile; queue overflow. */
   .toast-stack {
     position: fixed;
@@ -2227,9 +2648,18 @@
      ═══════════════════════════════════════════════════════════════════ */
 
   @media (max-width: 1023px) {
+    .app {
+      padding-left: var(--ds-dim-5xl);
+      padding-right: var(--ds-dim-5xl);
+      padding-bottom: var(--ds-dim-5xl);
+    }
     .ds-container {
-      margin: var(--ds-dim-5xl); padding: var(--ds-dim-5xl);
-      min-height: calc(100vh - 100px - 2 * var(--ds-dim-5xl));
+      margin: 0 auto;
+      padding: var(--ds-dim-5xl);
+      min-height: calc(100vh - var(--ib-chrome-offset) - 2 * var(--ds-dim-5xl) - var(--ds-dim-3xl));
+    }
+    .ds-container:has(.contests-layout) {
+      max-height: calc(100vh - var(--ib-chrome-offset) - 2 * var(--ds-dim-5xl) - var(--ds-dim-3xl));
     }
     .wizard-layout { grid-template-columns: 1fr; }
     .contest-grid { grid-template-columns: 1fr; }
@@ -2237,12 +2667,11 @@
     .stat-card { flex: 1 1 40%; min-width: 120px; }
   }
 
-  /* ── Mobile bottom-sheet, drawer & tab-bar baseline (always present in DOM,
+  /* ── Mobile bottom-sheet & drawer baseline (always present in DOM,
        only visible inside the mobile media query) ──────────────────────────── */
 
-  .mobile-tab-bar { display: none; }
-  .mobile-drawer-backdrop { display: none; }
   .mobile-drawer { display: none; }
+  .app-header__balance { display: none; }
 
   /* ═══════════════════════════════════════════════════════════════════
      MOBILE (< 640px)
@@ -2255,16 +2684,23 @@
 
     /* === App shell & containers === */
     .app {
-      padding-top: var(--ds-mobile-header-h);
-      padding-bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px));
+      padding: var(--ds-mobile-header-h) 12px calc(96px + env(safe-area-inset-bottom, 0px));
       min-height: 100vh;
+      background: var(--ds-surface-container);
+    }
+    .app:has(.contests-layout) {
+      max-height: none;
+      overflow: visible;
     }
     .ds-container {
-      margin: var(--ds-dim-2xl);
+      margin: 0;
       padding: var(--ds-dim-3xl);
       border-radius: var(--ds-radius-lg);
-      /* На мобиле учитываем фикс. tab-bar снизу и safe-area, плюс свои margin'ы */
-      min-height: calc(100vh - var(--ds-mobile-header-h) - var(--ds-mobile-tabbar-h) - env(safe-area-inset-bottom, 0px) - 2 * var(--ds-dim-2xl));
+      min-height: calc(100vh - var(--ds-mobile-header-h) - 96px - 24px - env(safe-area-inset-bottom, 0px));
+    }
+    .ds-container:has(.contests-layout) {
+      max-height: none;
+      overflow: visible;
     }
     /* Wizard: drop white frame so steps feel full-bleed */
     .ds-container--split { padding: 0; margin: 0; border: 0; background: transparent; min-height: 0; }
@@ -2294,150 +2730,295 @@
     }
     .role-bar__pill svg { width: 14px; height: 14px; color: var(--ds-text-muted); }
 
-    /* === Product header — compact 56px on mobile === */
+    /* === Product header — Figma Navigation IB Cabinet (node 1:37534) === */
     .app-header {
-      top: 32px; height: 56px;
-      padding: 0 var(--ds-dim-3xl);
-      gap: var(--ds-dim-2xl);
+      top: 32px;
+      height: 64px;
+      padding: 12px 16px;
+      gap: 16px;
+      justify-content: space-between;
+      background: var(--ds-bg);
+      border-bottom: 1px solid var(--ds-border);
     }
-    .app-header__logo { width: 28px; height: 28px; }
+    .app-header__brand {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      min-width: 0;
+      flex-shrink: 0;
+    }
+    .app-header__logo { width: 26px; height: 26px; border-radius: 6px; }
     .app-header__menu { display: none; }
     .app-header__wallet { display: none; }
-    .app-header__deposit { height: 36px; padding: 0 var(--ds-dim-3xl); }
-    .app-header__avatar { width: 36px; height: 36px; }
-    /* Burger on right for all roles, replacing close icon for client */
+    .app-header__deposit { display: none; }
+    .app-header__balance {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 16px;
+      border: 1px solid var(--ds-border);
+      border-radius: var(--ds-dim-l);
+      background: var(--ds-bg);
+      font-family: var(--ds-font-body);
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--ds-text-primary);
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .app-header__balance:hover { background: var(--ds-bg-page); border-color: var(--ds-border-input-hover); }
+    .app-header__balance:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); border-color: var(--ds-border-focus); }
+    .app-header__right { margin-left: auto; gap: 16px; flex-shrink: 0; }
+    .app-header__avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--ds-dim-l);
+      background: var(--ds-row-hover);
+    }
     .app-header__close { display: none; }
     .app-header__burger {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 36px; height: 36px; border-radius: var(--ds-radius-full);
-      background: transparent; color: var(--ds-text-primary);
-      border: 0; cursor: pointer; flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--ds-dim-l);
+      background: rgba(22, 22, 22, 0.08);
+      color: var(--ds-text-primary);
+      border: 0;
+      cursor: pointer;
+      flex-shrink: 0;
     }
-    .app-header__burger:hover { background: var(--ds-bg-page); }
-    .app-header__burger svg { width: 22px; height: 22px; }
+    .app-header__burger:hover { background: rgba(22, 22, 22, 0.12); }
+    .app-header__burger svg { width: 18px; height: 18px; }
 
-    /* === Mobile drawer (top-down, headers + nav) === */
-    .mobile-drawer-backdrop {
-      display: block;
-      position: fixed; inset: 0; z-index: 1500;
-      background: rgba(10, 10, 10, 0.45);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.2s ease;
-    }
-    .mobile-drawer-backdrop--open { opacity: 1; pointer-events: auto; }
+    /* === Mobile nav drawer — full-screen panel (Figma Navigation IB Cabinet 1:37196) === */
     .mobile-drawer {
-      display: block;
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1600;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0;
+      z-index: 1600;
       background: var(--ds-bg);
-      border-radius: 0 0 var(--ds-radius-xl) var(--ds-radius-xl);
-      transform: translateY(-100%);
+      transform: translateX(100%);
       transition: transform 0.25s ease;
-      box-shadow: var(--ds-shadow-04);
-      max-height: 92vh; overflow-y: auto;
-      padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl);
+      overflow: hidden;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+      max-height: none;
     }
-    .mobile-drawer--open { transform: translateY(0); }
-    .mobile-drawer__header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: var(--ds-dim-2xl) 0 var(--ds-dim-3xl);
+    .mobile-drawer--open { transform: translateX(0); }
+    .mobile-drawer__topbar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 64px;
+      padding: 16px;
+      border-bottom: 1px solid var(--ds-border);
+      background: var(--ds-bg);
     }
-    .mobile-drawer__title {
-      font-family: var(--ds-font-body); font-weight: 600;
-      font-size: 18px; line-height: 24px;
+    .mobile-drawer__close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--ds-dim-l);
+      background: rgba(22, 22, 22, 0.08);
+      color: var(--ds-text-primary);
+      border: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .mobile-drawer__close:hover { background: rgba(22, 22, 22, 0.12); }
+    .mobile-drawer__close svg { width: 18px; height: 18px; display: block; }
+    .mobile-drawer__body {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 24px 18px;
+      -webkit-overflow-scrolling: touch;
     }
     .mobile-drawer__menu {
-      display: flex; flex-direction: column; gap: var(--ds-dim-xs);
-    }
-    .mobile-drawer__item {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: var(--ds-dim-2xl); width: 100%;
-      min-height: 48px; padding: 0 var(--ds-dim-3xl);
-      border-radius: var(--ds-radius-md);
-      border: 0; background: transparent;
-      font-family: inherit; font-size: 15px; line-height: 20px;
-      color: var(--ds-text-primary); text-align: left;
-      cursor: pointer;
-    }
-    .mobile-drawer__item:hover { background: var(--ds-bg-page); }
-    .mobile-drawer__item--active { background: var(--ds-row-hover); font-weight: 600; }
-
-    /* === Mobile tab bar (fixed bottom) === */
-    .mobile-tab-bar {
       display: flex;
-      position: fixed; left: 0; right: 0; bottom: 0;
-      z-index: 990;
-      background: var(--ds-bg);
-      border-top: 1px solid var(--ds-border);
-      padding: 4px 4px calc(4px + env(safe-area-inset-bottom, 0px));
-      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
     }
-    .mobile-tab-bar__item {
-      flex: 1;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 2px;
-      min-height: 56px;
-      border: 0; background: transparent;
-      color: var(--ds-text-muted);
-      font-family: var(--ds-font-body); font-size: 11px; line-height: 14px; font-weight: 500;
+    .mobile-drawer__group { display: flex; flex-direction: column; width: 100%; }
+    /* Top-level — Product/Title 03 (Figma 1:37442) */
+    .mobile-drawer__item {
+      display: block;
+      width: 100%;
+      padding: 16px 0;
+      border: 0;
+      background: transparent;
+      font-family: var(--ds-font-body);
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 24px;
+      letter-spacing: -0.2px;
+      color: var(--ds-text-primary);
+      text-align: left;
       cursor: pointer;
     }
-    .mobile-tab-bar__item svg { width: 22px; height: 22px; }
-    .mobile-tab-bar__item--active { color: var(--ds-primary); font-weight: 600; }
-
-    /* === Modal → bottom-sheet on mobile === */
-    .ds-modal-overlay {
-      align-items: flex-end;
+    .mobile-drawer__item:hover { color: var(--ds-text-primary); }
+    .mobile-drawer__item--active { color: var(--ds-primary); }
+    .mobile-drawer__item-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 100%;
+    }
+    .mobile-drawer__item-label { min-width: 0; }
+    .mobile-drawer__chevron {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      color: var(--ds-text-primary);
+      transition: transform 0.2s ease;
+    }
+    .mobile-drawer__chevron--open { transform: rotate(180deg); }
+    /* Submenu — Common/Body 01 (Figma 1:37448) */
+    .mobile-drawer__submenu {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 4px 0 20px;
+    }
+    .mobile-drawer__subitem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
       padding: 0;
+      border: 0;
+      background: transparent;
+      font-family: var(--ds-font-body);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0;
+      color: var(--ds-text-secondary);
+      text-align: left;
+      cursor: pointer;
     }
-    .ds-modal {
-      width: 100% !important;
-      max-width: 100% !important;
-      max-height: 92vh;
-      border-radius: var(--ds-radius-xl) var(--ds-radius-xl) 0 0;
-      animation: bottom-sheet-in 0.28s cubic-bezier(0.2, 0, 0, 1);
-    }
-    .ds-modal::before {
-      content: '';
-      display: block;
-      width: 36px; height: 4px;
-      border-radius: 2px;
-      background: var(--ds-border-input);
-      margin: var(--ds-dim-l) auto 0;
-    }
-    .ds-modal__header {
-      padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-2xl);
-    }
-    .ds-modal__body {
-      padding: 0 var(--ds-dim-3xl) var(--ds-dim-3xl);
-    }
-    .ds-modal__footer {
-      padding: var(--ds-dim-3xl);
-      gap: var(--ds-dim-l);
-      flex-direction: column-reverse;
-      border-top: 1px solid var(--ds-border);
-      position: sticky; bottom: 0; background: var(--ds-bg);
-    }
-    .ds-modal__footer .ds-btn { width: 100%; }
-    @keyframes bottom-sheet-in {
-      from { transform: translateY(100%); }
-      to   { transform: translateY(0); }
+    .mobile-drawer__subitem:hover { color: var(--ds-text-secondary); }
+    .mobile-drawer__subitem--active { color: var(--ds-primary); font-weight: 400; }
+    .mobile-drawer__subitem-trail {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--ds-dim-s);
+      flex-shrink: 0;
     }
 
+    /* === Modal footer (desktop-only; mobile uses dr-panel--sheet via Modal) === */
     /* === Page header === */
     .page-header {
       gap: var(--ds-dim-2xl);
       margin-bottom: var(--ds-dim-5xl);
       flex-wrap: wrap;
-      align-items: flex-start;
+      align-items: center;
+      min-height: 44px;
+    }
+    /* Search open: gap to toolbar = margin-bottom only (24px), same as toolbar → stats */
+    .screen-enter:has(> .contests-layout) > .page-header {
+      padding-bottom: 0;
+    }
+    .page-header > h1,
+    .page-header > .rig-title-02,
+    .page-header > .rig-title-03 {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+      order: 1;
+    }
+    .page-header__actions {
+      flex: 0 0 auto;
+      flex-shrink: 0;
+      order: 2;
+      margin-left: auto;
+      gap: var(--ds-dim-l);
+    }
+    /* Mobile search — DS Input/S row under title + actions (Rebate pattern). */
+    .page-header-search {
+      order: 3;
+      flex: 1 1 100%;
+      width: 100%;
+      min-width: 0;
+      margin: var(--ds-dim-l) 0 0;
+      padding: 0;
+    }
+    .page-header-search:not([hidden]) { display: block; }
+    .page-header-search .search-input {
+      display: flex;
+      width: 100%;
+      height: 32px;
+      padding: 4px 12px;
+      box-shadow: none;
+    }
+    .search-wrap.is-open .tabs-action { display: inline-flex; }
+    .page-header__actions .search-wrap.is-open .tabs-action {
+      background: var(--ds-primary-content);
+      color: var(--ds-on-primary-container);
+    }
+    /* Search trigger — icon-only 40px in header (Rebate mobile pattern) */
+    .page-header__actions .tabs-action {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      gap: 0;
+      border-radius: var(--ds-dim-l);
+      font-size: 0;
+    }
+    .page-header__actions .tabs-action svg {
+      width: 20px;
+      height: 20px;
+    }
+    .page-header__actions .tabs-action__label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
     .rig-title-02 { font-size: 24px; line-height: 28px; letter-spacing: -0.3px; }
 
-    /* === Stats — 2x2 grid, left-aligned === */
+    /* === Stats — horizontal scroll strip (like rebate stat banners) === */
     .stat-banners {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: var(--ds-dim-2xl);
-      row-gap: var(--ds-dim-s);
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: var(--ds-dim-2xl);
+      padding: 0 0 var(--ds-dim-2xl);
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
+    .stat-banners::-webkit-scrollbar { display: none; }
+    .stat-banners.is-stat-banners-scrollable { cursor: grab; }
+    .stat-banners.is-stat-banners-dragging { cursor: grabbing; }
+    .stat-banners .stat-banner {
+      flex: 0 0 88%;
+      max-width: 88%;
+      scroll-snap-align: start;
+    }
+    .contests-layout__stats > .ds-notification { margin-bottom: var(--ds-dim-2xl); }
     .stat-banner { padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl); }
     .stat-banner__value { font-size: 20px; line-height: 24px; }
     .stats {
@@ -2479,14 +3060,81 @@
 
     /* === Table toolbar on mobile: stack period above chips === */
     .table-toolbar { flex-direction: column; align-items: stretch; gap: var(--ds-dim-2xl); }
+    .screen-enter:has(> .contests-layout) > .table-toolbar {
+      margin-bottom: var(--ds-dim-5xl);
+    }
     .table-toolbar__period { flex: 0 0 auto; min-width: 0; width: 100%; }
     .table-toolbar__period .date-range .dr-label { display: none; }
     .table-toolbar__period .date-range { width: 100%; }
-    .table-toolbar__chips { flex: 0 0 auto; width: 100%; margin-left: 0; }
-    .table-toolbar__chips .ds-chips-group { width: 100%; flex-wrap: wrap; }
+    .table-toolbar__chips { flex: 0 0 auto; width: 100%; margin-left: 0; min-width: 0; }
+    .table-toolbar__chips .ds-chips-group {
+      width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .table-toolbar__chips .ds-chips-group::-webkit-scrollbar { display: none; }
+    .table-toolbar__chips .ds-chip {
+      flex: 0 0 auto;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .table-toolbar__chips .ds-chips-group.is-chips-scrollable { cursor: grab; }
+    .table-toolbar__chips .ds-chips-group.is-chips-dragging { cursor: grabbing; }
+
+    /* === Date panel bottom sheet (mobile) === */
+    .dr-panel-backdrop { display: block; }
+    .dr-panel.dr-panel--sheet {
+      position: fixed !important;
+      top: auto !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+      height: auto !important;
+      max-height: calc(100dvh - var(--ds-mobile-header-h) - 12px);
+      border-radius: 16px 16px 0 0 !important;
+      border: none !important;
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18) !important;
+      margin: 0 !important;
+      z-index: 999;
+      display: flex !important;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .dr-panel.dr-panel--sheet.open { transform: translateY(0); }
+    .dr-panel.dr-panel--sheet .dr-panel__head { flex-shrink: 0; }
+    .dr-panel.dr-panel--sheet .dr-panel__body {
+      flex: 0 0 auto;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      touch-action: pan-y;
+      padding-bottom: var(--ds-dim-2xl);
+    }
+    .dr-panel.dr-panel--sheet .dr-panel__foot {
+      flex-shrink: 0;
+      padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+    }
+    .dr-panel.dr-panel--sheet .dr-panel__body--stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--ds-dim-2xl);
+    }
+    .dr-panel.dr-panel--sheet .time-input { max-width: none; }
 
     /* === IB & Client list cards (mobile) === */
-    .row-card-list { display: flex; flex-direction: column; gap: var(--ds-dim-3xl); }
+    .row-card-list { display: flex; flex-direction: column; gap: var(--ds-dim-l); }
     .row-card {
       border: 1px solid var(--ds-border);
       border-radius: var(--ds-radius-lg);
@@ -2525,8 +3173,16 @@
     .row-card__actions > .ds-icon-btn { flex: 0 0 auto; min-height: 40px; min-width: 40px; }
 
     /* === Wizard (mobile chrome) === */
-    .wizard-layout { grid-template-columns: 1fr; gap: var(--ds-dim-3xl); }
-    .wizard-panel { padding: var(--ds-dim-3xl); border-radius: var(--ds-radius-lg); }
+    .wizard-layout { grid-template-columns: 1fr; gap: var(--ds-dim-3xl); min-width: 0; }
+    .wizard-panel { padding: var(--ds-dim-3xl); border-radius: var(--ds-radius-lg); min-width: 0; max-width: 100%; }
+    .wizard-panel .ds-input-wrap { min-width: 0; max-width: 100%; }
+    .wizard-panel .ds-input-shell { min-width: 0; max-width: 100%; }
+    .wizard-stepper-mobile {
+      display: flex !important;
+      flex-direction: column;
+      gap: var(--ds-dim-2xl);
+    }
+    .wizard-panel > .breadcrumb { margin-bottom: var(--ds-dim-5xl); }
     .wizard-segments { margin-bottom: var(--ds-dim-3xl); }
     .wizard-step-header { flex-direction: column; align-items: stretch; }
     .wizard-step-header__aside .ds-chips-group { flex-wrap: wrap; }
@@ -2534,33 +3190,45 @@
     /* Inline grid overrides (set via inline style on JSX) — collapse via classes */
     .wizard-period-grid { grid-template-columns: 1fr !important; }
     .wizard-period-row { grid-template-columns: 1fr !important; }
-    .wizard-review-grid { grid-template-columns: 1fr !important; }
-    .prize-row-grid { grid-template-columns: 32px 1fr auto 32px !important; gap: var(--ds-dim-2xl) !important; }
-    .prize-row__label { display: none; }
-    .prize-row-grid .ds-input-wrap { grid-column: 3; min-width: 0; }
-    .prize-row-grid > .ds-icon-btn,
-    .prize-row-grid > span[aria-hidden="true"] { grid-column: 4; }
-    .prize-pool-toolbar {
-      display: flex !important; flex-direction: column !important;
-      align-items: flex-start !important; gap: var(--ds-dim-2xl) !important;
+    .wizard-review-grid { gap: var(--ds-dim-3xl); }
+    .wizard-panel .card__body,
+    .wizard-review-card__body {
+      padding: var(--ds-dim-3xl);
+      gap: var(--ds-dim-3xl);
     }
-    .prize-pool-toolbar__cell--action,
-    .prize-pool-toolbar__total { grid-column: auto !important; }
-    .prize-pool-toolbar__total { text-align: left !important; }
+    .wizard-panel .card { margin-bottom: var(--ds-dim-5xl) !important; }
+    .prize-row-grid {
+      grid-template-columns: 32px auto 120px 32px !important;
+      gap: var(--ds-dim-2xl) !important;
+    }
+    .prize-row-grid .ds-icon-btn--s { width: 32px; height: 32px; min-width: 32px; }
+    .prize-row-grid .ds-input-wrap { min-width: 0; max-width: 120px; width: 100%; }
+    .prize-row__label { white-space: nowrap; }
 
-    /* Wizard sticky footer (mobile) — sits above the tab bar (or replaces it) */
+    /* Wizard sticky footer (mobile) */
     .wizard-footer-mobile {
       position: fixed; left: 0; right: 0;
-      bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px));
+      bottom: env(safe-area-inset-bottom, 0px);
       z-index: 985;
       padding: var(--ds-dim-3xl);
       background: var(--ds-bg);
       border-top: 1px solid var(--ds-border);
-      display: flex; gap: var(--ds-dim-l);
+      display: flex !important;
+      gap: var(--ds-dim-l);
+      justify-content: flex-end;
       box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.04);
     }
+    .wizard-footer-mobile--split { justify-content: space-between; align-items: center; }
+    .wizard-footer-mobile__start,
+    .wizard-footer-mobile__end {
+      display: flex;
+      gap: var(--ds-dim-l);
+      align-items: center;
+      min-width: 0;
+    }
+    .wizard-footer-mobile__end { flex-shrink: 0; }
     .wizard-footer-mobile .ds-btn {
-      flex: 1; min-height: 44px;
+      flex: 0 0 auto; min-height: 44px;
       justify-content: center;
     }
     /* Wizard preview button row — full width, above sticky footer */
@@ -2577,6 +3245,13 @@
 
     /* === Detail page (IB / Client / Admin) === */
     .contest-detail-desc { white-space: normal !important; }
+    .contest-detail-meta {
+      gap: var(--ds-dim-2xl);
+      margin-bottom: var(--ds-dim-l);
+    }
+    .contest-detail-actions {
+      margin-bottom: var(--ds-dim-3xl);
+    }
     .contest-detail-action-bar {
       gap: var(--ds-dim-l) !important;
       flex-wrap: wrap !important;
@@ -2589,7 +3264,7 @@
     /* Sticky CTA on terms */
     .client-terms-cta {
       position: fixed; left: 0; right: 0;
-      bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px));
+      bottom: env(safe-area-inset-bottom, 0px);
       z-index: 985;
       padding: var(--ds-dim-3xl);
       background: var(--ds-bg);
@@ -2610,8 +3285,8 @@
       color: var(--ds-text-placeholder);
       margin: 0 !important;
     }
-    /* Reserve room above tab bar so the static CTA copy is visible */
-    .client-terms-spacer { height: 140px; }
+    /* Reserve room above sticky CTA so the static copy is visible */
+    .client-terms-spacer { height: 96px; }
 
     /* === Leaderboard (table -> card list) === */
     .leaderboard-scroll { max-height: none; overflow: visible; border: 0; }
@@ -2628,9 +3303,6 @@
       background: var(--ds-bg);
       min-height: 56px;
     }
-    .lb-card--top1 { box-shadow: inset 4px 0 0 0 #c2a341; }
-    .lb-card--top2 { box-shadow: inset 4px 0 0 0 #b9bcc1; }
-    .lb-card--top3 { box-shadow: inset 4px 0 0 0 #c69468; }
     .lb-card--you {
       background: var(--ds-primary-content);
       border-color: var(--ds-primary);
@@ -2656,32 +3328,182 @@
     }
     .lb-card__prize--empty { color: var(--ds-text-muted); font-weight: 400; }
 
-    /* User progress hero — compact on mobile */
-    .user-progress { padding: var(--ds-dim-4xl); }
-    .user-progress__row {
-      flex-direction: column; align-items: stretch;
-      gap: var(--ds-dim-3xl);
+    /* Leaderboard section header — title + count only on mobile */
+    .leaderboard-table-header .table-header__meta { display: none; }
+    .leaderboard-table-header {
+      flex-wrap: wrap;
+      gap: var(--ds-dim-s);
     }
-    .user-progress__rank { flex-direction: column; align-items: flex-start; gap: var(--ds-dim-s); }
-    .user-progress__score { text-align: left; }
+    .leaderboard-table-header .rig-title-04 {
+      flex: 1 1 auto;
+      white-space: normal;
+      flex-wrap: wrap;
+      row-gap: var(--ds-dim-xs);
+    }
 
-    /* Sticky "you" chip above leaderboard list */
+    /* User progress hero — compact on mobile */
+    .user-progress {
+      padding: var(--ds-dim-4xl);
+      gap: var(--ds-dim-2xl);
+    }
+    .user-progress__row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .user-progress__rank {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--ds-dim-s);
+    }
+    .user-progress--active .user-progress__rank {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      width: 100%;
+      flex-wrap: nowrap;
+      gap: var(--ds-dim-2xl);
+    }
+    .user-progress--active .user-progress__place {
+      flex-shrink: 0;
+    }
+    .user-progress--active .user-progress__place-meta {
+      margin-left: auto;
+      text-align: right;
+      white-space: nowrap;
+      flex-shrink: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .user-progress__place {
+      font-size: 24px;
+      line-height: 28px;
+    }
+    .user-progress__score {
+      text-align: left;
+      align-items: flex-start;
+      width: 100%;
+      gap: var(--ds-dim-s);
+      margin-top: var(--ds-dim-3xl);
+      padding-top: var(--ds-dim-3xl);
+      border-top: 1px solid color-mix(in srgb, var(--ds-on-primary) 18%, transparent);
+    }
+    .user-progress__score-value {
+      font-size: 18px;
+      line-height: 24px;
+    }
+    .user-progress__score-meta {
+      font-size: 13px;
+      line-height: 18px;
+      max-width: 100%;
+    }
+    .user-progress__score-line {
+      white-space: normal;
+    }
+    .user-progress__bar { margin-top: var(--ds-dim-2xl); }
+    .user-progress__caption {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--ds-dim-s);
+    }
+
+    /* Completed hero — stacked card layout on mobile */
+    .user-progress--completed {
+      padding: var(--ds-dim-4xl);
+      gap: 0;
+    }
+    .user-progress--completed .user-progress__completed-body {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .user-progress--completed .user-progress__completed-main {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: stretch;
+      gap: var(--ds-dim-3xl);
+      width: 100%;
+    }
+    .user-progress--completed .user-progress__rank-block {
+      gap: var(--ds-dim-xs);
+      justify-content: center;
+      padding-top: var(--ds-dim-s);
+    }
+    .user-progress--completed .user-progress__place {
+      font-size: 36px;
+      line-height: 40px;
+      letter-spacing: -0.7px;
+    }
+    .user-progress--completed .user-progress__place-meta {
+      font-size: 13px;
+      line-height: 18px;
+      color: color-mix(in srgb, var(--ds-on-primary) 72%, transparent);
+    }
+    .user-progress--completed .user-progress__result-panel {
+      width: 100%;
+      padding: var(--ds-dim-3xl);
+      border-radius: var(--ds-radius-md);
+      background: color-mix(in srgb, var(--ds-on-primary) 9%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ds-on-primary) 14%, transparent);
+      gap: var(--ds-dim-s);
+      justify-content: center;
+      min-height: 88px;
+    }
+    .user-progress--completed .user-progress__result-label {
+      font-size: 11px;
+      line-height: 14px;
+      letter-spacing: 0.2px;
+    }
+    .user-progress--completed .user-progress__result-main {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+    .user-progress--completed .user-progress__result-value {
+      font-size: 28px;
+      line-height: 32px;
+      letter-spacing: -0.4px;
+    }
+    .user-progress--completed .user-progress__result-metric {
+      font-size: 13px;
+      line-height: 18px;
+      opacity: 0.72;
+    }
+    .user-progress--completed .user-progress__outcome {
+      width: 100%;
+      max-width: none;
+      align-items: flex-start;
+      text-align: left;
+      margin-top: var(--ds-dim-3xl);
+      padding-top: var(--ds-dim-3xl);
+      border-top: 1px solid color-mix(in srgb, var(--ds-on-primary) 16%, transparent);
+    }
+    .user-progress--completed .user-progress__outcome-head {
+      gap: var(--ds-dim-2xl);
+    }
+    .user-progress--completed .user-progress__score-value {
+      font-size: 20px;
+      line-height: 24px;
+    }
+    .user-progress--completed .user-progress__score-meta {
+      font-size: 13px;
+      line-height: 18px;
+      color: color-mix(in srgb, var(--ds-on-primary) 68%, transparent);
+    }
+    .user-progress--completed.user-progress--won .user-progress__outcome {
+      border-top-color: color-mix(in srgb, var(--ds-on-primary) 22%, #7dffb8 12%);
+    }
+
+    /* Sticky "jump to your row" — Button/S stacked (Figma 12670:14365) */
     .lb-sticky-you {
       position: sticky; top: var(--ds-mobile-header-h);
       z-index: 5;
-      background: var(--ds-primary-content);
-      color: var(--ds-on-primary-container);
-      border: 1px solid var(--ds-primary);
-      border-radius: var(--ds-radius-lg);
-      padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
       margin-bottom: var(--ds-dim-3xl);
-      display: flex; align-items: center; justify-content: space-between;
-      gap: var(--ds-dim-2xl);
-      font-family: var(--ds-font-body); font-weight: 600; font-size: 14px;
-      box-shadow: var(--ds-shadow-01);
+      -webkit-tap-highlight-color: transparent;
     }
-    .lb-sticky-you__metric {
-      font-weight: 400; font-size: 12px; opacity: 0.85;
+    .lb-sticky-you .ds-btn--stacked > svg:first-child {
+      color: var(--ds-primary);
     }
 
     /* === Admin === */
@@ -2702,9 +3524,10 @@
     .admin-table-scroll table { min-width: 640px; }
     .admin-detail-grid { grid-template-columns: 1fr !important; }
 
-    /* === Snackbar stack above tab bar (mobile) === */
+    /* === Snackbar stack (mobile) — Figma 60462:53351: top, 16px inset === */
     .toast-stack {
-      bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px) + var(--ds-dim-2xl)) !important;
+      top: calc(env(safe-area-inset-top, 0px) + 54px) !important;
+      bottom: auto !important;
       left: var(--ds-dim-3xl) !important;
       right: var(--ds-dim-3xl) !important;
       max-width: none !important;
@@ -2713,6 +3536,10 @@
     .toast-stack .toast {
       width: 100% !important;
       max-width: none !important;
+      transform: translateY(calc(-100% - var(--ds-dim-3xl)));
+    }
+    .toast-stack .toast.toast--visible {
+      transform: translateY(0);
     }
 
     /* Tap targets & iOS zoom prevention */
@@ -2729,8 +3556,7 @@
   @media (prefers-reduced-motion: reduce) {
     .ds-modal { animation: none; }
     .toast,
-    .mobile-drawer,
-    .mobile-drawer-backdrop { transition: none; }
+    .mobile-drawer { transition: none; }
   }
 </style>
 </head>
@@ -2798,6 +3624,13 @@
     <path d="M13 15.4C13 15.9601 13 16.2401 12.891 16.454C12.7951 16.6422 12.6422 16.7951 12.454 16.891C12.2401 17 11.9601 17 11.4 17H11V13H10V12.6C10 12.0399 10 11.7599 10.109 11.546C10.2049 11.3578 10.3578 11.2049 10.546 11.109C10.6648 11.0485 10.832 11.0117 11.0547 11.0039L13 11V15.4Z" fill="currentColor"/>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" fill="currentColor"/>
   </symbol>
+  <symbol id="ic-book-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:288 (ic-book-16 scaled 1.5) -->
+    <g transform="scale(1.5)">
+      <g transform="translate(1.25 2.934)">
+        <path d="M6.75 0.639369C8.07225 0.00572848 9.46127 -0.0751104 10.583 0.0495251C11.1995 0.118041 11.7513 0.249824 12.1904 0.396205C12.5999 0.532701 12.9931 0.708167 13.2305 0.90597C13.4014 1.04838 13.4999 1.25971 13.5 1.48214V10.1491L13.4932 10.2478C13.4632 10.4737 13.3319 10.6765 13.1328 10.7946C12.9052 10.9296 12.6229 10.9341 12.3906 10.8073C10.0419 9.52565 7.85966 10.2943 7.17676 10.7663C6.94369 10.9274 6.63933 10.9431 6.39062 10.8073C4.04188 9.52565 1.85966 10.2943 1.17676 10.7663C0.947366 10.9249 0.648332 10.9427 0.401367 10.8132C0.154599 10.6836 0 10.4279 0 10.1491V1.48214C0.000117033 1.2597 0.0986367 1.04838 0.269531 0.90597C0.506888 0.708178 0.900115 0.532703 1.30957 0.396205C1.74871 0.249825 2.30046 0.118043 2.91699 0.0495251C4.03872 -0.0751133 5.42775 0.00572437 6.75 0.639369ZM6 1.94308C5.03055 1.50778 3.98688 1.44032 3.08301 1.54074C2.57467 1.59722 2.12623 1.70505 1.78418 1.81906C1.67606 1.8551 1.58114 1.89168 1.5 1.9255V8.96456C2.63352 8.57663 4.25204 8.38436 6 8.99679V1.94308ZM10.417 1.54074C9.51312 1.44033 8.46945 1.50778 7.5 1.94308V8.96456C8.63352 8.57663 10.252 8.38436 12 8.99679V1.9255C11.9189 1.89168 11.8239 1.8551 11.7158 1.81906C11.3738 1.70505 10.9253 1.59722 10.417 1.54074Z" fill="currentColor"/>
+      </g>
+    </g>
+  </symbol>
   <symbol id="ic-lightbulb-24" viewBox="0 0 24 24" fill="none"><!-- pro tip -->
     <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C8.68629 2 6 4.68629 6 8C6 10.0152 7.03215 11.7921 8.59808 12.832V15C8.59808 15.5523 9.0458 16 9.59808 16H14.4019C14.9542 16 15.4019 15.5523 15.4019 15V12.832C16.9678 11.7921 18 10.0152 18 8C18 4.68629 15.3137 2 12 2ZM10.5981 14V13H13.4019V14H10.5981ZM10 20H14V18H10V20Z" fill="currentColor"/>
   </symbol>
@@ -2813,6 +3646,13 @@
   </symbol>
   <symbol id="ic-plus-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1152 -->
     <path d="M12 6C11.4477 6 11 6.44771 11 7V11H7C6.44772 11 6 11.4477 6 12V13H11V18H12C12.5523 18 13 17.5523 13 17V13H17C17.5523 13 18 12.5523 18 12V11H13V6H12Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-trash-16" viewBox="0 0 16 16" fill="none"><!-- node 16084:735 -->
+    <g transform="translate(3.333 1.333) scale(0.666667)">
+      <path d="M5.1 6C4.76863 6 4.5 6.26863 4.5 6.6V13.4C4.5 13.7314 4.76863 14 5.1 14H5.9C6.23137 14 6.5 13.7314 6.5 13.4V6.6C6.5 6.26863 6.23137 6 5.9 6H5.1Z" fill="currentColor"/>
+      <path d="M7.5 6.6C7.5 6.26863 7.76863 6 8.1 6H8.9C9.23137 6 9.5 6.26863 9.5 6.6V13.4C9.5 13.7314 9.23137 14 8.9 14H8.1C7.76863 14 7.5 13.7314 7.5 13.4V6.6Z" fill="currentColor"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M4 1C4 0.447715 4.44772 0 5 0H9C9.55228 0 10 0.447715 10 1V2H14V3C14 3.55228 13.5523 4 13 4V17C13 18.1046 12.1046 19 11 19H3C1.89543 19 1 18.1046 1 17V4H0V3C0 2.44772 0.447715 2 1 2H4V1ZM3 4V16.4C3 16.7314 3.26863 17 3.6 17H10.4C10.7314 17 11 16.7314 11 16.4V4H3Z" fill="currentColor"/>
+    </g>
   </symbol>
   <symbol id="ic-trash-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:1268 -->
     <g transform="translate(5 2)">
@@ -2996,6 +3836,107 @@ const useIsHorizontallyScrollable = (ref) => {
   return scrollable;
 };
 
+/* Horizontal drag scroll — rebate #chips / .stat-banners behaviour. */
+const useHorizontalDragScroll = (ref, { scrollableClass, draggingClass }) => {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const updateScrollable = () => {
+      el.classList.toggle(scrollableClass, el.scrollWidth > el.clientWidth + 1);
+    };
+    updateScrollable();
+
+    let pid = null;
+    let startX = 0;
+    let startY = 0;
+    let startScroll = 0;
+    let dragged = false;
+
+    const onPointerDown = (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (el.scrollWidth <= el.clientWidth + 1) return;
+      pid = e.pointerId;
+      startX = e.clientX;
+      startY = e.clientY;
+      startScroll = el.scrollLeft;
+      dragged = false;
+    };
+
+    const endDrag = (e) => {
+      if (pid === null || e.pointerId !== pid) return;
+      if (dragged) el._suppressDragScrollClick = true;
+      pid = null;
+      dragged = false;
+      el.classList.remove(draggingClass);
+      try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+    };
+
+    const onPointerMove = (e) => {
+      if (pid === null || e.pointerId !== pid) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (!dragged) {
+        if (Math.abs(dx) <= 4 || Math.abs(dx) <= Math.abs(dy)) return;
+        dragged = true;
+        startX = e.clientX;
+        startScroll = el.scrollLeft;
+        el.classList.add(draggingClass);
+        try { el.setPointerCapture(e.pointerId); } catch (_) {}
+      }
+      el.scrollLeft = startScroll - (e.clientX - startX);
+      e.preventDefault();
+    };
+
+    const onClickCapture = (e) => {
+      if (!el._suppressDragScrollClick) return;
+      el._suppressDragScrollClick = false;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    };
+
+    const onWheel = (e) => {
+      if (el.scrollWidth <= el.clientWidth + 1) return;
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (!delta) return;
+      el.scrollLeft += delta;
+      e.preventDefault();
+    };
+
+    el.addEventListener('pointerdown', onPointerDown);
+    el.addEventListener('pointermove', onPointerMove, { passive: false });
+    el.addEventListener('pointerup', endDrag);
+    el.addEventListener('pointercancel', endDrag);
+    el.addEventListener('click', onClickCapture, true);
+    el.addEventListener('wheel', onWheel, { passive: false });
+
+    let ro;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(updateScrollable);
+      ro.observe(el);
+      Array.from(el.children).forEach((child) => ro.observe(child));
+    }
+    const onResize = () => updateScrollable();
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      el.removeEventListener('pointerdown', onPointerDown);
+      el.removeEventListener('pointermove', onPointerMove);
+      el.removeEventListener('pointerup', endDrag);
+      el.removeEventListener('pointercancel', endDrag);
+      el.removeEventListener('click', onClickCapture, true);
+      el.removeEventListener('wheel', onWheel);
+      window.removeEventListener('resize', onResize);
+      if (ro) ro.disconnect();
+      el.classList.remove(scrollableClass, draggingClass);
+    };
+  }, [ref, scrollableClass, draggingClass]);
+};
+const useHorizontalChipScroll = (ref) => useHorizontalDragScroll(ref, {
+  scrollableClass: 'is-chips-scrollable',
+  draggingClass: 'is-chips-dragging',
+});
+
 /* ═══════════════════════════════════════════════════════
    DS COMPONENTS — matching RIG v2.51.0 Storybook
    ═══════════════════════════════════════════════════════ */
@@ -3020,7 +3961,11 @@ const DS_ICON_ALIAS = {
   'protip':          'lightbulb',
   'rocket':          'flame',
 };
-const dsIc = (name) => `#ic-${DS_ICON_ALIAS[name] || name}-24`;
+const dsIc = (name, btnSize) => {
+  const base = DS_ICON_ALIAS[name] || name;
+  if (btnSize === 's' && base === 'trash') return '#ic-trash-16';
+  return `#ic-${base}-24`;
+};
 
 const Icon = ({ name, size = 'sm', className = '', style }) => (
   <span className={`icon icon--${size} ${className}`} style={style}>
@@ -3028,20 +3973,25 @@ const Icon = ({ name, size = 'sm', className = '', style }) => (
   </span>
 );
 
-const Button = ({ children, variant = 'primary', size = 'm', icon, iconRight, block, onClick, disabled, style, className = '' }) => (
+const Button = ({ children, variant = 'primary', size = 'm', icon, iconRight, block, onClick, disabled, style, className = '', eyebrow }) => (
   <button
-    className={`ds-btn ds-btn--${size} ds-btn--${variant} ${block ? 'ds-btn--block' : ''} ${className}`}
+    className={`ds-btn ds-btn--${size} ds-btn--${variant}${eyebrow ? ' ds-btn--stacked' : ''} ${block ? 'ds-btn--block' : ''} ${className}`}
     onClick={onClick} disabled={disabled} style={style}
   >
     {icon && <svg><use href={dsIc(icon)} /></svg>}
-    {children}
+    {eyebrow ? (
+      <span className="ds-btn__stack">
+        <span className="ds-btn__stack-eyebrow">{eyebrow}</span>
+        <span className="ds-btn__stack-label">{children}</span>
+      </span>
+    ) : children}
     {iconRight && <svg><use href={dsIc(iconRight)} /></svg>}
   </button>
 );
 
 const IconButton = ({ icon, size = 's', onClick, title, className = '' }) => (
   <button className={`ds-icon-btn ds-icon-btn--${size} ${className}`} onClick={onClick} title={title}>
-    <svg><use href={dsIc(icon)} /></svg>
+    <svg><use href={dsIc(icon, size)} /></svg>
   </button>
 );
 
@@ -3067,7 +4017,9 @@ const Chips = ({ label, selected, onClick, size, count }) => (
   </button>
 );
 
-const ChipsGroup = ({ children }) => <div className="ds-chips-group">{children}</div>;
+const ChipsGroup = React.forwardRef(({ children, className = '', ...rest }, ref) => (
+  <div ref={ref} className={['ds-chips-group', className].filter(Boolean).join(' ')} {...rest}>{children}</div>
+));
 
 /* DS Input — label floats inside the field per RIG Storybook.
    Supports leftIcon, rightIcon, prefix, textarea, and a "button" mode used by
@@ -3109,7 +4061,7 @@ const Input = ({
         {renderIcon(leftIcon, 'left')}
         {prefix && <span className="ds-input-shell__prefix">{prefix}</span>}
         {asButton ? (
-          <span className="ds-input-field" style={{display:'flex', alignItems:'center'}}>{children}</span>
+          <span className="ds-input-field">{children}</span>
         ) : type === 'textarea' ? (
           <textarea className="ds-input-field"
             value={value} onChange={onChange} placeholder={placeholder} disabled={disabled}
@@ -3167,7 +4119,7 @@ const Select = ({ label, value, onChange, options = [], placeholder, description
 
   const selected = options.find(o => o.value === value);
   return (
-    <div ref={ref} style={{position:'relative'}}>
+    <div ref={ref} style={{position:'relative', width:'100%', minWidth:0}}>
       <Input
         asButton label={label} leftIcon={leftIcon} rightIcon="chevron-down"
         description={description} error={error} size={size}
@@ -3278,28 +4230,111 @@ const Container = ({ children, style, className = '' }) => (
   <div className={`ds-container ${className}`} style={style}>{children}</div>
 );
 
-const Modal = ({ open, onClose, title, subtitle, children, footer, size = 'm' }) => {
+/* Mobile bottom sheet: scroll lock, enter animation, Escape to close. */
+const useMobilePickerSheet = (open, onClose, sheetRef) => {
+  const isMobile = useIsMobile();
+
   useEffect(() => {
-    if (!open) return;
+    if (!open || !isMobile) return undefined;
+    const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    document.body.classList.add('sheet-scroll-lock');
+    document.body.style.top = `-${scrollY}px`;
+    return () => {
+      document.body.classList.remove('sheet-scroll-lock');
+      document.body.style.top = '';
+      window.scrollTo(0, scrollY);
+    };
+  }, [open, isMobile]);
+
+  useLayoutEffect(() => {
+    if (!open || !isMobile || !sheetRef?.current) return undefined;
+    const el = sheetRef.current;
+    requestAnimationFrame(() => el.classList.add('open'));
+    return () => el.classList.remove('open');
+  }, [open, isMobile, sheetRef]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = e => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, onClose]);
+
+  return isMobile;
+};
+
+const Modal = ({ open, onClose, title, headerMeta, subtitle, children, footer, size = 'm' }) => {
+  const sheetRef = useRef(null);
+  const isMobile = useMobilePickerSheet(open, onClose, sheetRef);
+
+  useEffect(() => {
+    if (!open || isMobile) return undefined;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
-    document.addEventListener('keydown', onKey);
-    return () => { document.body.style.overflow = prev; document.removeEventListener('keydown', onKey); };
-  }, [open, onClose]);
+    return () => { document.body.style.overflow = prev; };
+  }, [open, isMobile]);
+
   if (!open) return null;
   const maxWidth = size === 'l' ? 640 : size === 's' ? 420 : 520;
+
+  const closeBtn = (
+    <button
+      className={isMobile ? 'dr-panel__close' : 'ds-modal__close'}
+      onClick={onClose}
+      aria-label="Close"
+      type="button"
+    >
+      <svg><use href="#ic-cross-24"/></svg>
+    </button>
+  );
+
+  const titleBlock = (
+    <>
+      {title && (
+        typeof title === 'string'
+          ? (isMobile
+              ? <span className="dr-panel__title">{title}</span>
+              : <div className="rig-title-03">{title}</div>)
+          : (isMobile ? title : <div className="rig-title-03">{title}</div>)
+      )}
+      {subtitle && (
+        isMobile
+          ? <div className="rig-utility-01" style={{ color: 'var(--ds-text-muted)', marginTop: 'var(--ds-dim-xs)' }}>{subtitle}</div>
+          : <div style={{ marginTop: 'var(--ds-dim-s)', color: 'var(--ds-text-muted)', fontSize: 14, lineHeight: '20px' }}>{subtitle}</div>
+      )}
+    </>
+  );
+
+  if (isMobile) {
+    return ReactDOM.createPortal(
+      <>
+        <div className="dr-panel-backdrop open" onClick={onClose} aria-hidden="true" />
+        <div
+          ref={sheetRef}
+          className="dr-panel dr-panel--sheet"
+          role="dialog"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className={`dr-panel__head${subtitle ? ' dr-panel__head--stacked' : ''}`}>
+            <div className="dr-panel__head-main">{titleBlock}</div>
+            {headerMeta && <div className="ds-modal__header-meta">{headerMeta}</div>}
+            {closeBtn}
+          </div>
+          <div className="dr-panel__body">{children}</div>
+          {footer && <div className="dr-panel__foot ds-modal__foot--stack">{footer}</div>}
+        </div>
+      </>,
+      document.body
+    );
+  }
+
   const modal = (
     <div className="ds-modal-overlay" onClick={onClose}>
-      <div className="ds-modal" style={{maxWidth}} onClick={e => e.stopPropagation()}>
+      <div className="ds-modal" style={{ maxWidth }} onClick={e => e.stopPropagation()}>
         <div className="ds-modal__header">
-          <div className="ds-modal__title">
-            {title && <div className="rig-title-03">{title}</div>}
-            {subtitle && <div style={{marginTop:'var(--ds-dim-s)', color:'var(--ds-text-muted)', fontSize:14, lineHeight:'20px'}}>{subtitle}</div>}
-          </div>
-          <button className="ds-modal__close" onClick={onClose} aria-label="Close" type="button">
-            <svg><use href="#ic-cross-24"/></svg>
-          </button>
+          <div className="ds-modal__title">{titleBlock}</div>
+          {headerMeta && <div className="ds-modal__header-meta">{headerMeta}</div>}
+          {closeBtn}
         </div>
         <div className="ds-modal__body">{children}</div>
         {footer && <div className="ds-modal__footer">{footer}</div>}
@@ -3411,10 +4446,29 @@ const InfoTip = ({ children, label, className = '', placement = 'top' }) => (
   </span>
 );
 
-const ContestTypeInfo = ({ typeId, className = '' }) => {
+const ContestPeriodMeta = ({ children, className = '' }) => (
+  <span className={`contest-period-meta${className ? ` ${className}` : ''}`}>
+    <Icon name="calendar" size="sm" />
+    <span>{children}</span>
+  </span>
+);
+
+const ContestTypeInfo = ({ typeId, className = '', period, tooltip = false }) => {
   const [open, setOpen] = useState(false);
   const t = CONTEST_TYPES[typeId];
   if (!t) return null;
+
+  if (tooltip) {
+    return (
+      <InfoTipButton
+        btnClassName="type-info-btn"
+        className={className}
+        label={t.title}
+        icon="ds"
+        text={`${t.shortDesc} Ranked by "${t.metric}".`}
+      />
+    );
+  }
 
   return (
     <>
@@ -3422,7 +4476,7 @@ const ContestTypeInfo = ({ typeId, className = '' }) => {
         type="button"
         className={`type-info-btn ${className}`}
         onClick={e => { e.stopPropagation(); setOpen(true); }}
-        title={`How Score is calculated — ${t.title}`}
+        title={t.title}
         aria-label={`Score calculation info for ${t.title}`}
       >
         <svg><use href="#ic-info-24" /></svg>
@@ -3432,13 +4486,14 @@ const ContestTypeInfo = ({ typeId, className = '' }) => {
         onClose={() => setOpen(false)}
         size="l"
         title={
-          <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
-            <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32}}>
+          <span className="ds-modal__title-row">
+            <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32,flexShrink:0}}>
               <svg width="18" height="18"><use href={dsIc(t.icon)} /></svg>
             </span>
-            <span>{t.title} — how Score is calculated</span>
+            <span>{t.title}</span>
           </span>
         }
+        headerMeta={period ? <ContestPeriodMeta>{period}</ContestPeriodMeta> : null}
         footer={<Button variant="primary" size="m" onClick={() => setOpen(false)}>Got it</Button>}
       >
             <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-4xl)'}}>
@@ -3598,6 +4653,13 @@ const useToast = () => useContext(ToastContext);
    Mobile:   ButtonGroup is hidden via CSS; a compact pill is shown that
              opens a bottom-sheet picker. */
 const ROLE_LABELS = { ib: 'IB Partner', client: 'Client', admin: 'Admin' };
+/* Admin kept for demo routing; hidden from persona picker until ready. */
+const DEMO_PERSONA_OPTIONS = [
+  { id: 'ib',     label: 'IB Partner', title: 'IB Partner', desc: 'Creates and runs contests for their clients' },
+  { id: 'client', label: 'Client',     title: 'Client',     desc: 'Joins contests and views the leaderboard' },
+  { id: 'admin',  label: 'Admin',      title: 'Admin',      desc: 'Moderates contests and responds to alerts', hidden: true },
+];
+const VISIBLE_DEMO_PERSONAS = DEMO_PERSONA_OPTIONS.filter(opt => !opt.hidden);
 
 const RolePreviewBar = ({ role, onRoleChange, onPillTap }) => (
   <div className="role-bar" role="region" aria-label="Demo: role switch">
@@ -3605,11 +4667,7 @@ const RolePreviewBar = ({ role, onRoleChange, onPillTap }) => (
     <ButtonGroup
       value={role}
       onChange={onRoleChange}
-      options={[
-        {value: 'ib',     label: 'IB Partner'},
-        {value: 'client', label: 'Client'},
-        {value: 'admin',  label: 'Admin'},
-      ]}
+      options={VISIBLE_DEMO_PERSONAS.map(({ id, label }) => ({ value: id, label }))}
       size="s"
       ariaLabel="Preview role"
     />
@@ -3659,17 +4717,16 @@ const HEADER_MENUS = {
 
 /* Standalone rebate prototype (source: lalygi-sys/rere, figma/prototype). */
 const REBATE_PROTOTYPE_HREF = 'rebate/index.html';
+const IB_DASHBOARD_PROTOTYPE_HREF = 'ib-dashboard/index.html';
 
-/* Drawer показывает плоский список — раскрываем dropdown-пункты шапки. */
-const flattenHeaderMenuForDrawer = (items = []) =>
-  items.flatMap(item => (item.dropdown ? item.dropdown : [item]));
+/* Drawer uses the same hierarchical menu as AppHeader (Figma Navigation IB Cabinet 1:37196). */
 
 /* AppHeader — adaptive header per role.
    IB:    Logo + Menu + Wallet + Avatar
    Client: Logo + Menu (with badges & dropdowns) + Deposit + Avatar + Close
    Admin:  Logo + Menu + Wallet + Avatar
-   Mobile: horizontal Menu + Wallet are hidden via CSS; a burger button
-           opens the slide-down drawer (managed by App). */
+   Mobile: horizontal Menu + Wallet are hidden via CSS; compact balance chip,
+           avatar and burger open the slide-down drawer (managed by App). */
 const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0, onMenuOpen, onMenuSelect }) => {
   const menu = HEADER_MENUS[role] || HEADER_MENUS.ib;
   const [internalKey, setInternalKey] = useState(activeKeyProp || menu[0].key);
@@ -3687,7 +4744,9 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
 
   return (
     <header className="app-header" role="banner">
-      <div className="app-header__logo" aria-label="Logo" />
+      <div className="app-header__brand">
+        <div className="app-header__logo" aria-label="Logo" />
+      </div>
       <nav className="app-header__menu" aria-label="Main menu">
         {menu.map(item => {
           if (item.dropdown) {
@@ -3756,19 +4815,21 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
       </nav>
       <div className="app-header__right">
         {role === 'client' ? (
-          <button className="app-header__deposit" type="button">Deposit</button>
+          <button className="app-header__deposit is-desktop-only" type="button">Deposit</button>
         ) : (
-          <button className="app-header__wallet" type="button" aria-label="Wallet">
+          <button className="app-header__wallet is-desktop-only" type="button" aria-label="Wallet">
             <span className="app-header__wallet-label">Wallet</span>
             <span className="app-header__wallet-amount">$0.00</span>
           </button>
         )}
+        <button className="app-header__balance" type="button" aria-label="Wallet">
+          $0.00
+        </button>
         <button className="app-header__avatar" type="button" aria-label="Profile">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
-          {role === 'client' && <span className="app-header__avatar-dot" aria-hidden="true" />}
         </button>
         {role === 'client' && (
           <button className="app-header__close" type="button" aria-label="Menu">
@@ -3798,111 +4859,138 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
 };
 
 /* ═══════════════════════════════════════════════════════
-   MOBILE NAV — drawer, persona sheet, bottom tab bar
+   MOBILE NAV — drawer & persona sheet
    ═══════════════════════════════════════════════════════ */
 
-/* MobileDrawer — slide-down sheet anchored to the top of the viewport.
-   Used for the role-specific menu when the screen is too narrow for the
-   horizontal AppHeader. Renders only on mobile via CSS; on desktop the
-   element is `display: none`. Locks body scroll while open. */
-const MobileDrawer = ({ open, onClose, title, items = [], activeKey, onSelect }) => {
+/* MobileDrawer — full-screen nav panel (Figma 7pd3z node 1:37196).
+   Top bar with close control; menu items Title 03 (20/24 semibold).
+   Sections with dropdown show chevron and expand in place. */
+const MobileDrawer = ({
+  open,
+  onClose,
+  items = [],
+  activeKey,
+  onSelect,
+  role,
+  clientNewContestsCount = 0,
+  clientContestsTotal = 0,
+}) => {
+  const [expandedKeys, setExpandedKeys] = useState(() => new Set());
+
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
     document.addEventListener('keydown', onKey);
-    return () => { document.body.style.overflow = prev; document.removeEventListener('keydown', onKey); };
-  }, [open, onClose]);
+    const autoExpanded = new Set();
+    items.forEach(item => {
+      if (item.dropdown?.some(d => d.key === activeKey)) autoExpanded.add(item.key);
+    });
+    setExpandedKeys(autoExpanded);
+    return () => {
+      document.body.style.overflow = prev;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, onClose, items, activeKey]);
+
+  const toggleExpanded = (key) => {
+    setExpandedKeys(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  };
+
+  const renderSubTrail = (sub) => {
+    if (role === 'client' && sub.key === 'contests') {
+      return (
+        <span className="mobile-drawer__subitem-trail">
+          <Tag label={String(clientContestsTotal)} variant="brand" />
+          {clientNewContestsCount > 0 && <Tag label="New" variant="warning" />}
+        </span>
+      );
+    }
+    if (sub.badge) return <span className="mobile-drawer__subitem-trail"><Tag label={sub.badge} variant="brand" /></span>;
+    return null;
+  };
 
   return (
-    <>
-      <div
-        className={`mobile-drawer-backdrop ${open ? 'mobile-drawer-backdrop--open' : ''}`}
-        onClick={onClose}
-        aria-hidden={!open}
-      />
-      <div
-        className={`mobile-drawer ${open ? 'mobile-drawer--open' : ''}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-      >
-        <div className="mobile-drawer__header">
-          <span className="mobile-drawer__title">{title}</span>
-          <button
-            type="button"
-            className="ds-icon-btn ds-icon-btn--ghost ds-icon-btn--m"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <svg><use href="#ic-cross-24"/></svg>
-          </button>
-        </div>
-        <div className="mobile-drawer__menu" role="menu">
-          {items.map(item => (
-            <button
-              key={item.key}
-              type="button"
-              role="menuitem"
-              className={`mobile-drawer__item ${activeKey === item.key ? 'mobile-drawer__item--active' : ''}`}
-              onClick={() => { onSelect && onSelect(item); onClose && onClose(); }}
-            >
-              <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
-                {item.icon && (
-                  <svg width="20" height="20" style={{color:'var(--ds-text-secondary)'}}><use href={dsIc(item.icon)}/></svg>
-                )}
-                <span>{item.label}</span>
-              </span>
-              {item.badge && <Tag label={item.badge} variant="brand" />}
-            </button>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-};
-
-/* MobileTabBar — fixed bottom navigation, 4 tabs per role.
-   Reuses DS sprite icons that already exist in this file's <svg> sprite. */
-const TAB_BARS = {
-  ib: [
-    { key: 'dashboard', label: 'Home',  icon: 'market-watch' },
-    { key: 'contests',  label: 'Contests', icon: 'cup' },
-    { key: 'wallet',    label: 'Wallet',  icon: 'pattern-trend' },
-    { key: 'profile',   label: 'Profile',  icon: 'users' },
-  ],
-  client: [
-    { key: 'dashboard', label: 'Home',  icon: 'market-watch' },
-    { key: 'contests',  label: 'Contests', icon: 'cup' },
-    { key: 'bonuses',   label: 'Bonuses',   icon: 'gift' },
-    { key: 'profile',   label: 'Profile',  icon: 'users' },
-  ],
-  admin: [
-    { key: 'dashboard', label: 'Home',  icon: 'market-watch' },
-    { key: 'contests',  label: 'Contests', icon: 'cup' },
-    { key: 'users',     label: 'Users',    icon: 'users' },
-    { key: 'audit',     label: 'Audit',    icon: 'document' },
-  ],
-};
-
-const MobileTabBar = ({ role, activeKey, onSelect }) => {
-  const tabs = TAB_BARS[role] || TAB_BARS.ib;
-  return (
-    <nav className="mobile-tab-bar" role="navigation" aria-label="Main menu">
-      {tabs.map(tab => (
+    <div
+      className={`mobile-drawer ${open ? 'mobile-drawer--open' : ''}`}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Navigation menu"
+      aria-hidden={!open}
+    >
+      <div className="mobile-drawer__topbar">
         <button
-          key={tab.key}
           type="button"
-          className={`mobile-tab-bar__item ${activeKey === tab.key ? 'mobile-tab-bar__item--active' : ''}`}
-          onClick={() => onSelect && onSelect(tab)}
-          aria-current={activeKey === tab.key ? 'page' : undefined}
+          className="mobile-drawer__close"
+          onClick={onClose}
+          aria-label="Close menu"
         >
-          <svg><use href={dsIc(tab.icon)}/></svg>
-          <span>{tab.label}</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <use href="#ic-cross-24" />
+          </svg>
         </button>
-      ))}
-    </nav>
+      </div>
+      <div className="mobile-drawer__body">
+        <nav className="mobile-drawer__menu" aria-label="Main menu">
+          {items.map(item => {
+            if (item.dropdown?.length) {
+              const isOpen = expandedKeys.has(item.key);
+              return (
+                <div key={item.key} className="mobile-drawer__group">
+                  <button
+                    type="button"
+                    className="mobile-drawer__item"
+                    aria-expanded={isOpen}
+                    onClick={() => toggleExpanded(item.key)}
+                  >
+                    <span className="mobile-drawer__item-row">
+                      <span className="mobile-drawer__item-label">{item.label}</span>
+                      <svg className={`mobile-drawer__chevron ${isOpen ? 'mobile-drawer__chevron--open' : ''}`} viewBox="0 0 24 24" aria-hidden="true">
+                        <use href="#ic-chevron-down-24" />
+                      </svg>
+                    </span>
+                  </button>
+                  {isOpen && (
+                    <div className="mobile-drawer__submenu">
+                      {item.dropdown.map(sub => (
+                        <button
+                          key={sub.key}
+                          type="button"
+                          className={`mobile-drawer__subitem ${activeKey === sub.key ? 'mobile-drawer__subitem--active' : ''}`}
+                          onClick={() => { onSelect && onSelect(sub); onClose && onClose(); }}
+                        >
+                          <span className="mobile-drawer__item-label">{sub.label}</span>
+                          {renderSubTrail(sub)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <button
+                key={item.key}
+                type="button"
+                className={`mobile-drawer__item ${activeKey === item.key ? 'mobile-drawer__item--active' : ''}`}
+                onClick={() => { onSelect && onSelect(item); onClose && onClose(); }}
+              >
+                <span className="mobile-drawer__item-row">
+                  <span className="mobile-drawer__item-label">{item.label}</span>
+                  {item.badge ? <Tag label={item.badge} variant="brand" /> : null}
+                </span>
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+    </div>
   );
 };
 
@@ -3917,11 +5005,7 @@ const MobilePersonaSheet = ({ open, onClose, role, onChange }) => (
     size="m"
   >
     <div className="rig-radio-cards">
-      {[
-        { id: 'ib',     title: 'IB Partner', desc: 'Creates and runs contests for their clients' },
-        { id: 'client', title: 'Client',     desc: 'Joins contests and views the leaderboard' },
-        { id: 'admin',  title: 'Admin',      desc: 'Moderates contests and responds to alerts' },
-      ].map(opt => {
+      {VISIBLE_DEMO_PERSONAS.map(opt => {
         const isSelected = role === opt.id;
         return (
           <button
@@ -3981,61 +5065,115 @@ const StatCard = ({ value, label, color, trend }) => (
 );
 
 /* Компактные KPI-баннеры для списка контестов IB — «спортивная» мотивация + деловые метрики. */
-/* Подпись из двух частей: в ширину карточки; «·» только если обе части на одной строке */
-const StatBannerHintSplit = ({ parts }) => {
-  const wrapRef = useRef(null);
-  const firstRef = useRef(null);
-  const secondRef = useRef(null);
-  const [inline, setInline] = useState(true);
+/* Синхронизирует delta layout: если хоть в одной карточке delta не влезает в строку с числом — во всех под числом. */
+const StatBannersLayout = ({ ariaLabel, children }) => {
+  const ref = useRef(null);
+  const [deltaStacked, setDeltaStacked] = useState(false);
+
+  useHorizontalDragScroll(ref, {
+    scrollableClass: 'is-stat-banners-scrollable',
+    draggingClass: 'is-stat-banners-dragging',
+  });
+
+  const syncDeltaLayout = useCallback(() => {
+    const root = ref.current;
+    if (!root) return;
+    let stacked = false;
+    root.querySelectorAll('.stat-banner__value-row').forEach(row => {
+      const value = row.querySelector('.stat-banner__value');
+      const delta = row.querySelector('.stat-banner__delta');
+      if (!value || !delta || !String(delta.textContent || '').trim()) return;
+      const gap = parseFloat(getComputedStyle(row).columnGap || getComputedStyle(row).gap) || 8;
+      if (value.scrollWidth + gap + delta.scrollWidth > row.clientWidth + 1) stacked = true;
+    });
+    setDeltaStacked(stacked);
+  }, []);
 
   useLayoutEffect(() => {
-    const check = () => {
-      if (!firstRef.current || !secondRef.current) return;
-      setInline(firstRef.current.offsetTop === secondRef.current.offsetTop);
-    };
-    check();
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(check) : null;
-    if (wrapRef.current && ro) ro.observe(wrapRef.current);
-    window.addEventListener('resize', check);
+    syncDeltaLayout();
+    const root = ref.current;
+    if (!root) return undefined;
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(syncDeltaLayout) : null;
+    ro?.observe(root);
+    root.querySelectorAll('.stat-banner').forEach(el => ro?.observe(el));
+    window.addEventListener('resize', syncDeltaLayout);
     return () => {
       ro?.disconnect();
-      window.removeEventListener('resize', check);
+      window.removeEventListener('resize', syncDeltaLayout);
     };
-  }, [parts]);
+  }, [syncDeltaLayout, children]);
 
+  return (
+    <div
+      ref={ref}
+      className={`stat-banners${deltaStacked ? ' stat-banners--delta-stacked' : ''}`}
+      aria-label={ariaLabel}
+    >
+      {children}
+    </div>
+  );
+};
+
+/* Подпись из двух частей — перенос второй части через @container (без JS) */
+const StatBannerHintSplit = ({ parts }) => {
   if (!parts?.length) return null;
   if (parts.length === 1) {
     return <span className="stat-banner__hint">{parts[0]}</span>;
   }
-
   return (
-    <span ref={wrapRef} className="stat-banner__hint stat-banner__hint--split">
-      <span ref={firstRef} className="stat-banner__hint-part">{parts[0]}</span>
-      {inline && parts.length > 1 && (
-        <span className="stat-banner__hint-sep" aria-hidden="true"> · </span>
-      )}
-      {parts.slice(1).map((part, i) => (
-        <span key={i} ref={i === 0 ? secondRef : undefined} className="stat-banner__hint-part">{part}</span>
+    <span className="stat-banner__hint stat-banner__hint--split">
+      {parts.map((part, i) => (
+        <React.Fragment key={i}>
+          {i > 0 && <span className="stat-banner__hint-sep" aria-hidden="true"> · </span>}
+          <span className="stat-banner__hint-part">{part}</span>
+        </React.Fragment>
       ))}
     </span>
   );
 };
 
-const StatBanner = ({ variant, icon, label, value, hint, hintParts, delta, progress, live, infoTip }) => (
+const InfoTipButton = ({ label, text, btnClassName, className = '', icon = 'stat', onPointerDown, onClick }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <button
+      type="button"
+      className={`${btnClassName} info-tip info-tip--bottom${open ? ' is-open' : ''}${className ? ` ${className}` : ''}`}
+      aria-label={`About metric “${label}”`}
+      aria-expanded={open}
+      onPointerDown={(e) => { e.stopPropagation(); onPointerDown?.(e); }}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (onClick) onClick(e);
+        else setOpen(v => !v);
+      }}
+      onBlur={() => setOpen(false)}
+    >
+      {icon === 'ds' ? (
+        <svg><use href="#ic-info-24" /></svg>
+      ) : (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="10" r="7.25" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M10 9v5M10 6.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      )}
+      <span className="info-tip__bubble" role="tooltip">{text}</span>
+    </button>
+  );
+};
+
+const StatBannerInfoTip = ({ label, text }) => (
+  <InfoTipButton label={label} text={text} btnClassName="stat-banner__info-btn" />
+);
+
+const StatBanner = ({ variant, icon, label, value, hint, hintParts, delta, progress, infoTip }) => (
   <div className={`stat-banner stat-banner--${variant}`}>
     <div className="stat-banner__head">
       <div className="stat-banner__head-main">
         <span className="stat-banner__icon"><svg><use href={dsIc(icon)} /></svg></span>
         <span className="stat-banner__label">{label}</span>
-        {live && <span className="stat-banner__live-dot" aria-hidden="true" title="Live now" />}
       </div>
       {infoTip ? (
-        <button type="button" className="stat-banner__info-btn" aria-label={`About metric “${label}”`} title={infoTip}>
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
-            <circle cx="10" cy="10" r="7.25" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M10 9v5M10 6.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-        </button>
+        <StatBannerInfoTip label={label} text={infoTip} />
       ) : (
         <span className="stat-banner__info-spacer" aria-hidden="true" />
       )}
@@ -4183,7 +5321,7 @@ const IBContestStatsBanners = ({ rows }) => {
     ? [`min ${minReach}`, `max ${maxReach}`]
     : null;
   return (
-    <div className="stat-banners" aria-label="Contest metrics">
+    <StatBannersLayout ariaLabel="Contest metrics">
       <StatBanner
         variant="profit"
         icon="trending-up"
@@ -4224,7 +5362,7 @@ const IBContestStatsBanners = ({ rows }) => {
         hintParts={prizeHintParts || undefined}
         infoTip="Total prize pool of active contests and prizes already paid for completed ones."
       />
-    </div>
+    </StatBannersLayout>
   );
 };
 
@@ -4379,13 +5517,23 @@ const CalendarInput = ({ value, onChange, label }) => {
 
 const calSameDay = (a, b) => a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
-const DateRangeInput = ({ label = 'Contest period', startDate, endDate, onChangeStart, onChangeEnd }) => {
+const DateRangeInput = ({
+  label = 'Contest period',
+  startDate, endDate, onChangeStart, onChangeEnd,
+  defaultStartDate, defaultEndDate,
+}) => {
   const [open, setOpen] = useState(false);
   const [range, setRange] = useState({ start: startDate, end: endDate });
   const initRef = range.start || range.end || new Date();
   const [viewYear, setViewYear] = useState(initRef.getFullYear());
   const [viewMonth, setViewMonth] = useState(initRef.getMonth());
   const ref = useRef();
+  const sheetRef = useRef();
+  const close = () => setOpen(false);
+  const isMobile = useMobilePickerSheet(open, close, sheetRef);
+
+  const defaultStart = defaultStartDate ?? null;
+  const defaultEnd = defaultEndDate ?? null;
 
   useEffect(() => {
     if (open) return;
@@ -4393,15 +5541,18 @@ const DateRangeInput = ({ label = 'Contest period', startDate, endDate, onChange
   }, [startDate, endDate, open]);
 
   useEffect(() => {
+    if (!open || isMobile) return;
     const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, []);
+  }, [open, isMobile]);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const sd = range.start || null;
   const ed = range.end || null;
   const rangeSpan = sd && ed && !calSameDay(sd, ed);
+
+  const isDefault = calSameDay(sd, defaultStart) && calSameDay(ed, defaultEnd);
 
   const display = sd && ed
     ? `${formatDate(sd)} — ${formatDate(ed)}`
@@ -4415,18 +5566,32 @@ const DateRangeInput = ({ label = 'Contest period', startDate, endDate, onChange
     setViewMonth(m); setViewYear(y);
   };
 
+  const applyRange = (next) => {
+    setRange(next);
+    onChangeStart(next.start);
+    onChangeEnd(next.end ?? null);
+  };
+
+  const reset = () => {
+    const next = { start: defaultStart, end: defaultEnd };
+    applyRange(next);
+    const refDate = defaultStart || defaultEnd || today;
+    setViewYear(refDate.getFullYear());
+    setViewMonth(refDate.getMonth());
+  };
+
+  const done = () => {
+    applyRange(range);
+    setOpen(false);
+  };
+
   const handlePickDate = (dt) => {
     const ps = sd, pe = ed;
     let next;
     if (ps && pe) next = { start: dt, end: null };
     else if (ps && !pe) next = dt < ps ? { start: dt, end: ps } : { start: ps, end: dt };
     else next = { start: dt, end: null };
-    setRange(next);
-    onChangeStart(next.start);
-    if (next.end) {
-      onChangeEnd(next.end);
-      setOpen(false);
-    }
+    applyRange(next);
     if (dt.getMonth() !== viewMonth || dt.getFullYear() !== viewYear) {
       setViewMonth(dt.getMonth());
       setViewYear(dt.getFullYear());
@@ -4435,50 +5600,80 @@ const DateRangeInput = ({ label = 'Contest period', startDate, endDate, onChange
 
   const gridCells = buildMonthGridCells(viewYear, viewMonth);
 
+  const calendar = (
+    <div className="cal">
+      <div className="cal-nav">
+        <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(-1)} aria-label="Previous month">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <span className="dr-panel__month">{MONTHS[viewMonth]} {viewYear}</span>
+        <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(1)} aria-label="Next month">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <div className="cal-grid">
+        {DOW.map(d => <div key={d} className="cal-wd">{d}</div>)}
+      </div>
+      <div className="cal-grid">
+        {gridCells.map((cell, i) => {
+          const dt = cell.date;
+          const isStart = sd && calSameDay(dt, sd);
+          const isEnd = ed && calSameDay(dt, ed);
+          const inRange = sd && ed && dt > sd && dt < ed;
+          const cellCls = ['cal-cell'];
+          if (inRange) cellCls.push('in-range');
+          if (isStart && ed && rangeSpan) cellCls.push('is-start');
+          if (isEnd && sd && rangeSpan) cellCls.push('is-end');
+          const btnCls = ['cal-day'];
+          if (cell.out) btnCls.push('out');
+          if (calSameDay(dt, today)) btnCls.push('today');
+          if (isStart) btnCls.push('is-start');
+          if (isEnd) btnCls.push('is-end');
+          return (
+            <div key={i} className={cellCls.join(' ')}>
+              <button type="button" className={btnCls.join(' ')} onClick={() => handlePickDate(dt)}>{cell.label}</button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  const dropdown = (
+    <div
+      ref={isMobile ? sheetRef : null}
+      className={isMobile ? 'dr-panel dr-panel--sheet' : 'cal-dropdown cal-dropdown--range'}
+      role="dialog"
+      aria-label={label}
+    >
+      {isMobile && (
+        <div className="dr-panel__head">
+          <span className="dr-panel__title">{label}</span>
+          <button type="button" className="dr-panel__close" onClick={close} aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none"><use href="#ic-cross-24"/></svg>
+          </button>
+        </div>
+      )}
+      {isMobile ? <div className="dr-panel__body">{calendar}</div> : calendar}
+      <div className={isMobile ? 'dr-panel__foot' : 'cal-dropdown--range__foot'}>
+        <button type="button" className="dr-panel__reset" onClick={reset} disabled={isDefault}>Reset</button>
+        <Button variant="primary" size="s" onClick={done}>Done</Button>
+      </div>
+    </div>
+  );
+
   return (
     <div ref={ref} className="wizard-period-field">
       <Input asButton label={label} rightIcon="calendar" onClick={() => setOpen(v => !v)}>
         {display}
       </Input>
-      {open && (
-        <div className="cal-dropdown cal-dropdown--range">
-          <div className="cal">
-            <div className="cal-nav">
-              <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(-1)} aria-label="Previous month">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-              </button>
-              <span className="dr-panel__month">{MONTHS[viewMonth]} {viewYear}</span>
-              <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(1)} aria-label="Next month">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-            </div>
-            <div className="cal-grid">
-              {DOW.map(d => <div key={d} className="cal-wd">{d}</div>)}
-            </div>
-            <div className="cal-grid">
-              {gridCells.map((cell, i) => {
-                const dt = cell.date;
-                const isStart = sd && calSameDay(dt, sd);
-                const isEnd = ed && calSameDay(dt, ed);
-                const inRange = sd && ed && dt > sd && dt < ed;
-                const cellCls = ['cal-cell'];
-                if (inRange) cellCls.push('in-range');
-                if (isStart && ed && rangeSpan) cellCls.push('is-start');
-                if (isEnd && sd && rangeSpan) cellCls.push('is-end');
-                const btnCls = ['cal-day'];
-                if (cell.out) btnCls.push('out');
-                if (calSameDay(dt, today)) btnCls.push('today');
-                if (isStart) btnCls.push('is-start');
-                if (isEnd) btnCls.push('is-end');
-                return (
-                  <div key={i} className={cellCls.join(' ')}>
-                    <button type="button" className={btnCls.join(' ')} onClick={() => handlePickDate(dt)}>{cell.label}</button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
+      {open && !isMobile && dropdown}
+      {open && isMobile && ReactDOM.createPortal(
+        <>
+          <div className="dr-panel-backdrop open" onClick={close} aria-hidden="true" />
+          {dropdown}
+        </>,
+        document.body
       )}
     </div>
   );
@@ -4495,12 +5690,16 @@ const TimeRangeInput = ({
 }) => {
   const [open, setOpen] = useState(false);
   const ref = useRef();
+  const sheetRef = useRef();
+  const close = () => setOpen(false);
+  const isMobile = useMobilePickerSheet(open, close, sheetRef);
 
   useEffect(() => {
+    if (!open || isMobile) return;
     const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, []);
+  }, [open, isMobile]);
 
   const display = `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}`;
   const isDefault = startTime === defaultStartTime
@@ -4515,13 +5714,23 @@ const TimeRangeInput = ({
     onChangeEndMeridiem(defaultEndMeridiem);
   };
 
-  return (
-    <div ref={ref} className="wizard-period-field">
-      <Input asButton label={label} rightIcon="clock" onClick={() => setOpen(v => !v)}>
-        {display}
-      </Input>
-      {open && (
-        <div className="time-range-dropdown">
+  const dropdown = (
+    <div
+      ref={isMobile ? sheetRef : null}
+      className={isMobile ? 'dr-panel dr-panel--sheet' : 'time-range-dropdown'}
+      role="dialog"
+      aria-label={label}
+    >
+      {isMobile && (
+        <div className="dr-panel__head">
+          <span className="dr-panel__title">{label}</span>
+          <button type="button" className="dr-panel__close" onClick={close} aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none"><use href="#ic-cross-24"/></svg>
+          </button>
+        </div>
+      )}
+      {isMobile ? (
+        <div className="dr-panel__body dr-panel__body--stack">
           <TimeInputWithMeridiem
             label="Start time"
             value={startTime}
@@ -4536,11 +5745,44 @@ const TimeRangeInput = ({
             meridiem={endMeridiem}
             onMeridiemChange={onChangeEndMeridiem}
           />
-          <div className="time-range-dropdown__foot">
-            <button type="button" className="dr-panel__reset" onClick={reset} disabled={isDefault}>Reset</button>
-            <Button variant="primary" size="s" onClick={() => setOpen(false)}>Done</Button>
-          </div>
         </div>
+      ) : (
+        <>
+          <TimeInputWithMeridiem
+            label="Start time"
+            value={startTime}
+            onChange={onChangeStartTime}
+            meridiem={startMeridiem}
+            onMeridiemChange={onChangeStartMeridiem}
+          />
+          <TimeInputWithMeridiem
+            label="End time"
+            value={endTime}
+            onChange={onChangeEndTime}
+            meridiem={endMeridiem}
+            onMeridiemChange={onChangeEndMeridiem}
+          />
+        </>
+      )}
+      <div className={isMobile ? 'dr-panel__foot' : 'time-range-dropdown__foot'}>
+        <button type="button" className="dr-panel__reset" onClick={reset} disabled={isDefault}>Reset</button>
+        <Button variant="primary" size="s" onClick={close}>Done</Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div ref={ref} className="wizard-period-field">
+      <Input asButton label={label} rightIcon="clock" onClick={() => setOpen(v => !v)}>
+        {display}
+      </Input>
+      {open && !isMobile && dropdown}
+      {open && isMobile && ReactDOM.createPortal(
+        <>
+          <div className="dr-panel-backdrop open" onClick={close} aria-hidden="true" />
+          {dropdown}
+        </>,
+        document.body
       )}
     </div>
   );
@@ -4587,8 +5829,10 @@ const SearchIcon18 = () => (
   </svg>
 );
 
-/* Раскрывающийся поиск — как Rebate (Search client → inline field + close). */
+/* Раскрывающийся поиск — как Rebate mobile: trigger в header, поле в .page-header-search. */
+const CONTESTS_SEARCH_SLOT_ID = 'contests-page-header-search';
 const TableSearchToggle = ({ value, onChange, open, onOpenChange, triggerLabel = 'Search contests', placeholder = 'Search by name or type' }) => {
+  const isMobile = useIsMobile();
   const inputRef = useRef(null);
 
   const openSearch = () => {
@@ -4601,35 +5845,44 @@ const TableSearchToggle = ({ value, onChange, open, onOpenChange, triggerLabel =
     onChange('');
   };
 
+  const searchInput = (
+    <div className={`search-input ${open ? 'open' : ''}`} role="search">
+      <SearchIcon18 />
+      <input
+        ref={inputRef}
+        type="text"
+        placeholder={placeholder}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Escape') closeSearch(); }}
+        aria-label={placeholder}
+      />
+      <button type="button" className="search-clear" aria-label="Close search" onClick={closeSearch}>
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+          <path d="M5 5l8 8M13 5l-8 8"/>
+        </svg>
+      </button>
+    </div>
+  );
+
+  const slotEl = typeof document !== 'undefined' ? document.getElementById(CONTESTS_SEARCH_SLOT_ID) : null;
+
   return (
     <div className={`search-wrap ${open ? 'is-open' : ''}`}>
       <div
         className="tabs-action"
         role="button"
         tabIndex={0}
+        aria-label={triggerLabel}
+        aria-pressed={open}
         onClick={openSearch}
         onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSearch(); } }}
       >
         <SearchIcon18 />
-        {triggerLabel}
+        <span className="tabs-action__label">{triggerLabel}</span>
       </div>
-      <div className={`search-input ${open ? 'open' : ''}`} role="search">
-        <SearchIcon18 />
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder={placeholder}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          onKeyDown={e => { if (e.key === 'Escape') closeSearch(); }}
-          aria-label={placeholder}
-        />
-        <button type="button" className="search-clear" aria-label="Close search" onClick={closeSearch}>
-          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
-            <path d="M5 5l8 8M13 5l-8 8"/>
-          </svg>
-        </button>
-      </div>
+      {!isMobile && searchInput}
+      {isMobile && open && slotEl && ReactDOM.createPortal(searchInput, slotEl)}
     </div>
   );
 };
@@ -4665,7 +5918,8 @@ const DateRangeTrigger = ({ range, isOpen, onClick, placeholder = 'All periods',
      • sd && !ed → второй клик ставит end (swap если раньше start)
      • полоса is-start/in-range/is-end только когда обе даты и они разные
      • out-дни соседних месяцев кликабельны и переключают видимый месяц */
-const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null, end: null } }) => {
+const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null, end: null }, sheet = false }) => {
+  const sheetRef = useRef(null);
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const initRef = range?.start || range?.end || today;
   const [viewYear, setViewYear] = useState(initRef.getFullYear());
@@ -4708,8 +5962,20 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
   const activeBound = !sd ? 'start' : (!ed ? 'end' : null);
   const rangeSpan = sd && ed && !sameDay(sd, ed);
 
+  useLayoutEffect(() => {
+    if (!sheet || !sheetRef.current) return undefined;
+    const el = sheetRef.current;
+    requestAnimationFrame(() => el.classList.add('open'));
+    return () => el.classList.remove('open');
+  }, [sheet]);
+
   return (
-    <div className="dr-panel" role="dialog" aria-label="Contest period">
+    <div
+      ref={sheet ? sheetRef : null}
+      className={`dr-panel${sheet ? ' dr-panel--sheet' : ''}`}
+      role="dialog"
+      aria-label="Contest period"
+    >
       <div className="dr-panel__head">
         <span className="dr-panel__title">Contest period</span>
         <button type="button" className="dr-panel__close" onClick={onClose} aria-label="Close">
@@ -4782,7 +6048,10 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
             ? `${daysSelected} ${daysWord(daysSelected)} selected`
             : sd ? 'Select end date' : 'Select dates'}
         </span>
-        <button type="button" className="dr-panel__reset" onClick={reset} disabled={isSamePeriodRange(range, defaultRange)}>Reset</button>
+        <div className="dr-panel__foot-actions">
+          <button type="button" className="dr-panel__reset" onClick={reset} disabled={isSamePeriodRange(range, defaultRange)}>Reset</button>
+          <Button variant="primary" size="s" onClick={onClose} disabled={!sd || !ed}>Apply</Button>
+        </div>
       </div>
     </div>
   );
@@ -4823,7 +6092,7 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
           <div>
             <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-m)',flexWrap:'wrap'}}>
               <div className="contest-card__title">{name}</div>
-              <ContestTypeInfo typeId={typeId} />
+              <ContestTypeInfo typeId={typeId} tooltip />
             </div>
             {(showNewBadge || statusLabel) && (
               <div
@@ -4884,8 +6153,8 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
         </div>
       )}
       {!footer && onAction && (
-        <div className="contest-card__footer">
-          <Button variant="primary" size="m" block onClick={e => { e.stopPropagation(); onAction(); }} disabled={actionDisabled}>{actionLabel}</Button>
+        <div className="contest-card__footer" onClick={e => e.stopPropagation()}>
+          <Button variant="primary" size="m" block onClick={onAction} disabled={actionDisabled}>{actionLabel}</Button>
         </div>
       )}
     </div>
@@ -5070,17 +6339,41 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   const [sort, setSort] = useState({ key: null, dir: 'asc' });
   /* Sticky-колонка получает тень только когда таблица реально скролится. */
   const tableWrapRef = useRef(null);
+  const chipsRef = useRef(null);
   const tableScrollable = useIsHorizontallyScrollable(tableWrapRef);
+  useHorizontalChipScroll(chipsRef);
 
-  /* Закрываем боковую панель пикера, если клик прошёл мимо триггера и панели. */
+  /* Mobile date sheet: lock page scroll while open (rebate pattern). */
   useEffect(() => {
-    if (!pickerOpen) return;
+    if (!pickerOpen || !isMobile) return undefined;
+    const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+    document.body.classList.add('sheet-scroll-lock');
+    document.body.style.top = `-${scrollY}px`;
+    return () => {
+      document.body.classList.remove('sheet-scroll-lock');
+      document.body.style.top = '';
+      window.scrollTo(0, scrollY);
+    };
+  }, [pickerOpen, isMobile]);
+
+  /* Desktop: close picker on outside click. Mobile uses backdrop. */
+  useEffect(() => {
+    if (!pickerOpen || isMobile) return;
     const handler = e => {
       if (e.target.closest('.date-range-wrap') || e.target.closest('.dr-panel')) return;
       setPickerOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
+  }, [pickerOpen, isMobile]);
+
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const onKey = e => {
+      if (e.key === 'Escape') setPickerOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
   }, [pickerOpen]);
 
   /* Counts driven by the full row set so chips read like sticky tabs even when
@@ -5171,18 +6464,19 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           open={searchOpen}
           onOpenChange={setSearchOpen}
         />
-        <Button variant="primary" size="s" icon="plus" onClick={() => onNavigate('wizard')}>
-          Launch new
+        <Button variant="primary" size="s" onClick={() => onNavigate('wizard')}>
+          Start new
         </Button>
+      </div>
+      <div id={CONTESTS_SEARCH_SLOT_ID} className="page-header-search" hidden={!searchOpen} />
     </div>
-        </div>
 
       <div className="table-toolbar" role="toolbar" aria-label="Contest filters">
         <div className="table-toolbar__period">
           <DateRangeTrigger range={periodRange} isOpen={pickerOpen} onClick={() => setPickerOpen(v => !v)} />
       </div>
         <div className="table-toolbar__chips">
-          <ChipsGroup>
+          <ChipsGroup ref={chipsRef} role="tablist" aria-label="Filter by status">
             {STATUS_FILTERS.map(f => (
               <Chips
                 key={f.id}
@@ -5198,12 +6492,29 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
       </div>
 
       <div className="contests-layout">
-        {pickerOpen && (
-          <aside className="contests-layout__panel">
+        <div className="contests-layout__main">
+          {!isMobile && (
+          <aside
+            className={`contests-layout__panel${pickerOpen ? ' contests-layout__panel--open' : ''}`}
+            aria-hidden={!pickerOpen}
+          >
             <DateRangePanel range={periodRange} onChange={setPeriodRange} onClose={() => setPickerOpen(false)} defaultRange={defaultPeriodRange} />
           </aside>
-        )}
-        <div className="contests-layout__main">
+          )}
+          {isMobile && pickerOpen && ReactDOM.createPortal(
+            <>
+              <div className="dr-panel-backdrop open" onClick={() => setPickerOpen(false)} aria-hidden="true" />
+              <DateRangePanel
+                sheet
+                range={periodRange}
+                onChange={setPeriodRange}
+                onClose={() => setPickerOpen(false)}
+                defaultRange={defaultPeriodRange}
+              />
+            </>,
+            document.body
+          )}
+          <div className="contests-layout__right">
           <div className="contests-layout__stats">
             {draftOnlyView ? (
               <IBContestDraftLaunchPanel
@@ -5217,6 +6528,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
             )}
           </div>
           <div className="contests-layout__body">
+            <div className="contests-layout__content">
       {filteredRows.length === 0 ? (
       <div className="table-wrap">
           <div className="table-empty" role="status">
@@ -5338,6 +6650,8 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
         </table>
       </div>
       )}
+            </div>
+          </div>
           </div>
         </div>
       </div>
@@ -5397,34 +6711,31 @@ const WizardFooter = ({ step, isFinal = false, onPrev, onNext, onSaveDraft, onLa
 );
 
 /* WizardFooterMobile — fixed-bottom sticky action bar used on mobile.
-   Hidden on desktop via .is-mobile-only. The "Save draft" action moves
-   into the chevron-row above (not duplicated in the sticky footer to
-   keep the two primary actions thumb-reachable). */
-const WizardFooterMobile = ({ step, isFinal = false, onPrev, onNext, onLaunch, nextDisabled }) => (
-  <div className="wizard-footer-mobile is-mobile-only" role="group" aria-label="Wizard navigation">
-    {step > 1 ? (
-      <Button variant="outline" size="m" icon="arrow-left" onClick={onPrev}>Back</Button>
-    ) : (
-      <span style={{flex:1}} aria-hidden="true" />
-    )}
-    {isFinal ? (
-      <Button variant="primary" size="m" icon="rocket" onClick={onLaunch}>Launch</Button>
-    ) : (
-      <Button variant="primary" size="m" iconRight="arrow-right" onClick={onNext} disabled={nextDisabled}>Next</Button>
-    )}
+   Layout: [Back?] [Save draft] …… [Next / Launch] */
+const WizardFooterMobile = ({ step, isFinal = false, onPrev, onNext, onSaveDraft, onLaunch, nextDisabled }) => (
+  <div className="wizard-footer-mobile is-mobile-only wizard-footer-mobile--split" role="group" aria-label="Wizard navigation">
+    <div className="wizard-footer-mobile__start">
+      {step > 1 && (
+        <Button variant="outline" size="m" icon="arrow-left" onClick={onPrev}>Back</Button>
+      )}
+      <Button variant="outline" size="m" icon="save" onClick={onSaveDraft}>Save draft</Button>
+    </div>
+    <div className="wizard-footer-mobile__end">
+      {isFinal ? (
+        <Button variant="primary" size="m" icon="rocket" onClick={onLaunch}>Launch</Button>
+      ) : (
+        <Button variant="primary" size="m" iconRight="arrow-right" onClick={onNext} disabled={nextDisabled}>Next</Button>
+      )}
+    </div>
   </div>
 );
 
 /* Compact mobile stepper — label + DS Segmented progress bar (Figma 10490:782). */
-const WIZARD_STEP_LABELS = ['Type', 'Period', 'Prizes', 'Launch'];
 const WizardStepperMobile = ({ currentStep, totalSteps }) => (
   <div className="is-mobile-only wizard-stepper-mobile">
     <div className="wizard-stepper-mobile__head">
       <div className="rig-utility-01" style={{color:'var(--ds-text-muted)'}}>
         Step {currentStep} of {totalSteps}
-      </div>
-      <div className="rig-body-02-bold" style={{marginTop:2}}>
-        {WIZARD_STEP_LABELS[currentStep - 1] || ''}
       </div>
     </div>
     <div className="wizard-segments wizard-segments--inline" aria-hidden="true">
@@ -5437,14 +6748,17 @@ const WizardStepperMobile = ({ currentStep, totalSteps }) => (
   </div>
 );
 
+const WIZARD_DEFAULT_START_DATE = new Date(2026, 3, 15);
+const WIZARD_DEFAULT_END_DATE = new Date(2026, 4, 15);
+
 const IBCreateContest = ({ onNavigate, onCreateContest }) => {
   const showToast = useToast();
   const isMobile = useIsMobile();
   const [step, setStep] = useState(1);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [contestType, setContestType] = useState('volume');
-  const [startDate, setStartDate] = useState(new Date(2026, 3, 15));
-  const [endDate, setEndDate] = useState(new Date(2026, 4, 15));
+  const [startDate, setStartDate] = useState(WIZARD_DEFAULT_START_DATE);
+  const [endDate, setEndDate] = useState(WIZARD_DEFAULT_END_DATE);
   const [startTime, setStartTime] = useState('12:00');
   const [endTime, setEndTime] = useState('11:59');
   const [startMeridiem, setStartMeridiem] = useState('AM');
@@ -5521,6 +6835,10 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
     onNavigate('list');
     showToast('Draft saved');
   };
+  const previewCardFooter = (
+    <div className="ds-btn ds-btn--m ds-btn--primary ds-btn--block" aria-hidden="true">Join</div>
+  );
+
   const launchContest = () => {
     onCreateContest && onCreateContest(buildContest('Active'));
     onNavigate('list');
@@ -5586,7 +6904,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 })}
               </div>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
-              <WizardFooterMobile step={step} onPrev={prev} onNext={next} />
+              <WizardFooterMobile step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
             </div>
           )}
 
@@ -5601,6 +6919,8 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                   endDate={endDate}
                   onChangeStart={setStartDate}
                   onChangeEnd={setEndDate}
+                  defaultStartDate={WIZARD_DEFAULT_START_DATE}
+                  defaultEndDate={WIZARD_DEFAULT_END_DATE}
                 />
                 <TimeRangeInput
                   label="Time period"
@@ -5616,10 +6936,10 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
               </div>
               <Select label="Timezone" value={timezone} onChange={setTimezone} options={TIMEZONES} />
               <div style={{marginTop:'var(--ds-dim-6xl)'}}>
-                <InfoBox icon="lightbulb"><span><strong>Recommendation:</strong> optimal duration for {activeType.title} — {contestType === 'grow' ? '2–8 weeks for meaningful growth' : contestType === 'streak' ? '3–6 weeks to show discipline' : '1–4 weeks'}</span></InfoBox>
+                <InfoBox icon="book"><span><strong>Recommendation:</strong> optimal duration for {activeType.title} — {contestType === 'grow' ? '2–8 weeks for meaningful growth' : contestType === 'streak' ? '3–6 weeks to show discipline' : '1–4 weeks'}</span></InfoBox>
               </div>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
-              <WizardFooterMobile step={step} onPrev={prev} onNext={next} />
+              <WizardFooterMobile step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
             </div>
           )}
 
@@ -5630,6 +6950,8 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                   <h3 className="rig-title-03">Prize pool</h3>
                   <p className="rig-body-02">Set prizes for winners</p>
                 </div>
+                {/* Prize type chips — hidden until T&W flow is ready */}
+                {false && (
                 <div className="wizard-step-header__aside">
                   <ChipsGroup>
                     <Chips
@@ -5646,6 +6968,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                     />
                   </ChipsGroup>
                 </div>
+                )}
               </div>
               <div className="prize-rows-list">
                 {prizes.map(p => (
@@ -5654,7 +6977,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                     <div className="rig-body-01-bold prize-row__label">{p.pos} place</div>
                     <Input prefix="$" value={p.amount} onChange={e => updatePrize(p.id, e.target.value)} placeholder="0" />
                     {prizes.length > 1 ? (
-                      <IconButton icon="close" size="s" className="ds-icon-btn--danger" onClick={() => removePrize(p.id)} title="Remove place" />
+                      <IconButton icon="trash" size="s" className="ds-icon-btn--text" onClick={() => removePrize(p.id)} title="Remove place" />
                     ) : (
                       <span aria-hidden="true" />
                     )}
@@ -5677,7 +7000,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 </div>
               </div>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
-              <WizardFooterMobile step={step} onPrev={prev} onNext={next} />
+              <WizardFooterMobile step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
             </div>
           )}
 
@@ -5704,7 +7027,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                       </div>
                     </>
                   );
-                  const cellStyle = span === 2 ? {gridColumn:'1 / -1'} : undefined;
+                  const cellStyle = undefined;
                   if (isEditable) {
                     return (
                       <button
@@ -5725,19 +7048,18 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                     </div>
                   );
                 };
-                const sectionGrid = {display:'grid', gridTemplateColumns:'1fr 1fr', gap:'var(--ds-dim-5xl) var(--ds-dim-6xl)'};
                 const divider = <hr style={{height:1, background:'var(--ds-border)', border:0, margin:0}} aria-hidden="true" />;
                 return (
                   <div className="card" style={{marginBottom:'var(--ds-dim-6xl)'}}>
-                    <div className="card__body" style={{display:'flex', flexDirection:'column', gap:'var(--ds-dim-5xl)', paddingBottom:'var(--ds-dim-5xl)'}}>
-                      <div className="wizard-review-grid" style={sectionGrid}>
+                    <div className="card__body wizard-review-card__body">
+                      <div className="wizard-review-grid">
                         {[
                           {k:'Type', v: activeType.title, editStep: 1},
                           {k:'Description', v: activeType.clientDescTemplate(prizes[0]?.amount ? parseFloat(prizes[0].amount).toLocaleString('en-US') : '0'), span: 2},
                         ].map(renderField)}
                       </div>
                       {divider}
-                      <div className="wizard-review-grid" style={sectionGrid}>
+                      <div className="wizard-review-grid">
                         {[
                           {k:'Period', v: periodString, editStep: 2},
                           {k:'Time', v: `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}, ${timezone}`, editStep: 2},
@@ -5754,7 +7076,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                         ].map(renderField)}
                       </div>
                       {divider}
-                      <div className="wizard-review-grid" style={sectionGrid}>
+                      <div className="wizard-review-grid">
                         {[
                           {k:'Prize pool', v: `$${prizeTotal.toLocaleString('en-US')}`, editStep: 3},
                           {k:'Prize type', v: prizeType === 'wallet' ? 'Cash prize to Wallet' : 'T&W prizes', editStep: 3},
@@ -5765,7 +7087,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 );
               })()}
               <WizardFooter step={step} isFinal onPrev={prev} onSaveDraft={saveDraft} onLaunch={launchContest} />
-              <WizardFooterMobile step={step} isFinal onPrev={prev} onLaunch={launchContest} />
+              <WizardFooterMobile step={step} isFinal onPrev={prev} onSaveDraft={saveDraft} onLaunch={launchContest} />
             </div>
           )}
 
@@ -5793,8 +7115,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 days={`${previewTotalDays} days`}
                 progress={previewProgress}
                 progressText={`${previewElapsedDays} of ${previewTotalDays} days elapsed`}
-                onAction={() => showToast('This is a preview — the client will see this card')}
-                actionLabel="Join"
+                footer={previewCardFooter}
               />
           </div>
         </div>
@@ -5807,7 +7128,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
         title="Preview"
         subtitle="How the client will see the contest card"
         size="m"
-        footer={<Button variant="primary" size="m" onClick={() => setPreviewOpen(false)}>Close</Button>}
+        footer={<Button variant="text" size="m" block onClick={() => setPreviewOpen(false)}>Close</Button>}
       >
         <div className="contest-card-preview-host">
               <ContestCard
@@ -5822,7 +7143,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 days={`${previewTotalDays} days`}
                 progress={previewProgress}
                 progressText={`${previewElapsedDays} of ${previewTotalDays} days elapsed`}
-                actionLabel="Join"
+                footer={previewCardFooter}
               />
         </div>
       </Modal>
@@ -5830,17 +7151,31 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
   );
 };
 
-const IBContestDetailStatsBanners = ({ totalParticipants, metricLabel, prizePool, isFresh, isCompleted, isActive }) => {
+const IBContestDetailStatsBanners = ({ totalParticipants, metricLabel, prizePool, isFresh, isCompleted, isActive, onInvite }) => {
+  if (isFresh) {
+    return (
+      <Notification
+        variant="brand"
+        layout="horizontal"
+        title={`Invite clients to join — ${formatUsdCompact(prizePool || 0)} prize pool`}
+        description="Share the contest link with clients. Participants and metrics will appear here once they register and start trading."
+        actions={
+          <Button variant="outline" size="s" icon="link" onClick={onInvite}>
+            Copy link
+          </Button>
+        }
+      />
+    );
+  }
   const showDelta = !isFresh && !isCompleted;
   return (
-    <div className="stat-banners" aria-label="Contest metrics">
+    <StatBannersLayout ariaLabel="Contest metrics">
       <StatBanner
         variant="reach"
         icon="users"
         label="Participants"
         value={String(totalParticipants)}
         delta={showDelta ? { dir: 'up', text: '3 / day' } : undefined}
-        live={showDelta && isActive}
         hint={isFresh ? 'appear after first participants join' : undefined}
         infoTip="Number of clients registered for this contest."
       />
@@ -5869,7 +7204,7 @@ const IBContestDetailStatsBanners = ({ totalParticipants, metricLabel, prizePool
         delta={showDelta ? { dir: 'up', text: 'vs prev wk' } : undefined}
         infoTip="Change in the key metric compared to the previous week."
       />
-    </div>
+    </StatBannersLayout>
   );
 };
 
@@ -5921,37 +7256,34 @@ const IBContestDetail = ({ onNavigate, contest }) => {
   return (
     <div className="screen-enter">
       <Breadcrumb items={[{label:'Client contests', onClick:() => onNavigate('list')}, {label:'Contest details'}]} />
-      <div className="page-header" style={{marginTop:'var(--ds-dim-6xl)', marginBottom:'var(--ds-dim-l)'}}>
+      <div className="page-header contest-detail-header" style={{marginTop:'var(--ds-dim-6xl)', marginBottom:'var(--ds-dim-s)'}}>
         <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
           <span className={`type-icon type-icon--${ctype.typeIcon}`} style={{width:24,height:24,flexShrink:0}}>
             <svg width="14" height="14"><use href={dsIc(ctype.icon)}/></svg>
           </span>
           <h1 className="rig-title-02">{name}</h1>
-          <ContestTypeInfo typeId={ctype.id} />
+          <ContestTypeInfo typeId={ctype.id} period={periodWithTime} />
         </div>
       </div>
-      <p className="rig-body-02 contest-detail-desc" style={{color:'var(--ds-text-secondary)', marginBottom:'var(--ds-dim-5xl)', whiteSpace:'nowrap'}}>
+      <div className="contest-detail-meta">
+        <Tag label={statusLabel} variant={statusTag} />
+        <ContestPeriodMeta>{periodWithTime}</ContestPeriodMeta>
+        {!isFresh && !isCompleted && (
+          <span className="contest-period-meta">
+            <Icon name="clock" size="sm" />
+            <span>20 days left</span>
+          </span>
+        )}
+      </div>
+      <p className="rig-body-02 contest-detail-desc" style={{color:'var(--ds-text-secondary)', marginBottom:'var(--ds-dim-5xl)'}}>
         {ctype.clientDescTemplate ? ctype.clientDescTemplate(500) : ctype.desc}
       </p>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24,flexWrap:'wrap',gap:12}}>
-        <div style={{display:'flex',gap:'var(--ds-dim-5xl)',color:'var(--ds-text-muted)',fontSize:14,alignItems:'center',flexWrap:'wrap'}}>
-          <Tag label={statusLabel} variant={statusTag} />
-          <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-            <Icon name="calendar" size="sm" /><span>{periodWithTime}</span>
-          </span>
-          {!isFresh && !isCompleted && (
-            <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-              <Icon name="clock" size="sm" /><span>20 days left</span>
-            </span>
-          )}
-        </div>
-        <div className="contest-detail-action-bar" style={{display:'flex',gap:8}}>
-          <Button variant="outline" size="s" icon="link" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
-          {!isCompleted && (
-            <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
-          )}
-          <Button variant="outline" size="s" icon="download" disabled={isFresh}>Export</Button>
-        </div>
+      <div className="contest-detail-actions contest-detail-action-bar">
+        <Button variant="outline" size="s" icon="link" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
+        {!isCompleted && (
+          <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
+        )}
+        <Button variant="outline" size="s" icon="download" disabled={isFresh}>Export</Button>
       </div>
       <div style={{marginBottom:24}}>
         <IBContestDetailStatsBanners
@@ -5961,6 +7293,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
           isFresh={isFresh}
           isCompleted={isCompleted}
           isActive={isActive}
+          onInvite={() => showToast('Link copied!', 'positive')}
         />
       </div>
       {isFresh ? (
@@ -5981,7 +7314,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
           <div className="table-header leaderboard-table-header">
             <h4 className="rig-title-04">
               Leaderboard
-              <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>{totalParticipants} participants</span>
+              <span className="rig-utility-01 leaderboard-table-header__count">{totalParticipants} participants</span>
             </h4>
             <span className="table-header__meta">{leaderboardMetaText}</span>
           </div>
@@ -6001,8 +7334,8 @@ const IBContestDetail = ({ onNavigate, contest }) => {
                 );
               })}
               {rows.length > 20 && (
-                <div style={{display:'flex',justifyContent:'center',marginTop:'var(--ds-dim-2xl)'}}>
-                  <Button variant="outline" size="m">Load more</Button>
+                <div style={{marginTop:'var(--ds-dim-2xl)'}}>
+                  <Button variant="text" size="l" block>Load more</Button>
                 </div>
               )}
             </div>
@@ -6103,11 +7436,13 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
 
   return (
   <div className="screen-enter">
-    <h1 className="rig-title-02" style={{marginBottom:'var(--ds-dim-8xl)'}}>Partner contests</h1>
+    <div className="page-header">
+      <h1 className="rig-title-03">Partner contests</h1>
+    </div>
     <div className="table-header">
       <h4 className="rig-title-04">Active</h4>
       <span className="table-header__meta">
-        You are participating in {participatingCount} of {activeTotal} {contestsGenitiveAfterIz(activeTotal)}
+        Participating in {participatingCount} of {activeTotal} {contestsGenitiveAfterIz(activeTotal)}
       </span>
     </div>
     <div className="contest-grid">
@@ -6156,7 +7491,7 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
     <div className="table-header" style={{marginTop:'var(--ds-dim-7xl)'}}>
       <h4 className="rig-title-04">Completed</h4>
       <span className="table-header__meta">
-        You placed in the prizes in {prizePlacesCount} of {completedTotal} {contestsGenitiveAfterIz(completedTotal)}
+        Placed in the prizes in {prizePlacesCount} of {completedTotal} {contestsGenitiveAfterIz(completedTotal)}
       </span>
     </div>
     {isMobile ? (
@@ -6545,38 +7880,22 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
   );
 };
 
+const lbOrdinal = (p) => (p === 1 ? '1st' : p === 2 ? '2nd' : p === 3 ? '3rd' : `${p}th`);
+
 const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContestSeen }) => {
   const isMobile = useIsMobile();
   const [mobileVisibleCount, setMobileVisibleCount] = useState(20);
   const youRowRef = useRef(null);
   const scrollContainerRef = useRef(null);
   const [flash, setFlash] = useState(false);
-  const [youInView, setYouInView] = useState(true);
+  const [youInView, setYouInView] = useState(false);
   const [youAbove, setYouAbove] = useState(false);
   const flashTimerRef = useRef(null);
-  const scrollToYou = () => {
-    const row = youRowRef.current;
-    const scroller = scrollContainerRef.current;
-    if (row && scroller) {
-      const rowRect = row.getBoundingClientRect();
-      const sRect = scroller.getBoundingClientRect();
-      const offset = (rowRect.top - sRect.top) - (sRect.height / 2) + (rowRect.height / 2);
-      scroller.scrollTo({ top: scroller.scrollTop + offset, behavior: 'smooth' });
-    } else if (row) {
-      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
-    setFlash(false);
-    requestAnimationFrame(() => {
-      setFlash(true);
-      flashTimerRef.current = setTimeout(() => setFlash(false), 3400);
-    });
-  };
   useEffect(() => () => { if (flashTimerRef.current) clearTimeout(flashTimerRef.current); }, []);
   useEffect(() => {
     const row = youRowRef.current;
+    if (!row || typeof IntersectionObserver === 'undefined') return;
     const scroller = scrollContainerRef.current;
-    if (!row || !scroller || typeof IntersectionObserver === 'undefined') return;
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach(e => {
@@ -6586,11 +7905,15 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
           }
         });
       },
-      { root: scroller, threshold: 0.01, rootMargin: '-44px 0px -72px 0px' }
+      {
+        root: scroller || null,
+        threshold: 0.01,
+        rootMargin: scroller ? '-44px 0px -72px 0px' : '-120px 0px -72px 0px',
+      }
     );
     io.observe(row);
     return () => io.disconnect();
-  }, [contestTypeId]);
+  }, [contestTypeId, isMobile, mobileVisibleCount]);
   const isCompletedRoute = String(contestTypeId).startsWith('completed:');
   const contest = isCompletedRoute
     ? (CLIENT_COMPLETED_CONTESTS.find(c => c.name === String(contestTypeId).slice('completed:'.length)) || CLIENT_COMPLETED_CONTESTS[0])
@@ -6598,6 +7921,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
   /* Переход с «Результаты» в списке завершённых всегда с префиксом completed: — фиксируем экран как итоговый, даже при рассинхроне данных */
   const isCompleted = isCompletedRoute || contest.state === 'completed';
   const ctype = CONTEST_TYPES[contest.typeId] || CONTEST_TYPES.volume;
+  const periodLabel = `${contest.period || contest.dates}, 23:59 UTC`;
   useEffect(() => {
     if (!onMarkContestSeen || !contest?.typeId) return;
     const meta = CLIENT_CONTESTS.find(c => c.typeId === contest.typeId);
@@ -6628,6 +7952,36 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
           : (isYou && isCompleted ? (contest.yourReward ? stripPrize(contest.yourReward) : '—') : '—'),
     };
   });
+  const performScrollToYou = () => {
+    const row = youRowRef.current;
+    const scroller = scrollContainerRef.current;
+    if (row && scroller) {
+      const rowRect = row.getBoundingClientRect();
+      const sRect = scroller.getBoundingClientRect();
+      const offset = (rowRect.top - sRect.top) - (sRect.height / 2) + (rowRect.height / 2);
+      scroller.scrollTo({ top: scroller.scrollTop + offset, behavior: 'smooth' });
+    } else if (row) {
+      const headerH = 96;
+      const stickyH = 52;
+      const rect = row.getBoundingClientRect();
+      const target = window.scrollY + rect.top - headerH - stickyH - 8;
+      window.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+    }
+    if (flashTimerRef.current) clearTimeout(flashTimerRef.current);
+    setFlash(false);
+    requestAnimationFrame(() => {
+      setFlash(true);
+      flashTimerRef.current = setTimeout(() => setFlash(false), 3400);
+    });
+  };
+  const scrollToYou = () => {
+    if (isMobile && yourPlace > mobileVisibleCount) {
+      setMobileVisibleCount(yourPlace);
+      requestAnimationFrame(() => requestAnimationFrame(performScrollToYou));
+      return;
+    }
+    performScrollToYou();
+  };
   return (
   <div className="screen-enter">
     <Breadcrumb items={[{label:'Contests', onClick:() => onNavigate('list')}, {label: isCompleted ? 'Results' : 'Leaderboard'}]} />
@@ -6637,50 +7991,60 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
         <ContestTypeInfo typeId={contest.typeId} />
       </div>
       {isCompleted ? (
-        <span style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+        <span style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)',flexWrap:'wrap'}}>
           <Tag label="Completed" variant="neutral" />
-          <span className="rig-body-02" style={{color:'var(--ds-text-muted)'}}>{contest.dates}, 23:59 UTC</span>
+          <ContestPeriodMeta>{periodLabel}</ContestPeriodMeta>
         </span>
       ) : (
-        <span style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
+        <span style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)',flexWrap:'wrap'}}>
           <Tag label="Active" variant="positive" />
-          <span className="rig-body-02" style={{color:'var(--ds-text-muted)'}}>
-            Ends {(contest.dates || '').split(' — ')[1] || contest.dates}, 23:59 UTC
-          </span>
+          <ContestPeriodMeta>{periodLabel}</ContestPeriodMeta>
         </span>
       )}
     </div>
 
     {isCompleted ? (
-      <div className="user-progress">
-        <div className="user-progress__row">
-          <div className="user-progress__rank" style={{flexDirection:'column',alignItems:'flex-start',gap:'var(--ds-dim-m)'}}>
-            <div style={{display:'flex',alignItems:'baseline',gap:'var(--ds-dim-2xl)',flexWrap:'wrap'}}>
+      <div className={`user-progress user-progress--completed${contest.yourReward ? ' user-progress--won' : ''}`}>
+        <div className="user-progress__completed-body">
+          <div className="user-progress__completed-main">
+            <div className="user-progress__rank-block">
               <span className="user-progress__place">#{contest.yourPlace}</span>
               <span className="user-progress__place-meta">of {contest.participants} participants</span>
             </div>
-            <div className="user-progress__place-meta">
-              Final result: <strong style={{color:'var(--ds-on-primary)',fontWeight:700,fontVariantNumeric:'tabular-nums',marginLeft:4}}>{valueAt(contest.yourPlace)}</strong> <span style={{opacity:0.7}}>{ctype.metric}</span>
+            <div className="user-progress__result-panel">
+              <span className="user-progress__result-label">Final result</span>
+              <div className="user-progress__result-main">
+                <strong className="user-progress__result-value">{valueAt(contest.yourPlace)}</strong>
+                <span className="user-progress__result-metric">{ctype.metric}</span>
+              </div>
             </div>
           </div>
-          <div className="user-progress__score">
-            <span className="user-progress__score-value">
-              {contest.yourReward ? stripPrize(contest.yourReward) : 'No prize'}
+          <div className="user-progress__outcome">
+            <div className="user-progress__outcome-head">
+              {contest.yourReward && <Icon name="gift" size="sm" />}
+              <span className="user-progress__score-value">
+                {contest.yourReward ? stripPrize(contest.yourReward) : 'No prize'}
+              </span>
+            </div>
+            <span className="user-progress__score-meta">
+              {contest.yourReward
+                ? 'Reward credited to trading account'
+                : 'No prize this time — keep trading to improve next time.'}
             </span>
-            <span className="user-progress__score-meta">{contest.yourReward ? 'Reward credited to trading account' : 'No prize this time — keep trading to improve next time.'}</span>
           </div>
         </div>
       </div>
     ) : (
-      <div className="user-progress">
+      <div className="user-progress user-progress--active">
         <div className="user-progress__row">
           <div className="user-progress__rank">
             <span className="user-progress__place">#12</span>
             <span className="user-progress__place-meta">of {contest.participants || '—'} participants · Top 25%</span>
           </div>
           <div className="user-progress__score">
-            <span className="user-progress__score-value">67.4 <span className="user-progress__score-unit">lots</span></span>
-            <span className="user-progress__score-meta">To 3rd place: 88.8 more lots</span>
+            <span className="user-progress__score-line">
+              <strong>67.4</strong> lots · To 3rd place: 88.8 more lots
+            </span>
           </div>
         </div>
         <div className="user-progress__bar">
@@ -6698,7 +8062,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
     <div className="table-header leaderboard-table-header">
       <h4 className="rig-title-04">
         {isCompleted ? 'Final results' : 'Leaderboard'}
-        <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>· {total} participants</span>
+        <span className="rig-utility-01 leaderboard-table-header__count">{total} participants</span>
       </h4>
       <span className="table-header__meta">{isCompleted ? `Finalized ${(contest.dates.split(' — ')[1] || contest.dates)}, 23:59 UTC` : 'Updated: 2 min ago'}</span>
     </div>
@@ -6706,14 +8070,20 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
       <div>
         {(() => {
           const you = rows.find(r => r.isYou);
-          if (!you) return null;
+          if (!you || youInView) return null;
           return (
-            <div className="lb-sticky-you" role="status" aria-label="Your position">
-              <span>You — {you.p}{you.p === 1 ? 'st' : you.p === 2 ? 'nd' : you.p === 3 ? 'rd' : 'th'} place</span>
-              <span className="lb-sticky-you__metric">
-                {you.v} {ctype.metric.toLowerCase().replace(/[^a-z0-9 .]/gi, '').split(' ')[0] || ''}
-                {you.pr !== '—' ? ` · prize ${you.pr}` : ''}
-              </span>
+            <div className="lb-sticky-you">
+              <Button
+                variant="outline"
+                size="s"
+                block
+                icon="star-solid"
+                iconRight="chevron-down"
+                eyebrow={`You — ${lbOrdinal(you.p)} place`}
+                onClick={scrollToYou}
+              >
+                Jump to your row
+              </Button>
             </div>
           );
         })()}
@@ -6721,7 +8091,11 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
           {rows.slice(0, mobileVisibleCount).map(r => {
             const topClass = r.p === 1 ? 'lb-card--top1' : r.p === 2 ? 'lb-card--top2' : r.p === 3 ? 'lb-card--top3' : '';
             return (
-              <div key={r.p} className={`lb-card ${topClass} ${r.isYou ? 'lb-card--you' : ''}`}>
+              <div
+                key={r.p}
+                ref={r.isYou ? youRowRef : null}
+                className={`lb-card ${topClass} ${r.isYou ? 'lb-card--you' : ''} ${r.isYou && flash ? 'lb-card--flash' : ''}`}
+              >
                 {r.isYou
                   ? <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{r.p}</span>
                   : <Medal position={r.p}/>}
@@ -6739,8 +8113,8 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
           })}
         </div>
         {mobileVisibleCount < rows.length && (
-          <div style={{display:'flex',justifyContent:'center',marginTop:'var(--ds-dim-3xl)'}}>
-            <Button variant="outline" size="m" onClick={() => setMobileVisibleCount(c => c + 20)}>
+          <div style={{marginTop:'var(--ds-dim-3xl)'}}>
+            <Button variant="text" size="l" block onClick={() => setMobileVisibleCount(c => c + 20)}>
               Load more
             </Button>
           </div>
@@ -7047,15 +8421,14 @@ const App = () => {
   const navClient = s => { setClientScreen(s); window.scrollTo(0, 0); };
   const navAdmin = s => { setAdminScreen(s); window.scrollTo(0, 0); };
 
-  /* Resolve which menu items the slide-down drawer should show, and which
-     tab should look active in the bottom tab bar, based on current role +
-     internal screen state. Both drawer and tab bar reuse the production
-     persona menus where possible — items without a real screen (Wallet,
-     Profile, Bonuses, Users, Audit) are wired to a friendly toast so the
-     prototype demonstrates intent without faking depth. */
-  const drawerTitle = role === 'ib' ? 'IB Partner' : role === 'client' ? 'Client' : 'Admin';
-  const drawerItems = flattenHeaderMenuForDrawer(HEADER_MENUS[role] || []);
+  /* Resolve which menu items the slide-down drawer should show based on
+     current role + internal screen state. Drawer reuses production persona
+     menus — items without a real screen show a friendly toast. */
   const handleNavMenuSelect = (item) => {
+    if (role === 'ib' && item.key === 'dashboard') {
+      window.location.assign(IB_DASHBOARD_PROTOTYPE_HREF);
+      return;
+    }
     if (role === 'ib' && item.key === 'contests') {
       navIB('list');
       return;
@@ -7078,29 +8451,13 @@ const App = () => {
     }
     if (role === 'admin' && item.key === 'dashboard') {
       navAdmin('dashboard');
+      return;
     }
+    showAppToast(`“${item.label}” — section not implemented in this prototype`);
   };
   const handleDrawerSelect = (item) => {
     setMobileDrawerOpen(false);
     handleNavMenuSelect(item);
-  };
-  const tabActiveKey = (() => {
-    if (role === 'admin') return adminScreen === 'dashboard' ? 'dashboard' : 'contests';
-    return 'contests';
-  })();
-  const handleTabSelect = (tab) => {
-    if (tab.key === 'contests') {
-      if (role === 'ib') navIB('list');
-      if (role === 'client') navClient('list');
-      if (role === 'admin') navAdmin('dashboard');
-      return;
-    }
-    if (tab.key === 'dashboard' && role === 'admin') {
-      navAdmin('dashboard');
-      return;
-    }
-    /* Other tabs — out of scope for this prototype, surface a hint */
-    showAppToast(`“${tab.label}” — section not implemented in this prototype`);
   };
   /* In-app toast helper that bubbles up through the ToastProvider via
      a small inner component (required because useToast needs a Provider
@@ -7129,10 +8486,12 @@ const App = () => {
       <MobileDrawer
         open={mobileDrawerOpen}
         onClose={() => setMobileDrawerOpen(false)}
-        title={drawerTitle}
-        items={drawerItems}
+        items={HEADER_MENUS[role] || HEADER_MENUS.ib}
         activeKey={role === 'admin' && adminScreen === 'dashboard' ? 'dashboard' : 'contests'}
         onSelect={handleDrawerSelect}
+        role={role}
+        clientNewContestsCount={clientNewContestsCount}
+        clientContestsTotal={CLIENT_CONTESTS.length}
       />
       <MobilePersonaSheet
         open={personaSheetOpen}
@@ -7162,13 +8521,11 @@ const App = () => {
           </Container>
         )}
       </div>
-      <MobileTabBar role={role} activeKey={tabActiveKey} onSelect={handleTabSelect} />
     </ToastProvider>
   );
 };
 
-/* Bridge that lets <App /> trigger a toast from outside ToastProvider —
-   useful for non-screen actions (tab bar taps to unimplemented sections). */
+/* Bridge that lets <App /> trigger a toast from outside ToastProvider. */
 const AppShellToastBridge = ({ pending }) => {
   const showToast = useToast();
   useEffect(() => {

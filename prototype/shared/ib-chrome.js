@@ -206,6 +206,10 @@
     if (profileAction) {
       var action = profileAction.dataset.profileAction;
       closeProfileMenu();
+      if (action === 'invite') {
+        window.alert('Invite — not implemented in this prototype.');
+        return;
+      }
       if (action === 'profile-settings') {
         window.alert('Profile settings — not implemented in this prototype.');
         return;

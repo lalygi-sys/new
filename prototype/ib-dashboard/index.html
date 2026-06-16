@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IB Dashboard — Prototype</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/ib-chrome.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dashboard-body">
+  <main class="dashboard-page">
+    <div class="dashboard-grid">
+      <div class="dashboard-main">
+        <!-- Commission -->
+        <section class="dashboard-card commission-card commission-card--basic" data-rank="basic" aria-labelledby="commission-title">
+          <div class="commission-card__cap" aria-hidden="true"></div>
+          <div class="commission-card__body">
+            <div class="commission-card__top">
+              <div class="commission-card__greeting">
+                <h2 class="rig-title-02" id="commission-title">Hello, Jaydon Rosser!</h2>
+                <p class="commission-card__company">IB company Rosser Capital</p>
+              </div>
+              <button type="button" class="btn-primary" id="share-link-btn">
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M7.0472 1.31844C7.3138 1.19629 7.62781 1.24026 7.84993 1.43172L13.8724 6.62508C14.0237 6.75551 14.1735 6.88431 14.2894 7.00301C14.4104 7.12704 14.5502 7.29449 14.6322 7.52352C14.7426 7.8322 14.7427 8.16993 14.6322 8.47859C14.5502 8.70753 14.4104 8.87512 14.2894 8.9991C14.1735 9.11778 14.0237 9.24663 13.8724 9.37703L7.84993 14.5684C7.62779 14.7599 7.31381 14.8039 7.0472 14.6817C6.7808 14.5595 6.6097 14.2932 6.6097 14.0001V10.8634C6.03444 10.9852 5.46328 11.1885 4.91145 11.4532C3.98059 11.8998 3.2103 12.4151 2.60384 13.1456C2.40198 13.3888 2.06906 13.4795 1.7718 13.3721C1.47478 13.2648 1.27682 12.9829 1.27669 12.6671V12.3673L1.2845 12.0362C1.3612 10.3876 2.00333 8.81167 3.10774 7.57625C4.042 6.53122 5.25979 5.76554 6.6097 5.39949V2.00008C6.6097 1.70694 6.7808 1.44069 7.0472 1.31844ZM8.1097 6.00008C8.1097 6.36435 7.84836 6.67646 7.48958 6.73934C6.23938 6.95805 5.08618 7.61394 4.22591 8.57625C3.6459 9.22509 3.22638 9.99222 2.99251 10.8165C3.39853 10.5459 3.82454 10.311 4.26302 10.1007C5.19646 9.65291 6.23084 9.32522 7.30891 9.25203C7.51617 9.23797 7.72061 9.3104 7.87239 9.45223C8.02403 9.59404 8.1097 9.79245 8.1097 10.0001V12.3634L12.8929 8.24031C13.0207 8.13015 13.1032 8.05643 13.1624 8.00106C13.1031 7.9456 13.021 7.87126 12.8929 7.76082L8.1097 3.6368V6.00008Z" fill="currentColor"/></svg>
+                Share link
+              </button>
+            </div>
+
+            <div class="rank-block">
+              <div class="rank-block__head">
+                <div class="rank-block__title">
+                  <span class="rank-block__star" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.14786 12.637C2.76813 12.8619 2.30449 12.5204 2.40663 12.0911L3.36435 8.06536L0.177173 5.36075C-0.16162 5.07325 0.0148807 4.5197 0.457561 4.48138L4.65341 4.11814L6.30291 0.301635C6.47687 -0.100861 7.04775 -0.10045 7.22113 0.302298L8.87216 4.13759L13.0616 4.48516C13.5053 4.52197 13.6832 5.07662 13.3438 5.36468L10.1612 8.06536L11.1189 12.0911C11.2211 12.5204 10.7574 12.8619 10.3777 12.637L6.76279 10.4959L3.14786 12.637Z" fill="currentColor"/></svg>
+                  </span>
+                  <span class="rank-block__name">Basic rank</span>
+                </div>
+              </div>
+              <div class="segmented-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18" aria-label="Rank progress">
+                <div class="segmented-bar__seg"><div class="segmented-bar__fill"></div></div>
+                <div class="segmented-bar__seg"></div>
+                <div class="segmented-bar__seg"></div>
+                <div class="segmented-bar__seg"></div>
+                <div class="segmented-bar__seg"></div>
+              </div>
+              <button type="button" class="rank-block__calc-link" id="commission-calc-btn">
+                How your commission is calculated
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+
+            <div class="rank-callout">
+              <div class="rank-callout__row">
+                <div class="rank-callout__left">
+                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.00005 11.0001C8.55233 11.0001 9.00005 10.5523 9.00005 10.0001C9.00005 9.44778 8.55233 9.00006 8.00005 9.00006C7.44776 9.00006 7.00005 9.44778 7.00005 10.0001C7.00005 10.5523 7.44776 11.0001 8.00005 11.0001Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.30005 5.00005C5.30005 3.50888 6.50888 2.30005 8.00005 2.30005C9.49122 2.30005 10.7 3.50888 10.7 5.00005V6.30005H11.5C11.8866 6.30005 12.2 6.61345 12.2 7.00005V13C12.2 13.3866 11.8866 13.7 11.5 13.7H4.50005C4.11345 13.7 3.80005 13.3866 3.80005 13V7.00005C3.80005 6.61345 4.11345 6.30005 4.50005 6.30005H5.30005V5.00005ZM9.30005 5.00005V6.30005H6.70005V5.00005C6.70005 4.28208 7.28208 3.70005 8.00005 3.70005C8.71802 3.70005 9.30005 4.28208 9.30005 5.00005ZM5.20005 7.70005H10.8V12.3H5.20005V7.70005Z" fill="currentColor"/></svg>
+                  <span class="rank-callout__title">Unlock Platinum rank</span>
+                </div>
+                <div class="rank-callout__metrics">
+                  <span class="rank-callout__metric">
+                    <span class="rank-callout__metric-label">Active traders</span>
+                    <span class="rank-callout__metric-value">0/3</span>
+                  </span>
+                  <span class="rank-callout__metric">
+                    <span class="rank-callout__metric-label">Traded volume</span>
+                    <span class="rank-callout__metric-value">0/50</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <p class="commission-card__note">Rank criteria are calculated from 12 Aug 2025 and will update on 13 Sep 2025</p>
+          </div>
+        </section>
+
+        <!-- Referral links -->
+        <section class="dashboard-card referral-card" aria-labelledby="referral-title" hidden>
+          <h2 class="rig-title-03" id="referral-title">Referral links</h2>
+          <div class="referral-card__body">
+            <div class="referral-fields">
+              <label class="input-field">
+                <select aria-label="Link type">
+                  <option selected>Account opening</option>
+                  <option>Demo account</option>
+                  <option>Partner landing</option>
+                </select>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+              </label>
+              <label class="input-field">
+                <input type="text" readonly value="https://broker.com/register?ref=JAYDON2025" id="referral-url" aria-label="Referral URL">
+                <button type="button" id="copy-referral" aria-label="Copy referral link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+              </label>
+            </div>
+            <p class="referral-card__note">Make sure your referral activities comply with our <a href="#">IB compliance guide</a>. Misleading advertising may result in account restrictions.</p>
+          </div>
+        </section>
+
+        <!-- Revenue statistics -->
+        <section class="dashboard-card revenue-card" aria-labelledby="revenue-title">
+          <div class="card-head">
+            <div class="card-head__title">
+              <h2 class="rig-title-03" id="revenue-title">Revenue statistics</h2>
+              <span class="card-head__chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 3.5L10.5 8L6.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+            <div class="card-head__actions" role="tablist" aria-label="Revenue period">
+              <div class="card-head__chips">
+                <button type="button" class="chip chip--xs" role="tab" data-period="1d">1d</button>
+                <button type="button" class="chip chip--xs" role="tab" data-period="7d">7d</button>
+                <button type="button" class="chip chip--xs is-active" role="tab" aria-selected="true" data-period="30d">30d</button>
+                <button type="button" class="chip chip--xs" role="tab" data-period="all">All time</button>
+              </div>
+              <button type="button" class="icon-btn-ghost icon-btn-ghost--s" id="revenue-info-btn" aria-label="About revenue statistics" aria-expanded="false" aria-controls="revenue-info-tooltip">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.75 7.5V11.5H7.25V9C6.69772 9 6.25 8.55228 6.25 8V7.5H8.75Z" fill="currentColor"/><path d="M8.75 5.6C8.75 5.82091 8.57091 6 8.35 6H7.65C7.42909 6 7.25 5.82091 7.25 5.6V4.9C7.25 4.67909 7.42909 4.5 7.65 4.5H8.35C8.57091 4.5 8.75 4.67909 8.75 4.9V5.6Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 2.5C4.96243 2.5 2.5 4.96243 2.5 8C2.5 11.0376 4.96243 13.5 8 13.5C11.0376 13.5 13.5 11.0376 13.5 8C13.5 4.96243 11.0376 2.5 8 2.5Z" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="stat-banners stat-banners--compact" role="radiogroup" aria-label="Revenue metrics">
+            <div class="stat-banner stat-banner--profit is-selected" role="radio" aria-checked="true" tabindex="0" data-metric="profit" aria-label="IB profit, $20,000, up 21 percent">
+              <div class="stat-banner__head">
+                <div class="stat-banner__head-main">
+                  <span class="stat-banner__label">IB profit</span>
+                </div>
+                <span class="ds-radio ds-radio--s" aria-hidden="true">
+                  <svg class="ds-radio__off" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#6F6F6F"/></svg>
+                  <svg class="ds-radio__on" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#161616"/><path d="M10 15C12.7614 15 15 12.7614 15 10C15 7.23858 12.7614 5 10 5C7.23858 5 5 7.23858 5 10C5 12.7614 7.23858 15 10 15Z" fill="#161616"/></svg>
+                </span>
+              </div>
+              <div class="stat-banner__value-row">
+                <div class="stat-banner__value">$20,000</div>
+                <span class="stat-banner__delta stat-banner__delta--up">↑ 21%</span>
+              </div>
+              <div class="stat-banner__foot" aria-hidden="true"></div>
+            </div>
+            <div class="stat-banner stat-banner--traders" role="radio" aria-checked="false" tabindex="-1" data-metric="traders" aria-label="Active traders, 2, down 8 percent">
+              <div class="stat-banner__head">
+                <div class="stat-banner__head-main">
+                  <span class="stat-banner__label">Active traders</span>
+                </div>
+                <span class="ds-radio ds-radio--s" aria-hidden="true">
+                  <svg class="ds-radio__off" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#6F6F6F"/></svg>
+                  <svg class="ds-radio__on" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#161616"/><path d="M10 15C12.7614 15 15 12.7614 15 10C15 7.23858 12.7614 5 10 5C7.23858 5 5 7.23858 5 10C5 12.7614 7.23858 15 10 15Z" fill="#161616"/></svg>
+                </span>
+              </div>
+              <div class="stat-banner__value-row">
+                <div class="stat-banner__value">2</div>
+                <span class="stat-banner__delta stat-banner__delta--down">↓ 8%</span>
+              </div>
+              <div class="stat-banner__foot" aria-hidden="true"></div>
+            </div>
+            <div class="stat-banner stat-banner--volume" role="radio" aria-checked="false" tabindex="-1" data-metric="volume" aria-label="Traded volume, 44, up 3 percent">
+              <div class="stat-banner__head">
+                <div class="stat-banner__head-main">
+                  <span class="stat-banner__label">Traded volume</span>
+                </div>
+                <span class="ds-radio ds-radio--s" aria-hidden="true">
+                  <svg class="ds-radio__off" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#6F6F6F"/></svg>
+                  <svg class="ds-radio__on" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#161616"/><path d="M10 15C12.7614 15 15 12.7614 15 10C15 7.23858 12.7614 5 10 5C7.23858 5 5 7.23858 5 10C5 12.7614 7.23858 15 10 15Z" fill="#161616"/></svg>
+                </span>
+              </div>
+              <div class="stat-banner__value-row">
+                <div class="stat-banner__value">44</div>
+                <span class="stat-banner__delta stat-banner__delta--up">↑ 3%</span>
+              </div>
+              <div class="stat-banner__foot" aria-hidden="true"></div>
+            </div>
+            <div class="stat-banner stat-banner--deposit" role="radio" aria-checked="false" tabindex="-1" data-metric="deposit" aria-label="Total deposit, $12,456, down 5 percent">
+              <div class="stat-banner__head">
+                <div class="stat-banner__head-main">
+                  <span class="stat-banner__label">Total deposit</span>
+                </div>
+                <span class="ds-radio ds-radio--s" aria-hidden="true">
+                  <svg class="ds-radio__off" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#6F6F6F"/></svg>
+                  <svg class="ds-radio__on" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#161616"/><path d="M10 15C12.7614 15 15 12.7614 15 10C15 7.23858 12.7614 5 10 5C7.23858 5 5 7.23858 5 10C5 12.7614 7.23858 15 10 15Z" fill="#161616"/></svg>
+                </span>
+              </div>
+              <div class="stat-banner__value-row">
+                <div class="stat-banner__value">$12,456</div>
+                <span class="stat-banner__delta stat-banner__delta--down">↓ 5%</span>
+              </div>
+              <div class="stat-banner__foot" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="revenue-chart" aria-hidden="true">
+            <div class="revenue-chart__frame">
+              <div class="revenue-chart__ylabels" id="revenue-chart-ylabels" aria-hidden="true">
+                <span>$20k</span>
+                <span>$15k</span>
+                <span>$10k</span>
+                <span>$5k</span>
+                <span>$0</span>
+              </div>
+              <div class="revenue-chart__plot" id="revenue-chart-plot">
+                <svg class="revenue-chart__svg" viewBox="0 0 658 156" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#1945ff" stop-opacity="0.18"/>
+                      <stop offset="100%" stop-color="#1945ff" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <g class="revenue-chart__grid" aria-hidden="true">
+                    <line x1="0" y1="156" x2="658" y2="156"/>
+                    <line x1="0" y1="117" x2="658" y2="117"/>
+                    <line x1="0" y1="78" x2="658" y2="78"/>
+                    <line x1="0" y1="39" x2="658" y2="39"/>
+                    <line x1="0" y1="0" x2="658" y2="0"/>
+                  </g>
+                  <path id="revenue-chart-fill" d="M0 121 L55 111 L104 114 L165 102 L220 83 L261 90 L330 62 L387 73 L441 42 L493 49 L550 28 L606 35 L658 21 L658 156 L0 156 Z" fill="url(#chartFill)"/>
+                  <path id="revenue-chart-line" d="M0 121 L55 111 L104 114 L165 102 L220 83 L261 90 L330 62 L387 73 L441 42 L493 49 L550 28 L606 35 L658 21" fill="none" stroke="#1945ff" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                  <g class="revenue-chart__crosshair" id="revenue-chart-crosshair" aria-hidden="true" hidden>
+                    <line class="revenue-chart__crosshair-line" x1="0" y1="0" x2="0" y2="156"/>
+                    <circle class="revenue-chart__crosshair-dot" cx="0" cy="0" r="4"/>
+                  </g>
+                  <rect class="revenue-chart__hit" x="0" y="0" width="658" height="156" fill="transparent" aria-hidden="true"/>
+                </svg>
+              </div>
+              <div class="revenue-chart__xlabels" id="revenue-chart-xlabels" aria-hidden="true">
+                <span>1 Aug</span>
+                <span>8 Aug</span>
+                <span>15 Aug</span>
+                <span>22 Aug</span>
+                <span>29 Aug</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="dashboard-side">
+        <!-- Promo banner -->
+        <section class="dashboard-card promo-card" aria-label="Promotional offer">
+          <div class="promo-card__inner" id="promo-carousel" data-promo-theme="network">
+            <div class="promo-card__viewport">
+              <article class="promo-card__slide is-active" data-promo-slide="0" data-promo-theme="network" aria-hidden="false">
+                <div class="promo-card__content">
+                  <h2 class="promo-card__title">Grow your IB network faster</h2>
+                  <p class="promo-card__text">Invite active traders and unlock higher commission tiers with exclusive partner rewards.</p>
+                  <button type="button" class="promo-card__cta">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(1.25 2.934)"><path d="M6.75 0.639369C8.07225 0.00572848 9.46127 -0.0751104 10.583 0.0495251C11.1995 0.118041 11.7513 0.249824 12.1904 0.396205C12.5999 0.532701 12.9931 0.708167 13.2305 0.90597C13.4014 1.04838 13.4999 1.25971 13.5 1.48214V10.1491L13.4932 10.2478C13.4632 10.4737 13.3319 10.6765 13.1328 10.7946C12.9052 10.9296 12.6229 10.9341 12.3906 10.8073C10.0419 9.52565 7.85966 10.2943 7.17676 10.7663C6.94369 10.9274 6.63933 10.9431 6.39062 10.8073C4.04188 9.52565 1.85966 10.2943 1.17676 10.7663C0.947366 10.9249 0.648332 10.9427 0.401367 10.8132C0.154599 10.6836 0 10.4279 0 10.1491V1.48214C0.000117033 1.2597 0.0986367 1.04838 0.269531 0.90597C0.506888 0.708178 0.900115 0.532703 1.30957 0.396205C1.74871 0.249825 2.30046 0.118043 2.91699 0.0495251C4.03872 -0.0751133 5.42775 0.00572437 6.75 0.639369ZM6 1.94308C5.03055 1.50778 3.98688 1.44032 3.08301 1.54074C2.57467 1.59722 2.12623 1.70505 1.78418 1.81906C1.67606 1.8551 1.58114 1.89168 1.5 1.9255V8.96456C2.63352 8.57663 4.25204 8.38436 6 8.99679V1.94308ZM10.417 1.54074C9.51312 1.44033 8.46945 1.50778 7.5 1.94308V8.96456C8.63352 8.57663 10.252 8.38436 12 8.99679V1.9255C11.9189 1.89168 11.8239 1.8551 11.7158 1.81906C11.3738 1.70505 10.9253 1.59722 10.417 1.54074Z" fill="currentColor"/></g></svg>
+                    Learn more
+                  </button>
+                </div>
+              </article>
+              <article class="promo-card__slide" data-promo-slide="1" data-promo-theme="platinum" aria-hidden="true">
+                <div class="promo-card__content">
+                  <h2 class="promo-card__title">Reach Platinum rank sooner</h2>
+                  <p class="promo-card__text">Calculate your commission and see how close you are to Platinum rank.</p>
+                  <button type="button" class="promo-card__cta promo-card__cta--s" id="promo-platinum-cta">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.30287 0.301798C6.47678 -0.100586 7.04729 -0.100612 7.22084 0.301798L8.87221 4.13774L13.0617 4.48539C13.5053 4.52224 13.6832 5.07623 13.3439 5.3643L12.9611 5.68852L10.1613 8.06547L11.1193 12.0909C11.215 12.4934 10.8128 12.8193 10.4494 12.6729L10.3781 12.6368L6.76284 10.4961L3.1476 12.6368C2.76793 12.8614 2.30434 12.5201 2.40639 12.0909L3.3644 8.06547L0.176898 5.36039C-0.161448 5.07294 0.0149376 4.52015 0.457171 4.48149L4.65346 4.1182L6.30287 0.301798ZM5.60659 5.44047L2.72866 5.68949L4.92494 7.55375L4.25893 10.3506L6.76284 8.8682L9.26577 10.3506L8.60073 7.55375L10.7833 5.70024L7.91909 5.46293L6.75991 2.77152L5.60659 5.44047Z" fill="currentColor"/></svg>
+                    Calculate commission
+                  </button>
+                </div>
+              </article>
+              <article class="promo-card__slide" data-promo-slide="2" data-promo-theme="share" aria-hidden="true">
+                <div class="promo-card__content">
+                  <h2 class="promo-card__title">Share your referral link</h2>
+                  <p class="promo-card__text">Copy or share your link in one tap and bring new clients to your IB network today.</p>
+                  <button type="button" class="promo-card__cta">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7.0472 1.31844C7.3138 1.19629 7.62781 1.24026 7.84993 1.43172L13.8724 6.62508C14.0237 6.75551 14.1735 6.88431 14.2894 7.00301C14.4104 7.12704 14.5502 7.29449 14.6322 7.52352C14.7426 7.8322 14.7427 8.16993 14.6322 8.47859C14.5502 8.70753 14.4104 8.87512 14.2894 8.9991C14.1735 9.11778 14.0237 9.24663 13.8724 9.37703L7.84993 14.5684C7.62779 14.7599 7.31381 14.8039 7.0472 14.6817C6.7808 14.5595 6.6097 14.2932 6.6097 14.0001V10.8634C6.03444 10.9852 5.46328 11.1885 4.91145 11.4532C3.98059 11.8998 3.2103 12.4151 2.60384 13.1456C2.40198 13.3888 2.06906 13.4795 1.7718 13.3721C1.47478 13.2648 1.27682 12.9829 1.27669 12.6671V12.3673L1.2845 12.0362C1.3612 10.3876 2.00333 8.81167 3.10774 7.57625C4.042 6.53122 5.25979 5.76554 6.6097 5.39949V2.00008C6.6097 1.70694 6.7808 1.44069 7.0472 1.31844ZM8.1097 6.00008C8.1097 6.36435 7.84836 6.67646 7.48958 6.73934C6.23938 6.95805 5.08618 7.61394 4.22591 8.57625C3.6459 9.22509 3.22638 9.99222 2.99251 10.8165C3.39853 10.5459 3.82454 10.311 4.26302 10.1007C5.19646 9.65291 6.23084 9.32522 7.30891 9.25203C7.51617 9.23797 7.72061 9.3104 7.87239 9.45223C8.02403 9.59404 8.1097 9.79245 8.1097 10.0001V12.3634L12.8929 8.24031C13.0207 8.13015 13.1032 8.05643 13.1624 8.00106C13.1031 7.9456 13.021 7.87126 12.8929 7.76082L8.1097 3.6368V6.00008Z" fill="currentColor"/></svg>
+                    Share link
+                  </button>
+                </div>
+              </article>
+              <article class="promo-card__slide" data-promo-slide="3" data-promo-theme="manager" aria-hidden="true">
+                <div class="promo-card__content">
+                  <h2 class="promo-card__title">Grow faster with your manager</h2>
+                  <p class="promo-card__text">Personal support and tools to reach your IB goals.</p>
+                  <button type="button" class="promo-card__cta">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.25 2.00684C10.2408 2.11749 11.9956 3.54048 12.6865 5.50195C13.0309 5.50286 13.2253 5.50701 13.3887 5.55078C13.906 5.68954 14.3105 6.09396 14.4492 6.61133C14.5003 6.80208 14.5 7.03501 14.5 7.5V8C14.5 8.46499 14.5003 8.69792 14.4492 8.88867C14.3105 9.40604 13.906 9.81046 13.3887 9.94922C13.2085 9.9975 12.9906 9.99888 12.5752 9.99902C11.8419 12.2398 10.2016 14 8 14C8 13.6079 8 13.4118 8.0302 13.2917C8.09489 13.0345 8.0823 13.058 8.26097 12.862C8.34439 12.7705 8.70027 12.5346 9.41202 12.063C9.77117 11.825 10.1056 11.49 10.4062 11.0586C11.0836 10.0865 11.5 8.72639 11.5 7.33301C11.4998 5.14011 9.77525 3.5 8 3.5C6.22475 3.5 4.50017 5.14011 4.5 7.33301C4.5 7.90567 4.5 8.3989 4.5 8.92279C4.5 8.99447 4.5 9.03031 4.49816 9.06055C4.46755 9.56516 4.06516 9.96755 3.56056 9.99816C3.53031 10 3.49449 10 3.42285 10L3.42188 9.99902C3.00835 9.99886 2.79108 9.99738 2.61133 9.94922C2.09396 9.81046 1.68954 9.40604 1.55078 8.88867C1.49967 8.69792 1.5 8.46499 1.5 8V7.5C1.5 7.03501 1.49967 6.80208 1.55078 6.61133C1.68954 6.09396 2.09396 5.68954 2.61133 5.55078C2.77422 5.50714 2.968 5.50288 3.31055 5.50195C4.03002 3.45832 5.90704 2 8 2L8.25 2.00684Z" fill="currentColor"/></svg>
+                    Contact manager
+                  </button>
+                </div>
+              </article>
+            </div>
+            <div class="promo-pagination promo-pagination--light" role="tablist" aria-label="Promo slides">
+              <button type="button" class="promo-pagination__dot is-active" role="tab" aria-selected="true" aria-label="Slide 1 of 4" data-promo-dot="0"></button>
+              <button type="button" class="promo-pagination__dot" role="tab" aria-selected="false" aria-label="Slide 2 of 4" data-promo-dot="1"></button>
+              <button type="button" class="promo-pagination__dot" role="tab" aria-selected="false" aria-label="Slide 3 of 4" data-promo-dot="2"></button>
+              <button type="button" class="promo-pagination__dot" role="tab" aria-selected="false" aria-label="Slide 4 of 4" data-promo-dot="3"></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Clients -->
+        <section class="dashboard-card clients-card" aria-labelledby="clients-title">
+          <div class="card-head">
+            <div class="card-head__title">
+              <h2 class="rig-title-03" id="clients-title">Clients</h2>
+              <span class="card-head__chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 3.5L10.5 8L6.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+            <div class="card-head__actions">
+              <button type="button" class="icon-btn-ghost icon-btn-ghost--s" id="clients-info-btn" aria-label="About clients" aria-expanded="false" aria-controls="clients-info-tooltip">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.75 7.5V11.5H7.25V9C6.69772 9 6.25 8.55228 6.25 8V7.5H8.75Z" fill="currentColor"/><path d="M8.75 5.6C8.75 5.82091 8.57091 6 8.35 6H7.65C7.42909 6 7.25 5.82091 7.25 5.6V4.9C7.25 4.67909 7.42909 4.5 7.65 4.5H8.35C8.57091 4.5 8.75 4.67909 8.75 4.9V5.6Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 2.5C4.96243 2.5 2.5 4.96243 2.5 8C2.5 11.0376 4.96243 13.5 8 13.5C11.0376 13.5 13.5 11.0376 13.5 8C13.5 4.96243 11.0376 2.5 8 2.5Z" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="clients-card__tabs" role="tablist" aria-label="Client ranking">
+            <button type="button" class="chip chip--xs is-active" role="tab" aria-selected="true" data-client-tab="volume">New</button>
+            <button type="button" class="chip chip--xs" role="tab" data-client-tab="profit">Top profit</button>
+            <button type="button" class="chip chip--xs" role="tab" data-client-tab="active">Top active</button>
+          </div>
+
+          <div class="clients-list">
+            <div class="clients-list__head">
+              <span>Client</span>
+              <span id="clients-metric-label">New</span>
+            </div>
+            <div class="clients-list__row"><span class="clients-list__name">Olivia Bennett</span><span class="clients-list__value">$4,820</span></div>
+            <div class="clients-list__row"><span class="clients-list__name">Ethan Walker</span><span class="clients-list__value">$3,960</span></div>
+            <div class="clients-list__row"><span class="clients-list__name">Sophia Nguyen</span><span class="clients-list__value">$2,740</span></div>
+            <div class="clients-list__row"><span class="clients-list__name">Liam Carter</span><span class="clients-list__value">$2,110</span></div>
+            <div class="clients-list__row"><span class="clients-list__name">Ava Mitchell</span><span class="clients-list__value">$1,880</span></div>
+          </div>
+
+          <div class="clients-card__footer">
+            <button type="button" class="btn-tertiary btn-tertiary--s btn-tertiary--block" id="clients-view-all">View all New clients</button>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <!-- Loyalty program -->
+    <section class="dashboard-card loyalty-program" aria-labelledby="loyalty-program-title">
+      <div class="card-head loyalty-program__head">
+        <div class="card-head__title">
+          <h2 class="rig-title-03" id="loyalty-program-title">Loyalty program</h2>
+          <span class="card-head__chevron" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 3.5L10.5 8L6.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+        <div class="card-head__actions">
+          <button type="button" class="icon-btn-ghost icon-btn-ghost--s" aria-label="About loyalty program">
+            <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8.75 7.5V11.5H7.25V9C6.69772 9 6.25 8.55228 6.25 8V7.5H8.75Z" fill="currentColor"/><path d="M8.75 5.6C8.75 5.82091 8.57091 6 8.35 6H7.65C7.42909 6 7.25 5.82091 7.25 5.6V4.9C7.25 4.67909 7.42909 4.5 7.65 4.5H8.35C8.57091 4.5 8.75 4.67909 8.75 4.9V5.6Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 2.5C4.96243 2.5 2.5 4.96243 2.5 8C2.5 11.0376 4.96243 13.5 8 13.5C11.0376 13.5 13.5 11.0376 13.5 8C13.5 4.96243 11.0376 2.5 8 2.5Z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="loyalty-achievements" aria-label="Achievements">
+        <article class="loyalty-achievement">
+          <div class="loyalty-achievement__head">
+            <span class="loyalty-achievement__badge">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 8V9H16C16.5523 9 17 8.55228 17 8V7H8C7.44772 7 7 7.44772 7 8Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M6 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H18V1.8C18 1.77239 17.9986 1.7451 17.9959 1.7182C17.9549 1.3148 17.6142 1 17.2 1H16.8C16.3582 1 16 1.35817 16 1.8V3H8V1.8C8 1.35817 7.64183 1 7.2 1H6.8C6.35817 1 6 1.35817 6 1.8V3ZM16 5H8V5.2C8 5.64183 7.64183 6 7.2 6H6.8C6.35817 6 6 5.64183 6 5.2V5H5.6C5.26863 5 5 5.26863 5 5.6L5 18.4C5 18.7314 5.26863 19 5.6 19H18.4C18.7314 19 19 18.7314 19 18.4V5.6C19 5.26863 18.7314 5 18.4 5H18V5.2C18 5.64183 17.6418 6 17.2 6H16.8C16.3582 6 16 5.64183 16 5.2V5Z" fill="currentColor"/></svg>
+              This month
+            </span>
+            <div class="loyalty-achievement__reward">+$100</div>
+          </div>
+          <div class="loyalty-achievement__body">
+            <h3 class="loyalty-achievement__title">3 active traders</h3>
+            <p class="loyalty-achievement__desc">Bring 3 clients who start trading this month</p>
+          </div>
+          <div class="loyalty-achievement__progress" role="progressbar" aria-valuemin="0" aria-valuemax="3" aria-valuenow="1" aria-label="1 of 3 active traders"><span style="width: 33%"></span></div>
+        </article>
+        <article class="loyalty-achievement">
+          <div class="loyalty-achievement__head">
+            <span class="loyalty-achievement__badge">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 8V9H16C16.5523 9 17 8.55228 17 8V7H8C7.44772 7 7 7.44772 7 8Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M6 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H18V1.8C18 1.77239 17.9986 1.7451 17.9959 1.7182C17.9549 1.3148 17.6142 1 17.2 1H16.8C16.3582 1 16 1.35817 16 1.8V3H8V1.8C8 1.35817 7.64183 1 7.2 1H6.8C6.35817 1 6 1.35817 6 1.8V3ZM16 5H8V5.2C8 5.64183 7.64183 6 7.2 6H6.8C6.35817 6 6 5.64183 6 5.2V5H5.6C5.26863 5 5 5.26863 5 5.6L5 18.4C5 18.7314 5.26863 19 5.6 19H18.4C18.7314 19 19 18.7314 19 18.4V5.6C19 5.26863 18.7314 5 18.4 5H18V5.2C18 5.64183 17.6418 6 17.2 6H16.8C16.3582 6 16 5.64183 16 5.2V5Z" fill="currentColor"/></svg>
+              Limited: 30 days
+            </span>
+            <div class="loyalty-achievement__reward">+$250</div>
+          </div>
+          <div class="loyalty-achievement__body">
+            <h3 class="loyalty-achievement__title">$10,000 IB profit</h3>
+            <p class="loyalty-achievement__desc">Reach $10,000 cumulative IB profit in 30 days</p>
+          </div>
+          <div class="loyalty-achievement__progress" role="progressbar" aria-valuemin="0" aria-valuemax="10000" aria-valuenow="2000" aria-label="$2,000 of $10,000"><span style="width: 20%"></span></div>
+        </article>
+        <article class="loyalty-achievement loyalty-achievement--done">
+          <div class="loyalty-achievement__head">
+            <span class="loyalty-achievement__badge loyalty-achievement__badge--done">Completed</span>
+            <div class="loyalty-achievement__reward">+$150</div>
+          </div>
+          <div class="loyalty-achievement__body">
+            <h3 class="loyalty-achievement__title">$5,000 client deposits</h3>
+            <p class="loyalty-achievement__desc">Your clients deposited $5,000 total</p>
+          </div>
+          <div class="loyalty-achievement__progress loyalty-achievement__progress--done" role="progressbar" aria-valuemin="0" aria-valuemax="5000" aria-valuenow="5000" aria-label="Completed"><span style="width: 100%"></span></div>
+        </article>
+      </div>
+
+      <div class="loyalty-leaderboard" aria-labelledby="loyalty-leaderboard-title">
+        <div class="loyalty-leaderboard__head">
+          <h3 class="loyalty-leaderboard__title" id="loyalty-leaderboard-title">Leaderboard</h3>
+          <span class="loyalty-leaderboard__period">August 2025</span>
+        </div>
+        <div class="loyalty-leaderboard__list">
+          <div class="loyalty-leaderboard__row loyalty-leaderboard__row--you">
+            <span class="loyalty-leaderboard__rank">24</span>
+            <span class="loyalty-leaderboard__name">Jaydon Rosser (you)</span>
+            <span class="loyalty-leaderboard__value">1,240 pts</span>
+          </div>
+          <div class="loyalty-leaderboard__row">
+            <span class="loyalty-leaderboard__rank">1</span>
+            <span class="loyalty-leaderboard__name">Olivia Bennett</span>
+            <span class="loyalty-leaderboard__value">4,820 pts</span>
+          </div>
+          <div class="loyalty-leaderboard__row">
+            <span class="loyalty-leaderboard__rank">2</span>
+            <span class="loyalty-leaderboard__name">Ethan Walker</span>
+            <span class="loyalty-leaderboard__value">3,960 pts</span>
+          </div>
+          <div class="loyalty-leaderboard__row">
+            <span class="loyalty-leaderboard__rank">3</span>
+            <span class="loyalty-leaderboard__name">Sophia Nguyen</span>
+            <span class="loyalty-leaderboard__value">2,740 pts</span>
+          </div>
+          <div class="loyalty-leaderboard__row">
+            <span class="loyalty-leaderboard__rank">4</span>
+            <span class="loyalty-leaderboard__name">Liam Carter</span>
+            <span class="loyalty-leaderboard__value">2,110 pts</span>
+          </div>
+          <div class="loyalty-leaderboard__row">
+            <span class="loyalty-leaderboard__rank">5</span>
+            <span class="loyalty-leaderboard__name">Ava Mitchell</span>
+            <span class="loyalty-leaderboard__value">1,880 pts</span>
+          </div>
+        </div>
+        <div class="loyalty-leaderboard__footer">
+          <button type="button" class="btn-tertiary btn-tertiary--s btn-tertiary--on-dark" id="loyalty-leaderboard-view-all">View all</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Operation history slide panel -->
+  <div class="clients-history-slide" id="clients-history-slide" hidden aria-hidden="true">
+    <button type="button" class="clients-history-slide__backdrop" data-close-clients-history aria-label="Close operation history"></button>
+    <div class="clients-history-slide__panel" role="dialog" aria-modal="true" aria-labelledby="clients-history-title">
+      <div class="clients-history-slide__head">
+        <button type="button" class="clients-history-slide__back" data-close-clients-history aria-label="Back">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3.5L5.5 8L10 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <h2 class="clients-history-slide__title" id="clients-history-title">Operation history</h2>
+      </div>
+      <div class="clients-history-slide__body">
+        <div class="profit-history-list">
+          <div class="profit-history-list__row"><span class="profit-history-list__label">IB profit</span><span class="profit-history-list__value">+$29.50</span></div>
+          <div class="profit-history-list__row"><span class="profit-history-list__label">IB profit</span><span class="profit-history-list__value">+$29.50</span></div>
+          <div class="profit-history-list__row"><span class="profit-history-list__label">IB profit</span><span class="profit-history-list__value">+$29.50</span></div>
+          <div class="profit-history-list__row"><span class="profit-history-list__label">IB profit</span><span class="profit-history-list__value">+$29.50</span></div>
+          <div class="profit-history-list__row"><span class="profit-history-list__label">IB profit</span><span class="profit-history-list__value">+$29.50</span></div>
+        </div>
+        <button type="button" class="profit-history-list__more">
+          <span class="profit-history-list__more-title">View full operation history</span>
+          <span class="profit-history-list__more-sub">All commissions, payouts and client activity</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share link modal (placeholder — final design TBD) -->
+  <div class="dashboard-overlay" id="share-link-modal" hidden>
+    <div class="dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="share-link-modal-title">
+      <div class="dashboard-modal__head">
+        <h2 class="dashboard-modal__title" id="share-link-modal-title">Share link</h2>
+        <button type="button" class="dashboard-modal__close" data-close-modal aria-label="Close">✕</button>
+      </div>
+      <p class="dashboard-modal__stub">Placeholder: выбор типа ссылки и копирование. Финальный макет будет добавлен позже.</p>
+    </div>
+  </div>
+
+  <!-- Commission calculator modal (placeholder — final design TBD) -->
+  <div class="dashboard-overlay" id="commission-calc-modal" hidden>
+    <div class="dashboard-modal" role="dialog" aria-modal="true" aria-labelledby="commission-calc-modal-title">
+      <div class="dashboard-modal__head">
+        <h2 class="dashboard-modal__title" id="commission-calc-modal-title">Commission calculator</h2>
+        <button type="button" class="dashboard-modal__close" data-close-modal aria-label="Close">✕</button>
+      </div>
+      <p class="dashboard-modal__stub">Placeholder: калькулятор комиссии. Финальный макет будет добавлен позже.</p>
+    </div>
+  </div>
+
+  <script src="../shared/ib-chrome.js" data-active="dashboard" data-contests-href="../index.html" data-rebate-href="../rebate/index.html"></script>
+  <script src="app.js"></script>
+</body>
+</html>

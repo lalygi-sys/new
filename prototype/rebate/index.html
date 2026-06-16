@@ -46,7 +46,7 @@ button{font-family:inherit;cursor:pointer}
 .page-header{display:flex;align-items:center;justify-content:flex-start;flex-shrink:0;margin:0 0 32px;gap:32px;min-width:0}
 .page-header .rig-title-03{flex-shrink:0}
 .page-header .tabs{display:inline-flex;align-items:stretch;flex-shrink:0}
-.page-header .tabs--s .tab-item{height:32px;min-width:0;padding:0 12px}
+.page-header .tabs--m .tab-item{height:44px;min-width:0;padding:0 16px}
 .page-header .tabs-right{margin-left:auto;flex-shrink:0}
 .rig-title-03{margin:0;font-family:inherit;font-weight:600;font-size:20px;line-height:24px;letter-spacing:-.2px;color:var(--c-content-primary)}
 .inner{max-width:1216px;width:100%;margin:0 auto;background:var(--c-surface);border:1px solid var(--c-border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:0;flex:1 1 auto;box-sizing:border-box;padding:40px}
@@ -91,6 +91,7 @@ button{font-family:inherit;cursor:pointer}
 /* === PAGE HEADER (title + view tabs + actions) === */
 .tab-item{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:160px;padding:12px 8px;background:transparent;border:none;font-family:inherit;font-size:14px;line-height:20px;font-weight:600;letter-spacing:0;color:var(--c-content-tertiary);cursor:pointer;white-space:nowrap;transition:color .12s}
 .tabs--s .tab-item{height:32px;min-width:0;padding:0 12px}
+.tabs--m .tab-item{height:44px;min-width:0;padding:0 16px}
 .tab-item:hover:not(.active){color:var(--c-content-secondary)}
 .tab-item.active{color:var(--c-primary)}
 .tab-item::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--c-border)}
@@ -133,9 +134,12 @@ button{font-family:inherit;cursor:pointer}
 .search-clear{flex-shrink:0;width:18px;height:18px;display:inline-grid;place-items:center;border:none;background:transparent;cursor:pointer;color:var(--c-content-secondary);padding:0;border-radius:4px}
 .search-clear:hover{color:var(--c-content-primary);background:var(--c-secondary-container)}
 .search-wrap.is-open .tabs-action{display:none}
+.page-header-search{display:none}
+.page-header-search:not([hidden]){display:block}
 
 /* === TOOLBAR (Filters + Date + Chips) === */
-.toolbar{display:flex;align-items:center;gap:8px;padding:24px 0 20px;flex-wrap:wrap;row-gap:12px;flex-shrink:0}
+.toolbar{display:flex;align-items:center;gap:8px;padding:24px 0 20px;flex-wrap:wrap;row-gap:12px;flex-shrink:0;container-type:inline-size;container-name:toolbar}
+.toolbar__start{display:flex;align-items:center;gap:8px;flex:0 0 auto;min-width:0}
 .filter-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--c-border);border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;background:var(--c-surface);white-space:nowrap;color:var(--c-content-primary);transition:background-color .18s,border-color .18s,color .18s}
 .filter-btn:hover{border-color:var(--c-border-strong)}
 .filter-btn svg{width:18px;height:18px}
@@ -146,8 +150,12 @@ button{font-family:inherit;cursor:pointer}
 .date-range[aria-expanded="true"]{background:var(--c-surface);border-color:#3b71ff;box-shadow:0 0 0 4px rgba(59,113,255,.5)}
 .date-range[aria-expanded="true"]:hover{background:var(--c-surface);border-color:#3b71ff}
 .date-range .dr-label{color:var(--c-content-secondary);font-weight:400}
+.date-range .dr-text{display:inline-flex;align-items:center;min-width:0;flex:1 1 auto;gap:8px;overflow:hidden}
+.date-range .dr-text .dr-label,
+.date-range .dr-text .dr-value{color:var(--c-content-primary);font-size:14px;line-height:20px;font-weight:400}
 .date-range svg{width:18px;height:18px;flex-shrink:0;color:var(--c-content-secondary)}
 .date-range-wrap{position:relative}
+.date-range-wrap--table{display:none}
 .date-panel-dates{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .date-panel-dates .date-field{display:flex;flex-direction:column}
 .date-panel-dates .date-field .modal-label{font-size:12px;color:var(--c-content-secondary);font-weight:500;margin-bottom:6px}
@@ -179,12 +187,38 @@ button{font-family:inherit;cursor:pointer}
 .cal-day:disabled{color:var(--c-content-tertiary);cursor:not-allowed;background:transparent}
 .date-panel .filter-panel-footer{justify-content:space-between;gap:12px}
 .date-panel .filter-panel-footer .fp-count{font-size:14px;line-height:20px;color:var(--c-content-secondary);font-feature-settings:'lnum' 1,'tnum' 1}
+.date-panel-footer__actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.date-panel-footer .fp-apply{
+  height:32px;padding:0 16px;border:none;border-radius:8px;
+  background:var(--c-primary);color:#fff;
+  font-family:inherit;font-size:14px;font-weight:600;line-height:20px;
+  cursor:pointer;transition:background .12s;
+}
+.date-panel-footer .fp-apply:hover:not(:disabled){background:#1538d0}
+.date-panel-footer .fp-apply:disabled{opacity:.45;cursor:not-allowed}
 /* Toolbar status chips — DS Chips/S (matches prototype/index.html .ds-chip--s) */
-.chips-group{display:flex;gap:8px;flex-wrap:nowrap;margin-left:auto;min-width:0}
-/* When Filters + date leave too little room, the whole chip group wraps to the next row. */
+.chips-group{display:flex;gap:8px;flex-wrap:nowrap;min-width:0}
+/* Wide: chips on the same row as Filters + date, right-aligned in the remaining space. */
 #chips.chips-group,#mp-chips.chips-group{
-  flex:0 1 auto;min-width:min(100%,540px);margin-left:auto;
-  justify-content:flex-end;
+  flex:1 1 auto;min-width:0;margin-left:auto;justify-content:flex-end;
+}
+/* Narrow: chips wrap to the row below Filters + date, left-aligned + horizontal scroll when they overflow. */
+@container toolbar (max-width:1010px){
+  #chips.chips-group,#mp-chips.chips-group{
+    flex:1 1 100%;width:100%;max-width:100%;margin-left:0;justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+  #chips.chips-group::-webkit-scrollbar,#mp-chips.chips-group::-webkit-scrollbar{display:none}
+  #chips .chip,#mp-chips .chip{flex:0 0 auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+  #chips.chips-group.is-chips-scrollable,#mp-chips.chips-group.is-chips-scrollable{cursor:grab}
+  #chips.chips-group.is-chips-dragging,#mp-chips.chips-group.is-chips-dragging{cursor:grabbing}
 }
 #chips .chip,#mp-chips .chip{flex-shrink:0}
 .chip{
@@ -254,6 +288,12 @@ body.dp-open #tbl-main tbody tr:hover td:nth-child(4){background-color:rgba(22,2
 .client-name{font-size:14px;line-height:20px;color:var(--c-content-primary);display:inline-flex;align-items:center;gap:6px}
 .client-sub{font-size:10px;line-height:12px;letter-spacing:.15px;color:var(--c-content-tertiary);margin-top:4px}
 .td-sub{font-size:10px;line-height:12px;letter-spacing:.15px;color:var(--c-content-tertiary);margin-top:4px}
+/* Mobile card metric labels — hidden on desktop (thead carries labels). */
+.card-metric-label{display:none}
+.card-metric-body{display:block;min-width:0}
+.card-metric-value-row{display:block}
+.card-metric-value{display:inline}
+.card-metric-body--kpi .td-trend{display:block;margin-top:4px}
 .td-trend{margin-top:4px;font-size:10px;line-height:12px;letter-spacing:.15px}
 .td-trend .trend{font-size:10px}
 .trend{display:inline-flex;align-items:center;gap:2px;font-weight:600;font-size:10px;letter-spacing:.15px;cursor:help;padding:0 4px;margin-left:-4px;border-radius:4px;transition:background .12s;line-height:12px;border-bottom:1px dotted currentColor}
@@ -275,6 +315,10 @@ body.dp-open #tbl-main tbody tr:hover td:nth-child(4){background-color:rgba(22,2
 .tag-auto{color:var(--c-primary);background:var(--c-primary-container)}
 .tag-await{color:var(--c-warning);background:var(--c-warning-bg)}
 .tag-nothing{color:var(--c-positive);background:var(--c-positive-bg)}
+/* Mobile select-all — hidden on desktop (thead handles sort). */
+.mobile-sel-bar{display:none}
+.table-list-controls{display:none}
+
 /* Checkbox — Size S (DS 2187:21423): 20x20 hit area, 16x16 visual square, radius 2.4 */
 .checkbox{position:relative;width:20px;height:20px;padding:0;border:none;background:transparent;cursor:pointer;flex-shrink:0;display:inline-block;vertical-align:middle}
 .checkbox::before{content:'';position:absolute;left:50%;top:50%;width:16px;height:16px;transform:translate(-50%,-50%);border:1.5px solid var(--c-border-strong);border-radius:2.4px;background:var(--c-surface);box-sizing:border-box;transition:background .12s,border-color .12s}
@@ -475,7 +519,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .filter-panel-close{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border:none;background:transparent;color:var(--c-content-primary);border-radius:8px;cursor:pointer;transition:background .12s}
 .filter-panel-close:hover{background:var(--c-secondary-container)}
 .filter-panel-close svg{width:18px;height:18px}
-.filter-panel-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:4px}
+.filter-panel-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding:16px 20px 20px;display:flex;flex-direction:column;gap:4px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .filter-panel-section{margin-bottom:16px}
 .filter-panel-section:last-child{margin-bottom:0}
 .filter-panel-section .modal-label{font-size:12px;color:var(--c-content-secondary);font-weight:500;margin-bottom:8px}
@@ -488,13 +532,45 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .filter-btn.has-filters{background:var(--c-primary-container);border-color:transparent;color:var(--c-on-primary-container)}
 .filter-btn.has-filters:hover{background:var(--c-primary-container);border-color:transparent}
 .filter-btn.has-filters.active{background:var(--c-primary-container);border-color:transparent;color:var(--c-on-primary-container)}
+/* Sort trigger — mobile toolbar only (desktop uses thead). */
+.sort-btn{display:none}
+.sort-btn svg{width:18px;height:18px;flex-shrink:0}
+.sort-btn__label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.sort-btn.has-sort{background:var(--c-primary-container);border-color:transparent;color:var(--c-on-primary-container)}
+.sort-btn.has-sort:hover{background:var(--c-primary-container);border-color:transparent}
+/* Sort bottom sheet — reuses .filter-panel shell. */
+.sort-panel-header{align-items:flex-start!important;padding-bottom:12px!important}
+.sort-panel-header__text{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;padding-right:8px}
+.sort-panel-title{font-size:20px!important;line-height:24px!important;letter-spacing:-.2px}
+.sort-panel-subtitle{font-size:14px;line-height:20px;color:var(--c-content-tertiary);font-weight:400}
+.sort-panel-scroll{display:flex;flex-direction:column;gap:24px;padding:16px 16px 20px!important}
+.sort-panel-section{display:flex;flex-direction:column;gap:16px;padding:0;margin:0}
+.sort-panel-section .modal-label{margin-bottom:0}
+.sort-order-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0}
+.sort-radio-list{display:flex;flex-direction:column;gap:16px;margin:0}
+.sort-radio-row{display:flex;align-items:flex-start;gap:8px;padding:0;margin:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.sort-radio-row input{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+.sort-dir-chip{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border:1px solid var(--c-chip-border);border-radius:12px;background:var(--c-surface);font-family:inherit;font-size:14px;font-weight:600;line-height:20px;color:var(--c-content-primary);cursor:pointer;transition:background .12s,border-color .12s,color .12s;-webkit-tap-highlight-color:transparent}
+.sort-dir-chip svg{width:24px;height:24px;flex-shrink:0}
+.sort-dir-chip.sel{background:var(--c-primary-container);border-color:transparent;color:var(--c-on-primary-container)}
+.sort-radio-icon{flex-shrink:0;width:24px;height:24px;padding:2px;box-sizing:border-box;display:block;line-height:0}
+.sort-radio-icon .radio-off,.sort-radio-icon .radio-on{display:block;width:20px;height:20px}
+.sort-radio-icon svg{width:20px;height:20px;display:block}
+.sort-radio-icon .radio-on{display:none}
+.sort-radio-row:has(input:checked) .radio-off{display:none}
+.sort-radio-row:has(input:checked) .radio-on{display:block}
+.sort-radio-label{flex:1;min-width:0;font-size:16px;line-height:24px;color:var(--c-content-primary)}
+.sort-panel-footer--apply{justify-content:stretch!important;padding:16px 16px max(16px,env(safe-area-inset-bottom,16px))!important}
+.sort-panel-footer--apply .btn-block{margin-top:0;height:48px;border-radius:12px}
 @media (max-width:1024px){
   .table-layout{flex-direction:column;gap:0}
   .filter-panel{position:fixed;top:0;left:0;bottom:0;height:100vh;width:0;flex:none;z-index:90;border-radius:0;border:none;box-shadow:0 0 20px rgba(0,0,0,.15)}
   .filter-panel.open{width:min(360px,90vw)}
   .filter-panel-inner{width:min(360px,90vw)}
-  .filter-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s ease}
+  .filter-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s ease;touch-action:none}
   .filter-backdrop.open{opacity:1;pointer-events:auto}
+  /* Lock page scroll while filter/date/rebate sheets are open (mobile + tablet). */
+  body.sheet-scroll-lock{overflow:hidden!important;position:fixed;width:100%;left:0;right:0;touch-action:none}
 }
 .filter-backdrop{display:none}
 @media (max-width:1024px){.filter-backdrop{display:block}}
@@ -546,8 +622,10 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .combobox-wrap>.dropdown-menu .dropdown-empty{padding:12px;font-size:14px;color:#6f6f6f;text-align:center}
 
 /* "Time of payment" field renders the time input and the PM/AM toggle as a single composite control — the toggle (a 2-item radiogroup built from the DS `.chip` component) lives visually INSIDE the input's border. That's done by stripping the inner <input>'s own border / padding / background and letting the wrapping `.time-input` div paint the bordered shell instead. The shell paints its own focus ring via `:focus-within`, so tabbing into either the time input or the chips highlights the whole control. */
-.time-input{display:flex;align-items:center;gap:8px;border:1.5px solid #d9d9d9;border-radius:8px;background:#fff;padding:4px 4px 4px 14px;height:40px;box-sizing:border-box;transition:border-color .12s}
+.time-input{display:flex;align-items:center;gap:8px;border:1.5px solid #d9d9d9;border-radius:8px;background:#fff;padding:4px 4px 4px 12px;height:40px;box-sizing:border-box;transition:border-color .12s}
 .time-input:focus-within{border-color:#1945ff}
+.time-input__icon{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:18px;height:18px;color:var(--c-content-secondary)}
+.time-input__icon svg{width:18px;height:18px;display:block}
 .time-input>input{flex:1 1 auto;min-width:0;border:none;padding:0;background:transparent;outline:none;font-size:14px;font-family:inherit;color:#161616;height:auto}
 .time-period{margin-left:0;gap:4px;flex-shrink:0}
 .time-period .chip{height:30px;padding:0 10px;font-size:13px;line-height:18px}
@@ -565,7 +643,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .rebate-panel--edit #rebate-footer-setup{display:none!important}
 .rebate-panel:not(.rebate-panel--edit) #rebate-body-edit,
 .rebate-panel:not(.rebate-panel--edit) #rebate-footer-edit{display:none!important}
-.rebate-panel--edit .filter-panel-scroll{padding:16px 20px;gap:4px}
+.rebate-panel--edit .filter-panel-scroll{padding:16px 20px 20px;gap:4px}
 .rebate-accrued-block{display:flex;flex-direction:column;gap:20px}
 .rebate-accrued-head{font-size:14px;font-weight:600;line-height:20px;color:#161616;margin:0}
 .rebate-accrued-sub{font-size:14px;line-height:20px;color:#525252;margin:0}
@@ -591,7 +669,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .rebate-footer-edit .btn-sm-secondary:disabled,
 .rebate-footer-edit .btn-sm-secondary[disabled]{background:rgba(22,22,22,.06);color:rgba(22,22,22,.38);border-color:transparent}
 
-/* Toast / Snackbar — Figma Snackbar (same as contests prototype). Bottom-left stack. */
+/* Toast / Snackbar — Figma Snackbar (60132:14999). Web: bottom-left; mobile: top (60462:53351). */
 .toast-stack{
   position:fixed;bottom:30px;left:30px;z-index:3000;
   display:flex;flex-direction:column;gap:16px;align-items:flex-start;
@@ -663,7 +741,6 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .stat-banners {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: auto auto auto;
   column-gap: 12px;
   row-gap: 4px;
   align-items: stretch;
@@ -672,9 +749,9 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 }
 .stat-banner {
   position: relative;
-  display: grid;
-  grid-template-rows: subgrid;
-  grid-row: span 3;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   min-width: 0;
   padding: 12px 16px 16px;
   border-radius: 12px;
@@ -682,15 +759,8 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   background: var(--c-surface);
   overflow: hidden;
 }
-@supports not (grid-template-rows: subgrid) {
-  .stat-banner {
-    display: flex;
-    flex-direction: column;
-  }
-}
 .stat-banner__head {
-  grid-row: 1;
-  align-self: start;
+  flex: 0 0 auto;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -734,19 +804,22 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   color: var(--c-content-secondary);
 }
 .stat-banner__value-row {
-  grid-row: 2;
-  align-self: start;
+  flex: 0 0 auto;
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   align-items: baseline;
-  flex-wrap: wrap;
   gap: 8px;
-  row-gap: 2px;
   min-height: 28px;
   min-width: 0;
-  padding-top: 8px;
+  margin-top: 8px;
 }
-@supports not (grid-template-rows: subgrid) {
-  .stat-banner__value-row { margin-top: 8px; padding-top: 0; }
+.stat-banners--delta-stacked .stat-banner__value-row {
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: 2px;
+  min-height: 0;
 }
 .stat-banner__value {
   flex-shrink: 0;
@@ -758,17 +831,17 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   font-variant-numeric: tabular-nums;
 }
 .stat-banner__foot {
-  grid-row: 3;
-  align-self: start;
+  flex: 0 0 auto;
+  margin-top: 8px;
+  container-type: inline-size;
+  container-name: stat-foot;
   display: flex;
   align-items: flex-start;
   width: 100%;
   min-width: 0;
-  min-height: 14px;
+  height: auto;
+  min-height: 0;
   padding-top: 0;
-}
-@supports not (grid-template-rows: subgrid) {
-  .stat-banner__foot { margin-top: 2px; padding-top: 0; }
 }
 .stat-banner__delta {
   display: block;
@@ -804,6 +877,27 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   flex-shrink: 0;
 }
 .stat-banner__hint a:hover { text-decoration: underline; }
+.stat-banner__hint--split {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 4px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+.stat-banner__hint-part { white-space: nowrap; max-width: 100%; }
+.stat-banner__hint-sep { display: none; white-space: pre; }
+@container stat-foot (min-width: 164px) {
+  .stat-banner__hint--split {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    row-gap: 0;
+    column-gap: 0;
+  }
+  .stat-banner__hint--split .stat-banner__hint-sep { display: inline; flex-shrink: 0; }
+}
 
 /* Empty */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 24px;gap:24px;min-height:320px;height:100%}
@@ -821,10 +915,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .empty .btn-secondary-s:hover{background:rgba(22,22,22,.20)}
 .empty .btn-secondary-s:active{background:rgba(22,22,22,.25)}
 
-/* Tablet — left-align chips when wrapped (≤ 1024px) */
-@media (max-width:1024px){
-  #chips.chips-group,#mp-chips.chips-group{margin-left:0}
-}
+/* Tablet — toolbar chips use @container toolbar rules above */
 
 /* ============================================================
    MOBILE — phone breakpoint (≤ 640px)
@@ -836,13 +927,10 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
    this block specializes for phones where a 7-column data grid
    simply can't survive on a 360-px viewport.
 
-   Implementation note: this is CSS-only. We don't touch render()
-   — instead we set the table to `display:block`, hide <thead>,
-   and convert each <tr> into a CSS grid card. Cells become
-   block-level rows; their column meaning is restored by
-   `nth-child::before` labels. This keeps the JS rendering path
-   identical for desktop and mobile, so selection / sort / filter
-   logic doesn't fork.
+   Implementation note: mobile cards reuse the same <tr>/<td> DOM
+   from render(), with `.card-metric-label` spans hidden on desktop
+   and shown on phone. CSS converts each <tr> into a grid card;
+   <thead> is hidden so labels live inside each cell.
    ============================================================ */
 @media (max-width:640px){
   /* Native page scroll (desktop sets overflow:hidden for the
@@ -855,50 +943,154 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
      Product chrome from shared/ib-chrome.css */
   .content-wrap{padding:12px 12px 96px;background:var(--c-surface-container)}
   .inner{padding:16px 12px;background:var(--c-surface);border:none;border-radius:12px}
-  .page-header{margin:0 0 12px;padding:0;flex-wrap:wrap;gap:12px;align-items:center}
+  /* Match Clients settings — tablet rule #s-manage .inner{padding:24px} is more specific. */
+  #s-manage .inner{padding:16px 12px}
+  .page-header{margin:0 0 12px;padding:0;flex-wrap:wrap;gap:8px;align-items:center}
 
-  /* Mobile: title + actions on row 1, segmented tabs full width below */
+  /* Mobile: title + actions on row 1; tabs below — desktop underline style */
   .page-header .rig-title-03{flex:1 1 auto;min-width:0;font-size:20px;line-height:26px}
-  .page-header .tabs{order:3;display:flex;width:100%;background:var(--c-surface-container);border-radius:10px;padding:4px;gap:0}
-  .page-header .tabs--s .tab-item{flex:1;min-width:0;height:32px;padding:0 8px;border-radius:8px;background:transparent;font-size:13px}
-  .page-header .tab-item::after{display:none}
-  .page-header .tab-item.active{background:#fff;color:var(--c-content-primary);box-shadow:0 1px 3px rgba(0,0,0,.06)}
-  .page-header .tabs-right{order:2;margin-left:auto;gap:0}
+  .page-header .tabs{
+    order:4;
+    display:flex;
+    align-items:stretch;
+    flex:1 1 100%;
+    width:100%;
+    min-width:0;
+    background:transparent;
+    border-radius:0;
+    padding:0;
+    gap:0;
+  }
+  .page-header .tabs--m .tab-item{flex:1 1 0;min-width:0;width:0;height:44px;padding:0 8px;font-size:14px;line-height:20px}
+  .page-header .tabs-right{order:2;margin-left:auto;gap:8px}
   /* Search trigger collapses to a 40-px icon-only button on phones.
      The text label inside .tabs-action is hidden when the wrapper
      is rendered inside .tabs-right on mobile. */
   .tabs-right .tabs-action{width:40px;height:40px;padding:0;gap:0;border-radius:8px;font-size:0}
   .tabs-right .tabs-action svg{width:20px;height:20px}
   .icon-btn-text-s{width:40px;height:40px}
-  /* Search field, when opened, floats below the 56-px topnav as a
-     full-width overlay with shadow. left/right insets match the
-     content-wrap horizontal padding so the field aligns with the
-     cards underneath. */
-  .search-input.open{width:auto;position:fixed;top:calc(var(--ib-chrome-offset, 100px) + 8px);left:12px;right:12px;z-index:60;height:40px;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.12);border-radius:8px}
+  /* Mobile search — DS Input/S row under title + actions, above view tabs. */
+  .search-wrap.is-open .tabs-action{display:inline-flex}
+  .search-wrap.is-open .tabs-action{background:var(--c-primary-container);color:var(--c-on-primary-container);border-color:transparent}
+  .page-header-search{order:3;flex:1 1 100%;width:100%;min-width:0;margin:8px 0 0;padding:0}
+  .page-header-search .search-input{
+    display:flex;
+    width:100%;
+    height:32px;
+    padding:4px 12px;
+    background:var(--c-surface);
+    border:1px solid var(--c-border-strong);
+    border-radius:8px;
+    box-shadow:none;
+  }
+  .page-header-search .search-input:focus-within{border-color:var(--c-primary);box-shadow:0 0 0 3px var(--c-primary-container)}
 
-  /* === TOOLBAR (row 1: Filters + Statistics; row 2: chips scroll) === */
-  .toolbar{flex-wrap:wrap;gap:8px;padding:12px 0;margin:0}
-  #main-toolbar,#mp-toolbar{padding-top:16px}
-  .toolbar .filter-btn{flex:0 0 auto;height:40px;padding:0 14px;font-size:14px}
-  .toolbar .date-range-wrap{flex:1 1 0;min-width:0}
-  .toolbar .date-range{width:100%;height:40px;padding:0 12px;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px}
-  /* Hide "Statistics" hint label on phone — the calendar icon + date span carries enough meaning, saves ~80px of width. */
-  .toolbar .date-range .dr-label{display:none}
-  .toolbar .date-range .dr-value{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  /* Toolbar chips — full width row below Filters + date on phone */
-  #chips.chips-group,#mp-chips.chips-group{flex:1 1 100%;min-width:0;margin-left:0}
-
-  /* === STAT BANNERS (Manage payments) === */
+  /* === TOOLBAR (row 1: Filters + Sort; row 2: chips) === */
+  .toolbar{flex-wrap:wrap;column-gap:8px;row-gap:8px;padding:12px 0 0;margin:0}
+  #main-toolbar,#mp-toolbar{padding-top:8px;padding-bottom:0}
+  .toolbar .toolbar__start{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    order:1;
+    flex:1 1 100%;
+    width:100%;
+    min-width:0;
+  }
+  #chips.chips-group,#mp-chips.chips-group{order:2}
+  .date-range-wrap--toolbar{display:none!important}
+  .table-list-controls{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin:20px 0 12px;
+    padding:0;
+  }
+  #table-list-controls-mp{margin:0 0 12px}
+  .table-list-controls .mobile-sel-bar{padding:0;margin:0}
+  .table-list-controls .date-range-wrap--table{display:block;padding:0;margin:0}
+  .date-range-wrap--table .date-range{width:100%;height:32px;padding:4px 12px;font-size:14px;line-height:20px;display:flex;align-items:center;gap:8px;justify-content:flex-start}
+  .date-range-wrap--table .date-range .dr-text{display:inline-flex;align-items:center;min-width:0;flex:1 1 auto;gap:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .date-range-wrap--table .date-range .dr-label,
+  .date-range-wrap--table .date-range .dr-value{flex:0 1 auto;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Toolbar controls — DS Size S (Figma Button Tertiary/S 885:24656, Input/S 560:5739) */
+  .sort-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-width:0;
+    width:100%;
+    height:32px;
+    padding:0 16px;
+    border:1px solid var(--c-border);
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+    font-weight:600;
+    line-height:20px;
+    background:var(--c-surface);
+    color:var(--c-content-primary);
+    font-family:inherit;
+    transition:background-color .18s,border-color .18s,color .18s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .sort-btn.active{background:rgba(22,22,22,.12);border-color:var(--c-border-strong)}
+  .toolbar .filter-btn{
+    min-width:0;
+    width:100%;
+    height:32px;
+    padding:0 16px;
+    font-size:14px;
+    line-height:20px;
+    font-weight:600;
+  }
+  .toolbar .date-range{width:100%;height:32px;padding:4px 12px;font-size:14px;line-height:20px;display:flex;align-items:center;gap:8px;justify-content:flex-start}
+  .toolbar .date-range .dr-text{display:inline-flex;align-items:center;min-width:0;flex:1 1 auto;gap:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .toolbar .date-range .dr-label,
+  .toolbar .date-range .dr-value{flex:0 1 auto;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* === STAT BANNERS (Manage payments) ===
+     2-col grid (~185px/card) crushes long labels + foot hints on ~390px viewports.
+     Horizontal snap strip: one comfortable card + peek of the next. */
+  #s-manage .mp-layout__stats{margin-top:20px}
   .stat-banners {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 12px;
-    row-gap: 4px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 12px;
     padding: 0 0 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+    scrollbar-width: none;
+  }
+  .stat-banners::-webkit-scrollbar { display: none; }
+  .stat-banners.is-stat-banners-scrollable { cursor: grab; }
+  .stat-banners.is-stat-banners-dragging { cursor: grabbing; }
+  .stat-banners .stat-banner {
+    flex: 0 0 88%;
+    max-width: 88%;
+    scroll-snap-align: start;
   }
   .stat-banners .stat-banner:last-child {
-    grid-column: 1 / -1;
+    grid-column: auto;
   }
+  .stat-banner { padding: 12px 14px 14px; }
   .stat-banner__value { font-size: 20px; line-height: 24px; }
+  /* IconButton Text / Size XS (Figma 60322:32851) — not header export 40px */
+  .stat-banner__info-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    margin: 0;
+  }
+  .stat-banner__info-btn svg {
+    width: 16px;
+    height: 16px;
+  }
 
   /* === TABLE → VERTICAL CARD LIST ===
      1. The <table> becomes a block flow.
@@ -919,12 +1111,12 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .tbl thead{display:none}
   .tbl tbody{display:block}
 
-  /* Card shell */
+  /* Card shell — 2 metric columns; checkbox is absolutely positioned. */
   .tbl tbody tr{
     display:grid;
     grid-template-columns:1fr 1fr;
     column-gap:16px;
-    row-gap:8px;
+    row-gap:0;
     padding:14px 16px;
     margin:0 0 8px;
     background:var(--c-surface);
@@ -935,72 +1127,174 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     -webkit-tap-highlight-color:transparent;
   }
   .tbl tbody tr:active{background:var(--c-surface-container)}
-  /* Selected card uses a 2-px brand outline (via inset box-shadow,
-     so no layout shift from a thicker border). */
-  .tbl tbody tr.selected{background:var(--c-row-selected);border-color:var(--c-border-strong);box-shadow:inset 0 0 0 1px var(--c-border-strong)}
+  /* Selected — background only; border stays the same as unselected card. */
+  .tbl tbody tr.selected{background:var(--c-row-selected)}
   .tbl tbody tr.row-affected{border-color:rgba(227,45,45,.4)}
   .tbl tbody tr.row-affected:hover td,
   .tbl tbody tr:hover td,
   .tbl tbody tr.row-affected td{background:transparent!important}
 
-  /* All td cells: block, transparent, no borders */
-  .tbl tbody td{display:block;padding:0;border:none;background:transparent!important;position:static!important;box-shadow:none!important}
+  /* All td cells: block, transparent, no borders (checkbox cell overrides position). */
+  .tbl tbody td:not(:nth-child(1)){display:block;padding:0;border:none;background:transparent!important;position:static!important;box-shadow:none!important}
+  .tbl tbody td:nth-child(1){display:flex;padding:0;border:none;background:transparent!important;box-shadow:none!important}
 
-  /* td[1] = checkbox — hide; selection happens via card tap.
-     A future enhancement could surface a long-press multi-select
-     mode, but for now the bottom-bar already shows selection state. */
-  .tbl tbody td:nth-child(1){display:none}
+  /* td[1] = checkbox — pinned top-left; width = checkbox hit area only. */
+  .tbl tbody td:nth-child(1){
+    position:absolute!important;
+    top:14px;
+    left:16px;
+    z-index:1;
+    align-items:flex-start;
+    width:20px;
+    height:20px;
+    min-width:20px;
+    max-width:20px;
+    margin:0;
+  }
+  .tbl tbody td:nth-child(1) .checkbox{pointer-events:auto}
 
-  /* td[2] = client name + sub-line. Spans both columns; reserve
-     ~120px on the right so the status pill (positioned absolutely
-     at top:14, right:16) doesn't overlap the name. */
-  .tbl tbody td:nth-child(2){grid-column:1/-1;padding-right:120px;min-height:40px}
+  /* td[2] = client name + sub-line. Full width; inset for checkbox + status pill. */
+  .tbl tbody td:nth-child(2){
+    grid-column:1/-1;
+    padding-left:28px;
+    padding-right:120px;
+    min-height:40px;
+    margin-bottom:0;
+    padding-bottom:12px;
+    border-bottom:1px solid var(--c-border);
+  }
   .client-name{font-size:16px;line-height:22px;font-weight:600;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
   .client-sub{font-size:13px;line-height:18px;color:var(--c-content-tertiary);margin-top:2px}
 
-  /* td[3]/[4] = IB profit / Traded lots — 2-column metric row, with
-     a uppercase micro-label above each value. The top divider
-     separates "identity" (name) from "metrics" (numbers). */
+  /* Metric labels — DS stat-banner__label (12/16, weight 500, secondary). */
+  .card-metric-label{
+    display:block;
+    font-size:12px;
+    line-height:16px;
+    letter-spacing:.15px;
+    font-weight:500;
+    color:var(--c-content-secondary);
+    margin:0 0 8px;
+  }
+
+  /* td[3]/[4] = KPI metrics (IB profit / Traded lots). */
   .tbl tbody td:nth-child(3),
-  .tbl tbody td:nth-child(4){font-size:15px;font-weight:600;line-height:20px;color:var(--c-content-primary);padding-top:12px;margin-top:4px;border-top:1px solid var(--c-border)}
-  /* Labels — same visual style for every labelled cell. */
-  #tbl-main tbody td:nth-child(3)::before{content:'IB profit'}
-  #tbl-main tbody td:nth-child(4)::before{content:'Traded lots'}
-  #tbl-main tbody td:nth-child(5)::before{content:'Activity'}
-  #tbl-main tbody td:nth-child(6)::before{content:'Rebate settings'}
-  #s-manage .tbl tbody td:nth-child(3)::before{content:'Paid this period'}
-  #s-manage .tbl tbody td:nth-child(4)::before{content:'Accrued'}
-  #s-manage .tbl tbody td:nth-child(5)::before{content:'Rebate settings'}
-  #s-manage .tbl tbody td:nth-child(6)::before{content:'Next payment'}
-  .tbl tbody td:nth-child(3)::before,
-  .tbl tbody td:nth-child(4)::before,
-  .tbl tbody td:nth-child(5)::before,
-  .tbl tbody td:nth-child(6)::before{display:block;font-size:10px;line-height:14px;font-weight:600;color:var(--c-content-tertiary);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;font-feature-settings:normal}
-  .td-trend{margin-top:4px;font-size:12px;display:flex}
-  .td-sub{font-size:12px;line-height:16px;color:var(--c-content-tertiary);margin-top:2px;font-weight:400}
+  .tbl tbody td:nth-child(4){
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    min-width:0;
+    padding:12px 0 0;
+    margin-top:0;
+    border-top:none;
+    font-weight:inherit;
+    color:inherit;
+  }
+  .card-metric-body--kpi{width:100%;min-width:0}
+  .card-metric-body--kpi .card-metric-value-row{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:4px 8px;
+    width:100%;
+    min-width:0;
+  }
+  .card-metric-body--kpi .card-metric-value{
+    display:inline;
+    font-size:16px;
+    font-weight:600;
+    line-height:22px;
+    letter-spacing:-.2px;
+    color:var(--c-content-primary);
+    font-variant-numeric:tabular-nums;
+  }
+  .card-metric-body--kpi .td-trend{
+    margin:0;
+    display:inline-flex;
+    flex:0 0 auto;
+    font-size:12px;
+    line-height:16px;
+  }
+  .card-metric-body--kpi .td-trend .trend{
+    font-size:12px;
+    line-height:16px;
+    margin-left:0;
+    padding:0 2px;
+  }
 
-  /* td[5] = Activity / join-date — left column on row 3 */
-  .tbl tbody td:nth-child(5){font-size:14px;font-weight:500;line-height:18px}
-
-  /* td[6] = Rebate settings / period — right column on row 3.
-     Smaller font (rebate settings often wrap to 2 lines, e.g.
-     "80% Auto weekly" + "Thu 09:00 AM, GMT-8"). */
-  .tbl tbody td:nth-child(6){font-size:13px;font-weight:500;line-height:18px;min-width:0;overflow:hidden}
+  /* td[5]/[6] = secondary details row — extra air below KPIs. */
+  .tbl tbody td:nth-child(5),
+  .tbl tbody td:nth-child(6){
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    min-width:0;
+    padding:12px 0 0;
+    margin-top:12px;
+    border-top:none;
+    font-weight:inherit;
+    color:inherit;
+  }
+  .card-metric-body--detail{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    width:100%;
+    min-width:0;
+  }
+  .card-metric-value--detail{
+    display:block;
+    font-size:14px;
+    font-weight:500;
+    line-height:20px;
+    color:var(--c-content-primary);
+  }
+  .tbl tbody td:nth-child(6) .card-metric-value--detail{font-size:13px;line-height:18px}
+  .tbl tbody td:nth-child(5) .td-sub,
+  .tbl tbody td:nth-child(6) .td-sub{
+    font-size:12px;
+    line-height:16px;
+    color:var(--c-content-tertiary);
+    margin-top:0;
+    font-weight:400;
+  }
 
   /* td[7] = status + row actions. Status pill floats to the
      top-right of the card; the action buttons span the full
      bottom row as a divider-separated footer. */
-  .tbl tbody td:nth-child(7){grid-column:1/-1;display:block;margin-top:8px;padding-top:12px;border-top:1px solid var(--c-border)}
+  .tbl tbody td:nth-child(7){grid-column:1/-1;display:block;margin-top:12px;padding-top:12px;border-top:1px solid var(--c-border)}
   .tbl tbody td:nth-child(7) .status-default{position:absolute;top:14px;right:16px;display:inline-block!important}
   /* On mobile the row-action buttons are always visible (there is no
      :hover concept), not gated behind menu-open / hover states. */
-  .tbl tbody td:nth-child(7) .row-actions{display:flex!important;width:100%;margin:0;gap:8px;align-items:stretch;justify-content:stretch;flex-direction:row;align-self:stretch}
-  .tbl tbody td:nth-child(7) .row-actions .btn-sm{flex:1 1 auto;min-width:0;height:40px;padding:0 12px}
+  .tbl tbody td:nth-child(7) .row-actions{display:flex!important;width:100%;margin:0;gap:8px;align-items:center;justify-content:stretch;flex-direction:row;align-self:stretch}
+  .tbl tbody td:nth-child(7) .row-actions .btn-sm{flex:1 1 auto;min-width:0;height:32px;padding:0 16px;font-size:14px;line-height:20px}
   /* Drop the desktop secondary icon cluster (info + statistics).
      These actions are reached via the kebab dropdown instead. */
   .tbl tbody td:nth-child(7) .row-actions .row-action-icons{display:none}
-  .tbl tbody td:nth-child(7) .row-actions .row-action-more{display:inline-flex!important;width:40px;height:40px;flex:0 0 40px}
+  .tbl tbody td:nth-child(7) .row-actions .row-action-more{display:inline-flex!important;width:32px;height:32px;flex:0 0 32px;padding:0}
   .tbl tbody td:nth-child(7) .row-actions .row-action-more svg{width:20px;height:20px}
+
+  /* Mobile select-all row above the card list */
+  .mobile-sel-bar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 4px 10px;
+  }
+  .mobile-sel-bar[hidden]{display:none!important}
+  .mobile-sel-bar__label{
+    margin:0;
+    padding:4px 0;
+    border:none;
+    background:transparent;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:500;
+    line-height:20px;
+    color:var(--c-content-primary);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
 
   /* Pinned divider becomes a thin section header inside the card list */
   .tbl tbody tr.pinned-divider{display:block;padding:8px 0;margin:0;background:transparent;border:none;border-radius:0;cursor:default}
@@ -1008,31 +1302,29 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .tbl tbody tr.pinned-divider .pd-label{padding:0;margin:0;font-size:11px}
 
   /* === BOTTOM SHEETS for FILTER / DATE / REBATE panels ===
-     The tablet block (≤1024) already converts these to fixed
-     left-side drawers. Here we re-position them as bottom sheets
-     anchored to bottom:0 with a slide-up transform. The drag
-     handle is decorative (no JS gesture); ESC and tap-outside
-     still close. max-height 92vh leaves a hint of the underlying
-     content so users keep context (Material BottomSheet pattern). */
+     Sheet fills viewport from (chrome header + 12px gap) to bottom.
+     Header stays visible above; long forms scroll inside .filter-panel-scroll. */
   .filter-panel,.rebate-panel{
-    position:fixed!important;top:auto!important;left:0!important;right:0!important;bottom:0!important;
-    width:100%!important;max-width:none!important;height:auto!important;max-height:92vh;
+    position:fixed!important;
+    top:calc(var(--ib-chrome-offset, 96px) + 12px)!important;
+    left:0!important;right:0!important;bottom:0!important;
+    width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;
     border-radius:16px 16px 0 0!important;border:none!important;
     transform:translateY(100%);transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .2s ease;
     box-shadow:0 -8px 32px rgba(0,0,0,.18)!important;
     margin:0!important;flex:none!important;opacity:1!important;
-    z-index:95;
+    z-index:999;
   }
   .filter-panel.open,.rebate-panel.open{transform:translateY(0);width:100%!important;margin:0!important;flex:none!important}
-  .filter-panel-inner,.rebate-panel-inner{width:100%!important;max-width:none!important;max-height:92vh;display:flex;flex-direction:column;overflow:hidden}
+  .filter-panel-inner,.rebate-panel-inner{width:100%!important;max-width:none!important;height:100%;max-height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
   /* Drag-handle pill (decorative — see comment above).
      Higher opacity + thinner+wider pill matches iOS/Material
      conventions. z-index:2 keeps it above the header content
      even when the panel scrolls. */
   .filter-panel::before,.rebate-panel::before{content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);width:40px;height:5px;border-radius:3px;background:#c6c6c6;z-index:2;pointer-events:none}
-  .filter-panel-header{padding-top:24px}
-  .filter-panel-scroll{flex:1 1 auto;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,16px);-webkit-overflow-scrolling:touch}
-  .filter-panel-footer{padding-bottom:max(16px,env(safe-area-inset-bottom,16px))}
+  .filter-panel-header{padding-top:24px;flex-shrink:0}
+  .filter-panel-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;padding-bottom:max(20px,env(safe-area-inset-bottom,20px));-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
+  .filter-panel-footer{flex-shrink:0;padding-bottom:max(16px,env(safe-area-inset-bottom,16px))}
   /* Rebate panel: stack 2-up field rows vertically so each label
      gets the full width (avoids cramped 50/50 split at <640). */
   .field-row{flex-direction:column;gap:16px;margin-bottom:16px}
@@ -1062,10 +1354,10 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .row-action-menu{min-width:220px}
   .ram-item{height:44px}
 
-  /* Snackbar above fixed selection bar on mobile */
-  .toast-stack{bottom:16px;left:16px;right:16px;max-width:none;width:auto}
-  .toast-stack .toast{width:100%;max-width:none}
-  body.has-selection-bar .toast-stack{bottom:calc(180px + env(safe-area-inset-bottom,0px))}
+  /* Snackbar — mobile top stack (Figma 60462:53351): 54px from top, 16px inset */
+  .toast-stack{top:calc(env(safe-area-inset-top,0px) + 54px);bottom:auto;left:16px;right:16px;max-width:none;width:auto}
+  .toast-stack .toast{width:100%;max-width:none;transform:translateY(calc(-100% - 16px))}
+  .toast-stack .toast.toast--visible{transform:translateY(0)}
 
   /* Tooltip — anchor to the tap target; max-width narrower to
      stay inside the viewport on small screens. */
@@ -1077,7 +1369,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 </style>
 </head>
 <body>
-<script src="shared/ib-chrome.js" data-active="rebate" data-contests-href="../index.html"></script>
+<script src="shared/ib-chrome.js" data-active="rebate" data-contests-href="../index.html" data-dashboard-href="../ib-dashboard/index.html"></script>
 
 <!-- ==================== MAIN SCREEN ==================== -->
 <div class="screen active" id="s-main">
@@ -1086,7 +1378,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     <div class="inner">
     <header class="page-header">
       <h1 class="rig-title-03">Rebate sharing</h1>
-      <div class="tabs tabs--s" role="tablist" aria-label="View">
+      <div class="tabs tabs--m" role="tablist" aria-label="View">
         <button type="button" class="tab-item active" role="tab" aria-selected="true">Clients settings</button>
         <button type="button" class="tab-item" role="tab" aria-selected="false" onclick="go('s-manage')">Manage payments</button>
       </div>
@@ -1110,17 +1402,24 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
           </div>
         </div>
       </div>
+      <div class="page-header-search" id="page-header-search-main" hidden></div>
     </header>
 
     <div class="toolbar" id="main-toolbar">
+      <div class="toolbar__start">
       <div class="filter-btn" id="filter-btn-main" role="button" tabindex="0" aria-expanded="false" aria-controls="filter-panel-main" onclick="toggleFilterPanel('main')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFilterPanel('main')}">
         <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 4.5h14M5 9h8M7.5 13.5h3"/></svg>
         Filters
       </div>
-      <div class="date-range-wrap">
+      <button type="button" class="sort-btn" id="sort-btn-main" aria-expanded="false" aria-controls="sort-panel-main" onclick="toggleSortPanel('main')">
+        <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3.5v11M5.5 11.5L9 15l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="sort-btn__label" id="sort-btn-label-main">Client, A - Z</span>
+      </button>
+      </div>
+      <div class="date-range-wrap date-range-wrap--toolbar">
         <button type="button" class="date-range" id="date-trigger-main" aria-haspopup="dialog" aria-expanded="false" aria-controls="date-panel-main" onclick="toggleDatePopover('main')">
           <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="3.5" width="13" height="12" rx="2"/><path d="M2.5 7.5h13M6 2v3M12 2v3"/></svg>
-          <span class="dr-label">Statistics</span><span class="dr-value">25.02.2026 — 03.03.2026</span>
+          <span class="dr-text"><span class="dr-label">Statistics</span><span class="dr-value">25.02.2026 — 03.03.2026</span></span>
         </button>
       </div>
       <div class="chips-group" id="chips" role="tablist">
@@ -1131,14 +1430,31 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
       </div>
     </div>
 
+    <div class="table-list-controls" id="table-list-controls-main">
+      <div class="mobile-sel-bar" id="mobile-sel-bar-main" hidden>
+        <div class="checkbox" id="cb-all-mobile-main" role="checkbox" tabindex="0" aria-label="Select all" onclick="selAll()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selAll();}"></div>
+        <button type="button" class="mobile-sel-bar__label" onclick="selAll()">Select all</button>
+      </div>
+      <div class="date-range-wrap date-range-wrap--table">
+        <button type="button" class="date-range" id="date-trigger-main-mobile" aria-haspopup="dialog" aria-expanded="false" aria-controls="date-panel-main" onclick="toggleDatePopover('main')">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="3.5" width="13" height="12" rx="2"/><path d="M2.5 7.5h13M6 2v3M12 2v3"/></svg>
+          <span class="dr-text"><span class="dr-label">Statistics</span><span class="dr-value">25.02.2026 — 03.03.2026</span></span>
+        </button>
+      </div>
+    </div>
+
     <div class="filter-backdrop" id="filter-backdrop-main" onclick="toggleFilterPanel('main')"></div>
+    <div class="filter-backdrop" id="sort-backdrop-main" onclick="toggleSortPanel('main')"></div>
     <div class="filter-backdrop" id="date-backdrop-main" onclick="toggleDatePopover('main')"></div>
     <div class="table-layout">
-    <aside class="filter-panel date-panel" id="date-panel-main" data-kind="date-main" role="dialog" aria-label="Date range">
+    <aside class="filter-panel date-panel" id="date-panel-main" data-kind="date-main" role="dialog" aria-label="Statistics period for IB profit and Traded lots">
       <div class="filter-panel-inner">
-        <div class="filter-panel-header">
-          <span class="filter-panel-title">Date range</span>
-          <button type="button" class="filter-panel-close" aria-label="Close date range" onclick="toggleDatePopover('main')">
+        <div class="filter-panel-header sort-panel-header">
+          <div class="sort-panel-header__text">
+            <span class="filter-panel-title">Statistics period</span>
+            <span class="sort-panel-subtitle">IB profit and Traded lots</span>
+          </div>
+          <button type="button" class="filter-panel-close" aria-label="Close statistics period" onclick="toggleDatePopover('main')">
             <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l10 10M14 4L4 14"/></svg>
           </button>
         </div>
@@ -1176,9 +1492,12 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
             </div>
           </div>
         </div>
-        <div class="filter-panel-footer">
+        <div class="filter-panel-footer date-panel-footer">
           <span class="fp-count" id="date-count-main">7 days selected</span>
-          <button type="button" class="fp-reset" onclick="dateReset('main')">Reset</button>
+          <div class="date-panel-footer__actions">
+            <button type="button" class="fp-reset" onclick="dateReset('main')">Reset</button>
+            <button type="button" class="fp-apply" id="date-apply-main" onclick="applyDatePanel('main')">Apply</button>
+          </div>
         </div>
       </div>
     </aside>
@@ -1199,6 +1518,41 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
         <div class="filter-panel-footer">
           <span class="fp-count" data-default="59 clients">59 clients</span>
           <button type="button" class="fp-reset" onclick="resetPanelFilters('main')">Reset</button>
+        </div>
+      </div>
+    </aside>
+    <aside class="filter-panel sort-panel" id="sort-panel-main" data-kind="sort-main" role="dialog" aria-label="Sort clients settings">
+      <div class="filter-panel-inner">
+        <div class="filter-panel-header sort-panel-header">
+          <div class="sort-panel-header__text">
+            <span class="filter-panel-title sort-panel-title">Sort clients settings</span>
+            <span class="sort-panel-subtitle" id="sort-panel-subtitle-main">Current: Client, A - Z</span>
+          </div>
+          <button type="button" class="filter-panel-close" aria-label="Close sort settings" onclick="toggleSortPanel('main')">
+            <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l10 10M14 4L4 14"/></svg>
+          </button>
+        </div>
+        <div class="filter-panel-scroll sort-panel-scroll">
+          <div class="sort-panel-section">
+            <div class="modal-label">Sort order</div>
+            <div class="sort-order-chips" role="group" aria-label="Sort order">
+              <button type="button" class="sort-dir-chip sel" data-dir="asc" onclick="pickSortDir('main','asc')">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M7 10l5-5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Ascending
+              </button>
+              <button type="button" class="sort-dir-chip" data-dir="desc" onclick="pickSortDir('main','desc')">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M7 14l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Descending
+              </button>
+            </div>
+          </div>
+          <div class="sort-panel-section">
+            <div class="modal-label">Sort by</div>
+            <div class="sort-radio-list" id="sort-radio-list-main" role="radiogroup" aria-label="Sort by"></div>
+          </div>
+        </div>
+        <div class="filter-panel-footer sort-panel-footer--apply">
+          <button type="button" class="btn-block" onclick="applySortPanel('main')">Apply</button>
         </div>
       </div>
     </aside>
@@ -1250,7 +1604,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
           </div>
           <div style="font-size:14px;font-weight:600;margin-bottom:16px">Automatic rebate settings</div>
           <div class="field-row">
-            <div class="field"><label>Time of payment</label><div class="time-input"><input value="09:00" aria-label="Time"><div class="chips-group time-period" role="radiogroup" aria-label="Time period"><div class="chip active" role="radio" tabindex="0" aria-checked="true" onclick="pickTimePeriod(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickTimePeriod(this);}">PM</div><div class="chip" role="radio" tabindex="0" aria-checked="false" onclick="pickTimePeriod(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickTimePeriod(this);}">AM</div></div></div></div>
+            <div class="field"><label>Time of payment</label><div class="time-input"><span class="time-input__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12.9004 12.9219L12.5762 13.1914L9.57617 15.6914L9.06392 15.0767C8.71039 14.6525 8.76766 14.022 9.19185 13.6684L11.0996 12.0781V8C11.0996 7.44772 11.5473 7 12.0996 7H12.9004V12.9219Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2ZM12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4Z" fill="currentColor"/></svg></span><input value="09:00" aria-label="Time"><div class="chips-group time-period" role="radiogroup" aria-label="Time period"><div class="chip active" role="radio" tabindex="0" aria-checked="true" onclick="pickTimePeriod(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickTimePeriod(this);}">PM</div><div class="chip" role="radio" tabindex="0" aria-checked="false" onclick="pickTimePeriod(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pickTimePeriod(this);}">AM</div></div></div></div>
             <div class="field"><label>Time zone</label><div class="select-wrap combobox-wrap"><input type="text" class="combobox-trigger" value="(GMT+07:00) Western Indonesia Time — Jakarta" data-last-value="(GMT+07:00) Western Indonesia Time — Jakarta" aria-haspopup="menu" aria-expanded="false" aria-controls="select-time-zone" aria-label="Time zone" autocomplete="off" onclick="openCombobox(this);event.stopPropagation()" oninput="filterCombobox(this)" onfocus="openCombobox(this)" onblur="comboboxBlur(this)" onkeydown="comboboxKeydown(event,this)"><div class="dropdown-menu" id="select-time-zone" role="listbox" hidden><button class="dropdown-item" role="option" data-label="(GMT-12:00) International Date Line West — Baker Island" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-12:00) International Date Line West — Baker Island</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-11:00) Coordinated Universal Time-11 — Pago Pago" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-11:00) Coordinated Universal Time-11 — Pago Pago</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-10:00) Hawaii Standard Time — Honolulu" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-10:00) Hawaii Standard Time — Honolulu</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-09:00) Alaska Standard Time — Anchorage" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-09:00) Alaska Standard Time — Anchorage</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-08:00) Pacific Standard Time — Los Angeles" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-08:00) Pacific Standard Time — Los Angeles</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-07:00) Mountain Standard Time — Denver" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-07:00) Mountain Standard Time — Denver</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-06:00) Central Standard Time — Chicago" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-06:00) Central Standard Time — Chicago</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-05:00) Eastern Standard Time — New York" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-05:00) Eastern Standard Time — New York</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-04:00) Atlantic Standard Time — Halifax" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-04:00) Atlantic Standard Time — Halifax</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT-03:00) Argentina Time — Buenos Aires" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT-03:00) Argentina Time — Buenos Aires</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+00:00) Coordinated Universal Time — London" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+00:00) Coordinated Universal Time — London</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+01:00) Central European Time — Berlin" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+01:00) Central European Time — Berlin</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+01:00) Central European Time — Paris" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+01:00) Central European Time — Paris</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+02:00) Eastern European Time — Athens" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+02:00) Eastern European Time — Athens</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+03:00) Moscow Standard Time — Moscow" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+03:00) Moscow Standard Time — Moscow</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+04:00) Gulf Standard Time — Dubai" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+04:00) Gulf Standard Time — Dubai</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+05:00) Pakistan Standard Time — Karachi" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+05:00) Pakistan Standard Time — Karachi</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+05:30) Indian Standard Time — Mumbai" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+05:30) Indian Standard Time — Mumbai</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+06:00) Bangladesh Standard Time — Dhaka" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+06:00) Bangladesh Standard Time — Dhaka</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item selected" role="option" data-label="(GMT+07:00) Western Indonesia Time — Jakarta" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+07:00) Western Indonesia Time — Jakarta</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+07:00) Western Indonesia Time — Pontianak" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+07:00) Western Indonesia Time — Pontianak</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+07:00) Indochina Time — Bangkok" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+07:00) Indochina Time — Bangkok</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+08:00) Australian Western Standard Time — Perth" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+08:00) Australian Western Standard Time — Perth</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+08:00) China Standard Time — Beijing" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+08:00) China Standard Time — Beijing</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+08:00) Singapore Time — Singapore" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+08:00) Singapore Time — Singapore</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+09:00) Japan Standard Time — Tokyo" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+09:00) Japan Standard Time — Tokyo</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+09:00) Korea Standard Time — Seoul" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+09:00) Korea Standard Time — Seoul</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+10:00) Australian Eastern Standard Time — Sydney" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+10:00) Australian Eastern Standard Time — Sydney</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="dropdown-item" role="option" data-label="(GMT+12:00) New Zealand Standard Time — Auckland" onmousedown="event.preventDefault()" onclick="pickComboboxOption(this)"><span>(GMT+12:00) New Zealand Standard Time — Auckland</span><svg class="check-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3.5 8.5L6.5 11.5L12.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div></div>
           </div>
           <div class="rebate-days-field" id="rebate-days-field">
@@ -1303,7 +1657,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     <div class="inner">
     <header class="page-header">
       <h1 class="rig-title-03">Rebate sharing</h1>
-      <div class="tabs tabs--s" role="tablist" aria-label="View">
+      <div class="tabs tabs--m" role="tablist" aria-label="View">
         <button type="button" class="tab-item" role="tab" aria-selected="false" onclick="go('s-main')">Clients settings</button>
         <button type="button" class="tab-item active" role="tab" aria-selected="true">Manage payments</button>
       </div>
@@ -1327,13 +1681,20 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
           </div>
         </div>
       </div>
+      <div class="page-header-search" id="page-header-search-mp" hidden></div>
     </header>
     <div class="toolbar" id="mp-toolbar">
+      <div class="toolbar__start">
       <div class="filter-btn" id="filter-btn-mp" role="button" tabindex="0" aria-expanded="false" aria-controls="filter-panel-mp" onclick="toggleFilterPanel('mp')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFilterPanel('mp')}"><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 4.5h14M5 9h8M7.5 13.5h3"/></svg> Filters</div>
-      <div class="date-range-wrap">
+      <button type="button" class="sort-btn" id="sort-btn-mp" aria-expanded="false" aria-controls="sort-panel-mp" onclick="toggleSortPanel('mp')">
+        <svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 3.5v11M5.5 11.5L9 15l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="sort-btn__label" id="sort-btn-label-mp">Client, A - Z</span>
+      </button>
+      </div>
+      <div class="date-range-wrap date-range-wrap--toolbar">
         <button type="button" class="date-range" id="date-trigger-mp" aria-haspopup="dialog" aria-expanded="false" aria-controls="date-panel-mp" onclick="toggleDatePopover('mp')">
           <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="3.5" width="13" height="12" rx="2"/><path d="M2.5 7.5h13M6 2v3M12 2v3"/></svg>
-          <span class="dr-label">Next pay</span><span class="dr-value">25.02.2026 — 03.03.2026</span>
+          <span class="dr-text"><span class="dr-label">Next pay</span><span class="dr-value">25.02.2026 — 03.03.2026</span></span>
         </button>
       </div>
       <div class="chips-group" id="mp-chips" role="tablist">
@@ -1343,14 +1704,19 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
         <div class="chip" data-f="paused" role="tab" tabindex="0" aria-selected="false" onclick="fltMP(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();fltMP(this);}"><span class="chip-label">Paused payout</span><span class="cnt">2</span></div>
       </div>
     </div>
+
     <div class="filter-backdrop" id="filter-backdrop-mp" onclick="toggleFilterPanel('mp')"></div>
+    <div class="filter-backdrop" id="sort-backdrop-mp" onclick="toggleSortPanel('mp')"></div>
     <div class="filter-backdrop" id="date-backdrop-mp" onclick="toggleDatePopover('mp')"></div>
     <div class="mp-layout">
-    <aside class="filter-panel date-panel" id="date-panel-mp" data-kind="date-mp" role="dialog" aria-label="Date range">
+    <aside class="filter-panel date-panel" id="date-panel-mp" data-kind="date-mp" role="dialog" aria-label="Next pay date range">
       <div class="filter-panel-inner">
-        <div class="filter-panel-header">
-          <span class="filter-panel-title">Date range</span>
-          <button type="button" class="filter-panel-close" aria-label="Close date range" onclick="toggleDatePopover('mp')">
+        <div class="filter-panel-header sort-panel-header">
+          <div class="sort-panel-header__text">
+            <span class="filter-panel-title">Next pay</span>
+            <span class="sort-panel-subtitle">Payment date</span>
+          </div>
+          <button type="button" class="filter-panel-close" aria-label="Close next pay date range" onclick="toggleDatePopover('mp')">
             <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l10 10M14 4L4 14"/></svg>
           </button>
         </div>
@@ -1388,9 +1754,12 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
             </div>
           </div>
         </div>
-        <div class="filter-panel-footer">
+        <div class="filter-panel-footer date-panel-footer">
           <span class="fp-count" id="date-count-mp">7 days selected</span>
-          <button type="button" class="fp-reset" onclick="dateReset('mp')">Reset</button>
+          <div class="date-panel-footer__actions">
+            <button type="button" class="fp-reset" onclick="dateReset('mp')">Reset</button>
+            <button type="button" class="fp-apply" id="date-apply-mp" onclick="applyDatePanel('mp')">Apply</button>
+          </div>
         </div>
       </div>
     </aside>
@@ -1410,6 +1779,41 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
         <div class="filter-panel-footer">
           <span class="fp-count" data-default="25 payments">25 payments</span>
           <button type="button" class="fp-reset" onclick="resetPanelFilters('mp')">Reset</button>
+        </div>
+      </div>
+    </aside>
+    <aside class="filter-panel sort-panel" id="sort-panel-mp" data-kind="sort-mp" role="dialog" aria-label="Sort payments settings">
+      <div class="filter-panel-inner">
+        <div class="filter-panel-header sort-panel-header">
+          <div class="sort-panel-header__text">
+            <span class="filter-panel-title sort-panel-title">Sort payments settings</span>
+            <span class="sort-panel-subtitle" id="sort-panel-subtitle-mp">Current: Client, A - Z</span>
+          </div>
+          <button type="button" class="filter-panel-close" aria-label="Close sort settings" onclick="toggleSortPanel('mp')">
+            <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l10 10M14 4L4 14"/></svg>
+          </button>
+        </div>
+        <div class="filter-panel-scroll sort-panel-scroll">
+          <div class="sort-panel-section">
+            <div class="modal-label">Sort order</div>
+            <div class="sort-order-chips" role="group" aria-label="Sort order">
+              <button type="button" class="sort-dir-chip sel" data-dir="asc" onclick="pickSortDir('mp','asc')">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M7 10l5-5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Ascending
+              </button>
+              <button type="button" class="sort-dir-chip" data-dir="desc" onclick="pickSortDir('mp','desc')">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M7 14l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Descending
+              </button>
+            </div>
+          </div>
+          <div class="sort-panel-section">
+            <div class="modal-label">Sort by</div>
+            <div class="sort-radio-list" id="sort-radio-list-mp" role="radiogroup" aria-label="Sort by"></div>
+          </div>
+        </div>
+        <div class="filter-panel-footer sort-panel-footer--apply">
+          <button type="button" class="btn-block" onclick="applySortPanel('mp')">Apply</button>
         </div>
       </div>
     </aside>
@@ -1471,6 +1875,18 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
         </div>
       </div>
     </div>
+    </div>
+    <div class="table-list-controls" id="table-list-controls-mp">
+      <div class="mobile-sel-bar" id="mobile-sel-bar-mp" hidden>
+        <div class="checkbox" id="cb-all-mobile-mp" role="checkbox" tabindex="0" aria-label="Select all" onclick="selAllMP()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selAllMP();}"></div>
+        <button type="button" class="mobile-sel-bar__label" onclick="selAllMP()">Select all</button>
+      </div>
+      <div class="date-range-wrap date-range-wrap--table">
+        <button type="button" class="date-range" id="date-trigger-mp-mobile" aria-haspopup="dialog" aria-expanded="false" aria-controls="date-panel-mp" onclick="toggleDatePopover('mp')">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><rect x="2.5" y="3.5" width="13" height="12" rx="2"/><path d="M2.5 7.5h13M6 2v3M12 2v3"/></svg>
+          <span class="dr-text"><span class="dr-label">Next pay</span><span class="dr-value">25.02.2026 — 03.03.2026</span></span>
+        </button>
+      </div>
     </div>
     <div class="mp-layout__body">
     <div class="table-card">
@@ -1680,22 +2096,15 @@ function _applyRebateEditFooter(){
 function _rebateHasAccruedSelection(){
   return !!document.querySelector('#rebate-accrued-radios input:checked');
 }
-function _rebateFieldsChanged(){
-  if(!_rebateEditBaseline)return false;
-  const s=_rebateEditState();
-  const b=_rebateEditBaseline;
-  return _normalizePct(s.pct)!==b.pct||s.confirmType!==b.confirmType;
-}
 function _updRebateEditFooter(){
   const pauseBtn=document.getElementById('rebate-pause-btn');
   const confirmBtn=document.getElementById('rebate-confirm-edit');
   const isResume=_rebateCtx.verb==='Resume';
   const hasRadio=_rebateHasAccruedSelection();
-  const fieldsChanged=_rebateFieldsChanged();
   if(pauseBtn&&!pauseBtn.hidden)pauseBtn.disabled=!hasRadio;
   if(confirmBtn){
     if(isResume)confirmBtn.disabled=false;
-    else confirmBtn.disabled=!hasRadio||!fieldsChanged;
+    else confirmBtn.disabled=!hasRadio;
   }
 }
 function _rebateEditState(){
@@ -1813,6 +2222,46 @@ function _mpPayoutMode(d){
   if(rs.includes('manual'))return 'manual';
   return 'other';
 }
+function syncStatBannersDeltaLayout(root){
+  if(!root)return;
+  let stacked=false;
+  root.querySelectorAll('.stat-banner__value-row').forEach(row=>{
+    const value=row.querySelector('.stat-banner__value');
+    const delta=row.querySelector('.stat-banner__delta');
+    if(!value||!delta||!String(delta.textContent||'').trim())return;
+    const cs=getComputedStyle(row);
+    const gap=parseFloat(cs.columnGap||cs.gap)||8;
+    if(value.scrollWidth+gap+delta.scrollWidth>row.clientWidth+1)stacked=true;
+  });
+  root.classList.toggle('stat-banners--delta-stacked',stacked);
+}
+function syncStatBannersLayout(){
+  document.querySelectorAll('.stat-banners').forEach(syncStatBannersDeltaLayout);
+}
+let _statBannersRo=null;
+function initStatBannersLayoutSync(){
+  syncStatBannersLayout();
+  if(_statBannersRo)return;
+  if(typeof ResizeObserver!=='undefined'){
+    _statBannersRo=new ResizeObserver(syncStatBannersLayout);
+    document.querySelectorAll('.stat-banners').forEach(root=>{
+      _statBannersRo.observe(root);
+      root.querySelectorAll('.stat-banner').forEach(el=>_statBannersRo.observe(el));
+    });
+  }
+  window.addEventListener('resize',syncStatBannersLayout);
+}
+function setMPNextHintSplit(manualCount,autoModeCount){
+  const el=document.getElementById('mp-stat-next-hint');
+  if(!el)return;
+  if(!manualCount&&!autoModeCount){
+    el.textContent='';
+    el.className='stat-banner__hint';
+    return;
+  }
+  el.className='stat-banner__hint stat-banner__hint--split';
+  el.innerHTML=`<span class="stat-banner__hint-part">${manualCount} manual</span><span class="stat-banner__hint-sep" aria-hidden="true"> · </span><span class="stat-banner__hint-part">${autoModeCount} automatic</span>`;
+}
 function updateMPStatBanners(){
   const data=getMPFilteredData();
   const n=data.length;
@@ -1833,7 +2282,8 @@ function updateMPStatBanners(){
     set('mp-stat-next-delta','');
     set('mp-stat-paid-hint','No payments match filters');
     set('mp-stat-accrued-hint','');
-    set('mp-stat-next-hint','');
+    setMPNextHintSplit(0,0);
+    syncStatBannersLayout();
     return;
   }
   const avgAccrued=n?totalAccrued/n:0;
@@ -1847,7 +2297,8 @@ function updateMPStatBanners(){
     else paidHint.innerHTML=MP_OP_HISTORY_LINK;
   }
   set('mp-stat-accrued-hint',filtered?`${n} in view`:`${accruedClients} client${accruedClients===1?'':'s'} with profit`);
-  set('mp-stat-next-hint',`${manualCount} manual · ${autoModeCount} automatic`);
+  setMPNextHintSplit(manualCount,autoModeCount);
+  syncStatBannersLayout();
 }
 function calcPrev(currentStr,pctStr,tc){const cur=_num(currentStr);const pct=parseFloat(pctStr)/100||0;let prev;if(tc==='trend-up')prev=cur/(1+pct);else if(tc==='trend-down')prev=cur/(1-pct);else prev=cur;const isDollar=String(currentStr).includes('$');return(isDollar?'$':'')+prev.toFixed(2)}
 function calcDelta(currentStr,pctStr,tc){const cur=_num(currentStr);const pct=parseFloat(pctStr)/100||0;let prev;if(tc==='trend-up')prev=cur/(1+pct);else if(tc==='trend-down')prev=cur/(1-pct);else prev=cur;const diff=cur-prev;const isDollar=String(currentStr).includes('$');const sign=diff>0?'+':diff<-0.005?'−':'';return sign+(isDollar?'$':'')+Math.abs(diff).toFixed(2)}
@@ -1940,9 +2391,190 @@ function mpRowAction(action,name){
   showToast(msgs[action]||'Done','positive');
 }
 const NUMERIC_KEYS=new Set(['pr','lo','pd','ac','np']);
+const TH_SORT_ICON='<span class="th-sort__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><g transform="scale(0.025) translate(0, 960)"><path class="th-sort__part th-sort__part--up" d="M480-120 300-300l58-58 122 122 122-122 58 58-180 180"/><path class="th-sort__part th-sort__part--down" d="M358-598l-58-58 180-180 180 180-58 58-122-122-122 122Z"/></g></svg></span>';
 function _sortValue(d,k){const v=d[k];if(NUMERIC_KEYS.has(k))return _num(v);return String(v==null?'':v).toLowerCase()}
 function _sortCompare(a,b,key,dir){const va=_sortValue(a,key),vb=_sortValue(b,key);if(va<vb)return dir==='asc'?-1:1;if(va>vb)return dir==='asc'?1:-1;return 0}
-function _applySortVisual(kind){const s=SORT_STATE[kind];const selector=kind==='main'?'#tbl-main thead th.th-sortable':'#s-manage .tbl thead th.th-sortable';document.querySelectorAll(selector).forEach(th=>{const active=th.dataset.sortKey===s.key&&s.dir;th.classList.remove('th-sort--idle','th-sort--asc','th-sort--desc');if(active){th.classList.add(s.dir==='asc'?'th-sort--asc':'th-sort--desc');th.setAttribute('aria-sort',s.dir==='asc'?'ascending':'descending');}else{th.classList.add('th-sort--idle');th.setAttribute('aria-sort','none');}const up=th.querySelector('.th-sort__part--up');const down=th.querySelector('.th-sort__part--down');if(up)up.classList.toggle('th-sort__part--active',!!(active&&s.dir==='asc'));if(down)down.classList.toggle('th-sort__part--active',!!(active&&s.dir==='desc'));});}
+function _syncSortControl(el,s){
+  if(!el)return;
+  const key=el.dataset.sortKey;
+  const active=key===s.key&&s.dir;
+  el.classList.remove('th-sort--idle','th-sort--asc','th-sort--desc');
+  if(active){
+    el.classList.add(s.dir==='asc'?'th-sort--asc':'th-sort--desc');
+    el.setAttribute('aria-sort',s.dir==='asc'?'ascending':'descending');
+  }else{
+    el.classList.add('th-sort--idle');
+    el.setAttribute('aria-sort','none');
+  }
+  const up=el.querySelector('.th-sort__part--up');
+  const down=el.querySelector('.th-sort__part--down');
+  if(up)up.classList.toggle('th-sort__part--active',!!(active&&s.dir==='asc'));
+  if(down)down.classList.toggle('th-sort__part--active',!!(active&&s.dir==='desc'));
+}
+function _applySortVisual(kind){
+  const s=SORT_STATE[kind];
+  const thSel=kind==='main'?'#tbl-main thead th.th-sortable':'#s-manage .tbl thead th.th-sortable';
+  document.querySelectorAll(thSel).forEach(el=>_syncSortControl(el,s));
+  _updateSortTrigger(kind);
+}
+const SORT_DRAFT={main:{key:null,dir:'asc',chipDir:'asc'},mp:{key:null,dir:'asc',chipDir:'asc'}};
+const SORT_RADIO_OFF='<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#6F6F6F"/></svg>';
+const SORT_RADIO_ON='<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM10 18C5.58 18 2 14.42 2 10C2 5.58 5.58 2 10 2C14.42 2 18 5.58 18 10C18 14.42 14.42 18 10 18Z" fill="#161616"/><path d="M10 15C12.7614 15 15 12.7614 15 10C15 7.23858 12.7614 5 10 5C7.23858 5 5 7.23858 5 10C5 12.7614 7.23858 15 10 15Z" fill="#161616"/></svg>';
+function _sortThMeta(kind,key){
+  const tableSel=kind==='main'?'#tbl-main':'#s-manage .tbl';
+  const th=document.querySelector(`${tableSel} thead th.th-sortable[data-sort-key="${key}"]`);
+  if(!th)return{label:key,sub:''};
+  const label=th.querySelector('.th-label')?.textContent?.trim()||key;
+  const sub=th.querySelector('.sub')?.textContent?.trim()||'';
+  return{label,sub};
+}
+function _sortDirSuffix(key,dir){
+  const textKeys=new Set(['n']);
+  const dateKeys=new Set(['act','pd','ac','np']);
+  if(textKeys.has(key))return dir==='asc'?'A - Z':'Z - A';
+  if(dateKeys.has(key))return dir==='asc'?'Old - New':'New - Old';
+  return dir==='asc'?'Low - High':'High - Low';
+}
+function _sortNaturalDir(key){
+  return key==='n'?'asc':'desc';
+}
+function _sortDirFromChip(key,chipDir){
+  const natural=_sortNaturalDir(key);
+  return chipDir==='asc'?natural:(natural==='asc'?'desc':'asc');
+}
+function _sortChipFromApplied(key,dir){
+  return _sortDirFromChip(key,'asc')===dir?'asc':'desc';
+}
+function _sortPanelOptionLabel(kind,key,chipDir){
+  return _sortOptionLabel(kind,key,_sortDirFromChip(key,chipDir));
+}
+function _sortOptionLabel(kind,key,dir){
+  const{label,sub}=_sortThMeta(kind,key);
+  const name=(key==='act'&&sub)?sub:label;
+  return `${name}, ${_sortDirSuffix(key,dir||'asc')}`;
+}
+function _formatSortCurrent(kind,key,dir){
+  const tableSel=kind==='main'?'#tbl-main':'#s-manage .tbl';
+  const firstKey=document.querySelector(`${tableSel} thead th.th-sortable`)?.dataset.sortKey||'n';
+  const activeKey=key&&dir?key:firstKey;
+  const activeDir=key&&dir?dir:_sortNaturalDir(firstKey);
+  return _sortOptionLabel(kind,activeKey,activeDir);
+}
+function _updateSortTrigger(kind){
+  const btn=document.getElementById('sort-btn-'+kind);
+  const labelEl=document.getElementById('sort-btn-label-'+kind);
+  const sub=document.getElementById('sort-panel-subtitle-'+kind);
+  const s=SORT_STATE[kind];
+  const tableSel=kind==='main'?'#tbl-main':'#s-manage .tbl';
+  const firstKey=document.querySelector(`${tableSel} thead th.th-sortable`)?.dataset.sortKey||'n';
+  const activeKey=s.key&&s.dir?s.key:firstKey;
+  const activeDir=s.key&&s.dir?s.dir:_sortNaturalDir(firstKey);
+  const label=_sortOptionLabel(kind,activeKey,activeDir);
+  if(labelEl)labelEl.textContent=label;
+  if(sub)sub.textContent='Current: '+label;
+  if(btn)btn.classList.toggle('has-sort',!!(s.key&&s.dir));
+}
+function _syncSortPanelDraftUI(kind){
+  const draft=SORT_DRAFT[kind];
+  const panel=document.getElementById('sort-panel-'+kind);
+  if(!panel)return;
+  const tableSel=kind==='main'?'#tbl-main':'#s-manage .tbl';
+  const firstKey=document.querySelector(`${tableSel} thead th.th-sortable`)?.dataset.sortKey||'n';
+  const chipDir=draft.chipDir||'asc';
+  const key=draft.key||firstKey;
+  panel.querySelectorAll('.sort-dir-chip').forEach(chip=>{
+    const on=chip.dataset.dir===chipDir;
+    chip.classList.toggle('sel',on);
+    chip.setAttribute('aria-pressed',String(on));
+  });
+  panel.querySelectorAll('.sort-radio-row').forEach(row=>{
+    const input=row.querySelector('input');
+    const labelEl=row.querySelector('.sort-radio-label');
+    const rowKey=input.value;
+    if(labelEl)labelEl.textContent=_sortPanelOptionLabel(kind,rowKey,chipDir);
+    input.checked=rowKey===key;
+  });
+  draft.dir=_sortDirFromChip(key,chipDir);
+  const sub=document.getElementById('sort-panel-subtitle-'+kind);
+  if(sub){
+    const applied=SORT_STATE[kind];
+    sub.textContent='Current: '+_formatSortCurrent(kind,applied.key,applied.dir);
+  }
+}
+function _initSortPanel(kind){
+  const listId=kind==='main'?'sort-radio-list-main':'sort-radio-list-mp';
+  const list=document.getElementById(listId);
+  if(!list||list._built)return;
+  const tableSel=kind==='main'?'#tbl-main':'#s-manage .tbl';
+  const ths=document.querySelectorAll(`${tableSel} thead th.th-sortable`);
+  if(!ths.length)return;
+  list._built=true;
+  list.innerHTML='';
+  ths.forEach(th=>{
+    const key=th.dataset.sortKey;
+    const row=document.createElement('label');
+    row.className='sort-radio-row';
+    row.innerHTML=`<input type="radio" name="sort-key-${kind}" value="${key}" onchange="pickSortKey('${kind}','${key}')"><span class="sort-radio-icon" aria-hidden="true"><span class="radio-off">${SORT_RADIO_OFF}</span><span class="radio-on">${SORT_RADIO_ON}</span></span><span class="sort-radio-label"></span>`;
+    list.appendChild(row);
+  });
+  _syncSortPanelDraftUI(kind);
+}
+function _initSortPanels(){
+  _initSortPanel('main');
+  _initSortPanel('mp');
+  _applySortVisual('main');
+  _applySortVisual('mp');
+}
+function pickSortDir(kind,chipDir){
+  const draft=SORT_DRAFT[kind];
+  draft.chipDir=chipDir;
+  _syncSortPanelDraftUI(kind);
+}
+function pickSortKey(kind,key){
+  SORT_DRAFT[kind].key=key;
+  _syncSortPanelDraftUI(kind);
+}
+function _closeOpenSortPanel(){
+  document.querySelectorAll('.sort-panel.open').forEach(p=>{
+    const kind=p.id.replace('sort-panel-','');
+    toggleSortPanel(kind);
+  });
+}
+function toggleSortPanel(kind){
+  const panel=document.getElementById('sort-panel-'+kind);
+  const btn=document.getElementById('sort-btn-'+kind);
+  const back=document.getElementById('sort-backdrop-'+kind);
+  if(!panel)return;
+  const willOpen=!panel.classList.contains('open');
+  if(willOpen){
+    _closeOpenDatePanel();
+    _closeOpenRebatePanel();
+    const fp=document.getElementById('filter-panel-'+kind);
+    if(fp&&fp.classList.contains('open'))toggleFilterPanel(kind);
+    const s=SORT_STATE[kind];
+    const tableSel=kind==='main'?'#tbl-main':'#s-manage .tbl';
+    const firstKey=document.querySelector(`${tableSel} thead th.th-sortable`)?.dataset.sortKey||'n';
+    if(s.key&&s.dir){
+      SORT_DRAFT[kind]={key:s.key,dir:s.dir,chipDir:_sortChipFromApplied(s.key,s.dir)};
+    }else{
+      SORT_DRAFT[kind]={key:firstKey,dir:_sortDirFromChip(firstKey,'asc'),chipDir:'asc'};
+    }
+    _syncSortPanelDraftUI(kind);
+  }
+  panel.classList.toggle('open',willOpen);
+  if(btn){btn.classList.toggle('active',willOpen);btn.setAttribute('aria-expanded',String(willOpen));}
+  if(back)back.classList.toggle('open',willOpen);
+  _syncSheetScrollLock();
+  requestAnimationFrame(_refreshTableScrollState);
+}
+function applySortPanel(kind){
+  const draft=SORT_DRAFT[kind];
+  SORT_STATE[kind].key=draft.key;
+  SORT_STATE[kind].dir=draft.dir;
+  _applySortVisual(kind);
+  if(kind==='main')render();else renderMP();
+  toggleSortPanel(kind);
+}
 document.querySelectorAll('th.th-sortable').forEach(th=>{th.setAttribute('tabindex','0');th.setAttribute('role','button');th.setAttribute('aria-sort','none');});
 function sortBy(kind,key){const s=SORT_STATE[kind];if(s.key===key){s.dir=s.dir==='asc'?'desc':s.dir==='desc'?null:'asc';if(s.dir===null)s.key=null;}else{s.key=key;s.dir='asc';}_applySortVisual(kind);if(kind==='main')render();else renderMP();}
 document.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const th=e.target.closest&&e.target.closest('th.th-sortable');if(!th)return;e.preventDefault();const kind=th.closest('#tbl-main')?'main':'mp';sortBy(kind,th.dataset.sortKey);});
@@ -1970,7 +2602,10 @@ function render(){
     };
     const hasNarrowing=q||_countActiveFilters('main')>0;
     const c=hasNarrowing?cfg.nothing:(cfg[curF]||cfg.all);
-    document.getElementById('e-title').textContent=c.t;document.getElementById('e-desc').textContent=c.d;document.getElementById('e-btns').innerHTML=c.btns;return;}
+    document.getElementById('e-title').textContent=c.t;document.getElementById('e-desc').textContent=c.d;document.getElementById('e-btns').innerHTML=c.btns;
+    _syncCbAllState(['cb-all','cb-all-mobile-main'],[],DATA,sel);
+    _toggleMobileSelBar('mobile-sel-bar-main',false);
+    return;}
   tbl.style.display='table';eb.style.display='none';
   tb.innerHTML=f.map((d,i)=>{
     const isSetup=d.f==='setup';
@@ -1982,12 +2617,12 @@ function render(){
     const trCls=[sel.has(di)?'selected':'',d.alert?'row-affected':''].filter(Boolean).join(' ');
     const dividerHTML=(PIN_STATE.main&&pinDividerAt>0&&i===pinDividerAt)?`<tr class="pinned-divider" aria-hidden="true"><td colspan="7"><span class="pd-label">All clients</span></td></tr>`:'';
     return dividerHTML+`<tr class="${trCls}" onclick="togRow(${di})">
-    <td><div class="checkbox${sel.has(di)?' checked':''}" onclick="event.stopPropagation();togRow(${di})"></div></td>
+    <td><div class="checkbox${sel.has(di)?' checked':''}" role="checkbox" aria-checked="${sel.has(di)?'true':'false'}" tabindex="0" onclick="event.stopPropagation();togRow(${di})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();togRow(${di});}"></div></td>
     <td><div class="client-name">${d.n}${_alertBadgeHTML(d)}</div><div class="client-sub">${d.s}</div></td>
-    <td>${d.pr}<div class="td-trend"><span class="trend ${d.tc}" ${trendDataAttrs(d.pr,d.tr,d.tc)}>${trendIcon(d.tc)}<span class="trend-num">${d.tr}</span></span></div></td>
-    <td>${d.lo}<div class="td-trend"><span class="trend ${d.vtc}" ${trendDataAttrs(d.lo,d.vtr,d.vtc)}>${trendIcon(d.vtc)}<span class="trend-num">${d.vtr}</span></span></div></td>
-    <td>${d.act}<div class="td-sub">${d.dt}</div></td>
-    <td>${d.rs}<div class="td-sub">${d.rp}</div></td>
+    <td><span class="card-metric-label">IB profit</span><div class="card-metric-body card-metric-body--kpi"><div class="card-metric-value-row"><span class="card-metric-value">${d.pr}</span><span class="td-trend"><span class="trend ${d.tc}" ${trendDataAttrs(d.pr,d.tr,d.tc)}>${trendIcon(d.tc)}<span class="trend-num">${d.tr}</span></span></span></div></div></td>
+    <td><span class="card-metric-label">Traded lots</span><div class="card-metric-body card-metric-body--kpi"><div class="card-metric-value-row"><span class="card-metric-value">${d.lo}</span><span class="td-trend"><span class="trend ${d.vtc}" ${trendDataAttrs(d.lo,d.vtr,d.vtc)}>${trendIcon(d.vtc)}<span class="trend-num">${d.vtr}</span></span></span></div></div></td>
+    <td><span class="card-metric-label">Activity</span><div class="card-metric-body card-metric-body--detail"><span class="card-metric-value card-metric-value--detail">${d.act}</span><div class="td-sub">${d.dt}</div></div></td>
+    <td><span class="card-metric-label">Rebate settings</span><div class="card-metric-body card-metric-body--detail"><span class="card-metric-value card-metric-value--detail">${d.rs}</span><div class="td-sub">${d.rp}</div></div></td>
     <td><span class="status-default"><span class="tag ${d.sc}">${d.st}</span></span>
     <div class="row-actions">
       <button class="btn-sm ${rowBtnClass}" onclick="event.stopPropagation();openRebateForIndex(${di})">${rowBtnLabel}</button>
@@ -2000,9 +2635,9 @@ function render(){
         <button type="button" class="ram-item" role="menuitem" onclick="event.stopPropagation();closeRowMenus()"><span class="ram-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g transform="translate(2 2)"><path d="M9.10899 5.54601C9 5.75992 9 6.03995 9 6.6V7H9.4C9.96005 7 10.2401 7 10.454 6.89101C10.6422 6.79513 10.7951 6.64215 10.891 6.45399C11 6.24008 11 5.96005 11 5.4V5H10.6C10.0399 5 9.75992 5 9.54601 5.10899C9.35785 5.20487 9.20487 5.35785 9.10899 5.54601Z"/><path d="M11 13.4C11 13.9601 11 14.2401 10.891 14.454C10.7951 14.6422 10.6422 14.7951 10.454 14.891C10.2401 15 9.96005 15 9.4 15H9V11H8V10.6C8 10.0399 8 9.75992 8.10899 9.54601C8.20487 9.35785 8.35785 9.20487 8.54601 9.10899C8.66476 9.04849 8.83203 9.01172 9.05469 9.00391L11 9V13.4Z"/><path fill-rule="evenodd" clip-rule="evenodd" d="M20 10C20 15.5228 15.5228 20 10 20C4.47715 20 0 15.5228 0 10C0 4.47715 4.47715 0 10 0C15.5228 0 20 4.47715 20 10ZM18 10C18 14.4183 14.4183 18 10 18C5.58172 18 2 14.4183 2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10Z"/></g></svg></span>Client info</button>
         <button type="button" class="ram-item" role="menuitem" onclick="event.stopPropagation();closeRowMenus()"><span class="ram-icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><g transform="translate(2 2)"><path d="M8.67572 10.9213V0H9.67572C10.228 0 10.6757 0.447715 10.6757 1V12.5859L10.6302 12.6314L8.67572 10.9213Z"/><path d="M6.67572 9.17129V4H4.67572V10.9768L6.66021 9.15771L6.67572 9.17129Z"/><path d="M2.67572 8V12.8102L0.67572 14.6435V9C0.67572 8.44772 1.12344 8 1.67572 8H2.67572Z"/><path d="M16.2615 10H13.6757C13.1234 10 12.6757 9.55228 12.6757 9V8H19.6757V15H18.6757C18.1234 15 17.6757 14.5523 17.6757 14V11.4142L10.7213 18.3686L6.69124 14.8423L1.35145 19.7371L0 18.2628L6.66021 12.1576L10.6302 15.6313L16.2615 10Z"/></g></svg></span>Open statistics</button>
       </div>
-    </div></td></tr>`}).join('');
-  const cbAll=document.getElementById('cb-all');
-  if(cbAll){cbAll.classList.remove('checked','indeterminate');if(f.length){if(sel.size===f.length)cbAll.classList.add('checked');else if(sel.size>0)cbAll.classList.add('indeterminate');}}
+    </div></td></tr>`  }).join('');
+  _syncCbAllState(['cb-all','cb-all-mobile-main'],f,DATA,sel);
+  _toggleMobileSelBar('mobile-sel-bar-main',true);
   requestAnimationFrame(_refreshTableScrollState);
 }
 
@@ -2026,6 +2661,8 @@ function renderMP(){
     }
     const cbAllEmpty=document.getElementById('cb-all-mp');
     if(cbAllEmpty)cbAllEmpty.classList.remove('checked','indeterminate');
+    _syncCbAllState(['cb-all-mp','cb-all-mobile-mp'],[],MP,selMP);
+    _toggleMobileSelBar('mobile-sel-bar-mp',false);
     updateFilterFootprint('mp');
     return;
   }
@@ -2036,42 +2673,52 @@ function renderMP(){
     const trCls=[selMP.has(di)?'selected':'',d.alert?'row-affected':''].filter(Boolean).join(' ');
     const dividerHTML=(PIN_STATE.mp&&pinDividerAtMP>0&&i===pinDividerAtMP)?`<tr class="pinned-divider" aria-hidden="true"><td colspan="7"><span class="pd-label">All clients</span></td></tr>`:'';
     return dividerHTML+`<tr class="${trCls}" onclick="togRowMP(${di})">
-    <td><div class="checkbox${selMP.has(di)?' checked':''}" onclick="event.stopPropagation();togRowMP(${di})"></div></td>
+    <td><div class="checkbox${selMP.has(di)?' checked':''}" role="checkbox" aria-checked="${selMP.has(di)?'true':'false'}" tabindex="0" onclick="event.stopPropagation();togRowMP(${di})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();togRowMP(${di});}"></div></td>
     <td><div class="client-name">${d.n}${_alertBadgeHTML(d)}</div><div class="client-sub">${d.s}</div></td>
-    <td>${d.pd}<div class="td-sub">${d.fr}</div></td>
-    <td>${d.ac}<div class="td-sub">${d.af}</div></td>
-    <td>${d.rs}<div class="td-sub">${d.rp}</div></td>
-    <td>${d.np}<div class="td-sub">${d.nd}</div></td>
+    <td><span class="card-metric-label">Paid this period</span><div class="card-metric-body card-metric-body--detail"><span class="card-metric-value card-metric-value--detail">${d.pd}</span><div class="td-sub">${d.fr}</div></div></td>
+    <td><span class="card-metric-label">Accrued</span><div class="card-metric-body card-metric-body--detail"><span class="card-metric-value card-metric-value--detail">${d.ac}</span><div class="td-sub">${d.af}</div></div></td>
+    <td><span class="card-metric-label">Rebate settings</span><div class="card-metric-body card-metric-body--detail"><span class="card-metric-value card-metric-value--detail">${d.rs}</span><div class="td-sub">${d.rp}</div></div></td>
+    <td><span class="card-metric-label">Next payment</span><div class="card-metric-body card-metric-body--detail"><span class="card-metric-value card-metric-value--detail">${d.np}</span><div class="td-sub">${d.nd}</div></div></td>
     <td><span class="status-default"><span class="tag ${d.pc}">${d.ps}</span></span>${_mpRowActionsHTML(d,di)}</td>
   </tr>`}).join('');
-  const cbAll=document.getElementById('cb-all-mp');
-  if(cbAll){
-    cbAll.classList.remove('checked','indeterminate');
-    if(data.length){
-      const visible=data.map(d=>MP.indexOf(d));
-      const selCount=visible.filter(di=>selMP.has(di)).length;
-      if(selCount===visible.length)cbAll.classList.add('checked');
-      else if(selCount>0)cbAll.classList.add('indeterminate');
-    }
-  }
+  _syncCbAllState(['cb-all-mp','cb-all-mobile-mp'],data,MP,selMP);
+  _toggleMobileSelBar('mobile-sel-bar-mp',true);
   updateFilterFootprint('mp');
   requestAnimationFrame(_refreshTableScrollState);
 }
 
-function openSearch(kind){
+function _isMobileSearchLayout(){return window.matchMedia('(max-width:640px)').matches;}
+function _searchFieldEl(kind){
   const wrap=document.getElementById('search-wrap-'+kind);
-  if(!wrap)return;
-  wrap.classList.add('is-open');
-  wrap.querySelector('.search-input').classList.add('open');
-  const inp=wrap.querySelector('input');
-  setTimeout(()=>inp.focus(),0);
+  const panel=document.getElementById('page-header-search-'+kind);
+  return wrap?.querySelector('.search-input')||panel?.querySelector('.search-input');
+}
+function _mountSearchField(kind,open){
+  const wrap=document.getElementById('search-wrap-'+kind);
+  const panel=document.getElementById('page-header-search-'+kind);
+  const field=_searchFieldEl(kind);
+  if(!wrap||!field)return;
+  if(_isMobileSearchLayout()&&panel){
+    if(field.parentElement!==panel)panel.appendChild(field);
+    panel.hidden=!open;
+    wrap.classList.toggle('is-open',open);
+    field.classList.toggle('open',open);
+  }else{
+    if(field.parentElement!==wrap)wrap.appendChild(field);
+    if(panel)panel.hidden=true;
+    wrap.classList.toggle('is-open',open);
+    field.classList.toggle('open',open);
+  }
+}
+function openSearch(kind){
+  _mountSearchField(kind,true);
+  const inp=document.getElementById('search-input-'+kind);
+  if(inp)setTimeout(()=>inp.focus(),0);
 }
 function closeSearch(kind){
-  const wrap=document.getElementById('search-wrap-'+kind);
-  if(!wrap)return;
-  wrap.classList.remove('is-open');
-  wrap.querySelector('.search-input').classList.remove('open');
-  const inp=wrap.querySelector('input');
+  _mountSearchField(kind,false);
+  const inp=document.getElementById('search-input-'+kind);
+  if(!inp)return;
   inp.value='';
   if(kind==='main'){searchQ='';render();}else{searchQMP='';renderMP();}
 }
@@ -2277,11 +2924,35 @@ function fltMP(el){
 }
 function togRow(i){sel.has(i)?sel.delete(i):sel.add(i);updBB();render();}
 function togRowMP(i){selMP.has(i)?selMP.delete(i):selMP.add(i);updBBMP();renderMP();}
+function _getMainVisibleRows(){
+  const q=searchQ.trim().toLowerCase();
+  const base=curF==='all'?DATA:DATA.filter(d=>d.f===curF);
+  let f=q?base.filter(d=>(d.n||'').toLowerCase().includes(q)||(d.s||'').toLowerCase().includes(q)):base.slice();
+  return _applyPanelFilters(f,'main');
+}
+function _syncCbAllState(cbIds,filteredRows,dataArray,selectionSet){
+  const visibleIndices=filteredRows.map(d=>dataArray.indexOf(d));
+  const selCount=visibleIndices.filter(di=>selectionSet.has(di)).length;
+  const total=visibleIndices.length;
+  const state=total===0?'none':selCount===total?'checked':selCount>0?'indeterminate':'none';
+  cbIds.forEach(id=>{
+    const cb=document.getElementById(id);
+    if(!cb)return;
+    cb.classList.remove('checked','indeterminate');
+    if(state==='checked')cb.classList.add('checked');
+    else if(state==='indeterminate')cb.classList.add('indeterminate');
+    if(cb.getAttribute('role')==='checkbox')cb.setAttribute('aria-checked',state==='checked'?'true':state==='indeterminate'?'mixed':'false');
+  });
+}
+function _toggleMobileSelBar(barId,show){
+  const bar=document.getElementById(barId);
+  if(bar)bar.hidden=!show;
+}
 function selAll(){
-  /* Select-all in the table header toggles selection of rows visible in the current chip filter only. Uses DATA indices to interop with sel (which is keyed by DATA index since multi-filter persistence). When all currently-visible rows are already selected, the toggle clears just that subset. */
-  const visible=[];
-  DATA.forEach((d,di)=>{if(curF==='all'||d.f===curF)visible.push(di);});
-  const allSel=visible.every(di=>sel.has(di));
+  /* Toggle selection for every row currently visible (chip + search + panel filters). */
+  const f=_getMainVisibleRows();
+  const visible=f.map(d=>DATA.indexOf(d));
+  const allSel=visible.length>0&&visible.every(di=>sel.has(di));
   if(allSel)visible.forEach(di=>sel.delete(di));
   else visible.forEach(di=>sel.add(di));
   updBB();render();
@@ -2377,7 +3048,8 @@ function closeModal(id){
 function openRebatePanel(){
   /* Opening the rebate panel and the filters / date panels simultaneously would shrink the table-card below its min-width and force horizontal scrolling, so we close any open left-side panel first. The rebate panel itself is anchored on the right of .table-layout and animates its width / opacity / margin-left in sync with .filter-panel for a consistent feel. */
   document.querySelectorAll('.date-panel.open').forEach(p=>toggleDatePopover(p.id.replace('date-panel-','')));
-  document.querySelectorAll('.filter-panel.open:not(.date-panel)').forEach(p=>toggleFilterPanel(p.id.replace('filter-panel-','')));
+  _closeOpenSortPanel();
+  document.querySelectorAll('.filter-panel.open:not(.date-panel):not(.sort-panel)').forEach(p=>toggleFilterPanel(p.id.replace('filter-panel-','')));
   const panel=document.getElementById('rebate-panel-main');
   if(!panel)return;
   const titleEl=document.getElementById('rebate-panel-title');
@@ -2385,12 +3057,14 @@ function openRebatePanel(){
   _applyRebatePanelMode();
   panel.classList.add('open');
   panel.setAttribute('aria-hidden','false');
+  _syncSheetScrollLock();
 }
 function closeRebatePanel(){
   const panel=document.getElementById('rebate-panel-main');
   if(!panel)return;
   panel.classList.remove('open');
   panel.setAttribute('aria-hidden','true');
+  _syncSheetScrollLock();
 }
 function _closeOpenDatePanel(){
   const dp=document.querySelector('.date-panel.open');
@@ -2399,7 +3073,7 @@ function _closeOpenDatePanel(){
   toggleDatePopover(k);
 }
 function _closeOpenFilterPanel(){
-  const fp=document.querySelector('.filter-panel.open:not(.date-panel)');
+  const fp=document.querySelector('.filter-panel.open:not(.date-panel):not(.sort-panel)');
   if(!fp)return;
   const k=fp.id.replace('filter-panel-','');
   toggleFilterPanel(k);
@@ -2410,16 +3084,42 @@ function _closeOpenRebatePanel(){
   if(!rp)return;
   closeRebatePanel();
 }
+let _sheetScrollY=0;
+function _isSheetViewport(){return window.matchMedia('(max-width:1024px)').matches;}
+function _anySheetOpen(){
+  return !!document.querySelector('.filter-backdrop.open,.filter-panel.open,.rebate-panel.open');
+}
+function _syncSheetScrollLock(){
+  if(!_isSheetViewport())return;
+  const shouldLock=_anySheetOpen();
+  const locked=document.body.classList.contains('sheet-scroll-lock');
+  if(shouldLock&&!locked){
+    _sheetScrollY=window.scrollY||document.documentElement.scrollTop||0;
+    document.body.classList.add('sheet-scroll-lock');
+    document.body.style.top=`-${_sheetScrollY}px`;
+  }else if(!shouldLock&&locked){
+    document.body.classList.remove('sheet-scroll-lock');
+    document.body.style.top='';
+    window.scrollTo(0,_sheetScrollY);
+  }
+}
+function _onSheetTouchMove(e){
+  if(!document.body.classList.contains('sheet-scroll-lock'))return;
+  if(e.target.closest('.filter-panel.open,.rebate-panel.open,.sort-panel.open'))return;
+  e.preventDefault();
+}
+document.addEventListener('touchmove',_onSheetTouchMove,{passive:false});
 function toggleFilterPanel(kind){
   const panel=document.getElementById('filter-panel-'+kind);
   const btn=document.getElementById('filter-btn-'+kind);
   const back=document.getElementById('filter-backdrop-'+kind);
   if(!panel)return;
   const willOpen=!panel.classList.contains('open');
-  if(willOpen){_closeOpenDatePanel();_closeOpenRebatePanel();}
+  if(willOpen){_closeOpenDatePanel();_closeOpenRebatePanel();_closeOpenSortPanel();}
   panel.classList.toggle('open',willOpen);
   if(btn){btn.classList.toggle('active',willOpen);btn.setAttribute('aria-expanded',String(willOpen));}
   if(back)back.classList.toggle('open',willOpen);
+  _syncSheetScrollLock();
   requestAnimationFrame(_refreshTableScrollState);
 }
 
@@ -2452,11 +3152,129 @@ function _bindTableScrollObservers(){
     });
   });
 }
-window.addEventListener('resize',_refreshTableScrollState);
+function _updateHorizontalScrollable(el,scrollableClass){
+  if(!el||!scrollableClass)return;
+  el.classList.toggle(scrollableClass,el.scrollWidth>el.clientWidth+1);
+}
+function _updateChipsScrollable(el){
+  _updateHorizontalScrollable(el,'is-chips-scrollable');
+}
+function _updateStatBannersScrollable(el){
+  _updateHorizontalScrollable(el,'is-stat-banners-scrollable');
+}
+function _bindHorizontalDragScroll(el,opts){
+  const scrollableClass=opts.scrollableClass||'is-chips-scrollable';
+  const draggingClass=opts.draggingClass||'is-chips-dragging';
+  const onTap=opts.onTap;
+  if(el._hDragScrollBound)return;
+  el._hDragScrollBound=true;
+  _updateHorizontalScrollable(el,scrollableClass);
+  let pid=null,startX=0,startY=0,startScroll=0,dragged=false;
+  el.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    if(el.scrollWidth<=el.clientWidth+1)return;
+    pid=e.pointerId;
+    startX=e.clientX;
+    startY=e.clientY;
+    startScroll=el.scrollLeft;
+    dragged=false;
+  });
+  const endDrag=e=>{
+    if(pid===null||e.pointerId!==pid)return;
+    if(dragged){
+      el._suppressDragScrollClick=true;
+    }else if(onTap){
+      onTap(el,e);
+      el._suppressDragScrollClick=true;
+    }
+    pid=null;
+    dragged=false;
+    el.classList.remove(draggingClass);
+    try{el.releasePointerCapture(e.pointerId);}catch(_){}
+  };
+  el.addEventListener('pointermove',e=>{
+    if(pid===null||e.pointerId!==pid)return;
+    const dx=e.clientX-startX;
+    const dy=e.clientY-startY;
+    if(!dragged){
+      if(Math.abs(dx)<=4||Math.abs(dx)<=Math.abs(dy))return;
+      dragged=true;
+      startX=e.clientX;
+      startScroll=el.scrollLeft;
+      el.classList.add(draggingClass);
+      try{el.setPointerCapture(e.pointerId);}catch(_){}
+    }
+    el.scrollLeft=startScroll-(e.clientX-startX);
+    e.preventDefault();
+  },{passive:false});
+  el.addEventListener('pointerup',endDrag);
+  el.addEventListener('pointercancel',endDrag);
+  el.addEventListener('click',e=>{
+    if(!el._suppressDragScrollClick)return;
+    el._suppressDragScrollClick=false;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  },true);
+  el.addEventListener('wheel',e=>{
+    if(el.scrollWidth<=el.clientWidth+1)return;
+    const delta=Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY;
+    if(!delta)return;
+    el.scrollLeft+=delta;
+    e.preventDefault();
+  },{passive:false});
+}
+function _bindChipsHorizontalScroll(){
+  const chipGroups=document.querySelectorAll('#chips,#mp-chips');
+  chipGroups.forEach(el=>{
+    _bindHorizontalDragScroll(el,{
+      scrollableClass:'is-chips-scrollable',
+      draggingClass:'is-chips-dragging',
+      onTap(el,e){
+        const chip=e.target.closest('.chip');
+        if(chip&&el.contains(chip)){
+          if(el.id==='mp-chips')fltMP(chip);
+          else flt(chip);
+        }
+      }
+    });
+  });
+  const statBanners=document.querySelectorAll('.stat-banners');
+  statBanners.forEach(el=>{
+    _bindHorizontalDragScroll(el,{
+      scrollableClass:'is-stat-banners-scrollable',
+      draggingClass:'is-stat-banners-dragging'
+    });
+  });
+  if(typeof ResizeObserver!=='undefined'){
+    const ro=new ResizeObserver(()=>{
+      chipGroups.forEach(_updateChipsScrollable);
+      statBanners.forEach(_updateStatBannersScrollable);
+    });
+    chipGroups.forEach(el=>ro.observe(el));
+    statBanners.forEach(root=>{
+      ro.observe(root);
+      root.querySelectorAll('.stat-banner').forEach(el=>ro.observe(el));
+    });
+  }
+}
+window.addEventListener('resize',()=>{
+  _refreshTableScrollState();
+  document.querySelectorAll('#chips,#mp-chips').forEach(_updateChipsScrollable);
+  document.querySelectorAll('.stat-banners').forEach(_updateStatBannersScrollable);
+  ['main','mp'].forEach(kind=>{
+    const wrap=document.getElementById('search-wrap-'+kind);
+    const panel=document.getElementById('page-header-search-'+kind);
+    if(!wrap)return;
+    const open=wrap.classList.contains('is-open')||!!(panel&&!panel.hidden);
+    if(open)_mountSearchField(kind,true);
+  });
+});
 document.addEventListener('DOMContentLoaded',()=>{
   _applyRebatePanelMode();
   _refreshTableScrollState();
   _bindTableScrollObservers();
+  _initSortPanels();
+  _bindChipsHorizontalScroll();
 });
 
 function _positionRowMenu(btn,menu){
@@ -2554,7 +3372,7 @@ function resetPanelFilters(kind){
   if(kind==='main')render();else renderMP();
   updateFilterFootprint(kind);
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){const rp=document.querySelector('.rebate-panel.open');if(rp){closeRebatePanel();return;}const dp=document.querySelector('.date-panel.open');if(dp){toggleDatePopover(dp.id.replace('date-panel-',''));return;}const p=document.querySelector('.filter-panel.open:not(.date-panel)');if(p){toggleFilterPanel(p.id.replace('filter-panel-',''));}}});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;const rp=document.querySelector('.rebate-panel.open');if(rp){closeRebatePanel();return;}const dp=document.querySelector('.date-panel.open');if(dp){toggleDatePopover(dp.id.replace('date-panel-',''));return;}const sp=document.querySelector('.sort-panel.open');if(sp){toggleSortPanel(sp.id.replace('sort-panel-',''));return;}const p=document.querySelector('.filter-panel.open:not(.date-panel):not(.sort-panel)');if(p){toggleFilterPanel(p.id.replace('filter-panel-',''));}});
 function confirmRebate(){
   closeModal('dlg-rebate');
   showToast(_rebateConfirmToastMsg(),'positive',{label:'Undo',onClick:()=>showToast('Rebate settings reverted','negative')});
@@ -2590,19 +3408,22 @@ const DATE_DEFAULTS={get main(){return _dpDefaults('main');},get mp(){return _dp
 function _dpFmt(d){const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0');return `${dd}.${mm}.${d.getFullYear()}`}
 function _dpAddDays(d,n){const r=new Date(d);r.setDate(r.getDate()+n);return r}
 let _dpOpenId=null;
+function _dateTriggers(id){
+  return [document.getElementById('date-trigger-'+id),document.getElementById('date-trigger-'+id+'-mobile')].filter(Boolean);
+}
 function toggleDatePopover(id){
   const panel=document.getElementById('date-panel-'+id);
-  const trig=document.getElementById('date-trigger-'+id);
   const back=document.getElementById('date-backdrop-'+id);
   if(!panel)return;
   const willOpen=!panel.classList.contains('open');
-  if(willOpen){_closeOpenFilterPanel();_closeOpenRebatePanel();}
+  if(willOpen){_closeOpenFilterPanel();_closeOpenRebatePanel();_closeOpenSortPanel();_dpValidateAll(id,false);}
   panel.classList.toggle('open',willOpen);
-  if(trig)trig.setAttribute('aria-expanded',String(willOpen));
+  _dateTriggers(id).forEach(trig=>trig.setAttribute('aria-expanded',String(willOpen)));
   if(back)back.classList.toggle('open',willOpen);
   document.body.classList.toggle('dp-open',willOpen);
   _dpOpenId=willOpen?id:null;
   if(willOpen)requestAnimationFrame(()=>_dpScrollCalIntoView(id));
+  _syncSheetScrollLock();
   requestAnimationFrame(_refreshTableScrollState);
 }
 function closeDatePopover(id){const panel=document.getElementById('date-panel-'+id);if(!panel||!panel.classList.contains('open'))return;toggleDatePopover(id);}
@@ -2621,8 +3442,11 @@ function _dpInferPreset(sd,ed){
 }
 function _dpSync(id){
   const {sd,ed}=_dpGetRange(id);
-  const trig=document.getElementById('date-trigger-'+id);
-  if(trig){const v=trig.querySelector('.dr-value');if(v&&sd&&ed&&sd<=ed)v.textContent=`${_dpFmt(sd)} — ${_dpFmt(ed)}`;}
+  const label=sd&&ed&&sd<=ed?`${_dpFmt(sd)} — ${_dpFmt(ed)}`:null;
+  _dateTriggers(id).forEach(trig=>{
+    const v=trig.querySelector('.dr-value');
+    if(v&&label)v.textContent=label;
+  });
   const cnt=document.getElementById('date-count-'+id);
   if(cnt){if(sd&&ed&&sd<=ed){const n=_dpDayDiff(sd,ed);cnt.textContent=n+' day'+(n===1?'':'s')+' selected';}else if(sd&&!ed){cnt.textContent='Pick end date…';}else{cnt.textContent='—';}}
   const pan=document.getElementById('date-panel-'+id);
@@ -2719,11 +3543,18 @@ function dateReset(id){
   _dpSync(id);
   requestAnimationFrame(()=>_dpScrollCalIntoView(id));
 }
+function applyDatePanel(id){
+  _dpValidateAll(id,true);
+  const btn=document.getElementById('date-apply-'+id);
+  if(btn&&btn.disabled)return;
+  _dpSync(id);
+  closeDatePopover(id);
+}
 function _dpFormatInput(v){const d=v.replace(/\D/g,'').slice(0,8);if(d.length>4)return d.slice(0,2)+'.'+d.slice(2,4)+'.'+d.slice(4);if(d.length>2)return d.slice(0,2)+'.'+d.slice(2);return d;}
 function _dpParseDate(s){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(s);if(!m)return null;const dd=+m[1],mm=+m[2],yy=+m[3];if(mm<1||mm>12||dd<1||dd>31||yy<1900||yy>2100)return null;const d=new Date(yy,mm-1,dd);if(d.getFullYear()!==yy||d.getMonth()!==mm-1||d.getDate()!==dd)return null;return d;}
 function _dpSetFieldState(id,kind,err){const f=document.getElementById('date-field-'+kind+'-'+id);const i=document.getElementById('date-'+kind+'-'+id);const e=document.getElementById('date-error-'+kind+'-'+id);if(!f||!i||!e)return;if(err){f.classList.add('has-error');i.classList.add('invalid');i.setAttribute('aria-invalid','true');e.textContent=err;}else{f.classList.remove('has-error');i.classList.remove('invalid');i.removeAttribute('aria-invalid');e.textContent='';}}
 function _dpFieldError(id,kind,strict){const i=document.getElementById('date-'+kind+'-'+id);const v=i.value;if(!v)return strict?'Required':null;if(v.length<10)return strict?'Use DD.MM.YYYY':null;return _dpParseDate(v)?null:'Invalid date';}
-function _dpValidateAll(id,strict){const sErr=_dpFieldError(id,'start',strict);const eErr=_dpFieldError(id,'end',strict);let crossErr=null;if(!sErr&&!eErr){const sd=_dpParseDate(document.getElementById('date-start-'+id).value);const ed=_dpParseDate(document.getElementById('date-end-'+id).value);if(sd&&ed&&sd>ed)crossErr='Start is after end';}_dpSetFieldState(id,'start',sErr||crossErr||'');_dpSetFieldState(id,'end',eErr||'');const btn=document.getElementById('date-apply-'+id);if(btn)btn.disabled=!!(sErr||eErr||crossErr);}
+function _dpValidateAll(id,strict){const sErr=_dpFieldError(id,'start',strict);const eErr=_dpFieldError(id,'end',strict);let crossErr=null;let incomplete=false;if(!sErr&&!eErr){const sd=_dpParseDate(document.getElementById('date-start-'+id).value);const ed=_dpParseDate(document.getElementById('date-end-'+id).value);if(sd&&ed&&sd>ed)crossErr='Start is after end';else if(sd&&!ed)incomplete=true;}_dpSetFieldState(id,'start',sErr||crossErr||'');_dpSetFieldState(id,'end',eErr||'');const btn=document.getElementById('date-apply-'+id);if(btn)btn.disabled=!!(sErr||eErr||crossErr||incomplete);}
 function onDateInput(el,id,kind){const cur=el.selectionStart||0;const before=el.value;const after=_dpFormatInput(before);if(before!==after){el.value=after;const diff=after.length-before.length;const pos=Math.max(0,Math.min(after.length,cur+diff));el.setSelectionRange(pos,pos);}_dpValidateAll(id,false);_dpSync(id);}
 function onDateBlur(el,id,kind){_dpValidateAll(id,true);_dpSync(id);}
 function pickRebateDay(el){
@@ -2799,6 +3630,7 @@ updateFilterFootprint('main');
 updateFilterFootprint('mp');
 updateMPChipCounts();
 updateMPStatBanners();
+initStatBannersLayoutSync();
 dateReset('main');
 dateReset('mp');
 _refreshTableScrollState();
