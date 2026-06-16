@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -233,6 +233,14 @@
   .ds-icon-btn--s svg { width: 16px; height: 16px; }
   .ds-icon-btn--ghost { border-color: transparent; background: transparent; }
   .ds-icon-btn--ghost:hover { background: var(--ds-bg-hover); border-color: transparent; }
+  .ds-icon-btn--primary {
+    background: var(--ds-primary); color: var(--ds-on-primary);
+    border-color: var(--ds-primary);
+  }
+  .ds-icon-btn--primary:hover {
+    background: var(--ds-primary-hover); border-color: var(--ds-primary-hover);
+    color: var(--ds-on-primary);
+  }
   /* Danger ghost — for destructive actions (e.g. remove row).
      Default: subtle. Hover: tints red on negative-bg. */
   .ds-icon-btn--danger { border-color: transparent; background: transparent; color: var(--ds-text-secondary); }
@@ -355,14 +363,36 @@
   .ds-input-wrap { margin-bottom: var(--ds-dim-5xl); display: flex; flex-direction: column; gap: var(--ds-dim-s); }
   .ds-input-wrap:last-child { margin-bottom: 0; }
 
-  /* AM/PM chips — paired with a time input */
-  .time-with-meridiem { display: flex; gap: var(--ds-dim-s); align-items: stretch; min-width: 0; }
-  .time-with-meridiem > .ds-input-wrap { flex: 1 1 auto; min-width: 0; margin-bottom: 0; }
-  .time-meridiem {
-    display: flex;
-    align-self: flex-end; margin-bottom: 10px;
-    flex-shrink: 0;
+  /* Time + AM/PM composite — matches rebate .time-input */
+  .time-input {
+    display: flex; align-items: center; gap: var(--ds-dim-l);
+    height: 32px; padding: var(--ds-dim-s) var(--ds-dim-s) var(--ds-dim-s) var(--ds-dim-2xl);
+    border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-md);
+    background: var(--ds-bg); box-sizing: border-box; min-width: 0;
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
+  .time-input:focus-within {
+    border-color: var(--ds-border-focus);
+    box-shadow: var(--ds-focus-ring);
+  }
+  .time-input__icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; width: 16px; height: 16px; color: var(--ds-text-muted);
+  }
+  .time-input__icon svg { width: 16px; height: 16px; display: block; }
+  .time-input__field {
+    flex: 1 1 auto; min-width: 0; border: none; padding: 0; background: transparent;
+    outline: none; font-family: inherit; font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary);
+  }
+  .time-input__meridiem { flex-shrink: 0; }
+  .time-input__meridiem .ds-chips-group { gap: var(--ds-dim-s); flex-wrap: nowrap; }
+  .time-input__meridiem .ds-chip--s {
+    height: 24px; padding: 0 var(--ds-dim-l); font-size: 12px; line-height: 16px;
+    letter-spacing: 0.15px;
+  }
+  .time-input__meridiem .ds-chip--s .ds-chip__label { padding: 0 var(--ds-dim-s); }
+
   .ds-input-label {
     display: flex; align-items: center; gap: var(--ds-dim-s);
     font-family: var(--ds-font-body); font-weight: 400;
@@ -426,8 +456,9 @@
     position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 50;
     background: var(--ds-bg); border: 1px solid var(--ds-border);
     border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-dropdown);
-    max-height: 320px; overflow-y: auto; padding: var(--ds-dim-s) 0;
+    max-height: min(320px, calc(100dvh - 32px)); overflow-y: auto; padding: var(--ds-dim-s) 0;
   }
+  .ds-dropdown--above { top: auto; bottom: calc(100% + 6px); }
   .ds-dropdown__option {
     display: flex;
     align-items: center;
@@ -526,6 +557,29 @@
   .ds-notification--warning::before { background: var(--ds-warning); }
   .ds-notification--info { background: var(--ds-primary-content); }
   .ds-notification--info::before { background: var(--ds-primary); }
+  /* Brand gradient surface — same as .user-progress (client leaderboard hero) */
+  .ds-notification--brand {
+    background:
+      linear-gradient(135deg,
+        var(--ds-primary) 0%,
+        var(--ds-on-primary-container) 100%);
+    box-shadow: 0 8px 24px -16px color-mix(in srgb, var(--ds-on-primary-container) 70%, transparent);
+    color: var(--ds-on-primary);
+  }
+  .ds-notification--brand::before { display: none; }
+  .ds-notification--brand .ds-notification__title { color: var(--ds-on-primary); }
+  .ds-notification--brand .ds-notification__desc {
+    font-weight: 400;
+    color: color-mix(in srgb, var(--ds-on-primary) 80%, transparent);
+  }
+  .ds-notification--brand.ds-notification--horizontal .ds-notification__actions .ds-btn--outline {
+    background: #fff; color: var(--ds-text-primary);
+    border-color: var(--ds-border-input);
+  }
+  .ds-notification--brand.ds-notification--horizontal .ds-notification__actions .ds-btn--outline:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: var(--ds-border-input-hover);
+  }
   .ds-notification--neutral { background: var(--ds-neutral-bg); }
   .ds-notification__icon { flex-shrink: 0; width: 20px; height: 20px; }
   .ds-notification__icon svg { width: 20px; height: 20px; display: block; }
@@ -548,6 +602,9 @@
   .ds-notification--horizontal .ds-notification__actions {
     margin-top: 0; flex-shrink: 0; align-self: stretch;
     align-items: center; gap: var(--ds-dim-s);
+  }
+  .ds-notification--horizontal .ds-notification__actions .ds-btn--s {
+    padding: 0 var(--ds-dim-3xl);
   }
   .ds-notification--horizontal .ds-notification__actions .ds-btn--secondary {
     background: rgba(22, 22, 22, 0.15); color: var(--ds-text-primary); border-color: transparent;
@@ -916,8 +973,11 @@
   .stat-banners {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--ds-dim-2xl);
+    grid-template-rows: auto auto auto;
+    column-gap: var(--ds-dim-2xl);
+    row-gap: var(--ds-dim-s);
     align-items: stretch;
+    padding: 0 0 var(--ds-dim-3xl);
   }
   .stat-banners-note {
     margin: 0 0 var(--ds-dim-l);
@@ -927,6 +987,7 @@
   .stat-banners-placeholder {
     display: flex; align-items: center; gap: var(--ds-dim-l);
     min-height: 88px; padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    margin-bottom: var(--ds-dim-3xl);
     border-radius: var(--ds-radius-lg); border: 1px solid var(--ds-border);
     background: var(--ds-bg); color: var(--ds-text-secondary);
     font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
@@ -934,17 +995,45 @@
   .stat-banners-placeholder .icon { color: var(--ds-text-tertiary); flex-shrink: 0; }
   .stat-banner {
     position: relative;
-    display: flex; flex-direction: column;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 3;
     min-width: 0;
-    padding: var(--ds-dim-3xl);
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl);
     border-radius: var(--ds-radius-lg);
     border: 1px solid var(--ds-border);
     background: var(--ds-bg);
     overflow: hidden;
   }
+  @supports not (grid-template-rows: subgrid) {
+    .stat-banner {
+      display: flex;
+      flex-direction: column;
+    }
+  }
   .stat-banner__head {
-    display: flex; align-items: center; gap: var(--ds-dim-l);
-    min-height: 16px;
+    grid-row: 1;
+    align-self: start;
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: var(--ds-dim-s); width: 100%; min-height: 16px;
+  }
+  .stat-banner__head-main {
+    display: flex; align-items: flex-start; gap: var(--ds-dim-l);
+    min-width: 0; flex: 1 1 auto;
+  }
+  .stat-banner__info-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; width: 32px; height: 32px; padding: 0; margin: -4px -4px 0 0;
+    border: none; border-radius: var(--ds-radius-md); background: transparent;
+    color: var(--ds-text-secondary); cursor: pointer; transition: background 0.12s, color 0.12s;
+  }
+  .stat-banner__info-btn:hover,
+  .stat-banner__info-btn:focus-visible {
+    background: var(--ds-row-hover); color: var(--ds-text-primary);
+  }
+  .stat-banner__info-btn svg { width: 20px; height: 20px; display: block; }
+  .stat-banner__info-spacer {
+    flex-shrink: 0; width: 32px; height: 32px; margin: -4px -4px 0 0;
   }
   .stat-banner__icon {
     width: 16px; height: 16px; flex-shrink: 0;
@@ -958,15 +1047,22 @@
     letter-spacing: 0.15px; font-weight: 500; color: var(--ds-text-secondary);
   }
   .stat-banner__live-dot {
-    width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%;
+    width: 6px; height: 6px; flex-shrink: 0; margin-top: 5px;
+    border-radius: 50%;
     background: var(--ds-positive);
     box-shadow: 0 0 0 3px rgba(34, 168, 84, 0.2);
   }
   .stat-banner__value-row {
-    display: flex; align-items: baseline; flex-wrap: nowrap;
+    grid-row: 2;
+    align-self: start;
+    display: flex; align-items: baseline; flex-wrap: wrap;
     gap: var(--ds-dim-l);
-    min-height: 28px; min-width: 0; overflow: hidden;
-    margin-top: var(--ds-dim-3xl);
+    row-gap: var(--ds-dim-xs);
+    min-height: 28px; min-width: 0;
+    padding-top: var(--ds-dim-l);
+  }
+  @supports not (grid-template-rows: subgrid) {
+    .stat-banner__value-row { margin-top: var(--ds-dim-l); padding-top: 0; }
   }
   .stat-banner__value {
     flex-shrink: 0;
@@ -975,17 +1071,22 @@
     color: var(--ds-text-primary); font-variant-numeric: tabular-nums;
   }
   .stat-banner__foot {
-    display: flex; align-items: flex-start; align-self: stretch;
+    grid-row: 3;
+    align-self: start;
+    display: flex; align-items: flex-start;
     width: 100%; min-width: 0;
-    margin-top: var(--ds-dim-s);
+    min-height: 14px;
+    padding-top: 0;
+  }
+  @supports not (grid-template-rows: subgrid) {
+    .stat-banner__foot { margin-top: var(--ds-dim-xs); padding-top: 0; }
   }
   /* Foundations: Utility 01 bold — sentiment delta справа от числа */
   .stat-banner__delta {
     display: block;
     font-family: var(--ds-font-body); font-size: 12px; line-height: 16px;
     font-weight: 600; letter-spacing: 0.15px;
-    white-space: nowrap; flex: 1 1 auto; min-width: 0; max-width: 100%;
-    overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; flex: 0 1 auto; max-width: 100%;
   }
   .stat-banner__delta--up { color: var(--ds-positive-content); }
   .stat-banner__delta--down { color: var(--ds-negative); }
@@ -1027,10 +1128,30 @@
     margin-bottom: var(--ds-dim-3xl); flex-wrap: wrap;
   }
   .table-toolbar__period { flex: 0 0 auto; min-width: 320px; }
-  .dr-trigger .ds-input-shell__prefix { color: var(--ds-text-secondary); font-weight: 500; }
-  .dr-trigger .ds-input-shell__prefix::after { content: ' · '; font-weight: 400; color: var(--ds-text-tertiary); }
+  .date-range-wrap { position: relative; }
+  .date-range {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 32px; padding: 0 12px;
+    border: 1px solid var(--ds-border);
+    border-radius: 8px;
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary); background: var(--ds-bg);
+    cursor: pointer; white-space: nowrap;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    text-align: left;
+  }
+  .date-range:hover { background: var(--ds-bg-page); }
+  .date-range[aria-expanded="true"] {
+    background: var(--ds-bg);
+    border-color: #3b71ff;
+    box-shadow: 0 0 0 4px rgba(59, 113, 255, 0.5);
+  }
+  .date-range[aria-expanded="true"]:hover { background: var(--ds-bg); border-color: #3b71ff; }
+  .date-range svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--ds-text-secondary); }
+  .date-range .dr-label { color: var(--ds-text-secondary); font-weight: 400; }
+  .date-range .dr-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .table-toolbar__period .date-range { width: 100%; max-width: 100%; }
   .table-toolbar__chips { flex: 0 1 auto; margin-left: auto; }
-  .table-toolbar .ds-input-wrap { margin: 0; }
   /* Empty state inside table-wrap when filters yield no rows */
   .table-empty {
     padding: var(--ds-dim-7xl) var(--ds-dim-5xl);
@@ -1168,7 +1289,7 @@
      next to the participant name instead of being right-anchored across a
      wide cell — that's what created the "torn apart" feeling on the prior
      iteration. The participant column gets the largest share so long names
-     and the "Вы · Показать в рейтинге" pin row never wrap. */
+     and the "You · Show in ranking" pin row never wrap. */
   .leaderboard-scroll table { table-layout: fixed; width: 100%; }
   .leaderboard-scroll th, .leaderboard-scroll td { white-space: nowrap; }
   .leaderboard-scroll th.lb-col-place,
@@ -1228,23 +1349,51 @@
      Compacts the embedded Input by zeroing its margin. */
   .prize-row .ds-input-wrap { margin-bottom: 0; }
 
-  /* Prize pool — IB wizard step 3: сетка как у .prize-row, сумма по правому краю колонки инпута */
-  .prize-pool-toolbar {
+  .wizard-step-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ds-dim-3xl);
+    margin-bottom: var(--ds-dim-4xl);
+    flex-wrap: wrap;
+  }
+  .wizard-step-header__main { min-width: 0; flex: 1 1 auto; }
+  .wizard-step-header__main .rig-title-03 { margin-bottom: var(--ds-dim-s); }
+  .wizard-step-header__main .rig-body-02 { margin-bottom: 0; color: var(--ds-text-muted); }
+  .wizard-step-header__aside {
+    flex: 0 0 auto;
+    align-self: center;
+  }
+  .wizard-step-header__aside .ds-chips-group { flex-wrap: nowrap; }
+
+  .prize-rows-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-dim-3xl);
+    margin-top: var(--ds-dim-l);
+    margin-bottom: var(--ds-dim-6xl);
+  }
+  .prize-row-grid {
     display: grid;
     grid-template-columns: 40px 1fr 180px 40px;
     gap: var(--ds-dim-3xl);
     align-items: center;
-    margin-top: var(--ds-dim-4xl);
-    margin-bottom: var(--ds-dim-6xl);
   }
-  .prize-pool-toolbar__cell--lead { min-width: 0; }
-  .prize-pool-toolbar__cell--action { min-width: 0; }
-  .prize-pool-toolbar__total {
-    text-align: right;
-    justify-self: stretch;
+
+  /* Prize pool toolbar — same grid as prize rows */
+  .prize-pool-toolbar { margin: 0; }
+  .prize-pool-toolbar__cell--action {
+    grid-column: 1 / 3;
+    justify-self: start;
     min-width: 0;
   }
-  .prize-pool-toolbar__cell--trail { min-width: 0; }
+  .prize-pool-toolbar__cell--action .ds-btn { padding-left: 0; }
+  .prize-pool-toolbar__total {
+    grid-column: 3;
+    text-align: left;
+    justify-self: start;
+    min-width: 0;
+  }
 
   /* Review-field — clickable cell in IB review summary card.
      Editable fields turn into hoverable buttons with subtle bg + reveal pencil.
@@ -1376,6 +1525,7 @@
   .contest-card__title { font-family: var(--ds-font-body); font-size: 20px; font-weight: 600; line-height: 24px; letter-spacing: -0.2px; color: var(--ds-text-primary); }
   .contest-card__desc { font-family: var(--ds-font-body); font-size: 14px; font-weight: 400; line-height: 20px; color: var(--ds-text-secondary); min-height: 60px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .contest-card-preview-host .contest-card__desc { min-height: 0; -webkit-line-clamp: unset; display: block; overflow: visible; }
+  .contest-card-preview-host .ds-progress--xs { height: 4px; }
   .contest-card__divider { height: 1px; background: var(--ds-border); border: 0; margin: 0; }
   .contest-card__meta {
     display: flex; flex-wrap: wrap; gap: var(--ds-dim-l) var(--ds-dim-4xl);
@@ -1515,26 +1665,64 @@
   }
 
   /* Wizard */
-  .wizard-layout { display: grid; grid-template-columns: 1fr 380px; gap: var(--ds-dim-5xl); }
-  .wizard-steps { display: flex; align-items: center; gap: var(--ds-dim-3xl); padding: var(--ds-dim-s); margin-bottom: var(--ds-dim-6xl); }
-  /* DS Wizard step dot: 24×24 digit-in-circle icon from DS "Icons (1 brand)",
-     or a check icon when completed. Uses currentColor so state = color. */
-  .wizard-dot {
-    width: 24px; height: 24px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--ds-text-placeholder); transition: color 0.2s;
-    flex-shrink: 0;
+  .wizard-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: var(--ds-dim-5xl);
+    align-items: start;
   }
-  .wizard-dot svg { width: 24px; height: 24px; display: block; }
-  .wizard-dot--active { color: var(--ds-text-primary); }
-  .wizard-dot--done   { color: var(--ds-positive); }
-  .wizard-connector { flex: 1; height: 1px; background: var(--ds-border-input); transition: background 0.3s; min-width: var(--ds-dim-3xl); }
-  .wizard-connector--done { background: var(--ds-positive); }
+  /* Sticky client preview — top = role-bar + header + breathing room (116px desktop). */
+  .wizard-panel--preview {
+    position: sticky;
+    top: calc(100px + var(--ds-dim-3xl));
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-dim-3xl);
+  }
+  .wizard-segments {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-dim-l);
+    width: 100%;
+    margin-bottom: var(--ds-dim-6xl);
+  }
+  .wizard-segment {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 3px;
+    border-radius: 1000px;
+    background: rgba(22, 22, 22, 0.15);
+    transition: background 0.25s ease;
+  }
+  .wizard-segment--done,
+  .wizard-segment--active { background: var(--ds-text-primary); }
+  .wizard-stepper-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-dim-l);
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    border: 1px solid var(--ds-border);
+    border-radius: var(--ds-radius-md);
+    background: var(--ds-bg);
+    margin-bottom: var(--ds-dim-3xl);
+  }
+  .wizard-segments--inline { margin-bottom: 0; }
 
-  /* Preview label (DS Utility 01 — 12/16, weight 400, muted) */
+  .wizard-period-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--ds-dim-3xl);
+    margin-bottom: var(--ds-dim-4xl);
+    align-items: start;
+  }
+  .wizard-period-field { position: relative; min-width: 0; }
+  .wizard-period-field .ds-input-wrap { margin-bottom: 0; }
+
+  /* Preview label — match breadcrumb Body 02 (14/20) */
   .preview-card__label {
     font-family: var(--ds-font-body); font-weight: 400;
-    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    font-size: 14px; line-height: 20px; letter-spacing: 0;
     color: var(--ds-text-muted); text-transform: none;
   }
 
@@ -1574,6 +1762,66 @@
 
   /* Calendar popover (used with DS Input trigger) */
   .cal-dropdown { position: absolute; top: calc(100% + var(--ds-dim-m)); left: 0; z-index: 100; width: 288px; background: var(--ds-bg); border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-lg); padding-top: var(--ds-dim-2xl); box-shadow: var(--ds-shadow-dropdown); }
+  .cal-dropdown--range { width: 320px; padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl); }
+  .cal-dropdown--range .cal { user-select: none; }
+  .cal-dropdown--range .cal-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: var(--ds-dim-l);
+  }
+  .cal-dropdown--range .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0; gap: 0; }
+  .cal-dropdown--range .cal-wd {
+    height: 28px; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    color: var(--ds-text-secondary); font-weight: 500;
+  }
+  .cal-dropdown--range .cal-cell {
+    position: relative; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cal-dropdown--range .cal-cell.in-range::before,
+  .cal-dropdown--range .cal-cell.is-start::before,
+  .cal-dropdown--range .cal-cell.is-end::before {
+    content: '';
+    position: absolute; top: 2px; bottom: 2px; left: 0; right: 0;
+    background: var(--ds-primary-content); pointer-events: none; z-index: 0;
+  }
+  .cal-dropdown--range .cal-cell.is-start::before { left: 50%; }
+  .cal-dropdown--range .cal-cell.is-end::before { right: 50%; }
+  .cal-dropdown--range .cal-cell.is-start.is-end::before { display: none; }
+  .cal-dropdown--range .cal-day {
+    position: relative; z-index: 1;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: var(--ds-radius-md); border: none; background: transparent;
+    font-family: inherit; font-size: 13px; line-height: 20px;
+    color: var(--ds-text-primary); cursor: pointer; padding: 0;
+    transition: background 0.1s;
+  }
+  .cal-dropdown--range .cal-day:hover { background: var(--ds-bg-hover); }
+  .cal-dropdown--range .cal-day.out { color: var(--ds-text-tertiary); }
+  .cal-dropdown--range .cal-day.today { box-shadow: inset 0 0 0 1px var(--ds-border-input); }
+  .cal-dropdown--range .cal-day.is-start,
+  .cal-dropdown--range .cal-day.is-end { background: var(--ds-primary); color: #fff; font-weight: 600; }
+
+  .time-range-dropdown {
+    position: absolute; top: calc(100% + var(--ds-dim-m)); right: 0; left: auto; z-index: 100;
+    width: max-content; min-width: 220px; max-width: min(280px, calc(100vw - 32px));
+    background: var(--ds-bg); border: 1px solid var(--ds-border-input);
+    border-radius: var(--ds-radius-lg); box-shadow: var(--ds-shadow-dropdown);
+    padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
+    display: flex; flex-direction: column; gap: var(--ds-dim-2xl);
+  }
+  .time-range-dropdown .ds-input-wrap { margin-bottom: 0; gap: var(--ds-dim-s); }
+  .time-range-dropdown .ds-input-label { font-size: 12px; line-height: 16px; height: auto; }
+  .time-range-dropdown .time-input { width: 100%; max-width: 220px; }
+  .time-range-dropdown .time-input__field {
+    flex: 0 0 56px; width: 56px; max-width: 72px;
+  }
+  .time-range-dropdown__foot {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--ds-dim-2xl);
+    margin-top: var(--ds-dim-s); padding-top: var(--ds-dim-2xl);
+    border-top: 1px solid var(--ds-border);
+  }
   .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 var(--ds-dim-3xl); gap: 0; }
   .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 20px; font-weight: 400; border-radius: 50%; cursor: pointer; border: none; background: none; font-family: inherit; color: var(--ds-text-primary); transition: all 0.12s; }
   .cal-day:hover { background: var(--ds-bg-page); }
@@ -1582,11 +1830,8 @@
 
   /* Date-range side panel (DateRangePanel)
      Рендерится в потоке слева от таблицы — не заслоняет данные, в отличие от
-     popover-варианта. Триггер в тулбаре подсвечивается синей рамкой. */
-  .dr-trigger { position: relative; }
-  .dr-trigger--open .ds-input-shell { border-color: var(--ds-primary); box-shadow: 0 0 0 2px rgba(0, 90, 255, 0.16); }
-
-  /* Панель — flex-колонка: head примагничен сверху, foot снизу, всё между ними
+     popover-варианта. Триггер в тулбаре подсвечивается синей рамкой (как Rebate).
+     Панель — flex-колонка: head примагничен сверху, foot снизу, всё между ними
      скроллится. Тень убрана: рамка достаточно отделяет панель от таблицы. */
   .dr-panel {
     background: var(--ds-bg);
@@ -1713,7 +1958,7 @@
     flex: 1 1 auto; min-width: 0;
     display: flex; flex-direction: column; min-height: 0;
   }
-  .contests-layout__stats { flex: 0 0 auto; margin-bottom: var(--ds-dim-5xl); }
+  .contests-layout__stats { flex: 0 0 auto; }
   .contests-layout__body {
     flex: 1 1 auto; min-height: 0;
     display: flex; flex-direction: column;
@@ -1729,26 +1974,41 @@
     .ds-container:has(.contests-layout) { max-height: none; }
   }
 
-  /* Toast / Snackbar — Figma DS Components / Snackbar (60132:14999).
-     Dark inverse-surface, white text, status-coloured leading icon,
-     text-link action, optional close button on the trailing side. */
-  .toast {
-    /* Flush under fixed chrome: role-bar (36) + app-header (64) = 100 */
-    position: fixed; top: 100px; left: 50%;
-    transform: translateX(-50%) translateY(-100px);
+  /* Toast / Snackbar — Figma Components Snackbar (60132:14999).
+     Web screen location (60503:5551): bottom-left stack, 30px / 90px inset.
+     Behaviour (60462:7057): max 2 on Web, max 1 on mobile; queue overflow. */
+  .toast-stack {
+    position: fixed;
+    bottom: 90px;
+    left: 30px;
     z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ds-dim-3xl);
+    align-items: flex-start;
+    pointer-events: none;
+    max-width: calc(100vw - 60px);
+  }
+  .toast-stack .toast {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    pointer-events: auto;
+  }
+  .toast {
     display: flex; align-items: flex-start; gap: var(--ds-dim-l);
-    width: 360px; max-width: calc(100vw - var(--ds-dim-5xl) * 2);
+    width: 360px; max-width: calc(100vw - 60px);
     padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
     border-radius: var(--ds-radius-lg);
-    background: #161616;                            /* color/surface/inverse */
-    color: #ffffff;                                  /* color/content/inverse */
+    background: #161616;
+    color: #ffffff;
     font-size: 14px; line-height: 20px; font-weight: 400;
     box-shadow: 0 4px 8px rgba(0,0,0,0.08), 0 6px 16px rgba(0,0,0,0.20);
     opacity: 0; overflow: clip;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(calc(100% + var(--ds-dim-3xl)));
+    transition: transform 0.3s ease, opacity 0.3s ease, max-height 0.25s ease, margin 0.25s ease;
   }
-  .toast--visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast--visible { transform: translateY(0); opacity: 1; }
   .toast__icon { flex-shrink: 0; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; }
   .toast__text { flex: 1 1 auto; min-width: 0; min-height: 24px; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
   .toast__msg { word-break: break-word; }
@@ -1943,7 +2203,7 @@
   .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--ds-dim-10xl) var(--ds-dim-5xl); text-align: center; }
 
   /* Screen animation */
-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeInUp { from { opacity: 0; } to { opacity: 1; } }
   .screen-enter {
     animation: fadeInUp 0.25s ease-out forwards;
     /* Тянемся в вертикальное пространство, отданное .ds-container'ом, чтобы
@@ -1960,8 +2220,7 @@
     overflow: visible;
   }
 
-  /* Prize row */
-  .prize-row { display: grid; grid-template-columns: 48px 1fr 120px; gap: var(--ds-dim-2xl); align-items: center; margin-bottom: var(--ds-dim-2xl); }
+  /* Prize row — layout via .prize-row-grid (step 3 wizard) */
 
   /* ═══════════════════════════════════════════════════════════════════
      RESPONSIVE — DS breakpoints (Guides): tablet < 1024px, mobile < 640px
@@ -2176,9 +2435,10 @@
     /* === Stats — 2x2 grid, left-aligned === */
     .stat-banners {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--ds-dim-2xl);
+      column-gap: var(--ds-dim-2xl);
+      row-gap: var(--ds-dim-s);
     }
-    .stat-banner { padding: var(--ds-dim-3xl); }
+    .stat-banner { padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl); }
     .stat-banner__value { font-size: 20px; line-height: 24px; }
     .stats {
       flex-wrap: wrap; flex-direction: row;
@@ -2220,6 +2480,8 @@
     /* === Table toolbar on mobile: stack period above chips === */
     .table-toolbar { flex-direction: column; align-items: stretch; gap: var(--ds-dim-2xl); }
     .table-toolbar__period { flex: 0 0 auto; min-width: 0; width: 100%; }
+    .table-toolbar__period .date-range .dr-label { display: none; }
+    .table-toolbar__period .date-range { width: 100%; }
     .table-toolbar__chips { flex: 0 0 auto; width: 100%; margin-left: 0; }
     .table-toolbar__chips .ds-chips-group { width: 100%; flex-wrap: wrap; }
 
@@ -2265,26 +2527,25 @@
     /* === Wizard (mobile chrome) === */
     .wizard-layout { grid-template-columns: 1fr; gap: var(--ds-dim-3xl); }
     .wizard-panel { padding: var(--ds-dim-3xl); border-radius: var(--ds-radius-lg); }
-    .wizard-steps {
-      background: var(--ds-bg);
-      padding: var(--ds-dim-2xl) var(--ds-dim-3xl);
-      border: 1px solid var(--ds-border);
-      border-radius: var(--ds-radius-md);
-      margin-bottom: var(--ds-dim-3xl);
-      gap: var(--ds-dim-l);
-    }
-    .wizard-connector { display: none; }
+    .wizard-segments { margin-bottom: var(--ds-dim-3xl); }
+    .wizard-step-header { flex-direction: column; align-items: stretch; }
+    .wizard-step-header__aside .ds-chips-group { flex-wrap: wrap; }
 
     /* Inline grid overrides (set via inline style on JSX) — collapse via classes */
     .wizard-period-grid { grid-template-columns: 1fr !important; }
+    .wizard-period-row { grid-template-columns: 1fr !important; }
     .wizard-review-grid { grid-template-columns: 1fr !important; }
-    .prize-row { grid-template-columns: 32px 1fr 32px !important; gap: var(--ds-dim-2xl) !important; }
+    .prize-row-grid { grid-template-columns: 32px 1fr auto 32px !important; gap: var(--ds-dim-2xl) !important; }
     .prize-row__label { display: none; }
+    .prize-row-grid .ds-input-wrap { grid-column: 3; min-width: 0; }
+    .prize-row-grid > .ds-icon-btn,
+    .prize-row-grid > span[aria-hidden="true"] { grid-column: 4; }
     .prize-pool-toolbar {
       display: flex !important; flex-direction: column !important;
-      align-items: stretch !important; gap: var(--ds-dim-2xl) !important;
+      align-items: flex-start !important; gap: var(--ds-dim-2xl) !important;
     }
-    .prize-pool-toolbar__cell { display: none; }
+    .prize-pool-toolbar__cell--action,
+    .prize-pool-toolbar__total { grid-column: auto !important; }
     .prize-pool-toolbar__total { text-align: left !important; }
 
     /* Wizard sticky footer (mobile) — sits above the tab bar (or replaces it) */
@@ -2441,17 +2702,18 @@
     .admin-table-scroll table { min-width: 640px; }
     .admin-detail-grid { grid-template-columns: 1fr !important; }
 
-    /* === Toasts above tab bar === */
-    .toast {
-      top: auto !important;
+    /* === Snackbar stack above tab bar (mobile) === */
+    .toast-stack {
       bottom: calc(var(--ds-mobile-tabbar-h) + env(safe-area-inset-bottom, 0px) + var(--ds-dim-2xl)) !important;
       left: var(--ds-dim-3xl) !important;
       right: var(--ds-dim-3xl) !important;
-      width: auto !important;
       max-width: none !important;
-      transform: translateY(120px) !important;
+      width: auto !important;
     }
-    .toast--visible { transform: translateY(0) !important; }
+    .toast-stack .toast {
+      width: 100% !important;
+      max-width: none !important;
+    }
 
     /* Tap targets & iOS zoom prevention */
     .ds-input-shell input { font-size: 16px; }
@@ -2870,12 +3132,39 @@ const Input = ({
 /* DS Dropdown (Select) — DS Input trigger + options popover */
 const Select = ({ label, value, onChange, options = [], placeholder, description, error, leftIcon, size }) => {
   const [open, setOpen] = useState(false);
+  const [dropAbove, setDropAbove] = useState(false);
+  const [dropMaxH, setDropMaxH] = useState(320);
   const ref = useRef(null);
+
+  const syncDropdownLayout = useCallback(() => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const margin = 16;
+    const spaceBelow = window.innerHeight - rect.bottom - margin;
+    const spaceAbove = rect.top - margin;
+    const flip = spaceBelow < 180 && spaceAbove > spaceBelow;
+    const available = flip ? spaceAbove : spaceBelow;
+    setDropAbove(flip);
+    setDropMaxH(Math.max(120, Math.min(320, available)));
+  }, []);
+
   useEffect(() => {
     const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    syncDropdownLayout();
+    window.addEventListener('resize', syncDropdownLayout);
+    window.addEventListener('scroll', syncDropdownLayout, true);
+    return () => {
+      window.removeEventListener('resize', syncDropdownLayout);
+      window.removeEventListener('scroll', syncDropdownLayout, true);
+    };
+  }, [open, syncDropdownLayout]);
+
   const selected = options.find(o => o.value === value);
   return (
     <div ref={ref} style={{position:'relative'}}>
@@ -2887,7 +3176,10 @@ const Select = ({ label, value, onChange, options = [], placeholder, description
         {selected ? selected.label : (placeholder || '')}
       </Input>
       {open && (
-        <div className="ds-dropdown">
+        <div
+          className={`ds-dropdown${dropAbove ? ' ds-dropdown--above' : ''}`}
+          style={{ maxHeight: dropMaxH }}
+        >
           {options.map(opt => (
             <div key={opt.value}
                  className={`ds-dropdown__option ${opt.value === value ? 'ds-dropdown__option--selected' : ''}`}
@@ -2972,14 +3264,14 @@ const Notification = ({ variant = 'negative', title, description, actions, icon,
           <svg width={isHorizontal ? 24 : 20} height={isHorizontal ? 24 : 20}><use href={dsIc(icon)} /></svg>
         </span>
       )}
-      <div className="ds-notification__content">
-        {title && <div className="ds-notification__title" style={{color: variant === 'negative' ? 'var(--ds-negative-text)' : undefined}}>{title}</div>}
-        {description && <div className="ds-notification__desc">{description}</div>}
+    <div className="ds-notification__content">
+      {title && <div className="ds-notification__title" style={{color: variant === 'negative' ? 'var(--ds-negative-text)' : undefined}}>{title}</div>}
+      {description && <div className="ds-notification__desc">{description}</div>}
         {!isHorizontal && actions && <div className="ds-notification__actions">{actions}</div>}
-      </div>
-      {isHorizontal && actions && <div className="ds-notification__actions">{actions}</div>}
     </div>
-  );
+      {isHorizontal && actions && <div className="ds-notification__actions">{actions}</div>}
+  </div>
+);
 };
 
 const Container = ({ children, style, className = '' }) => (
@@ -3005,7 +3297,7 @@ const Modal = ({ open, onClose, title, subtitle, children, footer, size = 'm' })
             {title && <div className="rig-title-03">{title}</div>}
             {subtitle && <div style={{marginTop:'var(--ds-dim-s)', color:'var(--ds-text-muted)', fontSize:14, lineHeight:'20px'}}>{subtitle}</div>}
           </div>
-          <button className="ds-modal__close" onClick={onClose} aria-label="Закрыть" type="button">
+          <button className="ds-modal__close" onClick={onClose} aria-label="Close" type="button">
             <svg><use href="#ic-cross-24"/></svg>
           </button>
         </div>
@@ -3025,51 +3317,51 @@ const CONTEST_TYPES = {
   volume: {
     id: 'volume',
     title: 'Volume Race',
-    desc: 'Кто наторгует больше лотов за период',
-    shortDesc: 'Кто наторгует больший объём в лотах — побеждает.',
-    clientDescTemplate: (topPrize) => `Кто наторгует больший объём в лотах за период — заберёт до $${topPrize} бонус на торговый счёт.`,
+    desc: 'Who trades the most lots during the period',
+    shortDesc: 'Whoever trades the highest volume in lots wins.',
+    clientDescTemplate: (topPrize) => `Whoever trades the highest volume in lots during the period wins up to a $${topPrize} bonus to their trading account.`,
     icon: 'chart',
     circle: 'primary',
     typeIcon: 'volume',
-    metric: 'Объём (лоты)',
+    metric: 'Volume (lots)',
     scoring: {
-      formula: 'Score = Σ объём качественных сделок (в лотах)',
+      formula: 'Score = Σ volume of qualifying trades (in lots)',
       rules: [
-        'Учитываются только сделки объёмом ≥ минимального лота (по умолчанию 0.1)',
-        'Минимальное время удержания позиции — 5 минут (защита от wash-trading)',
-        'Встречные одновременные buy+sell по одному инструменту не учитываются',
-        'Результат обновляется в реальном времени после закрытия сделки',
+        'Only trades with volume ≥ minimum lot size (default 0.1) count',
+        'Minimum position hold time — 5 minutes (wash-trading protection)',
+        'Simultaneous opposing buy+sell on the same instrument are excluded',
+        'Results update in real time after a trade closes',
       ],
-      tiebreak: 'При равном объёме — выше тот, кто раньше достиг результата',
+      tiebreak: 'If volume is tied — higher rank goes to whoever reached the result first',
     },
   },
   streak: {
     id: 'streak',
     title: 'Trading Streak',
-    desc: 'Кто торгует больше дней подряд',
-    shortDesc: 'Кто удержит самый длинный streak — побеждает.',
-    clientDescTemplate: (topPrize) => `Кто удержит самый длинный streak торговых дней подряд — заберёт до $${topPrize} бонус.`,
+    desc: 'Who trades the most consecutive days',
+    shortDesc: 'Whoever holds the longest streak wins.',
+    clientDescTemplate: (topPrize) => `Whoever holds the longest streak of consecutive trading days wins up to a $${topPrize} bonus.`,
     icon: 'flame',
     circle: 'warning',
     typeIcon: 'streak',
-    metric: 'Дней подряд',
+    metric: 'Consecutive days',
     scoring: {
-      formula: 'Score = max длина непрерывной серии торговых дней',
+      formula: 'Score = max length of consecutive trading-day streak',
       rules: [
-        'Торговый день = хотя бы одна качественная сделка за сутки (UTC)',
-        'Качественная сделка: объём ≥ 0.1 лот, удержание ≥ 5 мин',
-        'Пропуск дня обнуляет текущую серию, но не стирает лучший результат',
-        'Финальный Score — максимальная серия за период контеста',
+        'Trading day = at least one qualifying trade within the UTC day',
+        'Qualifying trade: volume ≥ 0.1 lot, hold ≥ 5 min',
+        'Missing a day resets the current streak but keeps the best result',
+        'Final Score — longest streak during the contest period',
       ],
-      tiebreak: 'При равной серии — выше тот, у кого больше сделок суммарно',
+      tiebreak: 'If streaks are tied — higher rank goes to whoever has more trades overall',
     },
   },
   top: {
     id: 'top',
     title: 'Top Trader',
-    desc: 'Комбинация объёма и частоты',
-    shortDesc: 'Кто лучше совмещает объём и стабильность — побеждает.',
-    clientDescTemplate: (topPrize) => `Кто покажет лучшую комбинацию объёма и стабильности — заберёт до $${topPrize} бонус на торговый счёт.`,
+    desc: 'Combination of volume and frequency',
+    shortDesc: 'Whoever best combines volume and consistency wins.',
+    clientDescTemplate: (topPrize) => `Whoever shows the best combination of volume and consistency wins up to a $${topPrize} bonus to their trading account.`,
     icon: 'trophy',
     circle: 'positive',
     typeIcon: 'top',
@@ -3077,35 +3369,35 @@ const CONTEST_TYPES = {
     scoring: {
       formula: 'Score = (Volume_norm × 0.6) + (ActiveDays_norm × 0.4)',
       rules: [
-        'Volume_norm — объём участника / объём лидера (0..1)',
-        'ActiveDays_norm — активных дней участника / длительность контеста (0..1)',
-        'Объём учитывается по правилам Volume Race',
-        'Активный день = хотя бы одна качественная сделка',
-        'Итоговый Score нормализуется в шкалу 0–100',
+        'Volume_norm — participant volume / leader volume (0..1)',
+        'ActiveDays_norm — participant active days / contest duration (0..1)',
+        'Volume follows Volume Race rules',
+        'Active day = at least one qualifying trade',
+        'Final Score is normalized to a 0–100 scale',
       ],
-      tiebreak: 'При равном Score приоритет у участника с большим Volume_norm',
+      tiebreak: 'If Score is tied — priority goes to the participant with higher Volume_norm',
     },
   },
   grow: {
     id: 'grow',
     title: 'Grow account',
-    desc: 'Кто больше нарастит баланс в процентах',
-    shortDesc: 'Кто больше нарастит баланс в % — побеждает.',
-    clientDescTemplate: (topPrize) => `Кто больше нарастит баланс в процентах за период — заберёт до $${topPrize} бонус.`,
+    desc: 'Who grows account balance by the highest percentage',
+    shortDesc: 'Whoever grows balance by the highest % wins.',
+    clientDescTemplate: (topPrize) => `Whoever grows account balance by the highest percentage during the period wins up to a $${topPrize} bonus.`,
     icon: 'trending-up',
     circle: 'grow',
     typeIcon: 'grow',
-    metric: 'Прирост, %',
+    metric: 'Growth, %',
     scoring: {
       formula: 'Score = (EndBalance_adj − StartBalance) / StartBalance × 100 %',
       rules: [
-        'StartBalance — баланс счёта в момент старта контеста',
-        'EndBalance_adj = финальный баланс − (пополнения − выводы за период)',
-        'Пополнения и выводы исключаются из прироста, чтобы оценивать только результат торговли',
-        'Открытые позиции на момент фиксации оцениваются по рыночной цене',
-        'Минимальный стартовый баланс для участия задаётся IB (по умолчанию $100)',
+        'StartBalance — account balance at contest start',
+        'EndBalance_adj = final balance − (deposits − withdrawals during the period)',
+        'Deposits and withdrawals are excluded from growth to measure trading performance only',
+        'Open positions at snapshot time are marked to market',
+        'Minimum starting balance is set by the IB (default $100)',
       ],
-      tiebreak: 'При равном %: выше тот, у кого меньше максимальная просадка за период',
+      tiebreak: 'If % is tied — higher rank goes to whoever had the smaller max drawdown during the period',
     },
   },
 };
@@ -3113,7 +3405,7 @@ const CONTEST_TYPES = {
 const CONTEST_TYPE_LIST = Object.values(CONTEST_TYPES);
 
 const InfoTip = ({ children, label, className = '', placement = 'top' }) => (
-  <span className={`info-tip info-tip--${placement} ${className}`} tabIndex={0} aria-label={label || (typeof children === 'string' ? children : 'Подробнее')}>
+  <span className={`info-tip info-tip--${placement} ${className}`} tabIndex={0} aria-label={label || (typeof children === 'string' ? children : 'More info')}>
     <span className="info-tip__icon"><svg><use href="#ic-info-24" /></svg></span>
     <span className="info-tip__bubble" role="tooltip">{children}</span>
   </span>
@@ -3130,8 +3422,8 @@ const ContestTypeInfo = ({ typeId, className = '' }) => {
         type="button"
         className={`type-info-btn ${className}`}
         onClick={e => { e.stopPropagation(); setOpen(true); }}
-        title={`Как считается Score — ${t.title}`}
-        aria-label={`Информация о подсчёте Score для ${t.title}`}
+        title={`How Score is calculated — ${t.title}`}
+        aria-label={`Score calculation info for ${t.title}`}
       >
         <svg><use href="#ic-info-24" /></svg>
       </button>
@@ -3144,26 +3436,26 @@ const ContestTypeInfo = ({ typeId, className = '' }) => {
             <span className={`icon-circle icon-circle--${t.circle}`} style={{width:32,height:32}}>
               <svg width="18" height="18"><use href={dsIc(t.icon)} /></svg>
             </span>
-            <span>{t.title} — как считается Score</span>
+            <span>{t.title} — how Score is calculated</span>
           </span>
         }
-        footer={<Button variant="primary" size="m" onClick={() => setOpen(false)}>Понятно</Button>}
+        footer={<Button variant="primary" size="m" onClick={() => setOpen(false)}>Got it</Button>}
       >
             <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-4xl)'}}>
-              <div className="rig-body-02" style={{color:'var(--ds-text-secondary)'}}>{t.desc}. Участники ранжируются по метрике <strong style={{color:'var(--ds-text-primary)'}}>«{t.metric}»</strong>.</div>
+              <div className="rig-body-02" style={{color:'var(--ds-text-secondary)'}}>{t.desc}. Participants are ranked by <strong style={{color:'var(--ds-text-primary)'}}>"{t.metric}"</strong>.</div>
 
               <div className="score-section">
-                <div className="score-section__title">Формула</div>
+                <div className="score-section__title">Formula</div>
                 <div className="score-formula">{t.scoring.formula}</div>
               </div>
 
               <div className="score-section">
-                <div className="score-section__title">Правила учёта</div>
+                <div className="score-section__title">Scoring rules</div>
                 <BulletList items={t.scoring.rules} />
               </div>
 
               <div className="score-section">
-                <div className="score-section__title">Тай-брейк</div>
+                <div className="score-section__title">Tie-break</div>
                 <div className="rig-body-02" style={{color:'var(--ds-text-secondary)'}}>{t.scoring.tiebreak}</div>
               </div>
             </div>
@@ -3178,50 +3470,120 @@ const ContestTypeInfo = ({ typeId, className = '' }) => {
 
 const ToastContext = createContext();
 
-const ToastProvider = ({ children }) => {
-  const [toast, setToast] = useState(null);
+const TOAST_POSITIVE_ICON = (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path fillRule="evenodd" clipRule="evenodd" d="M21.1666 12C21.1666 17.0626 17.0626 21.1666 12 21.1666C6.93737 21.1666 2.83331 17.0626 2.83331 12C2.83331 6.93737 6.93737 2.83331 12 2.83331C17.0626 2.83331 21.1666 6.93737 21.1666 12Z" fill="#3dd680"/>
+    <path d="M10.7396 15.77L17.0416 9.46788L16.4752 8.90148C16.1173 8.5435 15.5369 8.5435 15.1789 8.90148L10.7396 13.3408L8.82108 11.4223C8.4631 11.0643 7.8827 11.0643 7.52472 11.4223L6.95831 11.9887L10.7396 15.77Z" fill="#161616"/>
+  </svg>
+);
+
+const TOAST_NEGATIVE_ICON = (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="10" fill="#ff6464"/>
+    <path d="M12 7v6M12 17h.01" stroke="#161616" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const ToastSnackbar = ({ item, onClose, onAction }) => {
+  const [visible, setVisible] = useState(false);
   const timerRef = useRef();
 
-  const showToast = useCallback((msg, type = 'negative', action) => {
-    clearTimeout(timerRef.current);
-    setToast({ msg, type, action });
-    timerRef.current = setTimeout(() => setToast(null), action ? 6000 : 4000);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(raf);
   }, []);
 
-  const handleAction = () => {
+  useEffect(() => {
     clearTimeout(timerRef.current);
-    if (toast?.action?.onClick) toast.action.onClick();
-    setToast(null);
-  };
-  const handleClose = () => {
-    clearTimeout(timerRef.current);
-    setToast(null);
-  };
+    timerRef.current = setTimeout(() => onClose(item.id), item.action ? 6000 : 3000);
+    return () => clearTimeout(timerRef.current);
+  }, [item.id, item.action, onClose]);
 
-  /* Status icons reuse the same hue as the legacy notification — green check for
-     positive, red exclamation for negative. Sized & coloured for inverse surface. */
-  const iconSvg = toast?.type === 'positive'
-    ? <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M21.1666 12C21.1666 17.0626 17.0626 21.1666 12 21.1666C6.93737 21.1666 2.83331 17.0626 2.83331 12C2.83331 6.93737 6.93737 2.83331 12 2.83331C17.0626 2.83331 21.1666 6.93737 21.1666 12Z" fill="#3dd680"/><path d="M10.7396 15.77L17.0416 9.46788L16.4752 8.90148C16.1173 8.5435 15.5369 8.5435 15.1789 8.90148L10.7396 13.3408L8.82108 11.4223C8.4631 11.0643 7.8827 11.0643 7.52472 11.4223L6.95831 11.9887L10.7396 15.77Z" fill="#161616"/></svg>
-    : <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#ff6464"/><path d="M12 7v6M12 17h.01" stroke="#161616" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
+  return (
+    <div
+      className={`toast toast--${item.type} ${visible ? 'toast--visible' : ''}`}
+      role="status"
+      aria-live="polite"
+    >
+      <span className="toast__icon">{item.type === 'positive' ? TOAST_POSITIVE_ICON : TOAST_NEGATIVE_ICON}</span>
+      <div className="toast__text">
+        <span className="toast__msg">{item.msg}</span>
+      </div>
+      {item.action && (
+        <button type="button" className="toast__action" onClick={() => onAction(item)}>
+          {item.action.label}
+        </button>
+      )}
+      <button type="button" className="toast__close" onClick={() => onClose(item.id)} aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="#ic-cross-24" /></svg>
+      </button>
+    </div>
+  );
+};
+
+const ToastProvider = ({ children }) => {
+  const isMobile = useMediaQuery('(max-width: 639px)');
+  const maxVisible = isMobile ? 1 : 2;
+  const [visible, setVisible] = useState([]);
+  const queueRef = useRef([]);
+  const idRef = useRef(0);
+
+  const flushQueue = useCallback((current) => {
+    const next = [...current];
+    while (next.length < maxVisible && queueRef.current.length > 0) {
+      next.push(queueRef.current.shift());
+    }
+    return next;
+  }, [maxVisible]);
+
+  const dismissToast = useCallback((id) => {
+    setVisible(current => flushQueue(current.filter(t => t.id !== id)));
+  }, [flushQueue]);
+
+  const handleAction = useCallback((item) => {
+    if (item.action?.onClick) item.action.onClick();
+    dismissToast(item.id);
+  }, [dismissToast]);
+
+  const showToast = useCallback((msg, type = 'negative', action) => {
+    const item = { id: ++idRef.current, msg, type, action };
+    setVisible(current => {
+      if (current.length < maxVisible) {
+        return [...current, item];
+      }
+      if (maxVisible === 1) {
+        queueRef.current.push(item);
+        return current;
+      }
+      const rest = current.slice(1);
+      if (rest.length < maxVisible) {
+        return [...rest, item];
+      }
+      queueRef.current.push(item);
+      return rest;
+    });
+  }, [maxVisible]);
+
+  useEffect(() => {
+    setVisible(current => {
+      if (current.length <= maxVisible) return current;
+      queueRef.current.unshift(...current.slice(0, current.length - maxVisible));
+      return current.slice(-maxVisible);
+    });
+  }, [maxVisible]);
 
   return (
     <ToastContext.Provider value={showToast}>
       {children}
-      <div className={`toast toast--${toast?.type || 'negative'} ${toast ? 'toast--visible' : ''}`} role="status" aria-live="polite">
-        {toast && <span className="toast__icon">{iconSvg}</span>}
-        <div className="toast__text">
-          <span className="toast__msg">{toast?.msg}</span>
-        </div>
-        {toast?.action && (
-          <button type="button" className="toast__action" onClick={handleAction}>
-            {toast.action.label}
-          </button>
-        )}
-        {toast && (
-          <button type="button" className="toast__close" onClick={handleClose} aria-label="Закрыть">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="#ic-cross-24" /></svg>
-          </button>
-        )}
+      <div className="toast-stack" aria-label="Notifications">
+        {visible.map(item => (
+          <ToastSnackbar
+            key={item.id}
+            item={item}
+            onClose={dismissToast}
+            onAction={handleAction}
+          />
+        ))}
       </div>
     </ToastContext.Provider>
   );
@@ -3238,7 +3600,7 @@ const useToast = () => useContext(ToastContext);
 const ROLE_LABELS = { ib: 'IB Partner', client: 'Client', admin: 'Admin' };
 
 const RolePreviewBar = ({ role, onRoleChange, onPillTap }) => (
-  <div className="role-bar" role="region" aria-label="Demo: переключение роли">
+  <div className="role-bar" role="region" aria-label="Demo: role switch">
     <span className="role-bar__label">Demo preview:</span>
     <ButtonGroup
       value={role}
@@ -3249,15 +3611,15 @@ const RolePreviewBar = ({ role, onRoleChange, onPillTap }) => (
         {value: 'admin',  label: 'Admin'},
       ]}
       size="s"
-      ariaLabel="Роль для предпросмотра"
+      ariaLabel="Preview role"
     />
     <button
       type="button"
       className="role-bar__pill is-mobile-only"
       onClick={onPillTap}
-      aria-label="Сменить роль для предпросмотра"
+      aria-label="Change preview role"
     >
-      <span>Demo: вы — {ROLE_LABELS[role] || role}</span>
+      <span>Demo: you are {ROLE_LABELS[role] || role}</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <polyline points="6 9 12 15 18 9" />
       </svg>
@@ -3271,10 +3633,11 @@ const HEADER_MENUS = {
   ib: [
     {key: 'dashboard', label: 'IB Dashboard'},
     {key: 'revenue',   label: 'Revenue statistics'},
-    {key: 'growth',    label: 'Увеличение показателей', dropdown: [
-      {key: 'promo',    label: 'Promo materials'},
+    {key: 'growth',    label: 'Client engagement', dropdown: [
       {key: 'contests', label: 'Contests'},
+      {key: 'rebate',   label: 'Rebate'},
     ]},
+    {key: 'promo',     label: 'Promo materials'},
   ],
   client: [
     {key: 'dashboard',     label: 'Dashboard'},
@@ -3289,10 +3652,13 @@ const HEADER_MENUS = {
   ],
   admin: [
     {key: 'dashboard', label: 'Dashboard'},
-    {key: 'contests',  label: 'Контесты'},
-    {key: 'users',     label: 'Пользователи'},
+    {key: 'contests',  label: 'Contests'},
+    {key: 'users',     label: 'Users'},
   ],
 };
+
+/* Standalone rebate prototype (source: lalygi-sys/rere, figma/prototype). */
+const REBATE_PROTOTYPE_HREF = 'rebate/index.html';
 
 /* Drawer показывает плоский список — раскрываем dropdown-пункты шапки. */
 const flattenHeaderMenuForDrawer = (items = []) =>
@@ -3304,7 +3670,7 @@ const flattenHeaderMenuForDrawer = (items = []) =>
    Admin:  Logo + Menu + Wallet + Avatar
    Mobile: horizontal Menu + Wallet are hidden via CSS; a burger button
            opens the slide-down drawer (managed by App). */
-const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0, onMenuOpen }) => {
+const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0, onMenuOpen, onMenuSelect }) => {
   const menu = HEADER_MENUS[role] || HEADER_MENUS.ib;
   const [internalKey, setInternalKey] = useState(activeKeyProp || menu[0].key);
   const activeKey = activeKeyProp || internalKey;
@@ -3321,8 +3687,8 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
 
   return (
     <header className="app-header" role="banner">
-      <div className="app-header__logo" aria-label="Логотип" />
-      <nav className="app-header__menu" aria-label="Главное меню">
+      <div className="app-header__logo" aria-label="Logo" />
+      <nav className="app-header__menu" aria-label="Main menu">
         {menu.map(item => {
           if (item.dropdown) {
             return (
@@ -3344,7 +3710,10 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
                       type="button"
                       role="menuitem"
                       className={`app-header__dropdown-item ${activeKey === d.key ? 'app-header__dropdown-item--active' : ''}`}
-                      onClick={() => setActiveKey(d.key)}
+                      onClick={() => {
+                        setActiveKey(d.key);
+                        onMenuSelect?.(d);
+                      }}
                     >
                       {d.key === 'contests' && role === 'client' ? (
                         <>
@@ -3374,7 +3743,10 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
             <button
               key={item.key}
               className={`app-header__menu-item ${activeKey === item.key ? 'app-header__menu-item--active' : ''}`}
-              onClick={() => setActiveKey(item.key)}
+              onClick={() => {
+                setActiveKey(item.key);
+                onMenuSelect?.(item);
+              }}
             >
               {item.label}
               {item.badge && <span className="app-header__menu-badge">{item.badge}</span>}
@@ -3386,12 +3758,12 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
         {role === 'client' ? (
           <button className="app-header__deposit" type="button">Deposit</button>
         ) : (
-          <button className="app-header__wallet" type="button" aria-label="Кошелёк">
+          <button className="app-header__wallet" type="button" aria-label="Wallet">
             <span className="app-header__wallet-label">Wallet</span>
             <span className="app-header__wallet-amount">$0.00</span>
           </button>
         )}
-        <button className="app-header__avatar" type="button" aria-label="Профиль">
+        <button className="app-header__avatar" type="button" aria-label="Profile">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
@@ -3399,7 +3771,7 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
           {role === 'client' && <span className="app-header__avatar-dot" aria-hidden="true" />}
         </button>
         {role === 'client' && (
-          <button className="app-header__close" type="button" aria-label="Меню">
+          <button className="app-header__close" type="button" aria-label="Menu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <line x1="4" y1="7" x2="20" y2="7" />
               <line x1="4" y1="12" x2="20" y2="12" />
@@ -3412,7 +3784,7 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
           type="button"
           className="app-header__burger is-mobile-only"
           onClick={onMenuOpen}
-          aria-label="Открыть меню"
+          aria-label="Open menu"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <line x1="4" y1="7" x2="20" y2="7" />
@@ -3462,7 +3834,7 @@ const MobileDrawer = ({ open, onClose, title, items = [], activeKey, onSelect })
             type="button"
             className="ds-icon-btn ds-icon-btn--ghost ds-icon-btn--m"
             onClick={onClose}
-            aria-label="Закрыть"
+            aria-label="Close"
           >
             <svg><use href="#ic-cross-24"/></svg>
           </button>
@@ -3495,29 +3867,29 @@ const MobileDrawer = ({ open, onClose, title, items = [], activeKey, onSelect })
    Reuses DS sprite icons that already exist in this file's <svg> sprite. */
 const TAB_BARS = {
   ib: [
-    { key: 'dashboard', label: 'Главная',  icon: 'market-watch' },
-    { key: 'contests',  label: 'Контесты', icon: 'cup' },
-    { key: 'wallet',    label: 'Кошелёк',  icon: 'pattern-trend' },
-    { key: 'profile',   label: 'Профиль',  icon: 'users' },
+    { key: 'dashboard', label: 'Home',  icon: 'market-watch' },
+    { key: 'contests',  label: 'Contests', icon: 'cup' },
+    { key: 'wallet',    label: 'Wallet',  icon: 'pattern-trend' },
+    { key: 'profile',   label: 'Profile',  icon: 'users' },
   ],
   client: [
-    { key: 'dashboard', label: 'Главная',  icon: 'market-watch' },
-    { key: 'contests',  label: 'Контесты', icon: 'cup' },
-    { key: 'bonuses',   label: 'Бонусы',   icon: 'gift' },
-    { key: 'profile',   label: 'Профиль',  icon: 'users' },
+    { key: 'dashboard', label: 'Home',  icon: 'market-watch' },
+    { key: 'contests',  label: 'Contests', icon: 'cup' },
+    { key: 'bonuses',   label: 'Bonuses',   icon: 'gift' },
+    { key: 'profile',   label: 'Profile',  icon: 'users' },
   ],
   admin: [
-    { key: 'dashboard', label: 'Главная',  icon: 'market-watch' },
-    { key: 'contests',  label: 'Контесты', icon: 'cup' },
-    { key: 'users',     label: 'Юзеры',    icon: 'users' },
-    { key: 'audit',     label: 'Аудит',    icon: 'document' },
+    { key: 'dashboard', label: 'Home',  icon: 'market-watch' },
+    { key: 'contests',  label: 'Contests', icon: 'cup' },
+    { key: 'users',     label: 'Users',    icon: 'users' },
+    { key: 'audit',     label: 'Audit',    icon: 'document' },
   ],
 };
 
 const MobileTabBar = ({ role, activeKey, onSelect }) => {
   const tabs = TAB_BARS[role] || TAB_BARS.ib;
   return (
-    <nav className="mobile-tab-bar" role="navigation" aria-label="Главное меню">
+    <nav className="mobile-tab-bar" role="navigation" aria-label="Main menu">
       {tabs.map(tab => (
         <button
           key={tab.key}
@@ -3540,15 +3912,15 @@ const MobilePersonaSheet = ({ open, onClose, role, onChange }) => (
   <Modal
     open={open}
     onClose={onClose}
-    title="Демо-режим"
-    subtitle="Выберите, чьим интерфейсом смотреть прототип"
+    title="Demo mode"
+    subtitle="Choose whose interface to preview"
     size="m"
   >
     <div className="rig-radio-cards">
       {[
-        { id: 'ib',     title: 'IB Partner', desc: 'Создаёт и ведёт контесты для своих клиентов' },
-        { id: 'client', title: 'Client',     desc: 'Участвует в контестах и видит лидерборд' },
-        { id: 'admin',  title: 'Admin',      desc: 'Модерирует контесты, реагирует на алерты' },
+        { id: 'ib',     title: 'IB Partner', desc: 'Creates and runs contests for their clients' },
+        { id: 'client', title: 'Client',     desc: 'Joins contests and views the leaderboard' },
+        { id: 'admin',  title: 'Admin',      desc: 'Moderates contests and responds to alerts' },
       ].map(opt => {
         const isSelected = role === opt.id;
         return (
@@ -3649,12 +4021,24 @@ const StatBannerHintSplit = ({ parts }) => {
   );
 };
 
-const StatBanner = ({ variant, icon, label, value, hint, hintParts, delta, progress, live }) => (
+const StatBanner = ({ variant, icon, label, value, hint, hintParts, delta, progress, live, infoTip }) => (
   <div className={`stat-banner stat-banner--${variant}`}>
     <div className="stat-banner__head">
-      <span className="stat-banner__icon"><svg><use href={dsIc(icon)} /></svg></span>
-      <span className="stat-banner__label">{label}</span>
-      {live && <span className="stat-banner__live-dot" aria-hidden="true" title="Идёт сейчас" />}
+      <div className="stat-banner__head-main">
+        <span className="stat-banner__icon"><svg><use href={dsIc(icon)} /></svg></span>
+        <span className="stat-banner__label">{label}</span>
+        {live && <span className="stat-banner__live-dot" aria-hidden="true" title="Live now" />}
+      </div>
+      {infoTip ? (
+        <button type="button" className="stat-banner__info-btn" aria-label={`About metric “${label}”`} title={infoTip}>
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="7.25" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M10 9v5M10 6.5v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </button>
+      ) : (
+        <span className="stat-banner__info-spacer" aria-hidden="true" />
+      )}
     </div>
     <div className="stat-banner__value-row">
       <div className="stat-banner__value">{value}</div>
@@ -3669,7 +4053,7 @@ const StatBanner = ({ variant, icon, label, value, hint, hintParts, delta, progr
         </span>
       )}
     </div>
-    {(hint || hintParts?.length) && (
+    {(hint || hintParts?.length) ? (
       <div className="stat-banner__foot">
         {hintParts?.length ? (
           <StatBannerHintSplit parts={hintParts} />
@@ -3677,6 +4061,8 @@ const StatBanner = ({ variant, icon, label, value, hint, hintParts, delta, progr
           <span className="stat-banner__hint">{hint}</span>
         ) : null}
       </div>
+    ) : (
+      <div className="stat-banner__foot" aria-hidden="true" />
     )}
     {progress != null && (
       <div className="stat-banner__track" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
@@ -3734,22 +4120,27 @@ const estimateDraftPotentialProfit = (draftRows, allRows) => {
   }, 0);
 };
 
-const IBContestDraftLaunchPanel = ({ draftRows, allRows, onLaunchDraft }) => {
+const IBContestDraftLaunchPanel = ({ draftRows, allRows, onNavigate, onSelectContest }) => {
   const potentialProfit = estimateDraftPotentialProfit(draftRows, allRows);
-  const targetDraft = draftRows.find(r => r.period && r.period !== 'Не задан') || draftRows[0];
+  const firstDraft = draftRows[0];
+
+  const handleContinue = () => {
+    if (!firstDraft) return;
+    onSelectContest && onSelectContest(firstDraft.name);
+    onNavigate && onNavigate('wizard');
+  };
 
   return (
     <Notification
-      variant="info"
+      variant="brand"
       layout="horizontal"
-      icon="protip"
-      title={`${formatUsdCompact(potentialProfit)} — возможная прибыль за неопубликованные контесты. Опубликуйте, чтобы начать зарабатывать.`}
-      description="Оценка на основе похожих активных контестов. Продолжите публикацию черновиков."
-      actions={targetDraft && (
-        <Button variant="tertiary" size="s" onClick={() => onLaunchDraft(targetDraft)}>
-          Опубликовать
+      title={`Potential profit from unpublished contests ${formatUsdCompact(potentialProfit)}`}
+      description="Estimate based on similar active contests and analytics from other IB contests."
+      actions={
+        <Button variant="outline" size="s" onClick={handleContinue}>
+          Continue editing
         </Button>
-      )}
+      }
     />
   );
 };
@@ -3759,7 +4150,7 @@ const IBContestStatsBanners = ({ rows }) => {
     return (
       <div className="stat-banners-placeholder" role="status">
         <Icon name="info" size="sm" />
-        <span>Опубликуйте контест — здесь появятся прибыль, участники и активация клиентов.</span>
+        <span>Publish a contest — profit, participants, and client activation will appear here.</span>
       </div>
     );
   }
@@ -3772,62 +4163,66 @@ const IBContestStatsBanners = ({ rows }) => {
   } = computeIBContestStats(rows);
   const profitHintParts = (activeProfit || completedProfit)
     ? [
-        activeProfit && `${formatUsdCompact(activeProfit)} активные`,
-        completedProfit && `${formatUsdCompact(completedProfit)} завершённые`,
+        activeProfit && `${formatUsdCompact(activeProfit)} active`,
+        completedProfit && `${formatUsdCompact(completedProfit)} completed`,
       ].filter(Boolean)
     : null;
   const prizeHintParts = (prizePoolActive || prizesGifted)
     ? [
-        prizePoolActive && `${formatUsdCompact(prizePoolActive)} в активных`,
-        prizesGifted && `${formatUsdCompact(prizesGifted)} выплачено`,
+        prizePoolActive && `${formatUsdCompact(prizePoolActive)} in active`,
+        prizesGifted && `${formatUsdCompact(prizesGifted)} paid out`,
       ].filter(Boolean)
     : null;
   const activationHintParts = activationTotal
     ? [
-        activationReturned > 0 && `${activationReturned} вернулись`,
-        activationNew > 0 && `${activationNew} новые клиенты`,
+        activationReturned > 0 && `${activationReturned} returned`,
+        activationNew > 0 && `${activationNew} new clients`,
       ].filter(Boolean)
     : null;
   const engageHintParts = avgReach && minReach && maxReach
-    ? [`мин ${minReach}`, `макс ${maxReach}`]
+    ? [`min ${minReach}`, `max ${maxReach}`]
     : null;
   return (
-    <div className="stat-banners" aria-label="Показатели контестов">
+    <div className="stat-banners" aria-label="Contest metrics">
       <StatBanner
         variant="profit"
         icon="trending-up"
-        label="Прибыль IB"
+        label="IB profit"
         value={formatUsdCompact(totalProfit)}
-        delta={totalProfit ? { dir: 'inflow', text: '+$85 за нед' } : undefined}
-        hint={profitHintParts ? undefined : 'начнёт начисляться после запуска'}
+        delta={totalProfit ? { dir: 'inflow', text: '+$85 / wk' } : undefined}
+        hint={profitHintParts ? undefined : 'accrues after launch'}
         hintParts={profitHintParts || undefined}
+        infoTip="Total IB profit from contests for the selected period and filters. Includes active and completed contests."
       />
       <StatBanner
         variant="reach"
         icon="users"
-        label="Клиенты в торговле"
+        label="Clients trading"
         value={String(activationTotal)}
-        delta={activationTotal ? { dir: 'up', text: '6 к пр. нед' } : undefined}
-        hint={activationHintParts ? undefined : 'клиенты после запуска контестов'}
+        delta={activationTotal ? { dir: 'up', text: '6 vs prev wk' } : undefined}
+        hint={activationHintParts ? undefined : 'clients after contests launch'}
         hintParts={activationHintParts || undefined}
+        infoTip="Clients who traded during contest periods: returning and new participants."
       />
       <StatBanner
         variant="engage"
         icon="chart"
-        label="Участников на контест"
+        label="Participants per contest"
         value={String(avgReach)}
-        delta={avgReach ? { dir: 'down', text: '4 к пр. нед' } : undefined}
-        hint={engageHintParts ? undefined : 'среднее по активным контестам'}
+        delta={avgReach ? { dir: 'down', text: '4 vs prev wk' } : undefined}
+        hint={engageHintParts ? undefined : 'average across active contests'}
         hintParts={engageHintParts || undefined}
+        infoTip="Average participants per active contest. Min and max are across current contests."
       />
       <StatBanner
         variant="prize"
         icon="trophy"
-        label="Призовой фонд"
+        label="Prize pool"
         value={formatUsdCompact(prizePoolTotal)}
-        delta={prizePoolTotal ? { dir: 'inflow', text: '+$300 за нед' } : undefined}
-        hint={prizeHintParts ? undefined : 'появится после запуска контестов'}
+        delta={prizePoolTotal ? { dir: 'inflow', text: '+$300 / wk' } : undefined}
+        hint={prizeHintParts ? undefined : 'appears after contests launch'}
         hintParts={prizeHintParts || undefined}
+        infoTip="Total prize pool of active contests and prizes already paid for completed ones."
       />
     </div>
   );
@@ -3843,7 +4238,7 @@ const Medal = ({ position }) => {
 const PrizeRank = ({ position }) => {
   const cls = position <= 3 ? `prize-rank--${position}` : 'prize-rank--default';
   return (
-    <span className={`prize-rank ${cls}`} aria-label={`${position} место`}>
+    <span className={`prize-rank ${cls}`} aria-label={`${position} place`}>
       <svg><use href="#ic-star-outline-24" /></svg>
     </span>
   );
@@ -3865,42 +4260,58 @@ const InfoBox = ({ icon, variant = 'info', children }) => {
   );
 };
 
-/* ── Wizard Stepper ── */
-const WizardStepper = ({ currentStep, totalSteps }) => {
-  const checkSvg = <svg viewBox="0 0 24 24" fill="none" style={{width:24,height:24}}><path d="M10.7396 15.7695L17.0416 9.46739L16.4752 8.90099C16.1173 8.54301 15.5369 8.54301 15.1789 8.90099L10.7396 13.3403L8.82108 11.4218C8.4631 11.0638 7.8827 11.0638 7.52472 11.4218L6.95831 11.9882L10.7396 15.7695Z" fill="#31865B"/><path fillRule="evenodd" clipRule="evenodd" d="M21.1666 11.9997C21.1666 17.0623 17.0626 21.1663 12 21.1663C6.93737 21.1663 2.83331 17.0623 2.83331 11.9997C2.83331 6.93706 6.93737 2.83301 12 2.83301C17.0626 2.83301 21.1666 6.93706 21.1666 11.9997ZM19.3333 11.9997C19.3333 16.0498 16.0501 19.333 12 19.333C7.94989 19.333 4.66665 16.0501 4.66665 11.9997C4.66665 7.94959 7.94989 4.66634 12 4.66634C16.0501 4.66634 19.3333 7.94959 19.3333 11.9997Z" fill="#31865B"/></svg>;
-
-  const items = [];
-  for (let i = 1; i <= totalSteps; i++) {
-    const isDone = i < currentStep;
-    const isActive = i === currentStep;
-    items.push(
-      <div key={`d${i}`} className={`wizard-dot ${isActive ? 'wizard-dot--active' : ''} ${isDone ? 'wizard-dot--done' : ''}`}>
-        {isDone ? checkSvg : <svg><use href={`#ic-digit-${i}-24`} /></svg>}
+/* ── Wizard Stepper — DS ProgressBar Type=Segmented (Figma 10490:782) ── */
+const WizardStepper = ({ currentStep, totalSteps }) => (
+  <div
+    className="wizard-segments"
+    role="progressbar"
+    aria-valuenow={currentStep}
+    aria-valuemin={1}
+    aria-valuemax={totalSteps}
+    aria-label={`Step ${currentStep} of ${totalSteps}`}
+  >
+    {Array.from({ length: totalSteps }, (_, i) => {
+      const step = i + 1;
+      const state = step < currentStep ? 'done' : step === currentStep ? 'active' : 'upcoming';
+      return (
+        <div
+          key={step}
+          className={`wizard-segment wizard-segment--${state}`}
+          aria-hidden="true"
+        />
+      );
+    })}
       </div>
     );
-    if (i < totalSteps) {
-      items.push(<div key={`c${i}`} className={`wizard-connector ${i < currentStep ? 'wizard-connector--done' : ''}`} />);
-    }
-  }
-  return <div className="wizard-steps">{items}</div>;
-};
 
 /* ── Calendar ── */
-const MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-const MONTHS_SHORT = ['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
-const DOW = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW = ['Mo','Tu','We','Th','Fr','Sa','Su'];
 
 const formatDate = d => `${d.getDate()} ${MONTHS_SHORT[d.getMonth()]} ${d.getFullYear()}`;
 
-const MeridiemToggle = ({ value, onChange }) => (
-  <div className="time-meridiem">
-    <ButtonGroup
-      value={value}
-      onChange={onChange}
-      options={[{value:'AM', label:'AM'}, {value:'PM', label:'PM'}]}
-      size="s"
-      ariaLabel="AM или PM"
-    />
+const TimeInputWithMeridiem = ({ label, value, onChange, meridiem, onMeridiemChange }) => (
+  <div className="ds-input-wrap">
+    {label && <label className="ds-input-label">{label}</label>}
+    <div className="time-input">
+      <span className="time-input__icon" aria-hidden="true">
+        <svg><use href={dsIc('clock')} /></svg>
+      </span>
+      <input
+        type="text"
+        className="time-input__field"
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        aria-label={label}
+      />
+      <div className="time-input__meridiem" role="radiogroup" aria-label="AM or PM">
+        <ChipsGroup>
+          <Chips label="AM" size="s" selected={meridiem === 'AM'} onClick={() => onMeridiemChange('AM')} />
+          <Chips label="PM" size="s" selected={meridiem === 'PM'} onClick={() => onMeridiemChange('PM')} />
+        </ChipsGroup>
+      </div>
+    </div>
   </div>
 );
 
@@ -3958,7 +4369,176 @@ const CalendarInput = ({ value, onChange, label }) => {
             })}
           </div>
           <div style={{display:'flex',gap:12,padding:'12px 16px 16px'}}>
-            <button style={{flex:1,height:40,border:'none',background:'none',borderRadius:12,fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}} onClick={() => setOpen(false)}>Закрыть</button>
+            <button style={{flex:1,height:40,border:'none',background:'none',borderRadius:12,fontSize:14,fontWeight:600,cursor:'pointer',fontFamily:'inherit'}} onClick={() => setOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const calSameDay = (a, b) => a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+
+const DateRangeInput = ({ label = 'Contest period', startDate, endDate, onChangeStart, onChangeEnd }) => {
+  const [open, setOpen] = useState(false);
+  const [range, setRange] = useState({ start: startDate, end: endDate });
+  const initRef = range.start || range.end || new Date();
+  const [viewYear, setViewYear] = useState(initRef.getFullYear());
+  const [viewMonth, setViewMonth] = useState(initRef.getMonth());
+  const ref = useRef();
+
+  useEffect(() => {
+    if (open) return;
+    setRange({ start: startDate, end: endDate });
+  }, [startDate, endDate, open]);
+
+  useEffect(() => {
+    const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const sd = range.start || null;
+  const ed = range.end || null;
+  const rangeSpan = sd && ed && !calSameDay(sd, ed);
+
+  const display = sd && ed
+    ? `${formatDate(sd)} — ${formatDate(ed)}`
+    : sd
+      ? `${formatDate(sd)} — …`
+      : 'Select period';
+
+  const navMonth = dir => {
+    let m = viewMonth + dir, y = viewYear;
+    if (m > 11) { m = 0; y++; } else if (m < 0) { m = 11; y--; }
+    setViewMonth(m); setViewYear(y);
+  };
+
+  const handlePickDate = (dt) => {
+    const ps = sd, pe = ed;
+    let next;
+    if (ps && pe) next = { start: dt, end: null };
+    else if (ps && !pe) next = dt < ps ? { start: dt, end: ps } : { start: ps, end: dt };
+    else next = { start: dt, end: null };
+    setRange(next);
+    onChangeStart(next.start);
+    if (next.end) {
+      onChangeEnd(next.end);
+      setOpen(false);
+    }
+    if (dt.getMonth() !== viewMonth || dt.getFullYear() !== viewYear) {
+      setViewMonth(dt.getMonth());
+      setViewYear(dt.getFullYear());
+    }
+  };
+
+  const gridCells = buildMonthGridCells(viewYear, viewMonth);
+
+  return (
+    <div ref={ref} className="wizard-period-field">
+      <Input asButton label={label} rightIcon="calendar" onClick={() => setOpen(v => !v)}>
+        {display}
+      </Input>
+      {open && (
+        <div className="cal-dropdown cal-dropdown--range">
+          <div className="cal">
+            <div className="cal-nav">
+              <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(-1)} aria-label="Previous month">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <span className="dr-panel__month">{MONTHS[viewMonth]} {viewYear}</span>
+              <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(1)} aria-label="Next month">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <div className="cal-grid">
+              {DOW.map(d => <div key={d} className="cal-wd">{d}</div>)}
+            </div>
+            <div className="cal-grid">
+              {gridCells.map((cell, i) => {
+                const dt = cell.date;
+                const isStart = sd && calSameDay(dt, sd);
+                const isEnd = ed && calSameDay(dt, ed);
+                const inRange = sd && ed && dt > sd && dt < ed;
+                const cellCls = ['cal-cell'];
+                if (inRange) cellCls.push('in-range');
+                if (isStart && ed && rangeSpan) cellCls.push('is-start');
+                if (isEnd && sd && rangeSpan) cellCls.push('is-end');
+                const btnCls = ['cal-day'];
+                if (cell.out) btnCls.push('out');
+                if (calSameDay(dt, today)) btnCls.push('today');
+                if (isStart) btnCls.push('is-start');
+                if (isEnd) btnCls.push('is-end');
+                return (
+                  <div key={i} className={cellCls.join(' ')}>
+                    <button type="button" className={btnCls.join(' ')} onClick={() => handlePickDate(dt)}>{cell.label}</button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const TimeRangeInput = ({
+  label = 'Time period',
+  startTime, endTime, startMeridiem, endMeridiem,
+  onChangeStartTime, onChangeEndTime, onChangeStartMeridiem, onChangeEndMeridiem,
+  defaultStartTime = '12:00',
+  defaultEndTime = '11:59',
+  defaultStartMeridiem = 'AM',
+  defaultEndMeridiem = 'PM',
+}) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef();
+
+  useEffect(() => {
+    const handler = e => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const display = `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}`;
+  const isDefault = startTime === defaultStartTime
+    && endTime === defaultEndTime
+    && startMeridiem === defaultStartMeridiem
+    && endMeridiem === defaultEndMeridiem;
+
+  const reset = () => {
+    onChangeStartTime(defaultStartTime);
+    onChangeEndTime(defaultEndTime);
+    onChangeStartMeridiem(defaultStartMeridiem);
+    onChangeEndMeridiem(defaultEndMeridiem);
+  };
+
+  return (
+    <div ref={ref} className="wizard-period-field">
+      <Input asButton label={label} rightIcon="clock" onClick={() => setOpen(v => !v)}>
+        {display}
+      </Input>
+      {open && (
+        <div className="time-range-dropdown">
+          <TimeInputWithMeridiem
+            label="Start time"
+            value={startTime}
+            onChange={onChangeStartTime}
+            meridiem={startMeridiem}
+            onMeridiemChange={onChangeStartMeridiem}
+          />
+          <TimeInputWithMeridiem
+            label="End time"
+            value={endTime}
+            onChange={onChangeEndTime}
+            meridiem={endMeridiem}
+            onMeridiemChange={onChangeEndMeridiem}
+          />
+          <div className="time-range-dropdown__foot">
+            <button type="button" className="dr-panel__reset" onClick={reset} disabled={isDefault}>Reset</button>
+            <Button variant="primary" size="s" onClick={() => setOpen(false)}>Done</Button>
           </div>
         </div>
       )}
@@ -3969,7 +4549,7 @@ const CalendarInput = ({ value, onChange, label }) => {
 /* DateRangeTrigger — кнопка-триггер в тулбаре. Управляется снаружи: открытое
    состояние (`isOpen`) и выбранный диапазон (`range`). Используется в паре
    с `DateRangePanel`, который рендерится рядом с таблицей. */
-const fmtDay = d => d ? `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}.${d.getFullYear()}` : '';
+const fmtDay = d => d ? `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}/${d.getFullYear()}` : '';
 
 /* 6-недельная сетка от понедельника недели, содержащей 1-е число (как calRender в Rebate). */
 const buildMonthGridCells = (viewYear, viewMonth) => {
@@ -3997,7 +4577,7 @@ const dayDiffInclusive = (a, b) => {
 
 const dateRangeButtonLabel = (range) => {
   if (range?.start && range?.end) return `${fmtDay(range.start)} — ${fmtDay(range.end)}`;
-  if (range?.start) return `от ${fmtDay(range.start)}`;
+  if (range?.start) return `from ${fmtDay(range.start)}`;
   return '';
 };
 
@@ -4008,7 +4588,7 @@ const SearchIcon18 = () => (
 );
 
 /* Раскрывающийся поиск — как Rebate (Search client → inline field + close). */
-const TableSearchToggle = ({ value, onChange, open, onOpenChange, triggerLabel = 'Поиск контестов', placeholder = 'Поиск по названию или типу' }) => {
+const TableSearchToggle = ({ value, onChange, open, onOpenChange, triggerLabel = 'Search contests', placeholder = 'Search by name or type' }) => {
   const inputRef = useRef(null);
 
   const openSearch = () => {
@@ -4044,7 +4624,7 @@ const TableSearchToggle = ({ value, onChange, open, onOpenChange, triggerLabel =
           onKeyDown={e => { if (e.key === 'Escape') closeSearch(); }}
           aria-label={placeholder}
         />
-        <button type="button" className="search-clear" aria-label="Закрыть поиск" onClick={closeSearch}>
+        <button type="button" className="search-clear" aria-label="Close search" onClick={closeSearch}>
           <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
             <path d="M5 5l8 8M13 5l-8 8"/>
           </svg>
@@ -4054,13 +4634,28 @@ const TableSearchToggle = ({ value, onChange, open, onOpenChange, triggerLabel =
   );
 };
 
-const DateRangeTrigger = ({ range, isOpen, onClick, placeholder = 'Все периоды', fieldLabel = 'Период проведения' }) => {
-  const label = dateRangeButtonLabel(range);
+const DateRangeCalendarIcon = () => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" aria-hidden="true">
+    <rect x="2.5" y="3.5" width="13" height="12" rx="2" />
+    <path d="M2.5 7.5h13M6 2v3M12 2v3" />
+  </svg>
+);
+
+const DateRangeTrigger = ({ range, isOpen, onClick, placeholder = 'All periods', fieldLabel = 'Contest period' }) => {
+  const valueLabel = dateRangeButtonLabel(range) || placeholder;
   return (
-    <div className={`dr-trigger ${isOpen ? 'dr-trigger--open' : ''}`}>
-      <Input size="S" asButton leftIcon="calendar" prefix={fieldLabel} onClick={onClick}>
-        {label || placeholder}
-      </Input>
+    <div className="date-range-wrap">
+      <button
+        type="button"
+        className="date-range"
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+        onClick={onClick}
+      >
+        <DateRangeCalendarIcon />
+        <span className="dr-label">{fieldLabel}</span>
+        <span className="dr-value">{valueLabel}</span>
+      </button>
     </div>
   );
 };
@@ -4108,22 +4703,16 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
   };
 
   const daysSelected = (sd && ed) ? dayDiffInclusive(sd, ed) : 0;
-  const daysWord = (n) => {
-    const m100 = n % 100; if (m100 >= 11 && m100 <= 14) return 'дней';
-    const m10 = n % 10;
-    if (m10 === 1) return 'день';
-    if (m10 >= 2 && m10 <= 4) return 'дня';
-    return 'дней';
-  };
+  const daysWord = (n) => (n === 1 ? 'day' : 'days');
 
   const activeBound = !sd ? 'start' : (!ed ? 'end' : null);
   const rangeSpan = sd && ed && !sameDay(sd, ed);
 
   return (
-    <div className="dr-panel" role="dialog" aria-label="Период проведения">
+    <div className="dr-panel" role="dialog" aria-label="Contest period">
       <div className="dr-panel__head">
-        <span className="dr-panel__title">Период проведения</span>
-        <button type="button" className="dr-panel__close" onClick={onClose} aria-label="Закрыть">
+        <span className="dr-panel__title">Contest period</span>
+        <button type="button" className="dr-panel__close" onClick={onClose} aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none"><use href="#ic-cross-24"/></svg>
         </button>
       </div>
@@ -4131,28 +4720,28 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
         <div className="dr-panel__inputs">
           <Input
             size="S"
-            label="Дата начала"
+            label="Start date"
             value={range?.start ? fmtDay(range.start) : ''}
-            placeholder="дд.мм.гггг"
+            placeholder="mm/dd/yyyy"
             readOnly
             className={activeBound === 'start' ? 'dr-panel__input--active' : ''}
           />
           <Input
             size="S"
-            label="Дата окончания"
+            label="End date"
             value={range?.end ? fmtDay(range.end) : ''}
-            placeholder="дд.мм.гггг"
+            placeholder="mm/dd/yyyy"
             readOnly
             className={activeBound === 'end' ? 'dr-panel__input--active' : ''}
           />
         </div>
         <div className="cal" id="cal-main">
           <div className="cal-nav">
-            <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(-1)} aria-label="Предыдущий месяц">
+            <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(-1)} aria-label="Previous month">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
             </button>
             <span className="dr-panel__month" id="cal-title-main">{MONTHS[viewMonth]} {viewYear}</span>
-            <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(1)} aria-label="Следующий месяц">
+            <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(1)} aria-label="Next month">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           </div>
@@ -4190,10 +4779,10 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
       <div className="dr-panel__foot">
         <span className="dr-panel__count">
           {daysSelected > 0
-            ? `${daysSelected} ${daysWord(daysSelected)} выбрано`
-            : sd ? 'Выберите дату окончания' : 'Выберите даты'}
+            ? `${daysSelected} ${daysWord(daysSelected)} selected`
+            : sd ? 'Select end date' : 'Select dates'}
         </span>
-        <button type="button" className="dr-panel__reset" onClick={reset} disabled={isSamePeriodRange(range, defaultRange)}>Сбросить</button>
+        <button type="button" className="dr-panel__reset" onClick={reset} disabled={isSamePeriodRange(range, defaultRange)}>Reset</button>
       </div>
     </div>
   );
@@ -4221,7 +4810,7 @@ const IllNoParticipants = ({ size = 100 }) => (
 );
 
 /* Shared ContestCard — used in ClientContestList and wizard preview */
-const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Участвую', onAction, actionDisabled, prizeVariant = 'inline', footer, showNewBadge }) => {
+const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, participants, prize, days, progress, progressText, onClick, actionLabel = 'Join', onAction, actionDisabled, prizeVariant = 'inline', footer, showNewBadge }) => {
   const t = CONTEST_TYPES[typeId];
   const showPrizeInMeta = prize && prizeVariant === 'inline';
   return (
@@ -4252,31 +4841,31 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
       {desc && <hr className="contest-card__divider" aria-hidden="true" />}
       <div className="contest-card__meta">
         {dates && <span className="contest-card__meta-item"><svg><use href="#ic-calendar-24"/></svg>{dates}</span>}
-        {participants != null && <span className="contest-card__meta-item"><svg><use href="#ic-users-24"/></svg>{participants} участников</span>}
+        {participants != null && <span className="contest-card__meta-item"><svg><use href="#ic-users-24"/></svg>{participants} participants</span>}
         {days && <span className="contest-card__meta-item"><svg><use href="#ic-clock-24"/></svg>{days}</span>}
         {showPrizeInMeta && (
           <span className="contest-card__meta-item contest-card__meta-item--prize">
             <svg><use href="#ic-gift-24"/></svg>
-            <span className="contest-card__prize-label">Призовой фонд</span>
+            <span className="contest-card__prize-label">Prize pool</span>
             {prize}
           </span>
         )}
       </div>
       {prize && prizeVariant === 'row' && (
         <div className="contest-card__prize-row">
-          <span className="contest-card__prize-row-label">Призовой фонд</span>
+          <span className="contest-card__prize-row-label">Prize pool</span>
           <span className="contest-card__prize-row-value">{prize}</span>
         </div>
       )}
       {prize && prizeVariant === 'chip' && (
         <span className="contest-card__prize-chip">
           <svg aria-hidden="true"><use href="#ic-gift-24"/></svg>
-          Призовой фонд <strong>{prize}</strong>
+          Prize pool <strong>{prize}</strong>
         </span>
       )}
       {prize && prizeVariant === 'stack' && (
         <div className="contest-card__prize-stack">
-          <span className="contest-card__prize-stack-label">Призовой фонд</span>
+          <span className="contest-card__prize-stack-label">Prize pool</span>
           <span className="contest-card__prize-stack-value">{prize}</span>
         </div>
       )}
@@ -4308,16 +4897,16 @@ const ContestCard = ({ typeId, name, statusLabel, statusVariant, desc, dates, pa
    ═══════════════════════════════════════════════════════ */
 
 const IB_CONTEST_ROWS = [
-  {name:'Volume Race', typeId:'volume', status:'Active', statusTag:'positive', count:47, ibProfit:420, prizePool:420, activationReturned:14, activationNew:18, period:'15 Mar — 30 Apr 2026', progress:33, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
-  {name:'Grow account', typeId:'grow', status:'Active', statusTag:'positive', count:18, ibProfit:180, prizePool:300, activationReturned:6, activationNew:8, period:'1 — 15 May 2026', progress:45, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
-  {name:'April Top Traders', typeId:'top', status:'Active', statusTag:'positive', count:24, ibProfit:95, prizePool:180, activationReturned:5, activationNew:9, period:'5 Apr — 20 May 2026', progress:52, action:'Статистика', actionIcon:'chart', share:true, nav:'detail'},
-  {name:'Trading Streak', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'1 — 31 May 2026', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
-  {name:'Summer Volume Open', typeId:'volume', status:'Draft', statusTag:'neutral', count:'—', period:'15 Jun — 15 Jul 2026', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
-  {name:'June Grow Push', typeId:'grow', status:'Draft', statusTag:'neutral', count:'—', period:'Не задан', action:'Редактировать', actionIcon:'edit', nav:'wizard'},
-  {name:'Top Trader', typeId:'top', status:'Completed', statusTag:'neutral', count:32, ibProfit:240, prizePool:400, prizesGifted:400, period:'1 — 28 Feb 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
-  {name:'March Volume Cup', typeId:'volume', status:'Completed', statusTag:'neutral', count:41, ibProfit:310, prizePool:500, prizesGifted:500, period:'10 — 31 Mar 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
-  {name:'Winter Streak Challenge', typeId:'streak', status:'Completed', statusTag:'neutral', count:18, ibProfit:120, prizePool:300, prizesGifted:300, period:'1 — 31 Dec 2025', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
-  {name:'Q1 Grow Sprint', typeId:'grow', status:'Completed', statusTag:'neutral', count:27, ibProfit:195, prizePool:300, prizesGifted:300, period:'1 Jan — 31 Mar 2026', action:'Результаты', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'Volume Race', typeId:'volume', status:'Active', statusTag:'positive', count:47, ibProfit:420, prizePool:420, activationReturned:14, activationNew:18, period:'15 Mar — 30 Apr 2026', progress:33, action:'Statistics', actionIcon:'chart', share:true, nav:'detail'},
+  {name:'Grow account', typeId:'grow', status:'Active', statusTag:'positive', count:18, ibProfit:180, prizePool:300, activationReturned:6, activationNew:8, period:'1 — 15 May 2026', progress:45, action:'Statistics', actionIcon:'chart', share:true, nav:'detail'},
+  {name:'April Top Traders', typeId:'top', status:'Active', statusTag:'positive', count:24, ibProfit:95, prizePool:180, activationReturned:5, activationNew:9, period:'5 Apr — 20 May 2026', progress:52, action:'Statistics', actionIcon:'chart', share:true, nav:'detail'},
+  {name:'Trading Streak', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'1 — 31 May 2026', action:'Edit', actionIcon:'edit', nav:'wizard'},
+  {name:'Summer Volume Open', typeId:'volume', status:'Draft', statusTag:'neutral', count:'—', period:'15 Jun — 15 Jul 2026', action:'Edit', actionIcon:'edit', nav:'wizard'},
+  {name:'June Grow Push', typeId:'grow', status:'Draft', statusTag:'neutral', count:'—', period:'Not set', action:'Edit', actionIcon:'edit', nav:'wizard'},
+  {name:'Top Trader', typeId:'top', status:'Completed', statusTag:'neutral', count:32, ibProfit:240, prizePool:400, prizesGifted:400, period:'1 — 28 Feb 2026', action:'Results', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'March Volume Cup', typeId:'volume', status:'Completed', statusTag:'neutral', count:41, ibProfit:310, prizePool:500, prizesGifted:500, period:'10 — 31 Mar 2026', action:'Results', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'Winter Streak Challenge', typeId:'streak', status:'Completed', statusTag:'neutral', count:18, ibProfit:120, prizePool:300, prizesGifted:300, period:'1 — 31 Dec 2025', action:'Results', actionIcon:'eye', share:true, nav:'detail'},
+  {name:'Q1 Grow Sprint', typeId:'grow', status:'Completed', statusTag:'neutral', count:27, ibProfit:195, prizePool:300, prizesGifted:300, period:'1 Jan — 31 Mar 2026', action:'Results', actionIcon:'eye', share:true, nav:'detail'},
 ];
 
 const MONTH_KEY_TO_INDEX = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
@@ -4326,9 +4915,9 @@ const MONTH_KEY_TO_INDEX = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:
    Supported shapes:
      "1 — 30 Apr 2026"            (same-month) → Apr 1 .. Apr 30
      "1 Mar — 30 Apr 2026"        (cross-month) → Mar 1 .. Apr 30
-     "Не задан" / null            → null (drafts) */
+     "Not set" / null            → null (drafts) */
 const parseContestPeriod = (period) => {
-  if (!period || period === 'Не задан') return null;
+  if (!period || period === 'Not set') return null;
   const m1 = period.match(/^(\d+)\s+([A-Z][a-z]{2})\s*[—-]\s*(\d+)\s+([A-Z][a-z]{2})\s+(\d{4})$/);
   if (m1) {
     const y = +m1[5];
@@ -4380,31 +4969,31 @@ const getContestRowMeta = (row) => {
   if (row.status === 'Active') {
     const parts = [];
     const activated = (row.activationReturned || 0) + (row.activationNew || 0);
-    if (activated) parts.push(`${activated} в торговле`);
+    if (activated) parts.push(`${activated} trading`);
     if (row.ibProfit) parts.push(`${formatUsdCompact(row.ibProfit)} IB`);
     return parts.join(' · ') || null;
   }
   if (row.status === 'Draft') {
-    if (row.period === 'Не задан') return 'Укажите период проведения';
+    if (row.period === 'Not set') return 'Set contest period';
     const parsed = parseContestPeriod(row.period);
-    if (!parsed) return 'Не опубликован';
+    if (!parsed) return 'Not published';
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const start = new Date(parsed.start);
     start.setHours(0, 0, 0, 0);
     const days = Math.ceil((start - today) / 86400000);
     if (days > 0) {
-      const dayLabel = days === 1 ? 'день' : days < 5 ? 'дня' : 'дней';
-      return `Старт через ${days} ${dayLabel} · не опубликован`;
+      const dayLabel = days === 1 ? 'day' : 'days';
+      return `Starts in ${days} ${dayLabel} · not published`;
     }
-    if (row.prizePool) return `Приз ${formatUsdCompact(row.prizePool)} · не опубликован`;
-    return 'Не опубликован';
+    if (row.prizePool) return `Prize ${formatUsdCompact(row.prizePool)} · not published`;
+    return 'Not published';
   }
   if (row.status === 'Completed') {
     const parts = [];
     if (row.ibProfit) parts.push(`${formatUsdCompact(row.ibProfit)} IB`);
     const paid = row.prizesGifted ?? row.prizePool;
-    if (paid) parts.push(`${formatUsdCompact(paid)} выплачено`);
+    if (paid) parts.push(`${formatUsdCompact(paid)} paid out`);
     return parts.join(' · ') || null;
   }
   return null;
@@ -4424,10 +5013,10 @@ const sortContestRows = (rows, sort) => {
   return [...rows].sort((a, b) => {
     const va = getValue(a);
     const vb = getValue(b);
-    if (va == null && vb == null) return a.name.localeCompare(b.name, 'ru');
+    if (va == null && vb == null) return a.name.localeCompare(b.name, 'en');
     if (va == null) return 1;
     if (vb == null) return -1;
-    if (va === vb) return a.name.localeCompare(b.name, 'ru');
+    if (va === vb) return a.name.localeCompare(b.name, 'en');
     return va < vb ? -dir : dir;
   });
 };
@@ -4487,7 +5076,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   useEffect(() => {
     if (!pickerOpen) return;
     const handler = e => {
-      if (e.target.closest('.dr-trigger') || e.target.closest('.dr-panel')) return;
+      if (e.target.closest('.date-range-wrap') || e.target.closest('.dr-panel')) return;
       setPickerOpen(false);
     };
     document.addEventListener('mousedown', handler);
@@ -4552,8 +5141,8 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
     const idx = rows.findIndex(r => r.name === row.name);
     if (idx === -1) return;
     setRows(rows.filter((_, i) => i !== idx));
-    showToast(`Черновик «${row.name}» удалён`, 'negative', {
-      label: 'Отменить',
+    showToast(`Draft “${row.name}” deleted`, 'negative', {
+      label: 'Undo',
       onClick: () => setRows(prev => {
         const next = prev.slice();
         next.splice(idx, 0, row);
@@ -4565,16 +5154,16 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   const goToContest = (r) => { onSelectContest && onSelectContest(r.name); onNavigate(r.nav); };
 
   const STATUS_FILTERS = [
-    {id: 'all',       label: 'Все'},
-    {id: 'Active',    label: 'Активные'},
-    {id: 'Draft',     label: 'Черновики'},
-    {id: 'Completed', label: 'Завершённые'},
+    {id: 'all',       label: 'All'},
+    {id: 'Active',    label: 'Active'},
+    {id: 'Draft',     label: 'Drafts'},
+    {id: 'Completed', label: 'Completed'},
   ];
 
   return (
   <div className="screen-enter">
     <div className="page-header">
-      <h1 className="rig-title-03">Контесты для клиентов</h1>
+      <h1 className="rig-title-03">Client contests</h1>
       <div className="page-header__actions">
         <TableSearchToggle
           value={query}
@@ -4582,14 +5171,16 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           open={searchOpen}
           onOpenChange={setSearchOpen}
         />
-        <Button variant="primary" size="s" onClick={() => onNavigate('wizard')}>Создать контест</Button>
-      </div>
+        <Button variant="primary" size="s" icon="plus" onClick={() => onNavigate('wizard')}>
+          Launch new
+        </Button>
     </div>
+        </div>
 
-      <div className="table-toolbar" role="toolbar" aria-label="Фильтры контестов">
+      <div className="table-toolbar" role="toolbar" aria-label="Contest filters">
         <div className="table-toolbar__period">
           <DateRangeTrigger range={periodRange} isOpen={pickerOpen} onClick={() => setPickerOpen(v => !v)} />
-        </div>
+      </div>
         <div className="table-toolbar__chips">
           <ChipsGroup>
             {STATUS_FILTERS.map(f => (
@@ -4618,7 +5209,8 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
               <IBContestDraftLaunchPanel
                 draftRows={draftRows}
                 allRows={rows}
-                onLaunchDraft={goToContest}
+                onNavigate={onNavigate}
+                onSelectContest={onSelectContest}
               />
             ) : (
               <IBContestStatsBanners rows={filteredRows} />
@@ -4626,16 +5218,16 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           </div>
           <div className="contests-layout__body">
       {filteredRows.length === 0 ? (
-        <div className="table-wrap">
+      <div className="table-wrap">
           <div className="table-empty" role="status">
-            <div className="table-empty__title">Ничего не нашли</div>
+            <div className="table-empty__title">No results</div>
             <div className="table-empty__hint">
               {filterActive
-                ? 'Сбросьте фильтры или попробуйте другой запрос.'
-                : 'Пока нет ни одного контеста. Создайте первый.'}
+                ? 'Clear filters or try a different search.'
+                : 'No contests yet. Create the first one.'}
             </div>
             {filterActive && (
-              <Button variant="outline" size="s" icon="close" onClick={resetFilters}>Сбросить фильтры</Button>
+              <Button variant="outline" size="s" icon="close" onClick={resetFilters}>Clear filters</Button>
             )}
           </div>
         </div>
@@ -4659,16 +5251,16 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                 </div>
                 <div className="row-card__meta">
                   <span className="row-card__meta-item"><svg><use href="#ic-calendar-24"/></svg>{r.period}</span>
-                  <span className="row-card__meta-item"><svg><use href="#ic-users-24"/></svg>{r.count} участников</span>
+                  <span className="row-card__meta-item"><svg><use href="#ic-users-24"/></svg>{r.count} participants</span>
                 </div>
                 {r.progress != null && <ProgressBar value={r.progress} size="xs" />}
                 <div className="row-card__actions" onClick={e => e.stopPropagation()}>
                   <Button variant="outline" size="m" icon={r.actionIcon} onClick={() => goToContest(r)}>{r.action}</Button>
                   {r.share && (
-                    <IconButton icon="link" size="m" onClick={() => showToast('Ссылка скопирована!', 'positive')} title="Поделиться" />
+                    <IconButton icon="link" size="m" onClick={() => showToast('Link copied!', 'positive')} title="Share" />
                   )}
                   {r.status === 'Draft' && (
-                    <IconButton icon="trash" size="m" className="ds-icon-btn--danger" onClick={() => deleteRow(r)} title="Удалить черновик" />
+                    <IconButton icon="trash" size="m" className="ds-icon-btn--danger" onClick={() => deleteRow(r)} title="Delete draft" />
                   )}
                 </div>
               </div>
@@ -4681,14 +5273,14 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           <thead><tr>
             <th>
               <span className="th-label">
-                Контесты
+                Contests
                 <span className="th-label__count">{sortedRows.length}</span>
               </span>
             </th>
-            <th>Тип</th>
-            <th>Статус</th>
-            <SortableTh label="Участники" count={tableParticipantsTotal} sortKey="count" sort={sort} onSort={toggleSort} />
-            <SortableTh label="Период" sortKey="period" sort={sort} onSort={toggleSort} />
+            <th>Type</th>
+            <th>Status</th>
+            <SortableTh label="Participants" count={tableParticipantsTotal} sortKey="count" sort={sort} onSort={toggleSort} />
+            <SortableTh label="Period" sortKey="period" sort={sort} onSort={toggleSort} />
             <th></th>
           </tr></thead>
           <tbody>
@@ -4724,18 +5316,18 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                         {r.status === 'Active' && (<>
                           <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-l)'}}>
                             <span style={{width:6,height:6,borderRadius:'50%',background:'var(--ds-positive)'}} />
-                            Обновлено 2 мин назад
+                            Updated 2 min ago
                           </span>
                         </>)}
-                        {r.status === 'Draft' && <>Сохранён сегодня</>}
+                        {r.status === 'Draft' && <>Saved today</>}
                         {r.status === 'Completed' && (<>
-                          <Icon name="trophy" size="xs" /> Победитель: <strong>AB****</strong>
+                          <Icon name="trophy" size="xs" /> Winner: <strong>AB****</strong>
                         </>)}
                       </div>
                       <div className="td-actions">
                         <Button variant="outline" size="s" icon={r.actionIcon} onClick={e => { e.stopPropagation(); onSelectContest && onSelectContest(r.name); onNavigate(r.nav); }}>{r.action}</Button>
-                        {r.share && <IconButton icon="link" size="s" onClick={e => { e.stopPropagation(); showToast('Ссылка скопирована!', 'positive'); }} title="Поделиться" />}
-                        {r.status === 'Draft' && <IconButton icon="trash" size="s" onClick={e => { e.stopPropagation(); deleteRow(r); }} title="Удалить черновик" />}
+                        {r.share && <IconButton icon="link" size="s" onClick={e => { e.stopPropagation(); showToast('Link copied!', 'positive'); }} title="Share" />}
+                        {r.status === 'Draft' && <IconButton icon="trash" size="s" onClick={e => { e.stopPropagation(); deleteRow(r); }} title="Delete draft" />}
                       </div>
                     </div>
                   </td>
@@ -4749,7 +5341,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
           </div>
         </div>
       </div>
-  </div>
+    </div>
   );
 };
 
@@ -4778,8 +5370,8 @@ const TIMEZONES = [
 
 /* WizardFooter — desktop sticky-bottom action row used across wizard steps.
    Layout:
-     [Назад] ........... [Сохранить черновик] [Далее / Запустить]
-   "Сохранить черновик" is available on every step. The right-most button
+     [Back] ........... [Save draft] [Next / Launch]
+   "Save draft" is available on every step. The right-most button
    becomes the launch CTA on the final step.
    On mobile, the wizard renders <WizardFooterMobile /> instead — see below. */
 const WizardFooter = ({ step, isFinal = false, onPrev, onNext, onSaveDraft, onLaunch, nextDisabled }) => (
@@ -4790,15 +5382,15 @@ const WizardFooter = ({ step, isFinal = false, onPrev, onNext, onSaveDraft, onLa
   }}>
     <div>
       {step > 1 && (
-        <Button variant="outline" size="m" icon="arrow-left" onClick={onPrev}>Назад</Button>
+        <Button variant="outline" size="m" icon="arrow-left" onClick={onPrev}>Back</Button>
       )}
     </div>
     <div style={{display:'flex', gap:'var(--ds-dim-2xl)', flexWrap:'wrap'}}>
-      <Button variant="outline" size="m" icon="save" onClick={onSaveDraft}>Сохранить черновик</Button>
+      <Button variant="outline" size="m" icon="save" onClick={onSaveDraft}>Save draft</Button>
       {isFinal ? (
-        <Button variant="primary" size="m" icon="rocket" onClick={onLaunch}>Запустить контест</Button>
+        <Button variant="primary" size="m" icon="rocket" onClick={onLaunch}>Launch contest</Button>
       ) : (
-        <Button variant="primary" size="m" iconRight="arrow-right" onClick={onNext} disabled={nextDisabled}>Далее</Button>
+        <Button variant="primary" size="m" iconRight="arrow-right" onClick={onNext} disabled={nextDisabled}>Next</Button>
       )}
     </div>
   </div>
@@ -4809,50 +5401,38 @@ const WizardFooter = ({ step, isFinal = false, onPrev, onNext, onSaveDraft, onLa
    into the chevron-row above (not duplicated in the sticky footer to
    keep the two primary actions thumb-reachable). */
 const WizardFooterMobile = ({ step, isFinal = false, onPrev, onNext, onLaunch, nextDisabled }) => (
-  <div className="wizard-footer-mobile is-mobile-only" role="group" aria-label="Навигация мастера">
+  <div className="wizard-footer-mobile is-mobile-only" role="group" aria-label="Wizard navigation">
     {step > 1 ? (
-      <Button variant="outline" size="m" icon="arrow-left" onClick={onPrev}>Назад</Button>
+      <Button variant="outline" size="m" icon="arrow-left" onClick={onPrev}>Back</Button>
     ) : (
       <span style={{flex:1}} aria-hidden="true" />
     )}
     {isFinal ? (
-      <Button variant="primary" size="m" icon="rocket" onClick={onLaunch}>Запустить</Button>
+      <Button variant="primary" size="m" icon="rocket" onClick={onLaunch}>Launch</Button>
     ) : (
-      <Button variant="primary" size="m" iconRight="arrow-right" onClick={onNext} disabled={nextDisabled}>Далее</Button>
+      <Button variant="primary" size="m" iconRight="arrow-right" onClick={onNext} disabled={nextDisabled}>Next</Button>
     )}
   </div>
 );
 
-/* Compact mobile stepper — hides the long connector line, shows
-   "Шаг N из M: <label>" with a tiny dots progress indicator. */
-const WIZARD_STEP_LABELS = ['Тип', 'Период', 'Призы', 'Запуск'];
+/* Compact mobile stepper — label + DS Segmented progress bar (Figma 10490:782). */
+const WIZARD_STEP_LABELS = ['Type', 'Period', 'Prizes', 'Launch'];
 const WizardStepperMobile = ({ currentStep, totalSteps }) => (
-  <div className="is-mobile-only" style={{
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    padding: 'var(--ds-dim-2xl) var(--ds-dim-3xl)',
-    border: '1px solid var(--ds-border)', borderRadius: 'var(--ds-radius-md)',
-    background: 'var(--ds-bg)',
-    marginBottom: 'var(--ds-dim-3xl)',
-  }}>
-    <div>
+  <div className="is-mobile-only wizard-stepper-mobile">
+    <div className="wizard-stepper-mobile__head">
       <div className="rig-utility-01" style={{color:'var(--ds-text-muted)'}}>
-        Шаг {currentStep} из {totalSteps}
+        Step {currentStep} of {totalSteps}
       </div>
       <div className="rig-body-02-bold" style={{marginTop:2}}>
         {WIZARD_STEP_LABELS[currentStep - 1] || ''}
       </div>
     </div>
-    <div style={{display:'flex', gap:'var(--ds-dim-s)'}}>
-      {Array.from({length: totalSteps}).map((_, i) => (
-        <span key={i} style={{
-          width: 8, height: 8, borderRadius: '50%',
-          background: i + 1 === currentStep
-            ? 'var(--ds-primary)'
-            : i + 1 < currentStep
-              ? 'var(--ds-positive)'
-              : 'var(--ds-border-input)',
-        }} />
-      ))}
+    <div className="wizard-segments wizard-segments--inline" aria-hidden="true">
+      {Array.from({ length: totalSteps }, (_, i) => {
+        const step = i + 1;
+        const state = step < currentStep ? 'done' : step === currentStep ? 'active' : 'upcoming';
+        return <div key={step} className={`wizard-segment wizard-segment--${state}`} />;
+      })}
     </div>
   </div>
 );
@@ -4898,6 +5478,9 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
     setPrizes(prev => prev.map(p => p.id === id ? {...p, amount} : p));
   };
   const prizeTotal = prizes.reduce((sum, p) => sum + (parseFloat(p.amount) || 0), 0);
+  const previewTotalDays = Math.max(1, Math.round((endDate - startDate) / 86400000));
+  const previewElapsedDays = Math.min(10, previewTotalDays);
+  const previewProgress = Math.round((previewElapsedDays / previewTotalDays) * 100);
 
   const activeType = CONTEST_TYPES[contestType];
 
@@ -4924,9 +5507,9 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
       status,
       statusTag: isActive ? 'positive' : 'neutral',
       count: isActive ? 0 : '—',
-      period: isActive ? formatPeriodEn(startDate, endDate) : 'Не задан',
+      period: isActive ? formatPeriodEn(startDate, endDate) : 'Not set',
       progress: isActive ? 0 : null,
-      action: isActive ? 'Статистика' : 'Редактировать',
+      action: isActive ? 'Statistics' : 'Edit',
       actionIcon: isActive ? 'chart' : 'edit',
       share: isActive,
       nav: isActive ? 'detail' : 'wizard',
@@ -4936,29 +5519,29 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
   const saveDraft = () => {
     onCreateContest && onCreateContest(buildContest('Draft'));
     onNavigate('list');
-    showToast('Черновик сохранён');
+    showToast('Draft saved');
   };
   const launchContest = () => {
     onCreateContest && onCreateContest(buildContest('Active'));
     onNavigate('list');
-    showToast('Контест запущен!', 'positive');
+    showToast('Contest launched!', 'positive');
   };
 
   return (
     <div className="screen-enter">
       <div className="wizard-layout">
         <div className="wizard-panel">
-          <Breadcrumb items={[{label: 'Контесты для клиентов', onClick: () => onNavigate('list')}, {label: 'Создание контеста'}]} />
+          <Breadcrumb items={[{label: 'Client contests', onClick: () => onNavigate('list')}, {label: 'Create contest'}]} />
           <div className="is-desktop-only">
-            <WizardStepper currentStep={step} totalSteps={4} />
+          <WizardStepper currentStep={step} totalSteps={4} />
           </div>
           <WizardStepperMobile currentStep={step} totalSteps={4} />
 
           {step === 1 && (
             <div>
-              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Тип контеста</h3>
-              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Выберите формат соревнования</p>
-              <div className="rig-radio-cards" role="radiogroup" aria-label="Тип контеста">
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Contest type</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Choose a competition format</p>
+              <div className="rig-radio-cards" role="radiogroup" aria-label="Contest type">
                 {CONTEST_TYPE_LIST.map(t => {
                   const isSelected = contestType === t.id;
                   const onKeyDown = (e) => {
@@ -5009,25 +5592,31 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
 
           {step === 2 && (
             <div>
-              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Период проведения</h3>
-              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Укажите даты, время и часовой пояс</p>
-              <div className="wizard-period-grid" style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
-                <CalendarInput label="Дата начала" value={startDate} onChange={setStartDate} />
-                <div className="time-with-meridiem">
-                  <Input label="Время начала" rightIcon="clock" value={startTime} onChange={e => setStartTime(e.target.value)} />
-                  <MeridiemToggle value={startMeridiem} onChange={setStartMeridiem} />
-                </div>
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Contest period</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Set dates, times, and timezone</p>
+              <div className="wizard-period-row">
+                <DateRangeInput
+                  label="Contest period"
+                  startDate={startDate}
+                  endDate={endDate}
+                  onChangeStart={setStartDate}
+                  onChangeEnd={setEndDate}
+                />
+                <TimeRangeInput
+                  label="Time period"
+                  startTime={startTime}
+                  endTime={endTime}
+                  startMeridiem={startMeridiem}
+                  endMeridiem={endMeridiem}
+                  onChangeStartTime={setStartTime}
+                  onChangeEndTime={setEndTime}
+                  onChangeStartMeridiem={setStartMeridiem}
+                  onChangeEndMeridiem={setEndMeridiem}
+                />
               </div>
-              <div className="wizard-period-grid" style={{display:'grid',gridTemplateColumns:'1fr 260px',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-4xl)'}}>
-                <CalendarInput label="Дата окончания" value={endDate} onChange={setEndDate} />
-                <div className="time-with-meridiem">
-                  <Input label="Время окончания" rightIcon="clock" value={endTime} onChange={e => setEndTime(e.target.value)} />
-                  <MeridiemToggle value={endMeridiem} onChange={setEndMeridiem} />
-                </div>
-              </div>
-              <Select label="Часовой пояс" value={timezone} onChange={setTimezone} options={TIMEZONES} />
+              <Select label="Timezone" value={timezone} onChange={setTimezone} options={TIMEZONES} />
               <div style={{marginTop:'var(--ds-dim-6xl)'}}>
-                <InfoBox icon="lightbulb"><span><strong>Рекомендация:</strong> оптимальная длительность для {activeType.title} — {contestType === 'grow' ? '2–8 недель, чтобы прирост был значимым' : contestType === 'streak' ? '3–6 недель для демонстрации дисциплины' : '1–4 недели'}</span></InfoBox>
+                <InfoBox icon="lightbulb"><span><strong>Recommendation:</strong> optimal duration for {activeType.title} — {contestType === 'grow' ? '2–8 weeks for meaningful growth' : contestType === 'streak' ? '3–6 weeks to show discipline' : '1–4 weeks'}</span></InfoBox>
               </div>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
               <WizardFooterMobile step={step} onPrev={prev} onNext={next} />
@@ -5036,49 +5625,56 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
 
           {step === 3 && (
             <div>
-              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Призовой фонд</h3>
-              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Определите призы для победителей</p>
-              <div className="ds-input-wrap">
-                <ChipsGroup>
-                  <Chips
-                    label="Денежный приз на Wallet"
-                    selected={prizeType === 'wallet'}
-                    onClick={() => setPrizeType('wallet')}
-                  />
-                  <Chips
-                    label="Призы T&W"
-                    selected={prizeType === 'tw'}
-                    onClick={() => setPrizeType('tw')}
-                  />
-                </ChipsGroup>
+              <div className="wizard-step-header">
+                <div className="wizard-step-header__main">
+                  <h3 className="rig-title-03">Prize pool</h3>
+                  <p className="rig-body-02">Set prizes for winners</p>
+                </div>
+                <div className="wizard-step-header__aside">
+                  <ChipsGroup>
+                    <Chips
+                      label="Cash prize to Wallet"
+                      size="s"
+                      selected={prizeType === 'wallet'}
+                      onClick={() => setPrizeType('wallet')}
+                    />
+                    <Chips
+                      label="T&W prizes"
+                      size="s"
+                      selected={prizeType === 'tw'}
+                      onClick={() => setPrizeType('tw')}
+                    />
+                  </ChipsGroup>
+                </div>
               </div>
-              <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-3xl)',marginTop:'var(--ds-dim-l)'}}>
+              <div className="prize-rows-list">
                 {prizes.map(p => (
-                  <div key={p.id} className="prize-row" style={{display:'grid',gridTemplateColumns:'40px 1fr 180px 40px',gap:'var(--ds-dim-3xl)',alignItems:'center'}}>
+                  <div key={p.id} className="prize-row prize-row-grid">
                     <PrizeRank position={p.pos} />
-                    <div className="rig-body-01-bold prize-row__label">{p.pos} место</div>
+                    <div className="rig-body-01-bold prize-row__label">{p.pos} place</div>
                     <Input prefix="$" value={p.amount} onChange={e => updatePrize(p.id, e.target.value)} placeholder="0" />
-                    {prizes.length > 1 && (
-                      <IconButton icon="close" size="s" className="ds-icon-btn--danger" onClick={() => removePrize(p.id)} title="Удалить место" />
+                    {prizes.length > 1 ? (
+                      <IconButton icon="close" size="s" className="ds-icon-btn--danger" onClick={() => removePrize(p.id)} title="Remove place" />
+                    ) : (
+                      <span aria-hidden="true" />
                     )}
                   </div>
                 ))}
-              </div>
-              <div
-                className="prize-pool-toolbar"
-                role="status"
-                aria-live="polite"
-                aria-label={`Призовой фонд ${prizeTotal} долларов США`}
-              >
-                <div className="prize-pool-toolbar__cell prize-pool-toolbar__cell--lead" aria-hidden="true" />
-                <div className="prize-pool-toolbar__cell prize-pool-toolbar__cell--action">
-                  <Button variant="text" size="s" icon="plus" onClick={addPrize}>Добавить место</Button>
+                <div
+                  className="prize-pool-toolbar prize-row-grid"
+                  role="status"
+                  aria-live="polite"
+                  aria-label={`Prize pool ${prizeTotal} US dollars`}
+                >
+                  <div className="prize-pool-toolbar__cell prize-pool-toolbar__cell--action">
+                    <Button variant="text" size="s" icon="plus" onClick={addPrize}>Add place</Button>
+                  </div>
+                  <span className="prize-pool-toolbar__total rig-body-02" style={{color:'var(--ds-text-primary)'}}>
+                    Prize pool:{' '}
+                    <span className="rig-body-02-bold" style={{fontVariantNumeric:'tabular-nums'}}>${prizeTotal.toLocaleString('en-US')}</span>
+                  </span>
+                  <span aria-hidden="true" />
                 </div>
-                <span className="prize-pool-toolbar__total rig-body-02" style={{color:'var(--ds-text-primary)'}}>
-                  Призовой фонд:{' '}
-                  <span className="rig-body-02-bold" style={{fontVariantNumeric:'tabular-nums'}}>${prizeTotal.toLocaleString('en-US')}</span>
-                </span>
-                <div className="prize-pool-toolbar__cell prize-pool-toolbar__cell--trail" aria-hidden="true" />
               </div>
               <WizardFooter step={step} onPrev={prev} onNext={next} onSaveDraft={saveDraft} />
               <WizardFooterMobile step={step} onPrev={prev} onNext={next} />
@@ -5087,8 +5683,8 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
 
           {step === 4 && (
             <div>
-              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Проверьте и запустите</h3>
-              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Убедитесь, что всё верно перед запуском</p>
+              <h3 className="rig-title-03" style={{marginBottom:'var(--ds-dim-s)'}}>Review and launch</h3>
+              <p className="rig-body-02" style={{color:'var(--ds-text-muted)', marginBottom:'var(--ds-dim-4xl)'}}>Make sure everything is correct before launch</p>
               {(() => {
                 const renderField = ({k,v,tip,span,editStep}) => {
                   const isEditable = !!editStep;
@@ -5104,7 +5700,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                       </div>
                       <div className="rig-body-02-bold" style={{marginTop:'var(--ds-dim-xs)', display:'inline-flex', alignItems:'center', gap:'var(--ds-dim-s)'}}>
                         <span>{v}</span>
-                        {tip && <InfoTip label="Правило валидного лота">{tip}</InfoTip>}
+                        {tip && <InfoTip label="Valid lot rule">{tip}</InfoTip>}
                       </div>
                     </>
                   );
@@ -5117,7 +5713,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                         className="review-field review-field--editable"
                         style={cellStyle}
                         onClick={() => setStep(editStep)}
-                        aria-label={`Изменить «${k}»`}
+                        aria-label={`Edit “${k}”`}
                       >
                         {inner}
                       </button>
@@ -5136,32 +5732,32 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                     <div className="card__body" style={{display:'flex', flexDirection:'column', gap:'var(--ds-dim-5xl)', paddingBottom:'var(--ds-dim-5xl)'}}>
                       <div className="wizard-review-grid" style={sectionGrid}>
                         {[
-                          {k:'Тип', v: activeType.title, editStep: 1},
-                          {k:'Описание', v: activeType.clientDescTemplate(prizes[0]?.amount ? parseFloat(prizes[0].amount).toLocaleString('en-US') : '0'), span: 2},
+                          {k:'Type', v: activeType.title, editStep: 1},
+                          {k:'Description', v: activeType.clientDescTemplate(prizes[0]?.amount ? parseFloat(prizes[0].amount).toLocaleString('en-US') : '0'), span: 2},
                         ].map(renderField)}
                       </div>
                       {divider}
                       <div className="wizard-review-grid" style={sectionGrid}>
                         {[
-                          {k:'Период', v: periodString, editStep: 2},
-                          {k:'Время', v: `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}, ${timezone}`, editStep: 2},
-                          {k:'Метрика', v: activeType.metric},
-                          {k:'Мин. баланс клиента', v: `$${FIXED_CONDITIONS.minBalance}`},
-                          {k:'Мин. объём сделки', v: `${FIXED_CONDITIONS.minLot} лота`, tip:(
+                          {k:'Period', v: periodString, editStep: 2},
+                          {k:'Time', v: `${startTime} ${startMeridiem} — ${endTime} ${endMeridiem}, ${timezone}`, editStep: 2},
+                          {k:'Metric', v: activeType.metric},
+                          {k:'Min. client balance', v: `$${FIXED_CONDITIONS.minBalance}`},
+                          {k:'Min. trade volume', v: `${FIXED_CONDITIONS.minLot} lots`, tip:(
                             <>
-                              Учитываются только сделки, проходящие по правилу валидного лота.
+                              Only trades that meet the valid lot rule count.
                               <br /><br />
-                              <strong>Валидный лот</strong> — сделка удерживалась минимум 3 минуты и прошла минимум 3 пипса.
+                              <strong>Valid lot</strong> — trade held for at least 3 minutes and moved at least 3 pips.
                             </>
                           )},
-                          {k:'Торговые аккаунты', v:'Только 1 счёт клиента'},
+                          {k:'Trading accounts', v:'Only 1 client account'},
                         ].map(renderField)}
                       </div>
                       {divider}
                       <div className="wizard-review-grid" style={sectionGrid}>
                         {[
-                          {k:'Призовой фонд', v: `$${prizeTotal.toLocaleString('en-US')}`, editStep: 3},
-                          {k:'Тип приза', v: prizeType === 'wallet' ? 'Денежный приз на Wallet' : 'Призы T&W', editStep: 3},
+                          {k:'Prize pool', v: `$${prizeTotal.toLocaleString('en-US')}`, editStep: 3},
+                          {k:'Prize type', v: prizeType === 'wallet' ? 'Cash prize to Wallet' : 'T&W prizes', editStep: 3},
                         ].map(renderField)}
                       </div>
                     </div>
@@ -5176,24 +5772,15 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
           {/* Mobile-only: open preview as a bottom-sheet modal. Hidden on desktop because the sidebar is already visible. */}
           <div className="wizard-preview-row is-mobile-only">
             <Button variant="outline" size="m" icon="show" block onClick={() => setPreviewOpen(true)}>
-              Посмотреть глазами клиента
+              Preview as client
             </Button>
           </div>
         </div>
 
         {/* Desktop-only sticky preview sidebar */}
-        <div
-          className="wizard-panel is-desktop-only"
-          style={{
-            position: 'sticky', top: 116, alignSelf: 'start',
-            display: 'flex', flexDirection: 'column', gap: 'var(--ds-dim-3xl)',
-          }}
-        >
-          <div className="preview-card__label">Предпросмотр для клиента</div>
+        <div className="wizard-panel wizard-panel--preview is-desktop-only">
+          <div className="preview-card__label">Client preview</div>
           <div className="contest-card-preview-host">
-          {(() => {
-            const totalDays = Math.max(1, Math.round((endDate - startDate) / 86400000));
-            return (
               <ContestCard
                 typeId={activeType.id}
                 name={activeType.title}
@@ -5203,14 +5790,12 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 dates={periodString}
                 participants={0}
                 prize={`$${prizeTotal.toLocaleString('en-US')}`}
-                days={`${totalDays} дн.`}
-                progress={0}
-                progressText={`Прошло 0 из ${totalDays} дн.`}
-                onAction={() => showToast('Это предпросмотр — клиент увидит такую карточку')}
-                actionLabel="Участвую"
+                days={`${previewTotalDays} days`}
+                progress={previewProgress}
+                progressText={`${previewElapsedDays} of ${previewTotalDays} days elapsed`}
+                onAction={() => showToast('This is a preview — the client will see this card')}
+                actionLabel="Join"
               />
-            );
-          })()}
           </div>
         </div>
       </div>
@@ -5219,15 +5804,12 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
       <Modal
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
-        title="Предпросмотр"
-        subtitle="Так увидит клиент карточку контеста"
+        title="Preview"
+        subtitle="How the client will see the contest card"
         size="m"
-        footer={<Button variant="primary" size="m" onClick={() => setPreviewOpen(false)}>Закрыть</Button>}
+        footer={<Button variant="primary" size="m" onClick={() => setPreviewOpen(false)}>Close</Button>}
       >
         <div className="contest-card-preview-host">
-          {(() => {
-            const totalDays = Math.max(1, Math.round((endDate - startDate) / 86400000));
-            return (
               <ContestCard
                 typeId={activeType.id}
                 name={activeType.title}
@@ -5237,15 +5819,56 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
                 dates={periodString}
                 participants={0}
                 prize={`$${prizeTotal.toLocaleString('en-US')}`}
-                days={`${totalDays} дн.`}
-                progress={0}
-                progressText={`Прошло 0 из ${totalDays} дн.`}
-                actionLabel="Участвую"
+                days={`${previewTotalDays} days`}
+                progress={previewProgress}
+                progressText={`${previewElapsedDays} of ${previewTotalDays} days elapsed`}
+                actionLabel="Join"
               />
-            );
-          })()}
         </div>
       </Modal>
+    </div>
+  );
+};
+
+const IBContestDetailStatsBanners = ({ totalParticipants, metricLabel, prizePool, isFresh, isCompleted, isActive }) => {
+  const showDelta = !isFresh && !isCompleted;
+  return (
+    <div className="stat-banners" aria-label="Contest metrics">
+      <StatBanner
+        variant="reach"
+        icon="users"
+        label="Participants"
+        value={String(totalParticipants)}
+        delta={showDelta ? { dir: 'up', text: '3 / day' } : undefined}
+        live={showDelta && isActive}
+        hint={isFresh ? 'appear after first participants join' : undefined}
+        infoTip="Number of clients registered for this contest."
+      />
+      <StatBanner
+        variant="engage"
+        icon="chart"
+        label={metricLabel}
+        value={isFresh ? '0' : '1,234'}
+        delta={showDelta ? { dir: 'up', text: '82 / day' } : undefined}
+        hint={isFresh ? 'metric appears with first trades' : undefined}
+        infoTip="Key contest metric: volume, streak, or growth — depending on type."
+      />
+      <StatBanner
+        variant="prize"
+        icon="trophy"
+        label="Prize pool"
+        value={formatUsdCompact(prizePool || 0)}
+        hint={!prizePool && isFresh ? 'set when creating the contest' : undefined}
+        infoTip="Total prize amount distributed across places in this contest."
+      />
+      <StatBanner
+        variant="profit"
+        icon="trending-up"
+        label="Period trend"
+        value={isFresh ? '—' : '+23%'}
+        delta={showDelta ? { dir: 'up', text: 'vs prev wk' } : undefined}
+        infoTip="Change in the key metric compared to the previous week."
+      />
     </div>
   );
 };
@@ -5274,10 +5897,12 @@ const IBContestDetail = ({ onNavigate, contest }) => {
   );
   const totalParticipants = isFresh ? 0 : participantCount;
   const isCompleted = contest?.status === 'Completed';
-  const periodWithTime = period && period !== 'Не задан' ? `${period}, 23:59 UTC` : period;
+  const isActive = contest?.status === 'Active';
+  const prizePool = contest?.prizePool ?? 900;
+  const periodWithTime = period && period !== 'Not set' ? `${period}, 23:59 UTC` : period;
   const leaderboardMetaText = isCompleted
-    ? `Обновлено: ${(period.includes(' — ') ? period.split(' — ')[1] : period).trim()}, 23:59 UTC`
-    : 'Обновлено: 4 мая 2026, 14:32 UTC';
+    ? `Updated: ${(period.includes(' — ') ? period.split(' — ')[1] : period).trim()}, 23:59 UTC`
+    : 'Updated: May 4, 2026, 14:32 UTC';
   const prizes = ['$500', '$300', '$100'];
   const initialsAt = (i) => {
     const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -5295,7 +5920,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
   });
   return (
     <div className="screen-enter">
-      <Breadcrumb items={[{label:'Контесты для клиентов', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
+      <Breadcrumb items={[{label:'Client contests', onClick:() => onNavigate('list')}, {label:'Contest details'}]} />
       <div className="page-header" style={{marginTop:'var(--ds-dim-6xl)', marginBottom:'var(--ds-dim-l)'}}>
         <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
           <span className={`type-icon type-icon--${ctype.typeIcon}`} style={{width:24,height:24,flexShrink:0}}>
@@ -5316,25 +5941,27 @@ const IBContestDetail = ({ onNavigate, contest }) => {
           </span>
           {!isFresh && !isCompleted && (
             <span style={{display:'inline-flex',alignItems:'center',gap:6}}>
-              <Icon name="clock" size="sm" /><span>Осталось: 20 дней</span>
+              <Icon name="clock" size="sm" /><span>20 days left</span>
             </span>
           )}
         </div>
         <div className="contest-detail-action-bar" style={{display:'flex',gap:8}}>
-          <Button variant="outline" size="s" icon="link" onClick={() => showToast('Ссылка скопирована!', 'positive')}>Поделиться</Button>
+          <Button variant="outline" size="s" icon="link" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
           {!isCompleted && (
-            <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Контест приостановлен', 'negative', { label:'Отменить', onClick:() => showToast('Контест возобновлён', 'positive') })}>Приостановить</Button>
+            <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
           )}
-          <Button variant="outline" size="s" icon="download" disabled={isFresh}>Экспорт</Button>
+          <Button variant="outline" size="s" icon="download" disabled={isFresh}>Export</Button>
         </div>
       </div>
       <div style={{marginBottom:24}}>
-        <div className="stats">
-          <StatCard value={String(totalParticipants)} label="Участников" trend={isFresh || isCompleted ? null : {dir:'up', text:'3 / день', title:'Прирост к предыдущему дню'}} />
-          <StatCard value={isFresh ? '0' : '1,234'} label={ctype.metric} trend={isFresh || isCompleted ? null : {dir:'up', text:'82 / день', title:'Прирост к предыдущему дню'}} />
-          <StatCard value="$900" label="Призовой фонд" />
-          <StatCard value={isFresh ? '—' : '+23%'} label="Динамика за период" />
-        </div>
+        <IBContestDetailStatsBanners
+          totalParticipants={totalParticipants}
+          metricLabel={ctype.metric}
+          prizePool={prizePool}
+          isFresh={isFresh}
+          isCompleted={isCompleted}
+          isActive={isActive}
+        />
       </div>
       {isFresh ? (
         <div className="table-wrap table-wrap--leaderboard">
@@ -5342,19 +5969,19 @@ const IBContestDetail = ({ onNavigate, contest }) => {
             <div style={{width:120,height:120,marginBottom:'var(--ds-dim-3xl)',display:'flex',alignItems:'center',justifyContent:'center'}}>
               <IllNoParticipants />
             </div>
-            <h4 className="rig-title-03" style={{marginBottom:'var(--ds-dim-2xl)'}}>Пока никто не участвует</h4>
+            <h4 className="rig-title-03" style={{marginBottom:'var(--ds-dim-2xl)'}}>No participants yet</h4>
             <p className="rig-body-02" style={{color:'var(--ds-text-secondary)', maxWidth:'52ch', marginBottom:'var(--ds-dim-5xl)'}}>
-              Здесь появятся участники, как только клиенты присоединятся к контесту. Поделитесь ссылкой, чтобы ускорить старт.
+              Participants will appear here once clients join the contest. Share the link to get started faster.
             </p>
-            <Button variant="primary" size="m" icon="link" onClick={() => showToast('Ссылка скопирована!', 'positive')}>Скопировать ссылку</Button>
+            <Button variant="primary" size="m" icon="link" onClick={() => showToast('Link copied!', 'positive')}>Copy link</Button>
           </div>
         </div>
       ) : (
         <>
           <div className="table-header leaderboard-table-header">
             <h4 className="rig-title-04">
-              Лидерборд
-              <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>{totalParticipants} участников</span>
+              Leaderboard
+              <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>{totalParticipants} participants</span>
             </h4>
             <span className="table-header__meta">{leaderboardMetaText}</span>
           </div>
@@ -5375,7 +6002,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
               })}
               {rows.length > 20 && (
                 <div style={{display:'flex',justifyContent:'center',marginTop:'var(--ds-dim-2xl)'}}>
-                  <Button variant="outline" size="m">Загрузить ещё</Button>
+                  <Button variant="outline" size="m">Load more</Button>
                 </div>
               )}
             </div>
@@ -5384,10 +6011,10 @@ const IBContestDetail = ({ onNavigate, contest }) => {
             <div className="leaderboard-scroll">
               <table>
                 <thead><tr>
-                  <th className="lb-col-place">Место</th>
-                  <th className="lb-col-name">Участник</th>
+                  <th className="lb-col-place">Place</th>
+                  <th className="lb-col-name">Participant</th>
                   <th className="lb-col-score">{ctype.metric}</th>
-                  <th className="lb-col-prize">Приз</th>
+                  <th className="lb-col-prize">Prize</th>
                 </tr></thead>
                 <tbody>
                   {rows.map(r => (
@@ -5414,16 +6041,16 @@ const IBContestDetail = ({ onNavigate, contest }) => {
    ═══════════════════════════════════════════════════════ */
 
 const CLIENT_CONTESTS = [
-  {typeId:'volume', state:'active', name:'Volume Race', statusLabel:'Active', statusVariant:'positive', desc:'Кто наторгует больший объём в лотах за период — заберёт до $500 бонус на торговый счёт.', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:47, prize:'$900', progressText:'Прошло 10 из 30 дней', progress:33, days:'20 дней', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'streak', isNew:true, state:'upcoming', startsAtLabel:'1 мая 2026', name:'Trading Streak', statusLabel:'Coming soon', statusVariant:'neutral', desc:'Кто удержит самый длинный streak торговых дней подряд — заберёт до $300 бонус.', dates:'1 — 31 May 2026', period:'1 — 31 мая 2026', participants:12, prize:'$600', progressText:'Начнётся через 21 день', progress:0, days:'31 день', prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'grow', state:'active', name:'Grow account', statusLabel:'Active', statusVariant:'positive', desc:'Кто больше нарастит баланс в процентах за период — заберёт до $400 бонус.', dates:'1 — 30 Apr 2026', period:'1 — 30 апреля 2026', participants:18, prize:'$700', progressText:'Прошло 10 из 30 дней', progress:45, days:'20 дней', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'volume', state:'active', name:'Volume Race', statusLabel:'Active', statusVariant:'positive', desc:'Whoever trades the highest volume in lots during the period wins up to a $500 bonus to their trading account.', dates:'1 — 30 Apr 2026', period:'1 — 30 April 2026', participants:47, prize:'$900', progressText:'10 of 30 days elapsed', progress:33, days:'20 days', prizes:[{pos:1,prize:'$500 bonus',primary:true},{pos:2,prize:'$300 bonus'},{pos:3,prize:'$100 bonus'}]},
+  {typeId:'streak', isNew:true, state:'upcoming', startsAtLabel:'May 1, 2026', name:'Trading Streak', statusLabel:'Coming soon', statusVariant:'neutral', desc:'Whoever holds the longest streak of consecutive trading days wins up to a $300 bonus.', dates:'1 — 31 May 2026', period:'1 — 31 May 2026', participants:12, prize:'$600', progressText:'Starts in 21 days', progress:0, days:'31 days', prizes:[{pos:1,prize:'$300 bonus',primary:true},{pos:2,prize:'$200 bonus'},{pos:3,prize:'$100 bonus'}]},
+  {typeId:'grow', state:'active', name:'Grow account', statusLabel:'Active', statusVariant:'positive', desc:'Whoever grows account balance by the highest percentage during the period wins up to a $400 bonus.', dates:'1 — 30 Apr 2026', period:'1 — 30 April 2026', participants:18, prize:'$700', progressText:'10 of 30 days elapsed', progress:45, days:'20 days', prizes:[{pos:1,prize:'$400 bonus',primary:true},{pos:2,prize:'$200 bonus'},{pos:3,prize:'$100 bonus'}]},
 ];
 
 const CLIENT_COMPLETED_CONTESTS = [
-  {typeId:'top',    state:'completed', name:'Top Trader',     dates:'1 — 28 Feb 2026', participants:32, prize:'$900', yourPlace:7,  yourReward:null,        prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'volume', state:'completed', name:'Volume Race',    dates:'1 — 31 Jan 2026', participants:41, prize:'$900', yourPlace:2,  yourReward:'$300 бонус', prizes:[{pos:1,prize:'$500 бонус',primary:true},{pos:2,prize:'$300 бонус'},{pos:3,prize:'$100 бонус'}]},
-  {typeId:'streak', state:'completed', name:'Trading Streak', dates:'1 — 31 Dec 2025', participants:18, prize:'$500', yourPlace:12, yourReward:null,        prizes:[{pos:1,prize:'$300 бонус',primary:true},{pos:2,prize:'$150 бонус'},{pos:3,prize:'$50 бонус'}]},
-  {typeId:'grow',   state:'completed', name:'Grow account',   dates:'1 — 30 Nov 2025', participants:27, prize:'$700', yourPlace:3,  yourReward:'$100 бонус', prizes:[{pos:1,prize:'$400 бонус',primary:true},{pos:2,prize:'$200 бонус'},{pos:3,prize:'$100 бонус'}]},
+  {typeId:'top',    state:'completed', name:'Top Trader',     dates:'1 — 28 Feb 2026', participants:32, prize:'$900', yourPlace:7,  yourReward:null,        prizes:[{pos:1,prize:'$500 bonus',primary:true},{pos:2,prize:'$300 bonus'},{pos:3,prize:'$100 bonus'}]},
+  {typeId:'volume', state:'completed', name:'Volume Race',    dates:'1 — 31 Jan 2026', participants:41, prize:'$900', yourPlace:2,  yourReward:'$300 bonus', prizes:[{pos:1,prize:'$500 bonus',primary:true},{pos:2,prize:'$300 bonus'},{pos:3,prize:'$100 bonus'}]},
+  {typeId:'streak', state:'completed', name:'Trading Streak', dates:'1 — 31 Dec 2025', participants:18, prize:'$500', yourPlace:12, yourReward:null,        prizes:[{pos:1,prize:'$300 bonus',primary:true},{pos:2,prize:'$150 bonus'},{pos:3,prize:'$50 bonus'}]},
+  {typeId:'grow',   state:'completed', name:'Grow account',   dates:'1 — 30 Nov 2025', participants:27, prize:'$700', yourPlace:3,  yourReward:'$100 bonus', prizes:[{pos:1,prize:'$400 bonus',primary:true},{pos:2,prize:'$200 bonus'},{pos:3,prize:'$100 bonus'}]},
 ];
 
 const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, onCancelContest, onJoinContest, seenContestTypes, onMarkContestSeen }) => {
@@ -5448,8 +6075,8 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
   const cancel = (typeId, mode) => {
     markIfNew(typeId);
     onCancelContest && onCancelContest(typeId);
-    showToast('Запись отменена', 'negative', {
-      label: 'Отменить',
+    showToast('Registration cancelled', 'negative', {
+      label: 'Undo',
       onClick: () => onJoinContest && onJoinContest(typeId, mode),
     });
   };
@@ -5468,8 +6095,7 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
   const prizePlacesCount = completed.filter(c => c.yourPlace >= 1 && c.yourPlace <= 3).length;
   const contestsGenitiveAfterIz = (n) => {
     const mod10 = n % 10, mod100 = n % 100;
-    if (mod10 === 1 && mod100 !== 11) return 'контеста';
-    return 'контестов';
+    return n === 1 ? 'contest' : 'contests';
   };
 
   const activeTotal = cards.length;
@@ -5477,11 +6103,11 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
 
   return (
   <div className="screen-enter">
-    <h1 className="rig-title-02" style={{marginBottom:'var(--ds-dim-8xl)'}}>Контесты от партнёра</h1>
+    <h1 className="rig-title-02" style={{marginBottom:'var(--ds-dim-8xl)'}}>Partner contests</h1>
     <div className="table-header">
-      <h4 className="rig-title-04">Активные</h4>
+      <h4 className="rig-title-04">Active</h4>
       <span className="table-header__meta">
-        Вы принимаете участие в {participatingCount} из {activeTotal} {contestsGenitiveAfterIz(activeTotal)}
+        You are participating in {participatingCount} of {activeTotal} {contestsGenitiveAfterIz(activeTotal)}
       </span>
     </div>
     <div className="contest-grid">
@@ -5493,16 +6119,16 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
         if (!joined) {
           footer = (
             <Button variant="primary" size="m" block onClick={() => openTerms(c.typeId)}>
-              Участвовать
+              Join
             </Button>
           );
         } else if (isUpcoming || joinState === 'upcoming') {
           footer = (
-            <Button variant="outline" size="m" block onClick={() => cancel(c.typeId, joinState || 'upcoming')}>Отменить запись</Button>
+            <Button variant="outline" size="m" block onClick={() => cancel(c.typeId, joinState || 'upcoming')}>Cancel registration</Button>
           );
         } else {
           footer = (
-            <Button variant="outline" size="m" icon="chart" block onClick={() => openBoard(c.typeId)}>Статистика</Button>
+            <Button variant="outline" size="m" icon="chart" block onClick={() => openBoard(c.typeId)}>Statistics</Button>
           );
         }
         return (
@@ -5528,9 +6154,9 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
     </div>
 
     <div className="table-header" style={{marginTop:'var(--ds-dim-7xl)'}}>
-      <h4 className="rig-title-04">Завершённые</h4>
+      <h4 className="rig-title-04">Completed</h4>
       <span className="table-header__meta">
-        Вы заняли призовое место в {prizePlacesCount} из {completedTotal} {contestsGenitiveAfterIz(completedTotal)}
+        You placed in the prizes in {prizePlacesCount} of {completedTotal} {contestsGenitiveAfterIz(completedTotal)}
       </span>
     </div>
     {isMobile ? (
@@ -5552,16 +6178,16 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
                 <div style={{textAlign:'right',flexShrink:0}}>
                   <div className="rig-body-02-bold" style={{fontVariantNumeric:'tabular-nums'}}>#{c.yourPlace}</div>
                   <div className="rig-utility-01" style={{color: c.yourReward ? 'var(--ds-positive)' : 'var(--ds-text-muted)', marginTop: 2}}>
-                    {c.yourReward ? c.yourReward.replace(/\s*бонус$/i, '') : 'без приза'}
+                    {c.yourReward ? c.yourReward.replace(/\s*bonus$/i, '') : 'no prize'}
                   </div>
                 </div>
               </div>
               <div className="row-card__meta">
-                <span className="row-card__meta-item"><svg><use href="#ic-users-24"/></svg>{c.participants} участников</span>
-                <span className="row-card__meta-item"><svg><use href="#ic-cup-24"/></svg>Победитель: <strong style={{color:'var(--ds-text-primary)',fontWeight:600,marginLeft:4}}>{winnerOf(c.name)}</strong></span>
+                <span className="row-card__meta-item"><svg><use href="#ic-users-24"/></svg>{c.participants} participants</span>
+                <span className="row-card__meta-item"><svg><use href="#ic-cup-24"/></svg>Winner: <strong style={{color:'var(--ds-text-primary)',fontWeight:600,marginLeft:4}}>{winnerOf(c.name)}</strong></span>
               </div>
               <div className="row-card__actions" onClick={e => e.stopPropagation()}>
-                <Button variant="outline" size="m" icon="eye" onClick={() => openCompleted(c.name)}>Результаты</Button>
+                <Button variant="outline" size="m" icon="eye" onClick={() => openCompleted(c.name)}>Results</Button>
               </div>
             </div>
           );
@@ -5572,11 +6198,11 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
       <table>
         <thead>
           <tr>
-            <th>Контест</th>
-            <th>Период</th>
-            <th>Участники</th>
-            <th>Ваше место</th>
-            <th>Награда</th>
+            <th>Contest</th>
+            <th>Period</th>
+            <th>Participants</th>
+            <th>Your place</th>
+            <th>Reward</th>
             <th></th>
           </tr>
         </thead>
@@ -5599,14 +6225,14 @@ const ClientContestList = ({ onNavigate, onSelectContest, joinedContests = {}, o
                 <td>{c.dates}</td>
                 <td>{c.participants}</td>
                 <td><strong>#{c.yourPlace}</strong></td>
-                <td>{c.yourReward ? <span style={{fontVariantNumeric:'tabular-nums'}}>{c.yourReward.replace(/\s*бонус$/i, '')}</span> : <span style={{color:'var(--ds-text-muted)'}}>—</span>}</td>
+                <td>{c.yourReward ? <span style={{fontVariantNumeric:'tabular-nums'}}>{c.yourReward.replace(/\s*bonus$/i, '')}</span> : <span style={{color:'var(--ds-text-muted)'}}>—</span>}</td>
                 <td style={{textAlign:'right'}}>
                   <div className="row-action-stack">
                     <span className="row-meta" aria-hidden="true">
-                      <Icon name="trophy" size="xs" /> Победитель: <strong>{winnerOf(c.name)}</strong>
+                      <Icon name="trophy" size="xs" /> Winner: <strong>{winnerOf(c.name)}</strong>
                     </span>
                     <span className="td-actions">
-                      <Button className="row-hover-action" variant="outline" size="s" icon="eye" onClick={e => { e.stopPropagation(); openCompleted(c.name); }}>Результаты</Button>
+                      <Button className="row-hover-action" variant="outline" size="s" icon="eye" onClick={e => { e.stopPropagation(); openCompleted(c.name); }}>Results</Button>
                     </span>
                   </div>
                 </td>
@@ -5626,7 +6252,7 @@ const MIN_BALANCE_USD = 100;
 const contestRequiresFunding = (typeId) => typeId === 'grow';
 
 const INITIAL_TRADING_ACCOUNTS = [
-  { id: 'mt5-5123467', type: 'MT5', number: '5123467', label: 'Рабочий',  leverage: '1:500',  balance: 1540, currency: 'USD' },
+  { id: 'mt5-5123467', type: 'MT5', number: '5123467', label: 'Primary',  leverage: '1:500',  balance: 1540, currency: 'USD' },
   { id: 'mt5-5123482', type: 'MT5', number: '5123482', label: 'Swing',    leverage: '1:200',  balance: 45,   currency: 'USD' },
   { id: 'mt4-4298110', type: 'MT4', number: '4298110', label: 'Scalping', leverage: '1:1000', balance: 250,  currency: 'USD' },
 ];
@@ -5657,7 +6283,7 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
     if (createSelected) {
       const num = String(5300000 + Math.floor(Math.random() * 999999));
       const startingBalance = (requiresFunding && !preregister) ? MIN_BALANCE_USD : 0;
-      const newAcc = { id: `new-${num}`, type: 'MT5', number: num, label: 'Новый', leverage: '1:500', balance: startingBalance, currency: 'USD' };
+      const newAcc = { id: `new-${num}`, type: 'MT5', number: num, label: 'New', leverage: '1:500', balance: startingBalance, currency: 'USD' };
       setAccounts([newAcc, ...accounts]);
       setSelectedId(newAcc.id);
       onJoin(newAcc);
@@ -5676,20 +6302,20 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
   };
 
   const participateLabel = preregister
-    ? (createSelected ? 'Создать аккаунт и записаться' : 'Записаться на участие')
+    ? (createSelected ? 'Create account and register' : 'Register for contest')
     : (createSelected
-        ? 'Создать торговый аккаунт и участвовать'
-        : (needsDeposit ? `Пополнить $${deficit} и участвовать` : 'Участвую'));
+        ? 'Create trading account and join'
+        : (needsDeposit ? `Deposit $${deficit} and join` : 'Join'));
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      title={preregister ? 'Предварительная запись' : 'Участие в контесте'}
+      title={preregister ? 'Pre-registration' : 'Join contest'}
       subtitle={contestName}
       size="l"
       footer={<>
-        <Button variant="outline" size="m" onClick={onClose}>Отмена</Button>
+        <Button variant="outline" size="m" onClick={onClose}>Cancel</Button>
         <Button variant="primary" size="m" disabled={!canJoin} onClick={handleParticipate}>
           {participateLabel}
         </Button>
@@ -5699,35 +6325,35 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
         <div className="info-box" style={{marginBottom:'var(--ds-dim-3xl)'}}>
           <Icon name="clock" size="sm" style={{color:'var(--ds-primary)', marginTop:1}} />
           <span>
-            Контест ещё не начался{startsAtLabel ? <> — стартует <strong>{startsAtLabel}</strong></> : ''}.
-            Мы автоматически включим вас в участие в момент старта.
+            The contest has not started yet{startsAtLabel ? <> — starts <strong>{startsAtLabel}</strong></> : ''}.
+            We will automatically enroll you when it starts.
           </span>
         </div>
       )}
 
       <div className="join-rules">
-        <div className="join-rules__title">Условия участия</div>
+        <div className="join-rules__title">Participation requirements</div>
         <div className="join-rules__grid">
           {requiresFunding && (
             <div>
-              <div className="join-rules__label">Минимальный баланс</div>
+              <div className="join-rules__label">Minimum balance</div>
               <div className="join-rules__value">${MIN_BALANCE_USD}</div>
             </div>
           )}
           <div>
             <div className="join-rules__label">
-              Мин. объём сделки
+              Min. trade volume
               <InfoTip placement="bottom">
-                Учитываются только сделки, проходящие по правилу валидного лота.
+                Only trades that meet the valid lot rule count.
                 <br /><br />
-                <strong>Валидный лот</strong> — сделка удерживалась минимум 3 минуты и прошла минимум 3 пипса.
+                <strong>Valid lot</strong> — trade held for at least 3 minutes and moved at least 3 pips.
               </InfoTip>
             </div>
-            <div className="join-rules__value">0.01 лота</div>
+            <div className="join-rules__value">0.01 lots</div>
           </div>
           {requiresFunding && (
             <div>
-              <div className="join-rules__label">Торговый аккаунт</div>
+              <div className="join-rules__label">Trading account</div>
               <div className="join-rules__value">1</div>
             </div>
           )}
@@ -5736,7 +6362,7 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
 
       {requiresFunding && (
       <div className="section-title" style={{marginTop:'var(--ds-dim-4xl)', marginBottom:'var(--ds-dim-2xl)'}}>
-        Выберите торговый аккаунт
+        Select trading account
       </div>
       )}
 
@@ -5756,11 +6382,11 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
               <div style={{flex:1, minWidth:0}}>
                 <div className="rig-body-02-bold">{a.type} #{a.number}</div>
                 <div className="rig-utility-01" style={{color:'var(--ds-text-muted)', marginTop:'var(--ds-dim-xs)'}}>
-                  Баланс: <strong style={{color: low ? 'var(--ds-warning)' : 'var(--ds-text-primary)', fontVariantNumeric:'tabular-nums'}}>${a.balance.toLocaleString('en-US')}</strong> · {a.label}{a.leverage ? ` · Плечо ${a.leverage}` : ''}
+                  Balance: <strong style={{color: low ? 'var(--ds-warning)' : 'var(--ds-text-primary)', fontVariantNumeric:'tabular-nums'}}>${a.balance.toLocaleString('en-US')}</strong> · {a.label}{a.leverage ? ` · Leverage ${a.leverage}` : ''}
                 </div>
               </div>
               {low && (
-                <Tag label="Недостаточно средств" variant="warning" icon="alert-triangle" />
+                <Tag label="Insufficient funds" variant="warning" icon="alert-triangle" />
               )}
             </div>
           );
@@ -5769,11 +6395,11 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
         <button type="button" className={`join-create ${createSelected ? 'join-create--selected' : ''}`} onClick={pickCreate}>
           <span className="join-create__icon"><svg><use href="#ic-plus-24"/></svg></span>
           <span style={{flex:1, minWidth:0}}>
-            <span className="rig-body-02-bold">{preregister ? 'Создать аккаунт и записаться' : 'Создать аккаунт и участвовать'}</span>
+            <span className="rig-body-02-bold">{preregister ? 'Create account and register' : 'Create account and join'}</span>
             <span className="rig-utility-01" style={{display:'block', color:'var(--ds-text-muted)', marginTop:'var(--ds-dim-xs)'}}>
               {preregister
-                ? 'MT5 · создаётся мгновенно'
-                : `MT5 · создаётся мгновенно, баланс $${MIN_BALANCE_USD}`}
+                ? 'MT5 · created instantly'
+                : `MT5 · created instantly, balance $${MIN_BALANCE_USD}`}
             </span>
           </span>
         </button>
@@ -5784,7 +6410,7 @@ const JoinContestModal = ({ open, onClose, onJoin, contestName, contestType = 'v
         <div className="info-box info-box--positive" style={{marginTop:'var(--ds-dim-3xl)'}}>
           <Icon name="check" size="sm" style={{color:'var(--ds-positive)', marginTop:1}} />
           <span>
-            Дополнительный аккаунт не нужен — участие происходит автоматически по всем вашим торговым аккаунтам.
+            No extra account needed — participation applies automatically across all your trading accounts.
           </span>
         </div>
       )}
@@ -5803,20 +6429,20 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
   const alreadyJoined = !!joinedState;
   const joinedUpcoming = alreadyJoined && (isUpcoming || joinedState === 'upcoming');
   const ctaLabel = alreadyJoined
-    ? (joinedUpcoming ? 'Отменить запись' : 'Открыть лидерборд')
-    : (isUpcoming ? 'Записаться на участие' : 'Участвую');
+    ? (joinedUpcoming ? 'Cancel registration' : 'Open leaderboard')
+    : (isUpcoming ? 'Register for contest' : 'Join');
   const ctaCaption = joinedUpcoming
-    ? `Вы записаны на участие. Контест начнётся ${contest.startsAtLabel || contest.dates}.`
+    ? `You are registered. The contest starts ${contest.startsAtLabel || contest.dates}.`
     : (alreadyJoined
-        ? 'Вы уже участвуете — посмотрите своё место и статистику в лидерборде.'
+        ? 'You are already participating — see your rank and stats on the leaderboard.'
         : (isUpcoming
-            ? 'Нажимая «Записаться на участие», вы соглашаетесь с правилами контеста и условиями участия.'
-            : 'Нажимая «Участвую», вы соглашаетесь с правилами контеста и условиями участия.'));
+            ? 'By clicking “Register for contest”, you agree to the contest rules and participation terms.'
+            : 'By clicking “Join”, you agree to the contest rules and participation terms.'));
   const handleCancel = () => {
     const prev = joinedState;
     onCancelContest && onCancelContest(contest.typeId);
-    showToast('Запись отменена', 'negative', {
-      label: 'Отменить',
+    showToast('Registration cancelled', 'negative', {
+      label: 'Undo',
       onClick: () => onJoinContest && onJoinContest(contest.typeId, prev),
     });
   };
@@ -5827,7 +6453,7 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
   }, [contest.typeId, onMarkContestSeen]);
   return (
     <div className="screen-enter">
-      <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label:'Детали контеста'}]} />
+      <Breadcrumb items={[{label:'Contests', onClick:() => onNavigate('list')}, {label:'Contest details'}]} />
       <div style={{textAlign:'center',marginBottom:'var(--ds-dim-6xl)'}}>
         <div style={{marginBottom:'var(--ds-dim-3xl)'}}><span className="icon-circle icon-circle--primary" style={{width:64,height:64}}><svg width="32" height="32"><use href="#ic-market-watch-24"/></svg></span></div>
         <div style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)',justifyContent:'center'}}>
@@ -5839,36 +6465,36 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
 
       <div style={{marginBottom:'var(--ds-dim-3xl)'}}>
         <div className="stats">
-          <StatCard value={contest.days || '—'} label="Осталось" />
-          <StatCard value={String(contest.participants)} label="Участников" />
+          <StatCard value={contest.days || '—'} label="Remaining" />
+          <StatCard value={String(contest.participants)} label="Participants" />
         </div>
       </div>
 
       <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gap:'var(--ds-dim-3xl)',marginBottom:'var(--ds-dim-6xl)'}} className="terms-grid">
         <div className="card">
-          <div className="card__header"><h4 className="rig-title-04"><Icon name="clipboard" size="sm" style={{marginRight:'var(--ds-dim-s)'}} /> Правила</h4></div>
+          <div className="card__header"><h4 className="rig-title-04"><Icon name="clipboard" size="sm" style={{marginRight:'var(--ds-dim-s)'}} /> Rules</h4></div>
           <div className="card__body">
             <BulletList items={[
               ...(requiresFunding ? [
-                `Минимальный баланс клиента: $${MIN_BALANCE_USD}`,
-                'Участвует только 1 торговый аккаунт клиента',
+                `Minimum client balance: $${MIN_BALANCE_USD}`,
+                'Only 1 client trading account participates',
               ] : []),
-              'Минимальный объём сделки: 0.01 лота (только сделки по правилу валидного лота)',
-              'Позиция определяется суммарным объёмом в лотах',
-              `Период: ${contest.period || contest.dates}, 23:59 UTC`,
+              'Minimum trade volume: 0.01 lots (valid lot rule applies)',
+              'Rank is determined by total volume in lots',
+              `Period: ${contest.period || contest.dates}, 23:59 UTC`,
             ]} />
           </div>
         </div>
         <div className="card">
-          <div className="card__header"><h4 className="rig-title-04"><Icon name="gift" size="sm" style={{marginRight:'var(--ds-dim-s)'}} /> Призы</h4></div>
+          <div className="card__header"><h4 className="rig-title-04"><Icon name="gift" size="sm" style={{marginRight:'var(--ds-dim-s)'}} /> Prizes</h4></div>
           <div className="card__body">
             <div style={{display:'flex',flexDirection:'column',gap:'var(--ds-dim-3xl)'}}>
               {(contest.prizes || []).map(p => (
                 <div key={p.pos} style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
                   <PrizeRank position={p.pos} />
-                  <span className="rig-body-02" style={{flex:1,color:'var(--ds-text-primary)'}}>{p.pos} место</span>
+                  <span className="rig-body-02" style={{flex:1,color:'var(--ds-text-primary)'}}>{p.pos} place</span>
                   <span className="rig-body-02-bold" style={{color:'var(--ds-text-primary)',fontVariantNumeric:'tabular-nums'}}>
-                    {String(p.prize).replace(/\s*бонус$/i, '')}
+                    {String(p.prize).replace(/\s*bonus$/i, '')}
                   </span>
                 </div>
               ))}
@@ -5901,7 +6527,7 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
           onJoinContest && onJoinContest(contest.typeId, isUpcoming ? 'upcoming' : 'active');
           if (isUpcoming) {
             showToast(
-              `Запись подтверждена. Участие начнётся ${contest.startsAtLabel || contest.dates}`,
+              `Registration confirmed. Participation starts ${contest.startsAtLabel || contest.dates}`,
               'positive'
             );
             return;
@@ -5909,8 +6535,8 @@ const ClientContestTerms = ({ onNavigate, contestTypeId = 'volume', joinedContes
           onNavigate('board');
           showToast(
             account
-              ? `Вы участвуете на аккаунте ${account.type} #${account.number}!`
-              : 'Вы участвуете в контесте!',
+              ? `You are participating on account ${account.type} #${account.number}!`
+              : 'You joined the contest!',
             'positive'
           );
         }}
@@ -5977,7 +6603,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
     const meta = CLIENT_CONTESTS.find(c => c.typeId === contest.typeId);
     if (meta?.isNew) onMarkContestSeen(contest.typeId);
   }, [contest.typeId, onMarkContestSeen]);
-  const stripPrize = (s) => String(s || '').replace(/\s*бонус$/i, '');
+  const stripPrize = (s) => String(s || '').replace(/\s*bonus$/i, '');
   const prizesTop = (contest.prizes || []).slice(0, 3).map(p => stripPrize(p.prize));
   const total = Math.max(contest.participants || 0, isCompleted ? (contest.yourPlace || 0) : 12);
   const yourPlace = isCompleted ? (contest.yourPlace || 0) : 12;
@@ -5996,7 +6622,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
     return {
       p,
       isYou,
-      n: isYou ? 'Вы' : initialsAt(i + 5),
+      n: isYou ? 'You' : initialsAt(i + 5),
       v: isYou && isCompleted ? '—' : valueAt(p),
       pr: p <= 3 ? (prizesTop[p - 1] || '—')
           : (isYou && isCompleted ? (contest.yourReward ? stripPrize(contest.yourReward) : '—') : '—'),
@@ -6004,7 +6630,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
   });
   return (
   <div className="screen-enter">
-    <Breadcrumb items={[{label:'Контесты', onClick:() => onNavigate('list')}, {label: isCompleted ? 'Результаты' : 'Лидерборд'}]} />
+    <Breadcrumb items={[{label:'Contests', onClick:() => onNavigate('list')}, {label: isCompleted ? 'Results' : 'Leaderboard'}]} />
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'var(--ds-dim-5xl)',gap:'var(--ds-dim-3xl)',flexWrap:'wrap'}}>
       <div style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
         <h1 className="rig-title-02">{contest.name}</h1>
@@ -6012,14 +6638,14 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
       </div>
       {isCompleted ? (
         <span style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
-          <Tag label="Завершён" variant="neutral" />
+          <Tag label="Completed" variant="neutral" />
           <span className="rig-body-02" style={{color:'var(--ds-text-muted)'}}>{contest.dates}, 23:59 UTC</span>
         </span>
       ) : (
         <span style={{display:'flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
           <Tag label="Active" variant="positive" />
           <span className="rig-body-02" style={{color:'var(--ds-text-muted)'}}>
-            Завершается {(contest.dates || '').split(' — ')[1] || contest.dates}, 23:59 UTC
+            Ends {(contest.dates || '').split(' — ')[1] || contest.dates}, 23:59 UTC
           </span>
         </span>
       )}
@@ -6031,17 +6657,17 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
           <div className="user-progress__rank" style={{flexDirection:'column',alignItems:'flex-start',gap:'var(--ds-dim-m)'}}>
             <div style={{display:'flex',alignItems:'baseline',gap:'var(--ds-dim-2xl)',flexWrap:'wrap'}}>
               <span className="user-progress__place">#{contest.yourPlace}</span>
-              <span className="user-progress__place-meta">из {contest.participants} участников</span>
+              <span className="user-progress__place-meta">of {contest.participants} participants</span>
             </div>
             <div className="user-progress__place-meta">
-              Финальный результат: <strong style={{color:'var(--ds-on-primary)',fontWeight:700,fontVariantNumeric:'tabular-nums',marginLeft:4}}>{valueAt(contest.yourPlace)}</strong> <span style={{opacity:0.7}}>{ctype.metric}</span>
+              Final result: <strong style={{color:'var(--ds-on-primary)',fontWeight:700,fontVariantNumeric:'tabular-nums',marginLeft:4}}>{valueAt(contest.yourPlace)}</strong> <span style={{opacity:0.7}}>{ctype.metric}</span>
             </div>
           </div>
           <div className="user-progress__score">
             <span className="user-progress__score-value">
-              {contest.yourReward ? stripPrize(contest.yourReward) : 'Без приза'}
+              {contest.yourReward ? stripPrize(contest.yourReward) : 'No prize'}
             </span>
-            <span className="user-progress__score-meta">{contest.yourReward ? 'Награда зачислена на торговый счёт' : 'В этот раз не попали в призовую зону'}</span>
+            <span className="user-progress__score-meta">{contest.yourReward ? 'Reward credited to trading account' : 'No prize this time — keep trading to improve next time.'}</span>
           </div>
         </div>
       </div>
@@ -6050,20 +6676,20 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
         <div className="user-progress__row">
           <div className="user-progress__rank">
             <span className="user-progress__place">#12</span>
-            <span className="user-progress__place-meta">из {contest.participants || '—'} участников · Top 25%</span>
+            <span className="user-progress__place-meta">of {contest.participants || '—'} participants · Top 25%</span>
           </div>
           <div className="user-progress__score">
-            <span className="user-progress__score-value">67.4 <span className="user-progress__score-unit">лот</span></span>
-            <span className="user-progress__score-meta">До 3 места: ещё 88.8 лот</span>
+            <span className="user-progress__score-value">67.4 <span className="user-progress__score-unit">lots</span></span>
+            <span className="user-progress__score-meta">To 3rd place: 88.8 more lots</span>
           </div>
         </div>
         <div className="user-progress__bar">
           <ProgressBar value={43} size="m" onBrand />
         </div>
         <div className="user-progress__caption">
-          <span>До призовой зоны <strong>43%</strong></span>
+          <span><strong>43%</strong> to prize zone</span>
           <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-2xl)'}}>
-            <Icon name="clock" size="sm" /> Осталось {contest.days || '—'} 4 ч
+            <Icon name="clock" size="sm" /> {contest.days || '—'} 4 h left
           </span>
         </div>
       </div>
@@ -6071,10 +6697,10 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
 
     <div className="table-header leaderboard-table-header">
       <h4 className="rig-title-04">
-        {isCompleted ? 'Финальные результаты' : 'Лидерборд'}
-        <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>· {total} участников</span>
+        {isCompleted ? 'Final results' : 'Leaderboard'}
+        <span style={{color:'var(--ds-text-muted)',fontWeight:400,marginLeft:'var(--ds-dim-2xl)'}}>· {total} participants</span>
       </h4>
-      <span className="table-header__meta">{isCompleted ? `Подведено ${(contest.dates.split(' — ')[1] || contest.dates)}, 23:59 UTC` : 'Обновлено: 2 мин назад'}</span>
+      <span className="table-header__meta">{isCompleted ? `Finalized ${(contest.dates.split(' — ')[1] || contest.dates)}, 23:59 UTC` : 'Updated: 2 min ago'}</span>
     </div>
     {isMobile ? (
       <div>
@@ -6082,11 +6708,11 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
           const you = rows.find(r => r.isYou);
           if (!you) return null;
           return (
-            <div className="lb-sticky-you" role="status" aria-label="Ваша позиция">
-              <span>Вы — {you.p}-е место</span>
+            <div className="lb-sticky-you" role="status" aria-label="Your position">
+              <span>You — {you.p}{you.p === 1 ? 'st' : you.p === 2 ? 'nd' : you.p === 3 ? 'rd' : 'th'} place</span>
               <span className="lb-sticky-you__metric">
-                {you.v} {ctype.metric.toLowerCase().replace(/[^a-zа-я0-9 .]/gi, '').split(' ')[0] || ''}
-                {you.pr !== '—' ? ` · приз ${you.pr}` : ''}
+                {you.v} {ctype.metric.toLowerCase().replace(/[^a-z0-9 .]/gi, '').split(' ')[0] || ''}
+                {you.pr !== '—' ? ` · prize ${you.pr}` : ''}
               </span>
             </div>
           );
@@ -6102,7 +6728,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                 <div style={{minWidth:0}}>
                   <div className="lb-card__name">
                     {r.isYou
-                      ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:4}} /> Вы</>)
+                      ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:4}} /> You</>)
                       : (r.p <= 3 ? <strong>{r.n}</strong> : r.n)}
                   </div>
                   <div className="lb-card__sub">{r.v} {ctype.metric.toLowerCase()}</div>
@@ -6115,7 +6741,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
         {mobileVisibleCount < rows.length && (
           <div style={{display:'flex',justifyContent:'center',marginTop:'var(--ds-dim-3xl)'}}>
             <Button variant="outline" size="m" onClick={() => setMobileVisibleCount(c => c + 20)}>
-              Загрузить ещё
+              Load more
             </Button>
           </div>
         )}
@@ -6125,10 +6751,10 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
       <div className="leaderboard-scroll" ref={scrollContainerRef}>
         <table>
           <thead><tr>
-            <th className="lb-col-place">Место</th>
-            <th className="lb-col-name">Участник</th>
+            <th className="lb-col-place">Place</th>
+            <th className="lb-col-name">Participant</th>
             <th className="lb-col-score">{ctype.metric}</th>
-            <th className="lb-col-prize">Приз</th>
+            <th className="lb-col-prize">Prize</th>
           </tr></thead>
           <tbody>
             {(() => {
@@ -6145,14 +6771,14 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                     <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{you.p}</span>
                   </td>
                   <td className="lb-col-name">
-                    <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы
+                    <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You
                     <span
                       role="button"
                       tabIndex={0}
                       onClick={(e) => { e.stopPropagation(); scrollToYou(); }}
                       onKeyDown={(e) => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); e.stopPropagation(); scrollToYou(); } }}
                       className="leaderboard-pin__link"
-                    >Показать в рейтинге</span>
+                    >Show in ranking</span>
                   </td>
                   <td className="lb-col-score">{you.v}</td>
                   <td className="lb-col-prize">{you.pr}</td>
@@ -6170,7 +6796,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                   </td>
                   <td className="lb-col-name">
                     {r.isYou
-                      ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы</>)
+                      ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You</>)
                       : (r.p <= 3 ? <strong>{r.n}</strong> : r.n)}
                   </td>
                   <td className="lb-col-score">{r.v}</td>
@@ -6192,14 +6818,14 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                     <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{you.p}</span>
                   </td>
                   <td className="lb-col-name">
-                    <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> Вы
+                    <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You
                     <span
                       role="button"
                       tabIndex={0}
                       onClick={(e) => { e.stopPropagation(); scrollToYou(); }}
                       onKeyDown={(e) => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); e.stopPropagation(); scrollToYou(); } }}
                       className="leaderboard-pin__link"
-                    >Показать в рейтинге</span>
+                    >Show in ranking</span>
                   </td>
                   <td className="lb-col-score">{you.v}</td>
                   <td className="lb-col-prize">{you.pr}</td>
@@ -6227,48 +6853,48 @@ const AdminDashboard = ({ onNavigate }) => {
       <div className="page-header"><h1 className="rig-title-02">Admin Panel — Contests</h1></div>
       <div style={{marginBottom:24}}>
         <div style={{color:'var(--ds-negative)',marginBottom:12,display:'flex',alignItems:'center',gap:6,fontSize:13,fontWeight:600}}>
-          <Icon name="alert-triangle" size="sm" /> Требует внимания
+          <Icon name="alert-triangle" size="sm" /> Needs attention
         </div>
         <Notification
           variant="negative" icon="alert-circle"
           title="IB Partner_X — «Mega Contest»"
-          description="Client_Z: 200 лотов за 1 час, средняя позиция 2 мин — возможный wash trading"
+          description="Client_Z: 200 lots in 1 hour, avg position 2 min — possible wash trading"
           actions={<>
-            <Button variant="negative" size="s" onClick={() => onNavigate('detail')}>Посмотреть</Button>
-            <Button variant="outline" size="s">Игнорировать</Button>
+            <Button variant="negative" size="s" onClick={() => onNavigate('detail')}>View</Button>
+            <Button variant="outline" size="s">Dismiss</Button>
           </>}
         />
       </div>
       <div style={{marginBottom:24}}>
         <div className="stats">
-          <StatCard value="12" label="Active" trend={{dir:'up',text:'+3 за неделю'}} />
-          <StatCard value="3" label="Pending" trend={{dir:'neutral',text:'без изменений'}} />
-          <StatCard value="1" label="Flagged" color="var(--ds-negative)" trend={{dir:'down',text:'+1 новый'}} />
-          <StatCard value="45" label="Completed" trend={{dir:'up',text:'+5 за месяц'}} />
+          <StatCard value="12" label="Active" trend={{dir:'up',text:'+3 this week'}} />
+          <StatCard value="3" label="Pending" trend={{dir:'neutral',text:'no change'}} />
+          <StatCard value="1" label="Flagged" color="var(--ds-negative)" trend={{dir:'down',text:'+1 new'}} />
+          <StatCard value="45" label="Completed" trend={{dir:'up',text:'+5 this month'}} />
         </div>
       </div>
       <div className="table-header">
-        <h4 className="rig-title-04">Все контесты</h4>
+        <h4 className="rig-title-04">All contests</h4>
         <ChipsGroup>
           {['all','active','pending','flagged'].map(f => (
-            <Chips key={f} label={f === 'all' ? 'Все' : f.charAt(0).toUpperCase() + f.slice(1)} selected={filter === f} onClick={() => setFilter(f)} />
+            <Chips key={f} label={f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)} selected={filter === f} onClick={() => setFilter(f)} />
           ))}
         </ChipsGroup>
       </div>
       <div className="admin-mobile-banner is-mobile-only" role="note">
         <Icon name="alert-triangle" size="sm" />
-        <span><strong>Полное управление и фильтры — на компьютере.</strong> На мобильном можно посмотреть статус и открыть детали — пролистайте таблицу вбок.</span>
+        <span><strong>Full management and filters are on desktop.</strong> On mobile you can view status and open details — scroll the table sideways.</span>
       </div>
       <div className="table-wrap admin-table-scroll">
         <table>
-          <thead><tr><th>Контест</th><th>IB Partner</th><th>Статус</th><th>Участники</th><th></th></tr></thead>
+          <thead><tr><th>Contest</th><th>IB Partner</th><th>Status</th><th>Participants</th><th></th></tr></thead>
           <tbody>
             {[
-              {name:'Volume Race',partner:'Partner_A',status:'Active',tag:'positive',count:47,action:'Статистика',actionIcon:'chart'},
-              {name:'Trading Streak',partner:'Partner_A',status:'Pending',tag:'warning',count:0,action:'Обзор',actionIcon:'eye'},
-              {name:'Grow account',partner:'Partner_X',status:'Flagged',tag:'negative',count:23,flagged:true,action:'Проверить',actionVariant:'negative'},
-              {name:'Top Trader',partner:'Partner_B',status:'Done',tag:'neutral',count:32,action:'Результаты',actionIcon:'eye'},
-              {name:'Volume Race',partner:'Partner_C',status:'Active',tag:'positive',count:18,action:'Статистика',actionIcon:'chart'},
+              {name:'Volume Race',partner:'Partner_A',status:'Active',tag:'positive',count:47,action:'Statistics',actionIcon:'chart'},
+              {name:'Trading Streak',partner:'Partner_A',status:'Pending',tag:'warning',count:0,action:'Review',actionIcon:'eye'},
+              {name:'Grow account',partner:'Partner_X',status:'Flagged',tag:'negative',count:23,flagged:true,action:'Review',actionVariant:'negative'},
+              {name:'Top Trader',partner:'Partner_B',status:'Done',tag:'neutral',count:32,action:'Results',actionIcon:'eye'},
+              {name:'Volume Race',partner:'Partner_C',status:'Active',tag:'positive',count:18,action:'Statistics',actionIcon:'chart'},
             ].map(r => (
               <tr key={r.name} style={{cursor:'pointer', background: r.flagged ? 'var(--ds-negative-bg)' : undefined}} onClick={() => onNavigate('detail')}>
                 <td><strong>{r.name}</strong></td><td>{r.partner}</td>
@@ -6290,7 +6916,7 @@ const AdminContestDetail = ({ onNavigate }) => {
   const showToast = useToast();
   return (
     <div className="screen-enter">
-      <Breadcrumb items={[{label:'Dashboard', onClick:() => onNavigate('dashboard')}, {label:'Детали контеста'}]} />
+      <Breadcrumb items={[{label:'Dashboard', onClick:() => onNavigate('dashboard')}, {label:'Contest details'}]} />
       <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:24,flexWrap:'wrap'}}>
         <h1 className="rig-title-02">Mega Contest</h1>
         <Tag label="Flagged" variant="negative" icon="alert-triangle" />
@@ -6302,40 +6928,40 @@ const AdminContestDetail = ({ onNavigate }) => {
           <span className="type-icon type-icon--volume" style={{width:20,height:20}}><svg width="12" height="12"><use href="#ic-market-watch-24"/></svg></span>
           <span style={{color:'var(--ds-text-primary)',fontWeight:500}}>Volume Race</span>
         </span>
-        <span>•</span><span>1 — 30 Apr 2026</span><span>•</span><span>Призы: $1,700</span>
+        <span>•</span><span>1 — 30 Apr 2026</span><span>•</span><span>Prizes: $1,700</span>
       </div>
       <Notification
         variant="negative" icon="alert-circle"
-        title="Подозрительная активность: Client_Z"
-        description="200 лотов за 1 час • средняя позиция: 2 мин • 45 встречных сделок (buy+sell одновременно) • паттерн: возможный wash trading"
+        title="Suspicious activity: Client_Z"
+        description="200 lots in 1 hour • avg position: 2 min • 45 opposing trades (simultaneous buy+sell) • pattern: possible wash trading"
         actions={<>
-          <Button variant="negative" size="s" onClick={() => showToast('Client_Z дисквалифицирован. Лидерборд пересчитан.', 'positive')}>Дисквалифицировать</Button>
-          <Button variant="outline" size="s" onClick={() => showToast('Алерт отклонён')}>Ложное срабатывание</Button>
+          <Button variant="negative" size="s" onClick={() => showToast('Client_Z disqualified. Leaderboard recalculated.', 'positive')}>Disqualify</Button>
+          <Button variant="outline" size="s" onClick={() => showToast('Alert dismissed')}>False positive</Button>
         </>}
       />
       <div className="admin-detail-grid" style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:24,marginTop:24}}>
         <div className="card">
           <div className="table-wrap admin-table-scroll" style={{border:'none'}}>
-            <div className="table-title"><h4 className="rig-body-01-bold">Лидерборд (полный)</h4></div>
+            <div className="table-title"><h4 className="rig-body-01-bold">Leaderboard (full)</h4></div>
             <table>
-              <thead><tr><th>Место</th><th>Клиент</th><th>Объём</th><th>Сделки</th><th>Ср. удерж.</th></tr></thead>
+              <thead><tr><th>Place</th><th>Client</th><th>Volume</th><th>Trades</th><th>Avg hold</th></tr></thead>
               <tbody>
-                <tr style={{background:'var(--ds-negative-bg)'}}><td><Medal position={1}/></td><td><strong>Client_Z ⚠</strong></td><td style={{fontVariantNumeric:'tabular-nums'}}>312.5</td><td>89</td><td style={{color:'var(--ds-negative)'}}>2 мин</td></tr>
-                <tr><td><Medal position={2}/></td><td>Client_A</td><td style={{fontVariantNumeric:'tabular-nums'}}>187.3</td><td>42</td><td>47 мин</td></tr>
-                <tr><td><Medal position={3}/></td><td>Client_B</td><td style={{fontVariantNumeric:'tabular-nums'}}>145.8</td><td>35</td><td>1.2 ч</td></tr>
-                <tr><td><Medal position={4}/></td><td>Client_C</td><td style={{fontVariantNumeric:'tabular-nums'}}>112.0</td><td>28</td><td>35 мин</td></tr>
-                <tr><td><Medal position={5}/></td><td>Client_D</td><td style={{fontVariantNumeric:'tabular-nums'}}>98.4</td><td>24</td><td>52 мин</td></tr>
+                <tr style={{background:'var(--ds-negative-bg)'}}><td><Medal position={1}/></td><td><strong>Client_Z ⚠</strong></td><td style={{fontVariantNumeric:'tabular-nums'}}>312.5</td><td>89</td><td style={{color:'var(--ds-negative)'}}>2 min</td></tr>
+                <tr><td><Medal position={2}/></td><td>Client_A</td><td style={{fontVariantNumeric:'tabular-nums'}}>187.3</td><td>42</td><td>47 min</td></tr>
+                <tr><td><Medal position={3}/></td><td>Client_B</td><td style={{fontVariantNumeric:'tabular-nums'}}>145.8</td><td>35</td><td>1.2 h</td></tr>
+                <tr><td><Medal position={4}/></td><td>Client_C</td><td style={{fontVariantNumeric:'tabular-nums'}}>112.0</td><td>28</td><td>35 min</td></tr>
+                <tr><td><Medal position={5}/></td><td>Client_D</td><td style={{fontVariantNumeric:'tabular-nums'}}>98.4</td><td>24</td><td>52 min</td></tr>
               </tbody>
             </table>
           </div>
         </div>
         <div>
           <div className="card" style={{marginBottom:20}}>
-            <div className="card__header"><h4 className="rig-body-01-bold">Действия</h4></div>
+            <div className="card__header"><h4 className="rig-body-01-bold">Actions</h4></div>
             <div className="card__body" style={{display:'flex',flexDirection:'column',gap:8}}>
-              <Button variant="outline" icon="pause" onClick={() => showToast('Контест приостановлен')}>Приостановить контест</Button>
-              <Button variant="negative" icon="x-circle" onClick={() => showToast('Контест отменён')}>Отменить контест</Button>
-              <Button variant="outline" icon="edit">Добавить заметку</Button>
+              <Button variant="outline" icon="pause" onClick={() => showToast('Contest paused')}>Pause contest</Button>
+              <Button variant="negative" icon="x-circle" onClick={() => showToast('Contest cancelled')}>Cancel contest</Button>
+              <Button variant="outline" icon="edit">Add note</Button>
             </div>
           </div>
           <div className="card">
@@ -6427,14 +7053,36 @@ const App = () => {
      persona menus where possible — items without a real screen (Wallet,
      Profile, Bonuses, Users, Audit) are wired to a friendly toast so the
      prototype demonstrates intent without faking depth. */
-  const drawerTitle = role === 'ib' ? 'IB Partner' : role === 'client' ? 'Клиент' : 'Admin';
+  const drawerTitle = role === 'ib' ? 'IB Partner' : role === 'client' ? 'Client' : 'Admin';
   const drawerItems = flattenHeaderMenuForDrawer(HEADER_MENUS[role] || []);
+  const handleNavMenuSelect = (item) => {
+    if (role === 'ib' && item.key === 'contests') {
+      navIB('list');
+      return;
+    }
+    if (role === 'ib' && item.key === 'rebate') {
+      window.location.assign(REBATE_PROTOTYPE_HREF);
+      return;
+    }
+    if (role === 'ib' && item.key === 'promo') {
+      showAppToast('“Promo materials” — section not implemented in this prototype');
+      return;
+    }
+    if (role === 'client' && item.key === 'contests') {
+      navClient('list');
+      return;
+    }
+    if (role === 'admin' && item.key === 'contests') {
+      navAdmin('dashboard');
+      return;
+    }
+    if (role === 'admin' && item.key === 'dashboard') {
+      navAdmin('dashboard');
+    }
+  };
   const handleDrawerSelect = (item) => {
-    if (role === 'ib' && item.key === 'contests') navIB('list');
-    if (role === 'ib' && item.key === 'promo') showAppToast('«Promo materials» — раздел в разработке для прототипа');
-    if (role === 'client' && item.key === 'contests') navClient('list');
-    if (role === 'admin' && item.key === 'contests') navAdmin('dashboard');
-    if (role === 'admin' && item.key === 'dashboard') navAdmin('dashboard');
+    setMobileDrawerOpen(false);
+    handleNavMenuSelect(item);
   };
   const tabActiveKey = (() => {
     if (role === 'admin') return adminScreen === 'dashboard' ? 'dashboard' : 'contests';
@@ -6452,7 +7100,7 @@ const App = () => {
       return;
     }
     /* Other tabs — out of scope for this prototype, surface a hint */
-    showAppToast(`«${tab.label}» — раздел в разработке для прототипа`);
+    showAppToast(`“${tab.label}” — section not implemented in this prototype`);
   };
   /* In-app toast helper that bubbles up through the ToastProvider via
      a small inner component (required because useToast needs a Provider
@@ -6476,6 +7124,7 @@ const App = () => {
         clientNewContestsCount={clientNewContestsCount}
         clientContestsTotal={CLIENT_CONTESTS.length}
         onMenuOpen={() => setMobileDrawerOpen(true)}
+        onMenuSelect={handleNavMenuSelect}
       />
       <MobileDrawer
         open={mobileDrawerOpen}
