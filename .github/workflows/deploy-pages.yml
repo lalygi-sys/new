@@ -32,21 +32,7 @@ jobs:
           if [ -d artifacts/fonts ]; then
             cp -r artifacts/fonts _site/artifacts/fonts
           fi
-          cat > _site/index.html <<'EOF'
-          <!DOCTYPE html>
-          <html lang="ru">
-          <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>IB Contest Platform — React Prototype</title>
-            <meta http-equiv="refresh" content="0; url=./prototype/index.html">
-            <link rel="canonical" href="./prototype/index.html">
-          </head>
-          <body>
-            <p><a href="./prototype/index.html">Открыть прототип</a></p>
-          </body>
-          </html>
-          EOF
+          cp prototype/hub.html _site/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
