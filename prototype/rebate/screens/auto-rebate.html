@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Auto Rebate — Clients settings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* Color tokens (from Figma Foundations) */
+    --color-key-primary: #1945ff;
+    --color-key-primary-container: rgba(25, 69, 255, 0.08);
+    --color-key-secondary: #161616;
+    --color-key-secondary-container: rgba(22, 22, 22, 0.08);
+
+    --color-content-primary: #161616;
+    --color-content-secondary: #525252;
+    --color-content-tertiary: #6f6f6f;
+
+    --color-surface-low: #ffffff;
+    --color-surface-container: #f4f5f8;
+    --color-surface-elevated: #ffffff;
+    --color-surface-overlay: rgba(0, 0, 0, 0.4);
+
+    --color-border-01: #c6c6c6;
+    --color-border-02: #dddedf;
+
+    --color-positive-content: #31865b;
+    --color-positive-container: #e1f7e9;
+    --color-negative-content: #e32d2d;
+    --color-negative-container: #feebeb;
+    --color-warning-content: #d18119;
+    --color-warning-container: #fff2e5;
+    --color-info-content: #1945ff;
+    --color-info-container: #e9f5ff;
+
+    /* Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    /* Typography sizes */
+    --t-body: 14px;
+    --t-body-lh: 20px;
+    --t-utility: 12px;
+    --t-utility-lh: 16px;
+    --t-utility-2: 10px;
+    --t-utility-2-lh: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+    color: var(--color-content-primary);
+    background: var(--color-surface-low);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ===== Top nav ===== */
+  .topnav {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    height: 64px;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--color-border-02);
+    background: var(--color-surface-low);
+  }
+  .logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--color-key-primary);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.5px;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 auto 0 8px;
+  }
+  .nav-link {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: var(--t-body);
+    font-weight: 500;
+    color: var(--color-content-primary);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .nav-link:hover { background: var(--color-surface-container); }
+  .nav-link.active {
+    background: var(--color-key-secondary-container);
+    color: var(--color-content-primary);
+  }
+  .topnav-right { display: flex; align-items: center; gap: 12px; }
+  .wallet {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--color-border-02);
+    border-radius: 24px;
+    font-size: var(--t-body);
+    font-weight: 600;
+    color: var(--color-content-primary);
+    white-space: nowrap;
+  }
+  .wallet-label { font-weight: 400; color: var(--color-content-secondary); }
+  .icon-btn-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    border: 1px solid var(--color-border-02);
+    background: var(--color-surface-low);
+  }
+  .icon-btn-circle:hover { background: var(--color-surface-container); }
+
+  /* ===== Page background ===== */
+  .page {
+    min-height: calc(100vh - 64px);
+    background: var(--color-surface-container);
+    padding: 24px 32px 48px;
+  }
+  .container { max-width: 1216px; margin: 0 auto; }
+
+  /* ===== Card ===== */
+  .card {
+    background: var(--color-surface-elevated);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+  }
+
+  /* ===== Tabs row ===== */
+  .tabs-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 8px 24px 0;
+    border-bottom: 1px solid var(--color-border-02);
+  }
+  .tabs { display: flex; gap: 0; }
+  .tab {
+    position: relative;
+    padding: 16px 16px 14px;
+    font-size: var(--t-body);
+    font-weight: 600;
+    color: var(--color-content-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .tab:hover { color: var(--color-content-primary); }
+  .tab.active {
+    color: var(--color-key-primary);
+    border-bottom-color: var(--color-key-primary);
+  }
+  .tabs-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 14px;
+  }
+  .action-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--t-body);
+    font-weight: 500;
+    color: var(--color-content-primary);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .action-link:hover { color: var(--color-key-primary); }
+  .action-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+  /* ===== Toolbar ===== */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 24px;
+    flex-wrap: nowrap;
+  }
+  .btn {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    background: var(--color-surface-low);
+    border: 1px solid var(--color-border-02);
+    font-size: var(--t-body);
+    font-weight: 600;
+    color: var(--color-content-primary);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .btn:hover { border-color: var(--color-border-01); }
+  .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .btn .date-text { font-weight: 400; }
+
+  .chips-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .chip {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-02);
+    background: var(--color-surface-low);
+    color: var(--color-content-primary);
+    font-size: var(--t-body);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color .15s, background .15s;
+  }
+  .chip:hover { border-color: var(--color-border-01); }
+  .chip .count {
+    font-weight: 500;
+    color: var(--color-content-tertiary);
+  }
+  .chip.active {
+    background: var(--color-key-primary-container);
+    border-color: transparent;
+    color: var(--color-content-primary);
+  }
+  .chip.active .count { color: var(--color-content-primary); }
+
+  /* ===== Table ===== */
+  .table-wrap { padding: 0 0 8px; }
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .tbl thead th {
+    text-align: left;
+    padding: 14px 12px;
+    border-top: 1px solid var(--color-border-02);
+    border-bottom: 1px solid var(--color-border-02);
+    background: var(--color-surface-low);
+    vertical-align: top;
+    font-weight: 400;
+  }
+  .th-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .th-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+    color: var(--color-content-primary);
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  .th-sub {
+    font-size: var(--t-utility);
+    line-height: var(--t-utility-lh);
+    color: var(--color-content-tertiary);
+    letter-spacing: 0.15px;
+  }
+  .sort-icon { color: var(--color-content-tertiary); }
+  .alert-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-negative-content);
+    font-size: var(--t-body);
+    font-weight: 500;
+    margin-left: 6px;
+  }
+  .alert-badge svg { width: 16px; height: 16px; }
+
+  .tbl tbody td {
+    padding: 16px 12px;
+    border-bottom: 1px solid var(--color-border-02);
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+    vertical-align: middle;
+  }
+  .tbl tbody tr:last-child td { border-bottom: none; }
+  .tbl tbody tr { transition: background .12s; }
+  .tbl tbody tr:hover { background: var(--color-surface-container); }
+
+  /* Column widths — match Figma frame (1168px inner) */
+  .col-cb { width: 48px; }
+  .col-client { width: 240px; }
+  .col-num { width: 120px; }
+  .col-num-sm { width: 128px; }
+  .col-trend { width: 132px; }
+  .col-settings { width: 152px; }
+  .col-status { width: 180px; }
+
+  /* Checkbox */
+  .checkbox {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--color-border-01);
+    border-radius: 4px;
+    background: var(--color-surface-low);
+    display: inline-grid; place-items: center;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .checkbox:hover { border-color: var(--color-content-secondary); }
+  .checkbox.checked {
+    background: var(--color-key-primary);
+    border-color: var(--color-key-primary);
+  }
+  .checkbox.checked::after {
+    content: '';
+    width: 10px; height: 6px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+
+  /* Client cell */
+  .client-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--t-body);
+    line-height: var(--t-body-lh);
+    color: var(--color-content-primary);
+  }
+  .client-sub {
+    font-size: var(--t-utility);
+    line-height: var(--t-utility-lh);
+    color: var(--color-content-tertiary);
+    margin-top: 2px;
+  }
+  .ic-alert {
+    width: 16px; height: 16px;
+    color: var(--color-negative-content);
+    flex-shrink: 0;
+  }
+
+  /* Cell sub line */
+  .cell-sub {
+    font-size: var(--t-utility);
+    line-height: var(--t-utility-lh);
+    color: var(--color-content-tertiary);
+    margin-top: 2px;
+  }
+
+  /* Trend */
+  .trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 500;
+  }
+  .trend-up { color: var(--color-positive-content); }
+  .trend-down { color: var(--color-negative-content); }
+  .trend-flat { color: var(--color-content-tertiary); }
+  .trend svg { width: 12px; height: 12px; }
+
+  /* Tag (status) */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--t-utility);
+    line-height: var(--t-utility-lh);
+    font-weight: 500;
+    letter-spacing: 0.15px;
+    white-space: nowrap;
+  }
+  .tag-setup { background: var(--color-warning-container); color: var(--color-warning-content); }
+  .tag-active { background: var(--color-positive-container); color: var(--color-positive-content); }
+  .tag-paused { background: var(--color-key-secondary-container); color: var(--color-content-primary); }
+</style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="logo" aria-label="Brand">K</div>
+  <nav class="nav-links" aria-label="Primary">
+    <span class="nav-link">IB Dashboard</span>
+    <span class="nav-link">Revenue statistics</span>
+    <span class="nav-link active">Rebate sharing</span>
+    <span class="nav-link">Promo materials</span>
+  </nav>
+  <div class="topnav-right">
+    <div class="wallet"><span class="wallet-label">Wallet</span>$0.00</div>
+    <button class="icon-btn-circle" aria-label="Account">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#525252" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" />
+      </svg>
+    </button>
+  </div>
+</header>
+
+<main class="page">
+  <div class="container">
+    <section class="card">
+      <!-- Tabs row -->
+      <div class="tabs-row">
+        <div class="tabs">
+          <div class="tab active">Clients settings</div>
+          <div class="tab">Manage payments</div>
+        </div>
+        <div class="tabs-actions">
+          <div class="action-link">
+            <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+              <circle cx="8" cy="8" r="5.25" />
+              <path d="M12 12l3.5 3.5" />
+            </svg>
+            Search client
+          </div>
+          <div class="action-link">
+            <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 2.5v9" />
+              <path d="M5.5 8L9 11.5 12.5 8" />
+              <path d="M3 15h12" />
+            </svg>
+            Export to CSV
+          </div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <button class="btn" type="button">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <path d="M2 4.5h14M5 9h8M7.5 13.5h3" />
+          </svg>
+          Filters
+        </button>
+        <button class="btn" type="button">
+          <span class="date-text">Statistics&nbsp;</span>
+          <span>25.02.2026 — 03.03.2026</span>
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <rect x="2.5" y="3.5" width="13" height="12" rx="2" />
+            <path d="M2.5 7.5h13M6 2v3M12 2v3" />
+          </svg>
+        </button>
+
+        <div class="chips-group" role="tablist" aria-label="Filter by status">
+          <button class="chip active" role="tab" aria-selected="true">All <span class="count">59</span></button>
+          <button class="chip" role="tab">Setup required <span class="count">34</span></button>
+          <button class="chip" role="tab">Active rebate <span class="count">22</span></button>
+          <button class="chip" role="tab">Paused rebate <span class="count">3</span></button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table class="tbl" role="table">
+          <colgroup>
+            <col class="col-cb" />
+            <col class="col-client" />
+            <col class="col-num-sm" />
+            <col class="col-num-sm" />
+            <col class="col-num" />
+            <col class="col-trend" />
+            <col class="col-settings" />
+            <col class="col-status" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col">
+                <div class="checkbox" role="checkbox" aria-checked="false" tabindex="0"></div>
+              </th>
+              <th scope="col">
+                <div class="th-inner">
+                  <span class="th-label">
+                    Client
+                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 6l3-3 3 3M5 10l3 3 3-3"/></svg>
+                    <span class="alert-badge">
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.25"/><path d="M8 5v3.5M8 10.5v.7" stroke-linecap="round"/></svg>
+                      4
+                    </span>
+                  </span>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="th-inner">
+                  <span class="th-label">IB profit
+                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 6l3-3 3 3M5 10l3 3 3-3"/></svg>
+                  </span>
+                  <span class="th-sub">Previous 7d</span>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="th-inner">
+                  <span class="th-label">Traded lots
+                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 6l3-3 3 3M5 10l3 3 3-3"/></svg>
+                  </span>
+                  <span class="th-sub">Previous 7d</span>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="th-inner">
+                  <span class="th-label">Activity
+                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 6l3-3 3 3M5 10l3 3 3-3"/></svg>
+                  </span>
+                  <span class="th-sub">Join IB date</span>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="th-inner">
+                  <span class="th-label">Trend IB profit
+                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 6l3-3 3 3M5 10l3 3 3-3"/></svg>
+                  </span>
+                  <span class="th-sub">7d vs prev 7d</span>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="th-inner">
+                  <span class="th-label">Rebate settings
+                    <svg class="sort-icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 6l3-3 3 3M5 10l3 3 3-3"/></svg>
+                  </span>
+                  <span class="th-sub">Period payout</span>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="th-inner">
+                  <span class="th-label">Rebate status</span>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  const ROWS = [
+    { name: 'Alfonso Siphron', sub: '2 Trading accounts',  profit: '$30.00', lots: '30.46', activity: 'Active',   date: '20.02.21',          trend: { dir: 'up',   value: '12%' }, settingsTitle: '0% Never set',     settingsSub: 'No payout schedule', statusKey: 'setup' },
+    { name: 'Alfonso Siphron', sub: 'Copy trading account', profit: '$23.00', lots: '45.58', activity: 'Inactive', date: '26.03.25',          trend: { dir: 'down', value: '30%' }, settingsTitle: '0% Never set',     settingsSub: 'No payout schedule', statusKey: 'setup' },
+    { name: 'Corey Rosser',    sub: '5 Trading account',    profit: '$12.67', lots: '34.23', activity: 'Active',   date: '20.02.25',          trend: { dir: 'up',   value: '4%'  }, settingsTitle: '20% Manual',       settingsSub: 'After confirmation', statusKey: 'active' },
+    { name: 'TerryPassaquindici', sub: 'Copy trading account', profit: '$30.33', lots: '21.45', activity: 'Active', date: '20.02.26',          trend: { dir: 'up',   value: '1%'  }, settingsTitle: '10% Manual',       settingsSub: 'After confirmation', statusKey: 'active' },
+    { name: 'id7585585', alert: true, sub: '23 Trading accounts', profit: '$9.00', lots: '10.13', activity: 'Active', date: '20.02.26',        trend: { dir: 'down', value: '1%'  }, settingsTitle: '80% Auto weekly',  settingsSub: 'Thu 09:00 AM, GMT-8', statusKey: 'paused' },
+    { name: 'Cheyenne George', sub: '1 Trading account',    profit: '$0.00',  lots: '0',     activity: 'Inactive', date: '20.02.26',          trend: { dir: 'flat', value: '0%'  }, settingsTitle: '0% Never set',     settingsSub: 'No payout schedule', statusKey: 'setup' },
+    { name: 'id869696',        sub: 'Copy trading account', profit: '$12.00', lots: '1.98',  activity: 'Active',   date: '20.02.26',          trend: { dir: 'down', value: '2%'  }, settingsTitle: '10% Auto weekly',  settingsSub: 'Thu 09:00 AM, GMT-8', statusKey: 'active' },
+    { name: 'TerryPassaquindici…', sub: 'Copy trading account', profit: '$3.33', lots: '$3.33', activity: 'Active', date: '20.02.26/4 weeks', trend: { dir: 'up',   value: '1%'  }, settingsTitle: '10% Manual',       settingsSub: 'After confirmation', statusKey: 'active' }
+  ];
+
+  const STATUS = {
+    setup:  { cls: 'tag-setup',  label: 'Setup required' },
+    active: { cls: 'tag-active', label: 'Active rebate' },
+    paused: { cls: 'tag-paused', label: 'Paused' }
+  };
+
+  const ALERT_SVG = '<svg class="ic-alert" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.25"/><path d="M8 5v3.5M8 10.5v.7" stroke-linecap="round"/></svg>';
+  const TREND_UP   = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l3-4 3 4"/></svg>';
+  const TREND_DOWN = '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4l3 4 3-4"/></svg>';
+
+  function renderRow(r) {
+    const status = STATUS[r.statusKey];
+    const trendCls = r.trend.dir === 'up' ? 'trend-up' : r.trend.dir === 'down' ? 'trend-down' : 'trend-flat';
+    const trendIcon = r.trend.dir === 'up' ? TREND_UP : r.trend.dir === 'down' ? TREND_DOWN : '';
+    return `
+      <tr>
+        <td><div class="checkbox" role="checkbox" aria-checked="false" tabindex="0"></div></td>
+        <td>
+          <div class="client-name">${r.name}${r.alert ? ALERT_SVG : ''}</div>
+          <div class="client-sub">${r.sub}</div>
+        </td>
+        <td>${r.profit}</td>
+        <td>${r.lots}</td>
+        <td>${r.activity}<div class="cell-sub">${r.date}</div></td>
+        <td><span class="trend ${trendCls}">${trendIcon}${r.trend.value}</span></td>
+        <td>${r.settingsTitle}<div class="cell-sub">${r.settingsSub}</div></td>
+        <td><span class="tag ${status.cls}">${status.label}</span></td>
+      </tr>`;
+  }
+
+  document.getElementById('tbody').innerHTML = ROWS.map(renderRow).join('');
+
+  document.body.addEventListener('click', (e) => {
+    const cb = e.target.closest('.checkbox');
+    if (cb) {
+      const next = cb.getAttribute('aria-checked') !== 'true';
+      cb.setAttribute('aria-checked', String(next));
+      cb.classList.toggle('checked', next);
+    }
+    const chip = e.target.closest('.chip');
+    if (chip) {
+      chip.parentElement.querySelectorAll('.chip').forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-selected', 'false');
+      });
+      chip.classList.add('active');
+      chip.setAttribute('aria-selected', 'true');
+    }
+  });
+</script>
+</body>
+</html>

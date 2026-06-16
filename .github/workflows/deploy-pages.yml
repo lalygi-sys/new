@@ -28,7 +28,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site/prototype _site/artifacts
-          cp -r prototype/. _site/prototype/
+          cp -rL prototype/. _site/prototype/
           if [ -d artifacts/fonts ]; then
             cp -r artifacts/fonts _site/artifacts/fonts
           fi

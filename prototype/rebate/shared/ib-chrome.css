@@ -1,0 +1,383 @@
+/* Shared IB product chrome — matches contests prototype AppHeader + RolePreviewBar. */
+:root {
+  --ds-primary: #1945ff;
+  --ds-primary-content: #eef1ff;
+  --ds-text-primary: #0a0a0a;
+  --ds-text-secondary: #525252;
+  --ds-text-muted: #6f6f6f;
+  --ds-bg: #ffffff;
+  --ds-bg-page: #f7f7f8;
+  --ds-row-hover: #F5F7FA;
+  --ds-border: #e6e6e6;
+  --ds-border-input: #c6c6c6;
+  --ds-border-input-hover: #a8a8a8;
+  --ds-border-focus: #3b71ff;
+  --ds-focus-ring: 0 0 0 4px rgba(59, 113, 255, 0.5);
+  --ds-dim-s: 4px;
+  --ds-dim-l: 8px;
+  --ds-dim-2xl: 12px;
+  --ds-dim-3xl: 16px;
+  --ds-dim-6xl: 32px;
+  --ds-radius-sm: 6px;
+  --ds-radius-md: 8px;
+  --ds-radius-lg: 12px;
+  --ds-radius-full: 1000px;
+  --ds-shadow-01: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --ds-shadow-02: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --ds-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ib-chrome-offset: 100px;
+}
+
+body.has-ib-chrome .screen {
+  padding-top: var(--ib-chrome-offset);
+  box-sizing: border-box;
+}
+
+.role-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  height: 36px;
+  background: var(--ds-bg-page);
+  border-bottom: 1px solid var(--ds-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-dim-2xl);
+  padding: 0 var(--ds-dim-6xl);
+  font-family: var(--ds-font-body);
+}
+
+.role-bar__label {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.15px;
+  color: var(--ds-text-muted);
+  font-weight: 400;
+}
+
+.ds-button-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--ds-row-hover);
+  border-radius: var(--ds-radius-md);
+  padding: 2px;
+  gap: 2px;
+}
+
+.ds-button-group__segment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--ds-text-secondary);
+  font-family: var(--ds-font-body);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: var(--ds-radius-sm);
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.ds-button-group__segment:hover:not(.ds-button-group__segment--active):not(:disabled) {
+  color: var(--ds-text-primary);
+}
+
+.ds-button-group__segment:focus-visible {
+  outline: none;
+  box-shadow: var(--ds-focus-ring);
+}
+
+.ds-button-group__segment--active {
+  background: var(--ds-bg);
+  color: var(--ds-text-primary);
+  font-weight: 600;
+  box-shadow: var(--ds-shadow-01);
+}
+
+.ds-button-group--s {
+  height: 28px;
+}
+
+.ds-button-group--s .ds-button-group__segment {
+  height: 24px;
+  padding: 0 var(--ds-dim-2xl);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.15px;
+}
+
+.role-bar__pill {
+  display: none;
+}
+
+.app-header {
+  position: fixed;
+  top: 36px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
+  background: var(--ds-bg);
+  border-bottom: 1px solid var(--ds-border);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ds-dim-6xl);
+  gap: var(--ds-dim-6xl);
+}
+
+.app-header__logo {
+  width: 32px;
+  height: 32px;
+  background: var(--ds-primary-content);
+  border-radius: var(--ds-radius-md);
+  flex-shrink: 0;
+}
+
+.app-header__menu {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-dim-s);
+  flex: 1;
+  min-width: 0;
+}
+
+.app-header__menu-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-dim-l);
+  height: 32px;
+  padding: 0 var(--ds-dim-3xl);
+  border-radius: var(--ds-dim-l);
+  border: 1px solid transparent;
+  background: transparent;
+  font-family: var(--ds-font-body);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ds-text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.app-header__menu-item:hover:not(.app-header__menu-item--active) {
+  background: var(--ds-bg-page);
+}
+
+.app-header__menu-item:focus-visible {
+  outline: none;
+  box-shadow: var(--ds-focus-ring);
+  border-color: var(--ds-border-focus);
+}
+
+.app-header__menu-item--active {
+  background: var(--ds-row-hover);
+  font-weight: 600;
+}
+
+.app-header__menu-caret {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--ds-text-secondary);
+  transition: transform 0.15s;
+}
+
+.app-header__menu-group {
+  position: relative;
+}
+
+.app-header__menu-item--has-dropdown {
+  padding-right: var(--ds-dim-2xl);
+}
+
+.app-header__dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 220px;
+  background: var(--ds-bg);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius-lg);
+  box-shadow: var(--ds-shadow-02);
+  padding: var(--ds-dim-s);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  z-index: 1100;
+}
+
+.app-header__menu-group:hover > .app-header__dropdown,
+.app-header__menu-group:focus-within > .app-header__dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.app-header__menu-group:hover > .app-header__menu-item--has-dropdown .app-header__menu-caret,
+.app-header__menu-group:focus-within > .app-header__menu-item--has-dropdown .app-header__menu-caret {
+  transform: rotate(180deg);
+}
+
+.app-header__dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-dim-l);
+  width: 100%;
+  height: 36px;
+  padding: 0 var(--ds-dim-3xl);
+  border: 0;
+  border-radius: var(--ds-radius-md);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--ds-font-body);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ds-text-primary);
+  white-space: nowrap;
+  text-align: left;
+  transition: background 0.12s;
+}
+
+.app-header__dropdown-item:hover {
+  background: var(--ds-bg-page);
+}
+
+.app-header__dropdown-item--active {
+  background: var(--ds-row-hover);
+  font-weight: 600;
+}
+
+.app-header__right {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-dim-l);
+  flex-shrink: 0;
+}
+
+.app-header__wallet {
+  height: 32px;
+  padding: 0 var(--ds-dim-3xl);
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-dim-l);
+  background: var(--ds-bg);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-dim-l);
+  font-family: var(--ds-font-body);
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ds-text-primary);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.app-header__wallet:hover {
+  background: var(--ds-bg-page);
+  border-color: var(--ds-border-input-hover);
+}
+
+.app-header__wallet-label {
+  color: var(--ds-text-secondary);
+  font-weight: 600;
+}
+
+.app-header__wallet-amount {
+  font-weight: 600;
+}
+
+.app-header__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--ds-radius-full);
+  background: var(--ds-row-hover);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ds-text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 0;
+}
+
+.app-header__avatar:hover {
+  background: var(--ds-bg-page);
+  color: var(--ds-text-primary);
+}
+
+.app-header__burger {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  :root {
+    --ib-chrome-offset: 88px;
+  }
+
+  .role-bar {
+    height: 32px;
+    padding: 0 var(--ds-dim-3xl);
+    justify-content: flex-start;
+    gap: var(--ds-dim-l);
+  }
+
+  .role-bar__label {
+    display: none;
+  }
+
+  .role-bar > .ds-button-group {
+    display: none;
+  }
+
+  .role-bar__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-dim-s);
+    height: 24px;
+    padding: 0 var(--ds-dim-2xl);
+    border-radius: var(--ds-radius-full);
+    background: var(--ds-bg);
+    border: 1px solid var(--ds-border);
+    font-family: var(--ds-font-body);
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 600;
+    color: var(--ds-text-primary);
+  }
+
+  .app-header {
+    top: 32px;
+    height: 56px;
+    padding: 0 var(--ds-dim-3xl);
+    gap: var(--ds-dim-2xl);
+  }
+
+  .app-header__logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .app-header__menu {
+    display: none;
+  }
+
+  .app-header__wallet {
+    display: none;
+  }
+
+  .app-header__avatar {
+    width: 36px;
+    height: 36px;
+  }
+}
