@@ -17,7 +17,6 @@
       --c-content-primary: #0a0a0a;
       --c-content-secondary: #525252;
       --c-content-tertiary: #6f6f6f;
-      --hub-tabs-h: 52px;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
     * { box-sizing: border-box; }
@@ -96,29 +95,6 @@
       transition: opacity 0.2s;
     }
     .hub__loading.is-hidden { opacity: 0; }
-    @media (min-width: 768px) {
-      .hub__tabs {
-        order: 0;
-        border-top: none;
-        border-bottom: 1px solid var(--c-border);
-        box-shadow: none;
-        padding: 12px 16px;
-        gap: 8px;
-        max-width: 720px;
-        margin: 0 auto;
-        width: 100%;
-      }
-      .hub__tab { height: 44px; font-size: 14px; border-radius: 12px; }
-      .hub__frame-wrap {
-        max-width: 1200px;
-        width: calc(100% - 32px);
-        margin: 16px auto;
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid var(--c-border);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-      }
-    }
   </style>
 </head>
 <body>
@@ -129,14 +105,14 @@
         class="hub__frame"
         id="hub-frame"
         title="IB prototype"
-        src="./prototype/index.html"
+        src="./prototype/ib-dashboard/index.html"
         allow="clipboard-read; clipboard-write"
       ></iframe>
     </div>
     <nav class="hub__tabs" role="tablist" aria-label="Prototype screens">
-      <button type="button" class="hub__tab" role="tab" data-screen="contests" aria-selected="true">Contests</button>
+      <button type="button" class="hub__tab" role="tab" data-screen="contests" aria-selected="false">Contests</button>
       <button type="button" class="hub__tab" role="tab" data-screen="rebate" aria-selected="false">Rebate</button>
-      <button type="button" class="hub__tab" role="tab" data-screen="dashboard" aria-selected="false">Dashboard</button>
+      <button type="button" class="hub__tab" role="tab" data-screen="dashboard" aria-selected="true">Dashboard</button>
     </nav>
   </div>
   <script>
@@ -145,38 +121,50 @@
       rebate: './prototype/rebate/index.html',
       dashboard: './prototype/ib-dashboard/index.html'
     };
-    const frame = document.getElementById('hub-frame');
-    const loading = document.getElementById('hub-loading');
-    const tabs = Array.from(document.querySelectorAll('.hub__tab'));
+    const DEFAULT_SCREEN = 'dashboard';
+    const DESKTOP_MQ = window.matchMedia('(min-width: 768px)');
 
     function screenFromHash() {
       const hash = (location.hash || '').replace(/^#/, '');
-      return SCREENS[hash] ? hash : 'contests';
+      return SCREENS[hash] ? hash : DEFAULT_SCREEN;
     }
 
-    function setScreen(id, pushHash) {
-      if (!SCREENS[id]) return;
-      tabs.forEach(tab => {
-        const active = tab.dataset.screen === id;
-        tab.setAttribute('aria-selected', active ? 'true' : 'false');
-      });
-      loading.classList.remove('is-hidden');
-      frame.src = SCREENS[id];
-      if (pushHash !== false) {
-        const next = '#' + id;
-        if (location.hash !== next) history.replaceState(null, '', next);
+    function redirectDesktopToPrototype() {
+      if (!DESKTOP_MQ.matches) return false;
+      window.location.replace(SCREENS[screenFromHash()]);
+      return true;
+    }
+
+    if (redirectDesktopToPrototype()) {
+      /* Full-page navigation on desktop — no iframe hub chrome. */
+    } else {
+      const frame = document.getElementById('hub-frame');
+      const loading = document.getElementById('hub-loading');
+      const tabs = Array.from(document.querySelectorAll('.hub__tab'));
+
+      function setScreen(id, pushHash) {
+        if (!SCREENS[id]) return;
+        tabs.forEach(tab => {
+          const active = tab.dataset.screen === id;
+          tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        loading.classList.remove('is-hidden');
+        frame.src = SCREENS[id];
+        if (pushHash !== false) {
+          const next = '#' + id;
+          if (location.hash !== next) history.replaceState(null, '', next);
+        }
       }
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => setScreen(tab.dataset.screen));
+      });
+
+      frame.addEventListener('load', () => loading.classList.add('is-hidden'));
+      window.addEventListener('hashchange', () => setScreen(screenFromHash(), false));
+
+      setScreen(screenFromHash(), false);
     }
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => setScreen(tab.dataset.screen));
-    });
-
-    frame.addEventListener('load', () => loading.classList.add('is-hidden'));
-
-    window.addEventListener('hashchange', () => setScreen(screenFromHash(), false));
-
-    setScreen(screenFromHash(), false);
   </script>
 </body>
 </html>
