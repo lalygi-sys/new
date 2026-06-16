@@ -790,7 +790,7 @@ body.has-ib-chrome .screen {
   }
 
   .app-header__avatar--static {
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     width: 32px;
@@ -802,9 +802,23 @@ body.has-ib-chrome .screen {
   }
 
   .app-header__avatar {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
     width: 32px;
     height: 32px;
+    padding: 0;
     border-radius: var(--ds-dim-l);
+    background: var(--ds-row-hover);
+    flex-shrink: 0;
+    line-height: 0;
+  }
+
+  .app-header__avatar svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+    flex-shrink: 0;
   }
 
   .app-header__burger {

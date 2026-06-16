@@ -1010,6 +1010,14 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     min-width:0;
   }
   #chips.chips-group,#mp-chips.chips-group{order:2}
+  /* Toolbar status chips — DS Chips/M on mobile (default .ds-chip: h=40, px=16, radius=12) */
+  #chips .chip,#mp-chips .chip{
+    height:40px;
+    padding:0 16px;
+    border-radius:12px;
+    gap:8px;
+  }
+  #chips .chip .chip-label,#mp-chips .chip .chip-label{padding:0}
   .date-range-wrap--toolbar{display:none!important}
   .table-list-controls{
     display:flex;
@@ -1091,7 +1099,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     grid-column: auto;
   }
   .stat-banner { padding: 12px 14px 14px; }
-  .stat-banner__value { font-size: 28px; line-height: 32px; letter-spacing: -0.5px; }
+  .stat-banner__value { font-size: 20px; line-height: 24px; letter-spacing: -0.2px; }
   /* IconButton Text / Size XS (Figma 60322:32851) — not header export 40px */
   .stat-banner__info-btn {
     width: 24px;
@@ -1323,11 +1331,11 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;
     border-radius:16px 16px 0 0!important;border:none!important;
     transform:translateY(100%);transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .2s ease;
-    box-shadow:0 -8px 32px rgba(0,0,0,.18)!important;
+    box-shadow:none!important;
     margin:0!important;flex:none!important;opacity:1!important;
     z-index:999;
   }
-  .filter-panel.open,.rebate-panel.open{transform:translateY(0);width:100%!important;margin:0!important;flex:none!important}
+  .filter-panel.open,.rebate-panel.open{transform:translateY(0);width:100%!important;margin:0!important;flex:none!important;box-shadow:0 -8px 32px rgba(0,0,0,.18)!important}
   .filter-panel-inner,.rebate-panel-inner{width:100%!important;max-width:none!important;height:100%;max-height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
   /* Drag-handle pill (decorative — see comment above).
      Higher opacity + thinner+wider pill matches iOS/Material

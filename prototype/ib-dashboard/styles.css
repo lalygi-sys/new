@@ -1821,10 +1821,15 @@ body.has-ib-chrome.dashboard-body {
   .commission-card__body { padding: 16px 20px 20px; }
 
   .commission-card__top {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
     margin-bottom: 16px;
     gap: 10px;
+  }
+
+  .commission-card__greeting {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .commission-card__company {
@@ -1832,7 +1837,8 @@ body.has-ib-chrome.dashboard-body {
   }
 
   .commission-card__top .btn-primary {
-    align-self: flex-start;
+    flex: 0 0 auto;
+    align-self: center;
   }
 
   .rank-block {
