@@ -2,7 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<script>
+(function () {
+  function syncViewportInsets() {
+    var vv = window.visualViewport;
+    if (!vv) return;
+    var inset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    document.documentElement.style.setProperty('--vv-bottom-inset', inset + 'px');
+  }
+  if (window.visualViewport) {
+    syncViewportInsets();
+    window.visualViewport.addEventListener('resize', syncViewportInsets);
+    window.visualViewport.addEventListener('scroll', syncViewportInsets);
+  }
+  window.addEventListener('orientationchange', syncViewportInsets);
+  window.addEventListener('resize', syncViewportInsets);
+})();
+</script>
 <script>
 (function () {
   var hash = (location.hash || '').replace(/^#/, '');
@@ -132,6 +149,8 @@
 
     /* Mobile chrome heights — used to offset content from fixed header */
     --ds-mobile-header-h: 96px;  /* role-bar 32 + app-header 64 */
+    --vv-bottom-inset: 0px;
+    --ds-fixed-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--vv-bottom-inset, 0px));
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1362,7 +1381,11 @@
   .date-range[aria-expanded="true"]:hover,
   .date-range:focus-visible:hover { background: var(--ds-bg); border-color: #3b71ff; }
   .date-range svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--ds-text-secondary); }
-  .date-range .dr-label { color: var(--ds-text-secondary); font-weight: 400; }
+  .date-range .dr-text {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-width: 0; flex: 1 1 auto; overflow: hidden;
+  }
+  .date-range .dr-label { color: var(--ds-text-secondary); font-weight: 400; flex-shrink: 0; }
   .date-range .dr-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .table-toolbar__period .date-range { width: 100%; max-width: 100%; }
   .table-toolbar__chips { flex: 0 1 auto; margin-left: auto; }
@@ -2439,7 +2462,7 @@
 
   /* Toast / Snackbar — Figma Components Snackbar (60132:14999).
      Web screen location (60503:5551): bottom-left stack, 30px / 90px inset.
-     Mobile: bottom stack, 16px inset + safe-area (above hub tab bar in iframe).
+     Mobile: bottom stack, 16px inset + safe-area + dynamic Chrome viewport inset.
      Behaviour (60462:7057): max 2 on Web, max 1 on mobile; queue overflow. */
   .toast-stack {
     position: fixed;
@@ -2731,8 +2754,8 @@
 
     /* === App shell & containers — match rebate .content-wrap + .inner (≤640px) === */
     .app {
-      padding: calc(var(--ds-mobile-header-h) + 12px) 12px calc(96px + env(safe-area-inset-bottom, 0px));
-      min-height: 100vh;
+      padding: calc(var(--ds-mobile-header-h) + 12px) 12px calc(16px + var(--ds-fixed-bottom));
+      min-height: 100dvh;
       background: var(--ds-surface-container);
     }
     .app:has(.contests-layout) {
@@ -2744,7 +2767,7 @@
       padding: 16px 12px;
       border: none;
       border-radius: 12px;
-      min-height: calc(100vh - var(--ds-mobile-header-h) - 12px - 96px - 24px - env(safe-area-inset-bottom, 0px));
+      min-height: calc(100dvh - var(--ds-mobile-header-h) - 12px - 16px - 24px - var(--ds-fixed-bottom));
     }
     .ds-container:has(.contests-layout) {
       max-height: none;
@@ -3138,8 +3161,16 @@
       margin-bottom: var(--ds-dim-5xl);
     }
     .table-toolbar__period { flex: 0 0 auto; min-width: 0; width: 100%; }
-    .table-toolbar__period .date-range .dr-label { display: none; }
     .table-toolbar__period .date-range { width: 100%; }
+    .table-toolbar__period .date-range .dr-text {
+      min-width: 0; flex: 1 1 auto; gap: 8px;
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    }
+    .table-toolbar__period .date-range .dr-label,
+    .table-toolbar__period .date-range .dr-value {
+      flex: 0 1 auto; min-width: 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
     .table-toolbar__chips { flex: 0 0 auto; width: 100%; margin-left: 0; min-width: 0; }
     .table-toolbar__chips .ds-chips-group {
       width: 100%;
@@ -3169,7 +3200,7 @@
       top: auto !important;
       left: 0 !important;
       right: 0 !important;
-      bottom: 0 !important;
+      bottom: var(--ds-fixed-bottom) !important;
       width: 100% !important;
       max-width: none !important;
       height: auto !important;
@@ -3198,7 +3229,7 @@
     }
     .dr-panel.dr-panel--sheet .dr-panel__foot {
       flex-shrink: 0;
-      padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+      padding-bottom: max(16px, var(--ds-fixed-bottom, 16px));
     }
     .dr-panel.dr-panel--sheet .dr-panel__body--stack {
       display: flex;
@@ -3282,7 +3313,7 @@
     /* Wizard sticky footer (mobile) */
     .wizard-footer-mobile {
       position: fixed; left: 0; right: 0;
-      bottom: env(safe-area-inset-bottom, 0px);
+      bottom: var(--ds-fixed-bottom);
       z-index: 985;
       padding: var(--ds-dim-3xl);
       background: var(--ds-bg);
@@ -3314,7 +3345,7 @@
 
     /* Add 100px scroll padding so sticky footer never covers content */
     .ds-container--split {
-      padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(72px + var(--ds-fixed-bottom));
     }
 
     /* === Detail page (IB / Client / Admin) === */
@@ -3342,7 +3373,7 @@
     /* Sticky CTA on terms */
     .client-terms-cta {
       position: fixed; left: 0; right: 0;
-      bottom: env(safe-area-inset-bottom, 0px);
+      bottom: var(--ds-fixed-bottom);
       z-index: 985;
       padding: var(--ds-dim-3xl);
       background: var(--ds-bg);
@@ -3364,7 +3395,7 @@
       margin: 0 !important;
     }
     /* Reserve room above sticky CTA so the static copy is visible */
-    .client-terms-spacer { height: 96px; }
+    .client-terms-spacer { height: calc(72px + var(--ds-fixed-bottom)); }
 
     /* === Leaderboard (table -> card list) === */
     .leaderboard-scroll { max-height: none; overflow: visible; border: 0; }
@@ -3605,7 +3636,7 @@
     /* === Snackbar stack (mobile) — bottom, 16px inset + safe-area === */
     .toast-stack {
       top: auto !important;
-      bottom: calc(env(safe-area-inset-bottom, 0px) + var(--ds-dim-3xl)) !important;
+      bottom: calc(var(--ds-fixed-bottom) + var(--ds-dim-3xl)) !important;
       left: var(--ds-dim-3xl) !important;
       right: var(--ds-dim-3xl) !important;
       max-width: none !important;
@@ -6085,8 +6116,10 @@ const DateRangeTrigger = ({ range, isOpen, onClick, placeholder = 'All periods',
         onClick={onClick}
       >
         <DateRangeCalendarIcon />
-        <span className="dr-label">{fieldLabel}</span>
-        <span className="dr-value">{valueLabel}</span>
+        <span className="dr-text">
+          <span className="dr-label">{fieldLabel}</span>
+          <span className="dr-value">{valueLabel}</span>
+        </span>
       </button>
     </div>
   );

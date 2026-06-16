@@ -7,133 +7,37 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>IB Prototypes</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --c-primary: #1945ff;
-      --c-primary-container: #eef1ff;
-      --c-surface: #ffffff;
-      --c-surface-container: #f7f7f8;
-      --c-border: #e6e6e6;
-      --c-content-primary: #0a0a0a;
-      --c-content-secondary: #525252;
-      --c-content-tertiary: #6f6f6f;
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
-    * { box-sizing: border-box; }
-    html, body {
+    body {
       margin: 0;
-      height: 100%;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--c-surface-container);
-      color: var(--c-content-primary);
-      -webkit-font-smoothing: antialiased;
-    }
-    .hub {
-      display: flex;
-      flex-direction: column;
-      height: 100dvh;
-      min-height: 100vh;
-      max-width: 100%;
-      overflow: hidden;
-    }
-    .hub__tabs {
-      flex: 0 0 auto;
-      display: flex;
-      gap: 4px;
-      padding: 8px 12px calc(8px + var(--safe-bottom));
-      background: var(--c-surface);
-      border-top: 1px solid var(--c-border);
-      box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
-      order: 2;
-    }
-    .hub__tab {
-      flex: 1 1 0;
-      min-width: 0;
-      height: 40px;
-      padding: 0 8px;
-      border: none;
-      border-radius: 10px;
-      background: transparent;
-      font: inherit;
-      font-size: 13px;
-      font-weight: 600;
-      line-height: 16px;
-      color: var(--c-content-secondary);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .hub__tab:hover { color: var(--c-content-primary); background: var(--c-surface-container); }
-    .hub__tab[aria-selected="true"] {
-      color: var(--c-primary);
-      background: var(--c-primary-container);
-      box-shadow: inset 0 0 0 1px rgba(25, 69, 255, 0.12);
-    }
-    .hub__frame-wrap {
-      flex: 1 1 auto;
-      min-height: 0;
-      position: relative;
-      order: 1;
-      background: var(--c-surface-container);
-    }
-    .hub__frame {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: var(--c-surface-container);
-    }
-    .hub__loading {
-      position: absolute;
-      inset: 0;
+      min-height: 100dvh;
       display: grid;
       place-items: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f7f7f8;
+      color: #525252;
       font-size: 14px;
-      color: var(--c-content-tertiary);
-      pointer-events: none;
-      transition: opacity 0.2s;
     }
-    .hub__loading.is-hidden { opacity: 0; }
   </style>
 </head>
 <body>
-  <div class="hub">
-    <div class="hub__frame-wrap">
-      <div class="hub__loading" id="hub-loading" aria-hidden="true">Loading…</div>
-      <iframe
-        class="hub__frame"
-        id="hub-frame"
-        title="IB prototype"
-        src="./prototype/ib-dashboard/index.html?v=67cc1d8"
-        allow="clipboard-read; clipboard-write"
-      ></iframe>
-    </div>
-    <nav class="hub__tabs" role="tablist" aria-label="Prototype screens">
-      <button type="button" class="hub__tab" role="tab" data-screen="dashboard" aria-selected="true">Dashboard</button>
-      <button type="button" class="hub__tab" role="tab" data-screen="contests" aria-selected="false">Contests</button>
-      <button type="button" class="hub__tab" role="tab" data-screen="rebate" aria-selected="false">Rebate</button>
-    </nav>
-  </div>
+  <p>Loading prototype…</p>
   <script>
     const BUILD = '67cc1d8';
-    /* Bust GitHub Pages CDN + browser cache: each deploy gets a new ?v=67cc1d8
+    /* Bust GitHub Pages CDN on each deploy (BUILD in query string). */
     (function ensureFreshHub() {
       const params = new URLSearchParams(location.search);
       if (params.get('v') === BUILD) return;
       params.set('v', BUILD);
       location.replace(location.pathname + '?' + params.toString() + location.hash);
     })();
+
     const SCREENS = {
       contests: './prototype/index.html#contests',
       rebate: './prototype/rebate/index.html',
       dashboard: './prototype/ib-dashboard/index.html'
     };
     const DEFAULT_SCREEN = 'dashboard';
-    const DESKTOP_MQ = window.matchMedia('(min-width: 768px)');
 
     function withBuild(url) {
       const hashIdx = url.indexOf('#');
@@ -148,42 +52,7 @@
       return SCREENS[hash] ? hash : DEFAULT_SCREEN;
     }
 
-    function redirectDesktopToPrototype() {
-      if (!DESKTOP_MQ.matches) return false;
-      window.location.replace(withBuild(SCREENS[screenFromHash()]));
-      return true;
-    }
-
-    if (redirectDesktopToPrototype()) {
-      /* Full-page navigation on desktop — no iframe hub chrome. */
-    } else {
-      const frame = document.getElementById('hub-frame');
-      const loading = document.getElementById('hub-loading');
-      const tabs = Array.from(document.querySelectorAll('.hub__tab'));
-
-      function setScreen(id, pushHash) {
-        if (!SCREENS[id]) return;
-        tabs.forEach(tab => {
-          const active = tab.dataset.screen === id;
-          tab.setAttribute('aria-selected', active ? 'true' : 'false');
-        });
-        loading.classList.remove('is-hidden');
-        frame.src = withBuild(SCREENS[id]);
-        if (pushHash !== false) {
-          const next = '#' + id;
-          if (location.hash !== next) history.replaceState(null, '', next);
-        }
-      }
-
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => setScreen(tab.dataset.screen));
-      });
-
-      frame.addEventListener('load', () => loading.classList.add('is-hidden'));
-      window.addEventListener('hashchange', () => setScreen(screenFromHash(), false));
-
-      setScreen(screenFromHash(), false);
-    }
+    location.replace(withBuild(SCREENS[screenFromHash()]));
   </script>
 </body>
 </html>

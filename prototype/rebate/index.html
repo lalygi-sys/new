@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -956,7 +956,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 
   /* === TOP NAV (compact 56px) ===
      Product chrome from shared/ib-chrome.css */
-  .content-wrap{padding:12px 12px 96px;background:var(--c-surface-container)}
+  .content-wrap{padding:12px 12px calc(16px + var(--ds-fixed-bottom));background:var(--c-surface-container)}
   .inner{padding:16px 12px;background:var(--c-surface);border:none;border-radius:12px}
   /* Match Clients settings — tablet rule #s-manage .inner{padding:24px} is more specific. */
   #s-manage .inner{padding:16px 12px}
@@ -1330,7 +1330,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .filter-panel,.rebate-panel{
     position:fixed!important;
     top:calc(var(--ib-chrome-offset, 96px) + 12px)!important;
-    left:0!important;right:0!important;bottom:0!important;
+    left:0!important;right:0!important;bottom:var(--ds-fixed-bottom)!important;
     width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;
     border-radius:16px 16px 0 0!important;border:none!important;
     transform:translateY(100%);transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .2s ease;
@@ -1354,8 +1354,8 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 
   /* === BOTTOM BAR (selection) ===
      Edge-to-edge sheet at the viewport bottom; reserve space below cards. */
-  #s-main .table-card>.bottom-bar{position:fixed;left:0!important;right:0!important;bottom:0!important;width:auto;border-radius:16px 16px 0 0;border-top:none;box-shadow:0 -4px 16px rgba(0,0,0,.12);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));gap:12px;z-index:50}
-  #s-manage .table-card>.bottom-bar{position:fixed;left:0!important;right:0!important;bottom:0!important;width:auto;border-radius:16px 16px 0 0;border-top:none;box-shadow:0 -4px 16px rgba(0,0,0,.12);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));gap:12px;z-index:50}
+  #s-main .table-card>.bottom-bar{position:fixed;left:0!important;right:0!important;bottom:var(--ds-fixed-bottom)!important;width:auto;border-radius:16px 16px 0 0;border-top:none;box-shadow:0 -4px 16px rgba(0,0,0,.12);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));gap:12px;z-index:50}
+  #s-manage .table-card>.bottom-bar{position:fixed;left:0!important;right:0!important;bottom:var(--ds-fixed-bottom)!important;width:auto;border-radius:16px 16px 0 0;border-top:none;box-shadow:0 -4px 16px rgba(0,0,0,.12);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));gap:12px;z-index:50}
   /* Reserve space so cards aren't covered by the bar. Stacked layout
      means 3 secondary buttons + 1 primary can be ~5 rows tall — but
      selectionly-renderered actions cap at 3, so worst-case height
@@ -1378,7 +1378,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .ram-item{height:44px}
 
   /* Snackbar — mobile bottom stack: 16px inset + safe-area */
-  .toast-stack{bottom:calc(env(safe-area-inset-bottom,0px) + 16px);left:16px;right:16px;max-width:none;width:auto}
+  .toast-stack{bottom:calc(var(--ds-fixed-bottom) + 16px);left:16px;right:16px;max-width:none;width:auto}
   .toast-stack .toast{width:100%;max-width:none}
 
   /* Tooltip — anchor to the tap target; max-width narrower to

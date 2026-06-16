@@ -353,4 +353,19 @@
     }
     closeDrawer();
   });
+
+  function syncVisualViewportInsets() {
+    var vv = window.visualViewport;
+    if (!vv) return;
+    var inset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    document.documentElement.style.setProperty('--vv-bottom-inset', inset + 'px');
+  }
+
+  if (window.visualViewport) {
+    syncVisualViewportInsets();
+    window.visualViewport.addEventListener('resize', syncVisualViewportInsets);
+    window.visualViewport.addEventListener('scroll', syncVisualViewportInsets);
+  }
+  window.addEventListener('orientationchange', syncVisualViewportInsets);
+  window.addEventListener('resize', syncVisualViewportInsets);
 })();
