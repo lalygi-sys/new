@@ -8,6 +8,7 @@
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<link rel="stylesheet" href="shared/ib-chrome.css">
 
 <!-- ═══════════════════════════════════════════════ -->
 <!-- DS TOKENS (RIG v2.51.0)                        -->
@@ -854,6 +855,11 @@
     background: var(--ds-row-hover);
     font-weight: 600;
   }
+  .app-header__menu-item:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
   .app-header__right { display: flex; align-items: center; gap: var(--ds-dim-l); flex-shrink: 0; }
   .app-header__wallet {
     height: 32px; padding: 0 var(--ds-dim-3xl);
@@ -1119,9 +1125,21 @@
     min-width: 0;
     padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl);
     border-radius: var(--ds-radius-lg);
-    border: 1px solid var(--ds-border);
-    background: var(--ds-bg);
+    border: 1px solid rgba(22, 22, 22, 0.07);
+    background: linear-gradient(
+      180deg,
+      var(--ds-row-hover) 0%,
+      rgba(245, 247, 250, 0.72) 38%,
+      rgba(255, 255, 255, 0.96) 68%,
+      #ffffff 100%
+    );
+    box-shadow: 0 1px 2px rgba(11, 11, 22, 0.04);
     overflow: visible;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .stat-banner:hover {
+    border-color: rgba(22, 22, 22, 0.1);
+    box-shadow: 0 2px 8px rgba(11, 11, 22, 0.06);
   }
   .stat-banner__head {
     flex: 0 0 auto;
@@ -2682,9 +2700,9 @@
     .is-mobile-only { display: revert !important; }
     .is-desktop-only { display: none !important; }
 
-    /* === App shell & containers === */
+    /* === App shell & containers — match rebate .content-wrap + .inner (≤640px) === */
     .app {
-      padding: var(--ds-mobile-header-h) 12px calc(96px + env(safe-area-inset-bottom, 0px));
+      padding: calc(var(--ds-mobile-header-h) + 12px) 12px calc(96px + env(safe-area-inset-bottom, 0px));
       min-height: 100vh;
       background: var(--ds-surface-container);
     }
@@ -2694,9 +2712,10 @@
     }
     .ds-container {
       margin: 0;
-      padding: var(--ds-dim-3xl);
-      border-radius: var(--ds-radius-lg);
-      min-height: calc(100vh - var(--ds-mobile-header-h) - 96px - 24px - env(safe-area-inset-bottom, 0px));
+      padding: 16px 12px;
+      border: none;
+      border-radius: 12px;
+      min-height: calc(100vh - var(--ds-mobile-header-h) - 12px - 96px - 24px - env(safe-area-inset-bottom, 0px));
     }
     .ds-container:has(.contests-layout) {
       max-height: none;
@@ -2780,20 +2799,27 @@
     }
     .app-header__close { display: none; }
     .app-header__burger {
-      display: inline-flex;
+      display: inline-flex !important;
       align-items: center;
       justify-content: center;
       width: 32px;
       height: 32px;
+      padding: 0;
       border-radius: var(--ds-dim-l);
       background: rgba(22, 22, 22, 0.08);
       color: var(--ds-text-primary);
       border: 0;
       cursor: pointer;
       flex-shrink: 0;
+      line-height: 0;
     }
     .app-header__burger:hover { background: rgba(22, 22, 22, 0.12); }
-    .app-header__burger svg { width: 18px; height: 18px; }
+    .app-header__burger svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+      flex-shrink: 0;
+    }
 
     /* === Mobile nav drawer — full-screen panel (Figma Navigation IB Cabinet 1:37196) === */
     .mobile-drawer {
@@ -2867,8 +2893,14 @@
       text-align: left;
       cursor: pointer;
     }
-    .mobile-drawer__item:hover { color: var(--ds-text-primary); }
+    .mobile-drawer__item:hover:not(:disabled) { color: var(--ds-text-primary); }
     .mobile-drawer__item--active { color: var(--ds-primary); }
+    .mobile-drawer__item:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+      color: var(--ds-text-tertiary);
+    }
     .mobile-drawer__item-row {
       display: inline-flex;
       align-items: center;
@@ -2995,12 +3027,15 @@
     .rig-title-02 { font-size: 24px; line-height: 28px; letter-spacing: -0.3px; }
 
     /* === Stats — horizontal scroll strip (like rebate stat banners) === */
+    .contests-layout__right {
+      gap: var(--ds-dim-4xl);
+    }
     .stat-banners {
       display: flex;
       flex-wrap: nowrap;
       align-items: stretch;
       gap: var(--ds-dim-2xl);
-      padding: 0 0 var(--ds-dim-2xl);
+      padding: 0;
       overflow-x: auto;
       overflow-y: visible;
       scroll-snap-type: x proximity;
@@ -4690,12 +4725,12 @@ const RolePreviewBar = ({ role, onRoleChange, onPillTap }) => (
 const HEADER_MENUS = {
   ib: [
     {key: 'dashboard', label: 'IB Dashboard'},
-    {key: 'revenue',   label: 'Revenue statistics'},
+    {key: 'revenue',   label: 'Revenue statistics', disabled: true},
     {key: 'growth',    label: 'Client engagement', dropdown: [
       {key: 'contests', label: 'Contests'},
       {key: 'rebate',   label: 'Rebate'},
     ]},
-    {key: 'promo',     label: 'Promo materials'},
+    {key: 'promo',     label: 'Promo materials', disabled: true},
   ],
   client: [
     {key: 'dashboard',     label: 'Dashboard'},
@@ -4721,15 +4756,111 @@ const IB_DASHBOARD_PROTOTYPE_HREF = 'ib-dashboard/index.html';
 
 /* Drawer uses the same hierarchical menu as AppHeader (Figma Navigation IB Cabinet 1:37196). */
 
+const isMobileProfileMenu = () => window.matchMedia('(max-width: 639px)').matches;
+
+/* IbProfileMenu — shared with ib-chrome.js (Figma Navigation IB Cabinet 1:37626 / 1:23985). */
+const IbProfileMenu = ({ open, onClose, onAction }) => {
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') onClose && onClose(); };
+    document.addEventListener('keydown', onKey);
+    if (isMobileProfileMenu()) document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      if (isMobileProfileMenu()) document.body.style.overflow = '';
+    };
+  }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open || isMobileProfileMenu()) return undefined;
+    const onDocClick = () => onClose && onClose();
+    document.addEventListener('click', onDocClick);
+    return () => document.removeEventListener('click', onDocClick);
+  }, [open, onClose]);
+
+  const handleAction = (action) => {
+    onClose && onClose();
+    onAction && onAction(action);
+  };
+
+  if (!open) return null;
+
+  return (
+    <div
+      className={`profile-menu profile-menu--open`}
+      id="ib-profile-menu"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Profile menu"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="profile-menu__topbar">
+        <button type="button" className="profile-menu__close" aria-label="Close profile menu" onClick={onClose}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+      <div className="profile-menu__body">
+        <div className="profile-menu__head">
+          <button type="button" className="profile-menu__identity" onClick={() => handleAction('profile-settings')}>
+            <span className="profile-menu__identity-label">Profile </span>
+            <span className="profile-menu__name">Jaydon Rosser</span>
+            <svg className="profile-menu__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+          <div className="profile-menu__meta profile-menu__meta--desktop">
+            <button type="button" className="profile-menu__invite-block" onClick={() => handleAction('invite')}>
+              <span className="profile-menu__company profile-menu__company--invite">Invite to Rosser Capital</span>
+              <span className="profile-menu__accounts">
+                <span className="profile-menu__account">
+                  <svg viewBox="0 0 46.239 46.239" fill="none" aria-hidden="true">
+                    <circle cx="23.1195" cy="23.1195" r="23.1193" fill="#ffffff" />
+                    <path d="M23.1152 2.11426C11.5135 2.11426 2.09766 11.5301 2.09766 23.1318C2.09766 34.7334 11.5135 44.1493 23.1152 44.1493C34.7168 44.1493 44.1327 34.7334 44.1327 23.1318C44.1327 11.5301 34.7168 2.11426 23.1152 2.11426ZM23.1152 10.5213C27.1716 10.5213 30.4713 13.821 30.4713 17.8774C30.4713 21.9338 27.1716 25.2335 23.1152 25.2335C19.0588 25.2335 15.759 21.9338 15.759 17.8774C15.759 13.821 19.0588 10.5213 23.1152 10.5213ZM23.1152 39.9458C18.8486 39.9458 13.8044 38.2224 10.2104 33.8927C13.7624 31.1184 18.2391 29.437 23.1152 29.437C27.9912 29.437 32.468 31.1184 36.0199 33.8927C32.4259 38.2224 27.3817 39.9458 23.1152 39.9458Z" fill="#E2E6F9" />
+                  </svg>
+                </span>
+                <span className="profile-menu__account profile-menu__account--add" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M7.58355 8.9667H3.97285C3.7769 8.9667 3.61264 8.9004 3.48009 8.7678C3.34753 8.6352 3.28125 8.4709 3.28125 8.2748C3.28125 8.0788 3.34753 7.91456 3.48009 7.78216C3.61264 7.64976 3.7769 7.58355 3.97285 7.58355H7.58355V3.97285C7.58355 3.7769 7.64985 3.61264 7.78246 3.48009C7.91508 3.34753 8.0794 3.28125 8.2754 3.28125C8.4715 3.28125 8.6357 3.34753 8.7681 3.48009C8.9005 3.61264 8.9667 3.7769 8.9667 3.97285V7.58355H12.5774C12.7734 7.58355 12.9376 7.64986 13.0702 7.78246C13.2027 7.91508 13.269 8.0794 13.269 8.2754C13.269 8.4715 13.2027 8.6357 13.0702 8.7681C12.9376 8.9005 12.7734 8.9667 12.5774 8.9667H8.9667V12.5774C8.9667 12.7734 8.9004 12.9376 8.7678 13.0702C8.6352 13.2027 8.4709 13.269 8.2748 13.269C8.0788 13.269 7.91456 13.2027 7.78216 13.0702C7.64975 12.9376 7.58355 12.7734 7.58355 12.5774V8.9667Z" fill="#161616" />
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div className="profile-menu__links">
+          <button type="button" className="profile-menu__link" onClick={() => handleAction('notifications')}>
+            <span>Notification</span>
+            <span className="profile-menu__badge profile-menu__badge--warning">2</span>
+          </button>
+          <button type="button" className="profile-menu__link" onClick={() => handleAction('language')}>
+            <span>Language</span>
+            <span className="profile-menu__badge profile-menu__badge--lang">
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fillRule="evenodd" clipRule="evenodd" d="M8.00016 1.3335C11.6821 1.3335 14.6668 4.31826 14.6668 8.00016C14.6668 11.6821 11.6821 14.6668 8.00016 14.6668C4.31826 14.6668 1.3335 11.6821 1.3335 8.00016C1.3335 4.31826 4.31826 1.3335 8.00016 1.3335Z" fill="#173398" /></svg>
+              <span>En</span>
+            </span>
+          </button>
+          <button type="button" className="profile-menu__link" onClick={() => handleAction('logout')}>Log out</button>
+        </div>
+        <div className="profile-menu__actions">
+          <button type="button" className="btn-tertiary btn-tertiary--s btn-tertiary--block" onClick={() => handleAction('profile-settings')}>Profile settings</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* AppHeader — adaptive header per role.
    IB:    Logo + Menu + Wallet + Avatar
    Client: Logo + Menu (with badges & dropdowns) + Deposit + Avatar + Close
    Admin:  Logo + Menu + Wallet + Avatar
    Mobile: horizontal Menu + Wallet are hidden via CSS; compact balance chip,
            avatar and burger open the slide-down drawer (managed by App). */
-const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0, onMenuOpen, onMenuSelect }) => {
+const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0, clientContestsTotal = 0, onMenuOpen, onMenuSelect, onProfileAction }) => {
   const menu = HEADER_MENUS[role] || HEADER_MENUS.ib;
   const [internalKey, setInternalKey] = useState(activeKeyProp || menu[0].key);
+  const [profileOpen, setProfileOpen] = useState(false);
   const activeKey = activeKeyProp || internalKey;
   const setActiveKey = setInternalKey;
 
@@ -4801,8 +4932,12 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
           return (
             <button
               key={item.key}
+              type="button"
               className={`app-header__menu-item ${activeKey === item.key ? 'app-header__menu-item--active' : ''}`}
+              disabled={item.disabled}
+              title={item.disabled ? 'Under maintenance' : undefined}
               onClick={() => {
+                if (item.disabled) return;
                 setActiveKey(item.key);
                 onMenuSelect?.(item);
               }}
@@ -4825,12 +4960,37 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
         <button className="app-header__balance" type="button" aria-label="Wallet">
           $0.00
         </button>
-        <button className="app-header__avatar" type="button" aria-label="Profile">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-        </button>
+        {role === 'ib' ? (
+          <div className="app-header__profile is-desktop-only">
+            <button
+              type="button"
+              className="app-header__avatar"
+              id="ib-profile-trigger"
+              aria-label="Profile"
+              aria-haspopup="dialog"
+              aria-expanded={profileOpen}
+              aria-controls="ib-profile-menu"
+              onClick={(e) => { e.stopPropagation(); setProfileOpen(v => !v); }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </button>
+            <IbProfileMenu
+              open={profileOpen}
+              onClose={() => setProfileOpen(false)}
+              onAction={onProfileAction}
+            />
+          </div>
+        ) : (
+          <button className="app-header__avatar" type="button" aria-label="Profile">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </button>
+        )}
         {role === 'client' && (
           <button className="app-header__close" type="button" aria-label="Menu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -4865,6 +5025,11 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
 /* MobileDrawer — full-screen nav panel (Figma 7pd3z node 1:37196).
    Top bar with close control; menu items Title 03 (20/24 semibold).
    Sections with dropdown show chevron and expand in place. */
+const isMobileDrawerItemDisabled = (item) => {
+  if (item.key === 'revenue' || item.key === 'promo') return false;
+  return !!item.disabled;
+};
+
 const MobileDrawer = ({
   open,
   onClose,
@@ -4974,12 +5139,19 @@ const MobileDrawer = ({
                 </div>
               );
             }
+            const drawerDisabled = isMobileDrawerItemDisabled(item);
             return (
               <button
                 key={item.key}
                 type="button"
                 className={`mobile-drawer__item ${activeKey === item.key ? 'mobile-drawer__item--active' : ''}`}
-                onClick={() => { onSelect && onSelect(item); onClose && onClose(); }}
+                disabled={drawerDisabled}
+                title={drawerDisabled ? 'Under maintenance' : undefined}
+                onClick={() => {
+                  if (drawerDisabled) return;
+                  onSelect && onSelect(item);
+                  onClose && onClose();
+                }}
               >
                 <span className="mobile-drawer__item-row">
                   <span className="mobile-drawer__item-label">{item.label}</span>
@@ -8437,6 +8609,10 @@ const App = () => {
       window.location.assign(REBATE_PROTOTYPE_HREF);
       return;
     }
+    if (role === 'ib' && item.key === 'revenue') {
+      showAppToast('“Revenue statistics” — section not implemented in this prototype');
+      return;
+    }
     if (role === 'ib' && item.key === 'promo') {
       showAppToast('“Promo materials” — section not implemented in this prototype');
       return;
@@ -8464,6 +8640,16 @@ const App = () => {
      above it). */
   const [pendingToast, setPendingToast] = useState(null);
   const showAppToast = (msg) => setPendingToast({ msg, ts: Date.now() });
+  const handleProfileAction = (action) => {
+    const labels = {
+      invite: 'Invite',
+      'profile-settings': 'Profile settings',
+      notifications: 'Notifications',
+      language: 'Language',
+      logout: 'Log out',
+    };
+    showAppToast(`${labels[action] || action} — not implemented in this prototype`);
+  };
 
   return (
     <ToastProvider>
@@ -8482,6 +8668,7 @@ const App = () => {
         clientContestsTotal={CLIENT_CONTESTS.length}
         onMenuOpen={() => setMobileDrawerOpen(true)}
         onMenuSelect={handleNavMenuSelect}
+        onProfileAction={handleProfileAction}
       />
       <MobileDrawer
         open={mobileDrawerOpen}

@@ -552,7 +552,26 @@ body.has-ib-chrome.dashboard-body {
 }
 
 .commission-card .rank-callout {
-  background: #202237;
+  background: var(--c-primary-container);
+  border-color: transparent;
+  color: var(--c-text-primary);
+}
+
+.commission-card .rank-callout__left svg {
+  color: var(--c-text-primary);
+  opacity: 1;
+}
+
+.commission-card .rank-callout__title {
+  color: var(--c-text-primary);
+}
+
+.commission-card .rank-callout__metric-label {
+  color: var(--c-text-secondary);
+}
+
+.commission-card .rank-callout__metric-value {
+  color: var(--c-text-primary);
 }
 
 .rank-callout__row {
@@ -627,6 +646,7 @@ body.has-ib-chrome.dashboard-body {
 }
 
 .loyalty-program {
+  display: none;
   max-width: 1134px;
   margin: 16px auto 0;
   padding: 24px;
@@ -1129,7 +1149,7 @@ body.has-ib-chrome.dashboard-body {
 .revenue-chart__frame {
   flex: 1 1 auto;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
+  grid-template-columns: max-content minmax(0, 1fr);
   grid-template-rows: minmax(180px, 1fr) 20px;
   column-gap: 8px;
   row-gap: 8px;
@@ -1139,8 +1159,13 @@ body.has-ib-chrome.dashboard-body {
 .revenue-chart__ylabels {
   grid-row: 1;
   grid-column: 1;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
   align-self: stretch;
+  width: max-content;
+  min-width: 0;
   min-height: 0;
   height: 100%;
   padding: 0;
@@ -1152,34 +1177,9 @@ body.has-ib-chrome.dashboard-body {
 }
 
 .revenue-chart__ylabels span {
-  position: absolute;
-  right: 0;
-  white-space: nowrap;
-}
-
-.revenue-chart__ylabels span:nth-child(1) {
-  top: 0;
+  position: static;
   transform: none;
-}
-
-.revenue-chart__ylabels span:nth-child(2) {
-  top: 25%;
-  transform: translateY(-50%);
-}
-
-.revenue-chart__ylabels span:nth-child(3) {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.revenue-chart__ylabels span:nth-child(4) {
-  top: 75%;
-  transform: translateY(-50%);
-}
-
-.revenue-chart__ylabels span:nth-child(5) {
-  top: 100%;
-  transform: translateY(-100%);
+  white-space: nowrap;
 }
 
 .revenue-chart__plot {
@@ -1816,6 +1816,10 @@ body.has-ib-chrome.dashboard-body {
     gap: 10px;
   }
 
+  .commission-card__company {
+    display: none;
+  }
+
   .commission-card__top .btn-primary {
     align-self: flex-start;
   }
@@ -1824,19 +1828,26 @@ body.has-ib-chrome.dashboard-body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    align-items: stretch;
   }
 
   .rank-block__head {
-    flex-direction: column;
-    align-items: flex-start;
+    align-self: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
   }
 
   .rank-block__calc-link {
+    align-self: flex-start;
     grid-column: auto;
     grid-row: auto;
     justify-self: auto;
     white-space: normal;
-    padding: 2px 0 2px 4px;
+    padding: 2px 0;
+    text-align: left;
   }
 
   .segmented-bar {

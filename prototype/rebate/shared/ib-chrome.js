@@ -50,27 +50,35 @@
             '</svg>' +
           '</button>' +
           '<div class="profile-menu" id="ib-profile-menu" role="dialog" aria-modal="true" aria-label="Profile menu" hidden>' +
+            '<div class="profile-menu__topbar">' +
+              '<button type="button" class="profile-menu__close" aria-label="Close profile menu">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>' +
+              '</button>' +
+            '</div>' +
+            '<div class="profile-menu__body">' +
             '<div class="profile-menu__head">' +
               '<button type="button" class="profile-menu__identity">' +
+                '<span class="profile-menu__identity-label">Profile </span>' +
                 '<span class="profile-menu__name">Jaydon Rosser</span>' +
                 '<svg class="profile-menu__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>' +
               '</button>' +
-              '<div class="profile-menu__meta">' +
-                '<p class="profile-menu__company">IB company Rosser Capital</p>' +
-                '<div class="profile-menu__accounts">' +
-                '<span class="profile-menu__account">' +
-                  '<svg viewBox="0 0 46.239 46.239" fill="none" aria-hidden="true">' +
-                    '<circle cx="23.1195" cy="23.1195" r="23.1193" fill="#ffffff"/>' +
-                    '<path d="M23.1152 2.11426C11.5135 2.11426 2.09766 11.5301 2.09766 23.1318C2.09766 34.7334 11.5135 44.1493 23.1152 44.1493C34.7168 44.1493 44.1327 34.7334 44.1327 23.1318C44.1327 11.5301 34.7168 2.11426 23.1152 2.11426ZM23.1152 10.5213C27.1716 10.5213 30.4713 13.821 30.4713 17.8774C30.4713 21.9338 27.1716 25.2335 23.1152 25.2335C19.0588 25.2335 15.759 21.9338 15.759 17.8774C15.759 13.821 19.0588 10.5213 23.1152 10.5213ZM23.1152 39.9458C18.8486 39.9458 13.8044 38.2224 10.2104 33.8927C13.7624 31.1184 18.2391 29.437 23.1152 29.437C27.9912 29.437 32.468 31.1184 36.0199 33.8927C32.4259 38.2224 27.3817 39.9458 23.1152 39.9458Z" fill="#E2E6F9"/>' +
-                  '</svg>' +
-                '</span>' +
-                '<span class="profile-menu__account profile-menu__account--add">' +
-                  '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
-                    '<path d="M7.58355 8.9667H3.97285C3.7769 8.9667 3.61264 8.9004 3.48009 8.7678C3.34753 8.6352 3.28125 8.4709 3.28125 8.2748C3.28125 8.0788 3.34753 7.91456 3.48009 7.78216C3.61264 7.64976 3.7769 7.58355 3.97285 7.58355H7.58355V3.97285C7.58355 3.7769 7.64985 3.61264 7.78246 3.48009C7.91508 3.34753 8.0794 3.28125 8.2754 3.28125C8.4715 3.28125 8.6357 3.34753 8.7681 3.48009C8.9005 3.61264 8.9667 3.7769 8.9667 3.97285V7.58355H12.5774C12.7734 7.58355 12.9376 7.64986 13.0702 7.78246C13.2027 7.91508 13.269 8.0794 13.269 8.2754C13.269 8.4715 13.2027 8.6357 13.0702 8.7681C12.9376 8.9005 12.7734 8.9667 12.5774 8.9667H8.9667V12.5774C8.9667 12.7734 8.9004 12.9376 8.7678 13.0702C8.6352 13.2027 8.4709 13.269 8.2748 13.269C8.0788 13.269 7.91456 13.2027 7.78216 13.0702C7.64975 12.9376 7.58355 12.7734 7.58355 12.5774V8.9667Z" fill="#161616"/>' +
-                  '</svg>' +
-                '</span>' +
-                '<button type="button" class="profile-menu__invite" data-profile-action="invite">Invite</button>' +
-                '</div>' +
+              '<div class="profile-menu__meta profile-menu__meta--desktop">' +
+                '<button type="button" class="profile-menu__invite-block" data-profile-action="invite">' +
+                  '<span class="profile-menu__company profile-menu__company--invite">Invite to Rosser Capital</span>' +
+                  '<span class="profile-menu__accounts">' +
+                    '<span class="profile-menu__account">' +
+                      '<svg viewBox="0 0 46.239 46.239" fill="none" aria-hidden="true">' +
+                        '<circle cx="23.1195" cy="23.1195" r="23.1193" fill="#ffffff"/>' +
+                        '<path d="M23.1152 2.11426C11.5135 2.11426 2.09766 11.5301 2.09766 23.1318C2.09766 34.7334 11.5135 44.1493 23.1152 44.1493C34.7168 44.1493 44.1327 34.7334 44.1327 23.1318C44.1327 11.5301 34.7168 2.11426 23.1152 2.11426ZM23.1152 10.5213C27.1716 10.5213 30.4713 13.821 30.4713 17.8774C30.4713 21.9338 27.1716 25.2335 23.1152 25.2335C19.0588 25.2335 15.759 21.9338 15.759 17.8774C15.759 13.821 19.0588 10.5213 23.1152 10.5213ZM23.1152 39.9458C18.8486 39.9458 13.8044 38.2224 10.2104 33.8927C13.7624 31.1184 18.2391 29.437 23.1152 29.437C27.9912 29.437 32.468 31.1184 36.0199 33.8927C32.4259 38.2224 27.3817 39.9458 23.1152 39.9458Z" fill="#E2E6F9"/>' +
+                      '</svg>' +
+                    '</span>' +
+                    '<span class="profile-menu__account profile-menu__account--add" aria-hidden="true">' +
+                      '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
+                        '<path d="M7.58355 8.9667H3.97285C3.7769 8.9667 3.61264 8.9004 3.48009 8.7678C3.34753 8.6352 3.28125 8.4709 3.28125 8.2748C3.28125 8.0788 3.34753 7.91456 3.48009 7.78216C3.61264 7.64976 3.7769 7.58355 3.97285 7.58355H7.58355V3.97285C7.58355 3.7769 7.64985 3.61264 7.78246 3.48009C7.91508 3.34753 8.0794 3.28125 8.2754 3.28125C8.4715 3.28125 8.6357 3.34753 8.7681 3.48009C8.9005 3.61264 8.9667 3.7769 8.9667 3.97285V7.58355H12.5774C12.7734 7.58355 12.9376 7.64986 13.0702 7.78246C13.2027 7.91508 13.269 8.0794 13.269 8.2754C13.269 8.4715 13.2027 8.6357 13.0702 8.7681C12.9376 8.9005 12.7734 8.9667 12.5774 8.9667H8.9667V12.5774C8.9667 12.7734 8.9004 12.9376 8.7678 13.0702C8.6352 13.2027 8.4709 13.269 8.2748 13.269C8.0788 13.269 7.91456 13.2027 7.78216 13.0702C7.64975 12.9376 7.58355 12.7734 7.58355 12.5774V8.9667Z" fill="#161616"/>' +
+                      '</svg>' +
+                    '</span>' +
+                  '</span>' +
+                '</button>' +
               '</div>' +
             '</div>' +
             '<div class="profile-menu__links">' +
@@ -89,6 +97,7 @@
             '</div>' +
             '<div class="profile-menu__actions">' +
               '<button type="button" class="btn-tertiary btn-tertiary--s btn-tertiary--block" data-profile-action="profile-settings">Profile settings</button>' +
+            '</div>' +
             '</div>' +
           '</div>' +
         '</div>' +
@@ -112,7 +121,7 @@
       '<div class="mobile-drawer__body">' +
         '<nav class="mobile-drawer__menu" aria-label="Main menu">' +
           '<button type="button" class="mobile-drawer__item' + (activeKey === 'dashboard' ? ' mobile-drawer__item--active' : '') + '" data-nav="dashboard">IB Dashboard</button>' +
-          '<button type="button" class="mobile-drawer__item" data-nav="revenue" disabled title="Under maintenance">Revenue statistics</button>' +
+          '<button type="button" class="mobile-drawer__item" data-nav="revenue">Revenue statistics</button>' +
           '<div class="mobile-drawer__group">' +
             '<button type="button" class="mobile-drawer__item mobile-drawer__toggle" aria-expanded="' + (growthActive ? 'true' : 'false') + '">' +
               '<span class="mobile-drawer__item-row">' +
@@ -127,7 +136,7 @@
               '<button type="button" class="mobile-drawer__subitem' + (activeKey === 'rebate' ? ' mobile-drawer__subitem--active' : '') + '" data-nav="rebate">Rebate</button>' +
             '</div>' +
           '</div>' +
-          '<button type="button" class="mobile-drawer__item" data-nav="promo" disabled title="Under maintenance">Promo materials</button>' +
+          '<button type="button" class="mobile-drawer__item" data-nav="promo">Promo materials</button>' +
         '</nav>' +
       '</div>' +
     '</div>';
@@ -158,17 +167,49 @@
 
   var profileTrigger = document.getElementById('ib-profile-trigger');
   var profileMenu = document.getElementById('ib-profile-menu');
+  var profileCloseBtn = document.querySelector('.profile-menu__close');
+
+  function isMobileProfileMenu() {
+    return window.matchMedia('(max-width: 639px)').matches;
+  }
 
   function openProfileMenu() {
     if (!profileMenu || !profileTrigger) return;
     profileMenu.hidden = false;
     profileTrigger.setAttribute('aria-expanded', 'true');
+    if (isMobileProfileMenu()) {
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(function () {
+        profileMenu.classList.add('profile-menu--open');
+      });
+    } else {
+      profileMenu.classList.add('profile-menu--open');
+    }
   }
 
   function closeProfileMenu() {
     if (!profileMenu || !profileTrigger) return;
-    profileMenu.hidden = true;
     profileTrigger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+
+    if (isMobileProfileMenu() && profileMenu.classList.contains('profile-menu--open')) {
+      profileMenu.classList.remove('profile-menu--open');
+      var hideAfterTransition = function (event) {
+        if (event.propertyName !== 'transform') return;
+        profileMenu.removeEventListener('transitionend', hideAfterTransition);
+        profileMenu.hidden = true;
+      };
+      profileMenu.addEventListener('transitionend', hideAfterTransition);
+      window.setTimeout(function () {
+        if (profileMenu.hidden === false && !profileMenu.classList.contains('profile-menu--open')) {
+          profileMenu.hidden = true;
+        }
+      }, 300);
+      return;
+    }
+
+    profileMenu.classList.remove('profile-menu--open');
+    profileMenu.hidden = true;
   }
 
   function toggleProfileMenu() {
@@ -180,7 +221,15 @@
   if (profileTrigger) {
     profileTrigger.addEventListener('click', function (event) {
       event.stopPropagation();
+      if (isMobileProfileMenu()) return;
       toggleProfileMenu();
+    });
+  }
+
+  if (profileCloseBtn) {
+    profileCloseBtn.addEventListener('click', function (event) {
+      event.stopPropagation();
+      closeProfileMenu();
     });
   }
 
@@ -191,7 +240,7 @@
   }
 
   document.addEventListener('click', function () {
-    closeProfileMenu();
+    if (!isMobileProfileMenu()) closeProfileMenu();
   });
 
   document.addEventListener('keydown', function (e) {
@@ -206,6 +255,10 @@
     if (profileAction) {
       var action = profileAction.dataset.profileAction;
       closeProfileMenu();
+      if (action === 'invite') {
+        window.alert('Invite — not implemented in this prototype.');
+        return;
+      }
       if (action === 'profile-settings') {
         window.alert('Profile settings — not implemented in this prototype.');
         return;
@@ -227,7 +280,7 @@
     var identity = event.target.closest('.profile-menu__identity');
     if (identity) {
       closeProfileMenu();
-      window.alert('Profile — not implemented in this prototype.');
+      window.alert('Profile settings — not implemented in this prototype.');
       return;
     }
 
@@ -257,6 +310,16 @@
     }
     if (key === 'rebate') {
       if (activeKey !== 'rebate') window.location.assign(rebateHref);
+      closeDrawer();
+      return;
+    }
+    if (key === 'revenue') {
+      window.alert('Revenue statistics — not implemented in this prototype.');
+      closeDrawer();
+      return;
+    }
+    if (key === 'promo') {
+      window.alert('Promo materials — not implemented in this prototype.');
       closeDrawer();
       return;
     }
