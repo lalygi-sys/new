@@ -120,6 +120,13 @@
   </div>
   <script>
     const BUILD = '983b55f';
+    /* Bust GitHub Pages CDN + browser cache: each deploy gets a new ?v= on the hub URL. */
+    (function ensureFreshHub() {
+      const params = new URLSearchParams(location.search);
+      if (params.get('v') === BUILD) return;
+      params.set('v', BUILD);
+      location.replace(location.pathname + '?' + params.toString() + location.hash);
+    })();
     const SCREENS = {
       contests: './prototype/index.html#contests',
       rebate: './prototype/rebate/index.html',
