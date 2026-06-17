@@ -242,6 +242,24 @@ body.has-ib-chrome .screen {
   min-width: 0;
 }
 
+.app-header__menu > * {
+  flex-shrink: 0;
+}
+
+.app-header__menu > .is-menu-overflow {
+  display: none !important;
+}
+
+.app-header__menu-more[hidden] {
+  display: none !important;
+}
+
+.app-header__menu-more--measure {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .app-header__menu-item {
   display: inline-flex;
   align-items: center;
@@ -359,6 +377,11 @@ body.has-ib-chrome .screen {
 .app-header__dropdown-item--active {
   background: var(--ds-row-hover);
   font-weight: 600;
+}
+
+.app-header__dropdown-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .app-header__right {

@@ -46,7 +46,7 @@ button{font-family:inherit;cursor:pointer}
 
 /* === CONTENT AREA === */
 .content-wrap{padding:16px;flex:1;background:var(--c-surface-container);display:flex;flex-direction:column;min-height:0}
-.page-header{display:flex;align-items:center;justify-content:flex-start;flex-shrink:0;margin:0 0 32px;gap:32px;min-width:0}
+.page-header{display:flex;align-items:center;justify-content:flex-start;flex-shrink:0;margin:0 0 32px;gap:32px;min-width:0;container-type:inline-size;container-name:page-header}
 .page-header .rig-title-03{flex-shrink:0}
 .page-header .tabs{display:inline-flex;align-items:stretch;flex-shrink:0}
 .page-header .tabs--m .tab-item{height:44px;min-width:0;padding:0 16px}
@@ -86,9 +86,38 @@ button{font-family:inherit;cursor:pointer}
   #s-main .table-card__scroll{overflow:visible}
   .tbl thead{position:static}
   .page-header{margin-bottom:24px}
-  .rig-title-03{font-size:18px;line-height:24px}
   .inner{padding:24px}
   .page-header{gap:20px}
+}
+
+/* Tablet — white frame fills viewport to bottom padding (matches contests .ds-container). */
+@media (min-width:641px) and (max-width:1024px){
+  .screen.active{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  .content-wrap{
+    flex:1 1 auto;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+    padding:16px 16px 24px;
+    box-sizing:border-box;
+  }
+  .inner{
+    flex:1 1 auto;
+    min-height:calc(100vh - var(--ib-chrome-offset,100px) - 16px - 24px);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  #s-main .inner,#s-manage .inner{
+    overflow:hidden;
+    padding:24px;
+  }
+  #s-main .table-layout{flex:1 1 auto;min-height:0}
+  #s-manage .mp-layout{flex:1 1 auto;min-height:0}
 }
 
 /* === PAGE HEADER (title + view tabs + actions) === */
@@ -139,6 +168,54 @@ button{font-family:inherit;cursor:pointer}
 .search-wrap.is-open .tabs-action{display:none}
 .page-header-search{display:none}
 .page-header-search:not([hidden]){display:block}
+/* Tablet / narrow — mobile header layout when title + tabs + actions don't fit one row. */
+@media (max-width:900px){
+  .page-header{flex-wrap:wrap;gap:8px;align-items:center}
+  .page-header .rig-title-03{flex:1 1 auto;min-width:0;font-size:20px;line-height:26px}
+  .page-header .tabs{
+    order:4;
+    display:flex;
+    align-items:stretch;
+    flex:1 1 100%;
+    width:100%;
+    min-width:0;
+    background:transparent;
+    border-radius:0;
+    padding:0;
+    gap:0;
+  }
+  .page-header .tabs--m .tab-item{flex:1 1 0;min-width:0;width:0;height:44px;padding:0 8px;font-size:14px;line-height:20px}
+  .page-header .tabs-right{order:2;margin-left:auto;gap:8px}
+  .tabs-right .tabs-action{width:40px;height:40px;padding:0;gap:0;border-radius:8px;font-size:0}
+  .tabs-right .tabs-action svg{width:20px;height:20px}
+  .page-header .icon-btn-text-s{width:40px;height:40px}
+  .search-wrap.is-open .tabs-action{
+    display:inline-flex;
+    background:var(--c-primary-container);
+    color:var(--c-on-primary-container);
+    border-color:transparent;
+  }
+  .page-header-search{
+    order:3;
+    flex:1 1 100%;
+    width:100%;
+    min-width:0;
+    margin:8px 0 0;
+    padding:0;
+  }
+  .page-header-search:not([hidden]){display:block}
+  .page-header-search .search-input{
+    display:flex;
+    width:100%;
+    height:32px;
+    padding:4px 12px;
+    background:var(--c-surface);
+    border:1px solid var(--c-border-strong);
+    border-radius:8px;
+    box-shadow:none;
+  }
+  .page-header-search .search-input:focus-within{border-color:var(--c-primary);box-shadow:0 0 0 3px var(--c-primary-container)}
+}
 
 /* === TOOLBAR (Filters + Date + Chips) === */
 .toolbar{display:flex;align-items:center;gap:8px;padding:24px 0 20px;flex-wrap:wrap;row-gap:12px;flex-shrink:0;container-type:inline-size;container-name:toolbar}
@@ -155,9 +232,23 @@ button{font-family:inherit;cursor:pointer}
 .date-range .dr-label{color:var(--c-content-secondary);font-weight:400}
 .date-range .dr-text{display:inline-flex;align-items:center;min-width:0;flex:1 1 auto;gap:8px;overflow:hidden}
 .date-range .dr-text .dr-label,
-.date-range .dr-text .dr-value{color:var(--c-content-primary);font-size:14px;line-height:20px;font-weight:400}
+.date-range .dr-text .dr-value{font-size:14px;line-height:20px;font-weight:400}
+.date-range .dr-text .dr-label{color:var(--c-content-secondary)}
+.date-range .dr-text .dr-value{color:var(--c-content-primary)}
 .date-range svg{width:18px;height:18px;flex-shrink:0;color:var(--c-content-secondary)}
 .date-range-wrap{position:relative}
+.date-range-wrap--toolbar .date-range .dr-text{
+  flex:1 1 auto;min-width:0;overflow:hidden;
+  justify-content:flex-start;
+}
+.date-range-wrap--toolbar .date-range .dr-label{
+  flex:0 0 auto;flex-shrink:0;
+}
+.date-range-wrap--toolbar .date-range .dr-value{
+  flex:1 0 192px;min-width:192px;
+  text-align:left;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
 .date-range-wrap--table{display:none}
 .date-panel-dates{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .date-panel-dates .date-field{display:flex;flex-direction:column}
@@ -205,8 +296,12 @@ button{font-family:inherit;cursor:pointer}
 #chips.chips-group,#mp-chips.chips-group{
   flex:1 1 auto;min-width:0;margin-left:auto;justify-content:flex-end;
 }
-/* Narrow: chips wrap to the row below Filters + date, left-aligned + horizontal scroll when they overflow. */
-@container toolbar (max-width:1010px){
+/* Manage payments — reserve min chip strip width; wraps when row 1 cannot fit Filters + date + chips. */
+#mp-toolbar #mp-chips.chips-group{
+  flex:1 1 620px;max-width:100%;
+}
+/* Narrow: chips drop to the row below Filters + date, left-aligned + horizontal scroll when they overflow. */
+@container toolbar (max-width:960px){
   #chips.chips-group,#mp-chips.chips-group{
     flex:1 1 100%;width:100%;max-width:100%;margin-left:0;justify-content:flex-start;
     flex-wrap:nowrap;
@@ -222,6 +317,24 @@ button{font-family:inherit;cursor:pointer}
   #chips .chip,#mp-chips .chip{flex:0 0 auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
   #chips.chips-group.is-chips-scrollable,#mp-chips.chips-group.is-chips-scrollable{cursor:grab}
   #chips.chips-group.is-chips-dragging,#mp-chips.chips-group.is-chips-dragging{cursor:grabbing}
+}
+/* Manage payments — longer chip labels: second-row strip (left-aligned + scroll) below this width. */
+@container toolbar (max-width:1060px){
+  #mp-toolbar #mp-chips.chips-group{
+    flex:1 1 100%;width:100%;max-width:100%;min-width:0;margin-left:0;justify-content:flex-start;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    touch-action:pan-x;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+  #mp-toolbar #mp-chips.chips-group::-webkit-scrollbar{display:none}
+  #mp-toolbar #mp-chips .chip{flex:0 0 auto;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+  #mp-toolbar #mp-chips.chips-group.is-chips-scrollable{cursor:grab}
+  #mp-toolbar #mp-chips.chips-group.is-chips-dragging{cursor:grabbing}
 }
 #chips .chip,#mp-chips .chip{flex-shrink:0}
 .chip{
@@ -245,7 +358,7 @@ button{font-family:inherit;cursor:pointer}
 .chip.active .cnt{background:var(--c-primary-container);color:var(--c-on-primary-container)}
 
 /* === TABLE === */
-.tbl{width:100%;border-collapse:collapse;table-layout:auto;min-width:960px}
+.tbl{width:100%;border-collapse:separate;border-spacing:0;table-layout:auto;min-width:960px}
 .tbl thead{position:sticky;top:0;z-index:2;background:var(--c-surface)}
 .tbl th{text-align:left;padding:14px 12px;font-size:12px;font-weight:400;line-height:16px;letter-spacing:.15px;color:var(--c-content-secondary);white-space:nowrap;vertical-align:top;background:var(--c-surface);box-shadow:inset 0 -1px 0 var(--c-border)}
 .tbl th .th-label{display:inline-flex;align-items:center;gap:6px;line-height:16px}
@@ -310,7 +423,7 @@ body.dp-open #tbl-main tbody td:nth-child(4){background-color:var(--c-surface-co
 .card-metric-body--kpi .td-trend{display:block;margin-top:4px}
 .td-trend{margin-top:4px;font-size:10px;line-height:12px;letter-spacing:.15px}
 .td-trend .trend{font-size:10px}
-.trend{display:inline-flex;align-items:center;gap:2px;font-weight:600;font-size:10px;letter-spacing:.15px;cursor:help;padding:0 4px;margin-left:-4px;border-radius:4px;transition:background .12s;line-height:12px;border-bottom:1px dotted currentColor}
+.trend{display:inline-flex;align-items:center;gap:2px;font-weight:600;font-size:10px;letter-spacing:.15px;cursor:help;padding:0 4px;margin-left:-4px;border-radius:4px;transition:background .12s;line-height:12px}
 .trend .trend-arrow{font-size:10px;line-height:1;font-weight:600;display:inline-block}
 @media (hover:none){
   .trend{cursor:pointer;padding:2px 6px;margin-left:-6px;border-radius:6px;-webkit-tap-highlight-color:transparent}
@@ -409,16 +522,20 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .ram-icon{display:inline-flex;width:20px;height:20px;align-items:center;justify-content:center;color:var(--c-content-secondary);flex-shrink:0}
 .ram-icon svg{width:18px;height:18px}
 
-/* Sticky last column: status + row-actions stays visible on right edge during horizontal scroll */
+/* Sticky last column: Rebate status stays visible on right edge during horizontal scroll.
+   border-collapse: separate (above) is required for box-shadow on sticky cells — same as contests. */
 .tbl th:last-child,
 .tbl td:last-child{position:sticky;right:0;background:var(--c-surface);z-index:1}
 .tbl thead th:last-child{z-index:3}
 .tbl tbody tr.row-affected td:last-child{background:#fdf6f6}
 /* Selected row: sticky cell uses the same opaque gray as the rest of the row. */
 .tbl tbody tr.selected td:last-child{background:var(--c-row-selected)}
-/* Left-edge shadow when table is horizontally scrollable — same token as contests .table-wrap--sticky-last.is-scrollable */
+/* Left-edge shadow when table overflows horizontally — same token as contests .table-wrap--sticky-last.is-scrollable */
 .table-card.is-scrolled-x .tbl tbody td:last-child{box-shadow:-8px 0 12px -8px rgba(20,20,20,.10)}
 .table-card.is-scrolled-x .tbl thead th:last-child{box-shadow:inset 0 -1px 0 var(--c-border),-8px 0 12px -8px rgba(20,20,20,.10)}
+.table-card.is-scrolled-x .tbl tbody tr:hover td:last-child{background:var(--c-surface-container);box-shadow:-8px 0 12px -8px rgba(20,20,20,.10)}
+.table-card.is-scrolled-x .tbl tbody tr.row-affected:hover td:last-child{background:#f9e6e6;box-shadow:-8px 0 12px -8px rgba(20,20,20,.10)}
+.table-card.is-scrolled-x .tbl tbody tr.selected td:last-child{box-shadow:-8px 0 12px -8px rgba(20,20,20,.10)}
 .btn-sm{display:inline-flex;align-items:center;justify-content:center;height:32px;padding:0 16px;border:none;border-radius:8px;font-family:inherit;font-size:14px;line-height:20px;font-weight:600;letter-spacing:0;color:var(--c-content-primary);background:transparent;cursor:pointer;white-space:nowrap;transition:background .12s}
 .btn-sm-primary{background:var(--c-primary);color:#fff}
 .btn-sm-primary:hover{background:#1538d0}
@@ -462,6 +579,18 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .m-chip.sel:hover{border-color:transparent;background:rgba(25,69,255,.12)}
 .m-chip.sel:active{border-color:transparent;background:rgba(25,69,255,.16)}
 .m-chip.xs{height:24px;padding:0 12px;font-size:12px;line-height:16px;letter-spacing:.15px;font-feature-settings:'lnum' 1,'tnum' 1}
+/* Date panel period presets — Figma Chips/S (11734:20919): h=32, px=16, radius 8, Body 02 Bold 14/20. */
+.date-panel .m-chip[data-period]{
+  height:32px;
+  padding:0 16px;
+  border:1px solid var(--c-border);
+  border-radius:8px;
+  font-size:14px;
+  line-height:20px;
+  font-weight:600;
+  letter-spacing:0;
+  font-feature-settings:normal;
+}
 .m-input{width:100%;padding:10px 14px;border:1.5px solid #d9d9d9;border-radius:8px;font-size:14px;font-family:inherit;outline:none;color:#161616}
 .m-input:focus{border-color:#1945ff}
 .m-input::placeholder{color:#b0b0b0}
@@ -491,7 +620,8 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .mp-layout__body>.table-card{flex:1 1 auto;min-width:0;min-height:0;margin:0}
 /* Manage payments — table stretches to the bottom of the white inner card. */
 #s-manage .content-wrap{min-height:0;overflow:hidden}
-#s-manage .inner{flex:1 1 auto;min-height:0;overflow:hidden;padding:40px}
+#s-manage .inner{flex:1 1 auto;min-height:0;overflow:hidden;display:flex;flex-direction:column}
+#s-manage .page-header,#s-manage .toolbar{flex-shrink:0}
 #s-manage .mp-layout{flex:1 1 auto;min-height:0}
 #s-manage .mp-layout__main{flex:1 1 auto;min-height:0}
 #s-manage .mp-layout__body{flex:1 1 auto;min-height:0}
@@ -512,9 +642,11 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 #s-main .table-layout .table-card{flex:1 1 auto;min-height:0;margin:0}
 @media (max-width:1024px){
   .mp-layout{flex-direction:column;overflow:visible}
-  #s-manage .content-wrap,#s-manage .inner{overflow:visible}
-  #s-manage .inner{padding:24px}
   #s-manage .mp-layout__body>.table-card{flex:none;margin-bottom:0}
+}
+@media (max-width:640px){
+  #s-manage .content-wrap,#s-manage .inner{overflow:visible}
+  #s-manage .inner{padding:16px 12px}
 }
 .filter-panel{display:flex;flex:0 0 0;width:0;min-height:0;overflow:hidden;background:var(--c-surface);border:0 solid var(--c-border);border-radius:12px;transition:flex-basis .25s ease,width .25s ease,opacity .2s ease,border-width 0s linear .25s,margin-right 0s linear .25s;opacity:0;box-sizing:border-box;margin-right:0}
 .filter-panel.open{flex:0 0 320px;width:320px;opacity:1;border-width:1px;margin-right:16px;transition:flex-basis .25s ease,width .25s ease,opacity .2s ease,border-width 0s linear 0s,margin-right 0s linear 0s}
@@ -569,10 +701,10 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .sort-panel-footer--apply .btn-block{margin-top:0;height:48px;border-radius:12px}
 @media (max-width:1024px){
   .table-layout{flex-direction:column;gap:0}
-  .filter-panel{position:fixed;top:0;left:0;bottom:0;height:100vh;width:0;flex:none;z-index:90;border-radius:0;border:none;box-shadow:0 0 20px rgba(0,0,0,.15)}
+  .filter-panel{position:fixed;top:var(--ib-chrome-offset,100px);left:0;bottom:0;height:auto;width:0;flex:none;z-index:90;border-radius:0;border:none;box-shadow:0 0 20px rgba(0,0,0,.15)}
   .filter-panel.open{width:min(360px,90vw)}
-  .filter-panel-inner{width:min(360px,90vw)}
-  .filter-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s ease;touch-action:none}
+  .filter-panel-inner{width:min(360px,90vw);height:100%;max-height:100%}
+  .filter-backdrop{position:fixed;top:var(--ib-chrome-offset,100px);left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:80;opacity:0;pointer-events:none;transition:opacity .2s ease;touch-action:none}
   .filter-backdrop.open{opacity:1;pointer-events:auto}
   /* Lock page scroll while filter/date/rebate sheets are open (mobile + tablet). */
   body.sheet-scroll-lock{overflow:hidden!important;position:fixed;width:100%;left:0;right:0;touch-action:none}
@@ -586,9 +718,9 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
 .rebate-panel.open{flex:0 0 440px;width:440px;opacity:1;border-width:1px;margin-left:16px;transition:flex-basis .25s ease,width .25s ease,opacity .2s ease,border-width 0s linear 0s,margin-left 0s linear 0s}
 .rebate-panel-inner{width:440px;flex:1 1 auto;min-height:0;padding:0;box-sizing:border-box;display:flex;flex-direction:column;overflow:hidden}
 @media (max-width:1024px){
-  .rebate-panel{position:fixed;top:0;right:0;bottom:0;height:100vh;width:0;flex:none;z-index:90;border-radius:0;border:none;box-shadow:0 0 20px rgba(0,0,0,.15);margin-left:0}
+  .rebate-panel{position:fixed;top:var(--ib-chrome-offset,100px);right:0;bottom:0;height:auto;width:0;flex:none;z-index:90;border-radius:0;border:none;box-shadow:0 0 20px rgba(0,0,0,.15);margin-left:0}
   .rebate-panel.open{width:min(440px,90vw);margin-left:0}
-  .rebate-panel-inner{width:min(440px,90vw)}
+  .rebate-panel-inner{width:min(440px,90vw);height:100%;max-height:100%}
 }
 
 /* Set Rebate form (rendered inside .rebate-panel). The legacy `.rebate-modal{width:500px}` rule was removed alongside the overlay HTML — the panel is sized by `.rebate-panel.open{flex:0 0 440px}` instead. */
@@ -916,6 +1048,43 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .stat-banner__hint--split .stat-banner__hint-sep { display: inline; flex-shrink: 0; }
 }
 
+/* Stat banners — horizontal swipe strip on tablet (matches contests @1023px). */
+@media (max-width:1024px){
+  .stat-banners {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 12px;
+    padding: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .stat-banners::-webkit-scrollbar { display: none; }
+  .stat-banners.is-stat-banners-scrollable { cursor: grab; }
+  .stat-banners.is-stat-banners-dragging { cursor: grabbing; }
+  .stat-banners .stat-banner { scroll-snap-align: start; }
+  .stat-banner__value-row { min-height: 24px; margin-top: 12px; }
+  .stat-banner__value {
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: -0.2px;
+  }
+}
+
+@media (min-width:641px) and (max-width:1024px){
+  .stat-banners .stat-banner {
+    flex: 0 0 min(42%, 280px);
+    max-width: min(42%, 280px);
+  }
+  #s-manage .mp-layout__stats { margin-bottom: 20px; }
+}
+
 /* Empty */
 .empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 24px;gap:24px;min-height:320px;height:100%}
 .empty .empty-illu{width:120px;height:120px;flex-shrink:0;display:grid;place-items:center;overflow:hidden}
@@ -1008,7 +1177,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .toolbar .toolbar__start{
     display:grid;
     grid-template-columns:1fr 1fr;
-    gap:12px;
+    gap:8px;
     order:1;
     flex:1 1 100%;
     width:100%;
@@ -1031,7 +1200,7 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .date-range-wrap--table .date-range .dr-text{display:inline-flex;align-items:center;min-width:0;flex:1 1 auto;gap:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
   .date-range-wrap--table .date-range .dr-label,
   .date-range-wrap--table .date-range .dr-value{flex:0 1 auto;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  /* Toolbar controls — DS Button Tertiary/M on mobile (h=40, px=16, radius=12) */
+  /* Toolbar controls — DS Button/S on mobile (h=32, px=12, radius=8) */
   .sort-btn{
     display:inline-flex;
     align-items:center;
@@ -1039,10 +1208,10 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     gap:8px;
     min-width:0;
     width:100%;
-    height:40px;
-    padding:0 16px;
+    height:32px;
+    padding:0 12px;
     border:1px solid var(--c-border);
-    border-radius:12px;
+    border-radius:8px;
     cursor:pointer;
     font-size:14px;
     font-weight:600;
@@ -1057,9 +1226,9 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .toolbar .filter-btn{
     min-width:0;
     width:100%;
-    height:40px;
-    padding:0 16px;
-    border-radius:12px;
+    height:32px;
+    padding:0 12px;
+    border-radius:8px;
     font-size:14px;
     line-height:20px;
     font-weight:600;
@@ -1068,37 +1237,16 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
   .toolbar .date-range .dr-text{display:inline-flex;align-items:center;min-width:0;flex:1 1 auto;gap:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
   .toolbar .date-range .dr-label,
   .toolbar .date-range .dr-value{flex:0 1 auto;min-width:0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  /* === STAT BANNERS (Manage payments) ===
-     2-col grid (~185px/card) crushes long labels + foot hints on ~390px viewports.
-     Horizontal snap strip: one comfortable card + peek of the next. */
+  /* === STAT BANNERS (Manage payments) — mobile card width (strip base @1024px) === */
   #s-manage .mp-layout__stats{margin-top:20px}
-  .stat-banners {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    gap: 12px;
-    padding: 0 0 12px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    touch-action: pan-x;
-    scrollbar-width: none;
-  }
-  .stat-banners::-webkit-scrollbar { display: none; }
-  .stat-banners.is-stat-banners-scrollable { cursor: grab; }
-  .stat-banners.is-stat-banners-dragging { cursor: grabbing; }
   .stat-banners .stat-banner {
     flex: 0 0 88%;
     max-width: 88%;
-    scroll-snap-align: start;
   }
   .stat-banners .stat-banner:last-child {
     grid-column: auto;
   }
   .stat-banner { padding: 12px 14px 14px; }
-  .stat-banner__value { font-size: 20px; line-height: 24px; letter-spacing: -0.2px; }
   /* IconButton Text / Size XS (Figma 60322:32851) — not header export 40px */
   .stat-banner__info-btn {
     width: 24px;
@@ -1127,6 +1275,10 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
      normal selector cascade. We don't want to fork render() just
      for mobile — overriding here is the contained change. */
   .tbl,#tbl-main,#s-manage .tbl{display:block!important;width:100%;min-width:0!important;table-layout:auto!important;border-collapse:separate}
+  .table-card.is-empty .tbl,
+  .table-card.is-empty #tbl-main,
+  .table-card.is-empty #s-manage .tbl{display:none!important}
+  .table-card.is-empty .empty{display:flex!important;min-height:240px}
   .tbl thead{display:none}
   .tbl tbody{display:block}
 
@@ -1470,12 +1622,11 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
     <div class="filter-backdrop" id="sort-backdrop-main" onclick="toggleSortPanel('main')"></div>
     <div class="filter-backdrop" id="date-backdrop-main" onclick="toggleDatePopover('main')"></div>
     <div class="table-layout">
-    <aside class="filter-panel date-panel" id="date-panel-main" data-kind="date-main" role="dialog" aria-label="Statistics period for IB profit and Traded lots">
+    <aside class="filter-panel date-panel" id="date-panel-main" data-kind="date-main" role="dialog" aria-label="IB profit and Traded lots date range">
       <div class="filter-panel-inner">
         <div class="filter-panel-header sort-panel-header">
           <div class="sort-panel-header__text">
-            <span class="filter-panel-title">Statistics period</span>
-            <span class="sort-panel-subtitle">IB profit and Traded lots</span>
+            <span class="filter-panel-title">IB profit and Traded lots</span>
           </div>
           <button type="button" class="filter-panel-close" aria-label="Close statistics period" onclick="toggleDatePopover('main')">
             <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l10 10M14 4L4 14"/></svg>
@@ -1485,12 +1636,12 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
           <div class="filter-panel-section">
             <div class="modal-label">Period</div>
             <div class="m-chips">
-              <span class="m-chip xs" data-period="1" onclick="datePreset(this,'main')">1 day</span>
-              <span class="m-chip xs sel" data-period="7" onclick="datePreset(this,'main')">7 days</span>
-              <span class="m-chip xs" data-period="14" onclick="datePreset(this,'main')">14 days</span>
-              <span class="m-chip xs" data-period="30" onclick="datePreset(this,'main')">30 days</span>
-              <span class="m-chip xs" data-period="90" onclick="datePreset(this,'main')">90 days</span>
-              <span class="m-chip xs" data-period="all" onclick="datePreset(this,'main')">All time</span>
+              <span class="m-chip" data-period="1" onclick="datePreset(this,'main')">1 day</span>
+              <span class="m-chip sel" data-period="7" onclick="datePreset(this,'main')">7 days</span>
+              <span class="m-chip" data-period="14" onclick="datePreset(this,'main')">14 days</span>
+              <span class="m-chip" data-period="30" onclick="datePreset(this,'main')">30 days</span>
+              <span class="m-chip" data-period="90" onclick="datePreset(this,'main')">90 days</span>
+              <span class="m-chip" data-period="all" onclick="datePreset(this,'main')">All time</span>
             </div>
           </div>
           <div class="filter-panel-section">
@@ -1737,7 +1888,6 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
         <div class="filter-panel-header sort-panel-header">
           <div class="sort-panel-header__text">
             <span class="filter-panel-title">Next pay</span>
-            <span class="sort-panel-subtitle">Payment date</span>
           </div>
           <button type="button" class="filter-panel-close" aria-label="Close next pay date range" onclick="toggleDatePopover('mp')">
             <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 4l10 10M14 4L4 14"/></svg>
@@ -1747,12 +1897,12 @@ body.dp-open .tbl tbody tr.pinned-divider td{background:transparent}
           <div class="filter-panel-section">
             <div class="modal-label">Period</div>
             <div class="m-chips">
-              <span class="m-chip xs" data-period="1" onclick="datePreset(this,'mp')">1 day</span>
-              <span class="m-chip xs sel" data-period="7" onclick="datePreset(this,'mp')">7 days</span>
-              <span class="m-chip xs" data-period="14" onclick="datePreset(this,'mp')">14 days</span>
-              <span class="m-chip xs" data-period="30" onclick="datePreset(this,'mp')">30 days</span>
-              <span class="m-chip xs" data-period="90" onclick="datePreset(this,'mp')">90 days</span>
-              <span class="m-chip xs" data-period="all" onclick="datePreset(this,'mp')">All time</span>
+              <span class="m-chip" data-period="1" onclick="datePreset(this,'mp')">1 day</span>
+              <span class="m-chip sel" data-period="7" onclick="datePreset(this,'mp')">7 days</span>
+              <span class="m-chip" data-period="14" onclick="datePreset(this,'mp')">14 days</span>
+              <span class="m-chip" data-period="30" onclick="datePreset(this,'mp')">30 days</span>
+              <span class="m-chip" data-period="90" onclick="datePreset(this,'mp')">90 days</span>
+              <span class="m-chip" data-period="all" onclick="datePreset(this,'mp')">All time</span>
             </div>
           </div>
           <div class="filter-panel-section">
@@ -2557,10 +2707,15 @@ function pickSortKey(kind,key){
   SORT_DRAFT[kind].key=key;
   _syncSortPanelDraftUI(kind);
 }
-function _closeOpenSortPanel(){
+function _closeOpenSortPanel(kind){
+  if(kind){
+    const panel=document.getElementById('sort-panel-'+kind);
+    if(panel&&panel.classList.contains('open'))toggleSortPanel(kind);
+    return;
+  }
   document.querySelectorAll('.sort-panel.open').forEach(p=>{
-    const kind=p.id.replace('sort-panel-','');
-    toggleSortPanel(kind);
+    const k=p.id.replace('sort-panel-','');
+    toggleSortPanel(k);
   });
 }
 function toggleSortPanel(kind){
@@ -2570,10 +2725,9 @@ function toggleSortPanel(kind){
   if(!panel)return;
   const willOpen=!panel.classList.contains('open');
   if(willOpen){
-    _closeOpenDatePanel();
+    _closeOpenDatePanel(kind);
     _closeOpenRebatePanel();
-    const fp=document.getElementById('filter-panel-'+kind);
-    if(fp&&fp.classList.contains('open'))toggleFilterPanel(kind);
+    _closeOpenFilterPanel(kind);
     const s=SORT_STATE[kind];
     const tableSel=kind==='main'?'#tbl-main':'#s-manage .tbl';
     const firstKey=document.querySelector(`${tableSel} thead th.th-sortable`)?.dataset.sortKey||'n';
@@ -2615,7 +2769,8 @@ function render(){
   const tb=document.getElementById('tbody');
   const tbl=document.getElementById('tbl-main');
   const eb=document.getElementById('empty-box');
-  if(!f.length){tbl.style.display='none';eb.style.display='flex';
+  const card=tbl?.closest('.table-card');
+  if(!f.length){tbl.style.display='none';eb.style.display='flex';card?.classList.add('is-empty');
     const cfg={
       nothing:{t:'Hmm, nothing matches',d:'Try a different name or clear filters to see all clients.',btns:'<button class="btn-secondary" onclick="resetSearchAndFilters()">Clear all</button>'},
       active:{t:'No clients with a configured active rebate',d:'You can set up the rebate payment with Manual or Automatic payment confirmation.',btns:'<button class="btn-primary" onclick="flt(document.querySelector(\'[data-f=setup]\'))">View clients need setup</button>'},
@@ -2629,7 +2784,7 @@ function render(){
     _syncCbAllState(['cb-all','cb-all-mobile-main'],[],DATA,sel);
     _toggleMobileSelBar('mobile-sel-bar-main',false);
     return;}
-  tbl.style.display='table';eb.style.display='none';
+  tbl.style.display='table';eb.style.display='none';card?.classList.remove('is-empty');
   tb.innerHTML=f.map((d,i)=>{
     const isSetup=d.f==='setup';
     const isPaused=d.f==='paused';
@@ -2675,9 +2830,10 @@ function renderMP(){
   if(PIN_STATE.mp&&alertNmp>0){const{a,r}=_partitionAlert(data);data=a.concat(r);pinDividerAtMP=a.length;}
   const tblMp=document.querySelector('#s-manage .tbl');
   const ebMp=document.getElementById('empty-box-mp');
+  const cardMp=tblMp?.closest('.table-card');
   if(!data.length){
     if(tblMp)tblMp.style.display='none';
-    if(ebMp){ebMp.style.display='flex';
+    if(ebMp){ebMp.style.display='flex';cardMp?.classList.add('is-empty');
       document.getElementById('e-title-mp').textContent='Hmm, nothing matches';
       document.getElementById('e-desc-mp').textContent='Try a different name or clear filters to see all clients.';
       document.getElementById('e-btns-mp').innerHTML='<button class="btn-secondary" onclick="resetSearchAndFiltersMP()">Clear all</button>';
@@ -2691,6 +2847,7 @@ function renderMP(){
   }
   if(tblMp)tblMp.style.display='table';
   if(ebMp)ebMp.style.display='none';
+  cardMp?.classList.remove('is-empty');
   document.getElementById('tbody-mp').innerHTML=data.map((d,i)=>{
     const di=MP.indexOf(d);
     const trCls=[selMP.has(di)?'selected':'',d.alert?'row-affected':''].filter(Boolean).join(' ');
@@ -2710,7 +2867,9 @@ function renderMP(){
   requestAnimationFrame(_refreshTableScrollState);
 }
 
-function _isMobileSearchLayout(){return window.matchMedia('(max-width:640px)').matches;}
+function _useStackedSearchLayout(){
+  return window.matchMedia('(max-width:900px)').matches;
+}
 function _searchFieldEl(kind){
   const wrap=document.getElementById('search-wrap-'+kind);
   const panel=document.getElementById('page-header-search-'+kind);
@@ -2721,7 +2880,7 @@ function _mountSearchField(kind,open){
   const panel=document.getElementById('page-header-search-'+kind);
   const field=_searchFieldEl(kind);
   if(!wrap||!field)return;
-  if(_isMobileSearchLayout()&&panel){
+  if(_useStackedSearchLayout()&&panel){
     if(field.parentElement!==panel)panel.appendChild(field);
     panel.hidden=!open;
     wrap.classList.toggle('is-open',open);
@@ -3058,7 +3217,15 @@ function _updBBHidden(n,id){
   if(n>0){el.textContent=`${n} hidden by filter`;el.hidden=false;}
   else{el.textContent='';el.hidden=true;}
 }
-function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='s-manage'){renderMP();updBBMP();updBB();}else{render();updBB();updBBMP();}requestAnimationFrame(_refreshTableScrollState);}
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  _closeOpenDatePanel();
+  _closeOpenFilterPanel();
+  _closeOpenSortPanel();
+  closeRebatePanel();
+  if(id==='s-manage'){renderMP();updBBMP();updBB();}else{render();updBB();updBBMP();}requestAnimationFrame(_refreshTableScrollState);
+}
 function openModal(id){
   /* The rebate dialog has been promoted from a center-overlay modal to a right-hand side panel that mirrors the filters panel. Any old call site (row buttons, bottom-bar buttons, hash deep-link) still calls openModal('dlg-rebate') — we redirect those calls to openRebatePanel() so the new surface is used everywhere without touching every caller. */
   if(id==='dlg-rebate'){_setRebateContext(['Alfonso Siphron'],'Set',[0],'main');openRebatePanel();return;}
@@ -3089,17 +3256,25 @@ function closeRebatePanel(){
   panel.setAttribute('aria-hidden','true');
   _syncSheetScrollLock();
 }
-function _closeOpenDatePanel(){
-  const dp=document.querySelector('.date-panel.open');
-  if(!dp)return;
-  const k=dp.id.replace('date-panel-','');
-  toggleDatePopover(k);
+function _closeOpenDatePanel(kind){
+  if(kind){
+    const panel=document.getElementById('date-panel-'+kind);
+    if(panel&&panel.classList.contains('open'))toggleDatePopover(kind);
+    return;
+  }
+  document.querySelectorAll('.date-panel.open').forEach(p=>{
+    toggleDatePopover(p.id.replace('date-panel-',''));
+  });
 }
-function _closeOpenFilterPanel(){
-  const fp=document.querySelector('.filter-panel.open:not(.date-panel):not(.sort-panel)');
-  if(!fp)return;
-  const k=fp.id.replace('filter-panel-','');
-  toggleFilterPanel(k);
+function _closeOpenFilterPanel(kind){
+  if(kind){
+    const panel=document.getElementById('filter-panel-'+kind);
+    if(panel&&panel.classList.contains('open'))toggleFilterPanel(kind);
+    return;
+  }
+  document.querySelectorAll('.filter-panel.open:not(.date-panel):not(.sort-panel)').forEach(p=>{
+    toggleFilterPanel(p.id.replace('filter-panel-',''));
+  });
 }
 function _closeOpenRebatePanel(){
   /* The rebate panel takes 440px on the right. Opening it together with a 320px filters panel on the left would push table-card below its min-width and force a horizontal scrollbar, so the two surfaces are mutually exclusive — opening one closes the other. */
@@ -3138,7 +3313,7 @@ function toggleFilterPanel(kind){
   const back=document.getElementById('filter-backdrop-'+kind);
   if(!panel)return;
   const willOpen=!panel.classList.contains('open');
-  if(willOpen){_closeOpenDatePanel();_closeOpenRebatePanel();_closeOpenSortPanel();}
+  if(willOpen){_closeOpenDatePanel(kind);_closeOpenRebatePanel();_closeOpenSortPanel(kind);}
   panel.classList.toggle('open',willOpen);
   if(btn){btn.classList.toggle('active',willOpen);btn.setAttribute('aria-expanded',String(willOpen));}
   if(back)back.classList.toggle('open',willOpen);
@@ -3439,7 +3614,7 @@ function toggleDatePopover(id){
   const back=document.getElementById('date-backdrop-'+id);
   if(!panel)return;
   const willOpen=!panel.classList.contains('open');
-  if(willOpen){_closeOpenFilterPanel();_closeOpenRebatePanel();_closeOpenSortPanel();_dpValidateAll(id,false);}
+  if(willOpen){_closeOpenFilterPanel(id);_closeOpenRebatePanel();_closeOpenSortPanel(id);_dpValidateAll(id,false);}
   panel.classList.toggle('open',willOpen);
   _dateTriggers(id).forEach(trig=>trig.setAttribute('aria-expanded',String(willOpen)));
   if(back)back.classList.toggle('open',willOpen);

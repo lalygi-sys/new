@@ -72,6 +72,25 @@ body.has-ib-chrome.dashboard-body {
   flex-shrink: 0;
 }
 
+/* Compact KPI row — value + delta on one baseline row. */
+.revenue-card .stat-banner__value-row {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  gap: 8px;
+  min-height: 24px;
+}
+
+.revenue-card .stat-banners.stat-banners--all-time .stat-banner__delta {
+  display: none;
+}
+
+.revenue-card .stat-banner__value {
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.2px;
+}
+
 .dashboard-card {
   background: var(--c-surface);
   border-radius: var(--c-radius-card);
@@ -1120,6 +1139,15 @@ body.has-ib-chrome.dashboard-body {
   min-width: 0;
 }
 
+/* If any card in the row needs a stacked delta, all cards stack delta under value. */
+.stat-banners--delta-stacked .stat-banner__value-row {
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: var(--ds-dim-s);
+  min-height: 0;
+}
+
 .stat-banner__value {
   flex-shrink: 0;
   font-family: var(--ds-font-body);
@@ -1838,11 +1866,16 @@ body.has-ib-chrome.dashboard-body {
   .stat-banners.is-stat-banners-dragging { cursor: grabbing; }
 
   .stat-banners .stat-banner {
-    flex: 0 0 88%;
-    max-width: 88%;
+    flex: 0 0 min(42%, 280px);
+    max-width: min(42%, 280px);
     width: auto;
     scroll-snap-align: start;
     touch-action: pan-x;
+  }
+
+  .stat-banners .stat-banner[role="radio"] {
+    width: auto;
+    max-width: min(42%, 280px);
   }
 
   .stat-banner { padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl); }

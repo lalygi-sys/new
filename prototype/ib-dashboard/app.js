@@ -293,6 +293,9 @@
 
   function updateRevenueBanners(period) {
     if (!revenueBanners) return;
+    var isAllTime = period === 'all';
+    revenueBanners.classList.toggle('stat-banners--all-time', isAllTime);
+    revenueBanners.classList.remove('stat-banners--delta-stacked');
     var banners = revenuePeriods[period].banners;
     revenueBanners.querySelectorAll('.stat-banner').forEach(function (banner) {
       var metric = banner.dataset.metric;
@@ -302,12 +305,22 @@
       var deltaEl = banner.querySelector('.stat-banner__delta');
       if (valueEl) valueEl.textContent = item.value;
       if (deltaEl) {
-        deltaEl.textContent = item.delta;
-        deltaEl.className = 'stat-banner__delta stat-banner__delta--' + item.trend;
+        if (isAllTime) {
+          deltaEl.hidden = true;
+          deltaEl.textContent = '';
+        } else {
+          deltaEl.hidden = false;
+          deltaEl.textContent = item.delta;
+          deltaEl.className = 'stat-banner__delta stat-banner__delta--' + item.trend;
+        }
       }
       var label = revenueMetricLabels[metric] || metric;
-      var ariaDelta = item.delta.replace('↑', 'up').replace('↓', 'down').replace('→', 'flat');
-      banner.setAttribute('aria-label', label + ', ' + item.value + ', ' + ariaDelta);
+      if (isAllTime) {
+        banner.setAttribute('aria-label', label + ', ' + item.value);
+      } else {
+        var ariaDelta = item.delta.replace('↑', 'up').replace('↓', 'down').replace('→', 'flat');
+        banner.setAttribute('aria-label', label + ', ' + item.value + ', ' + ariaDelta);
+      }
     });
   }
 
@@ -367,6 +380,8 @@
       chip.setAttribute('aria-selected', 'true');
       setRevenuePeriod(chip.dataset.period);
     });
+    var activeChip = revenuePeriodChips.querySelector('.chip.is-active');
+    if (activeChip) setRevenuePeriod(activeChip.dataset.period);
   }
 
   if (revenueChartHit && revenueChartSvg) {
@@ -892,6 +907,7 @@
       var ro = new ResizeObserver(function () {
         statBanners.forEach(function (el) {
           updateHorizontalScrollable(el, 'is-stat-banners-scrollable');
+          syncStatBannersDeltaLayout(el);
         });
       });
       statBanners.forEach(function (root) {
@@ -899,14 +915,36 @@
         root.querySelectorAll('.stat-banner').forEach(function (banner) {
           ro.observe(banner);
         });
+        syncStatBannersDeltaLayout(root);
       });
+    } else {
+      statBanners.forEach(syncStatBannersDeltaLayout);
     }
 
     window.addEventListener('resize', function () {
       statBanners.forEach(function (el) {
         updateHorizontalScrollable(el, 'is-stat-banners-scrollable');
+        syncStatBannersDeltaLayout(el);
       });
     });
+  }
+
+  function syncStatBannersDeltaLayout(root) {
+    if (!root) return;
+    if (root.closest('.revenue-card')) {
+      root.classList.remove('stat-banners--delta-stacked');
+      return;
+    }
+    var stacked = false;
+    root.querySelectorAll('.stat-banner__value-row').forEach(function (row) {
+      var value = row.querySelector('.stat-banner__value');
+      var delta = row.querySelector('.stat-banner__delta');
+      if (!value || !delta || !String(delta.textContent || '').trim()) return;
+      var styles = window.getComputedStyle(row);
+      var gap = parseFloat(styles.columnGap || styles.gap) || 8;
+      if (value.scrollWidth + gap + delta.scrollWidth > row.clientWidth + 1) stacked = true;
+    });
+    root.classList.toggle('stat-banners--delta-stacked', stacked);
   }
 
   initStatBannersScroll();

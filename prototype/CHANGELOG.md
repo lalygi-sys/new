@@ -6,6 +6,46 @@
 
 ---
 
+## 2026-06-13 — Header menu overflow «More»
+
+### Что изменилось
+
+#### Shared chrome (`shared/ib-chrome`, `rebate/shared`)
+- **Adaptive menu:** если пункты не помещаются в ширину nav, правые скрываются в dropdown **More** (стиль как у Client engagement — `app-header__menu-item--has-dropdown` + caret).
+- **ResizeObserver** пересчитывает раскладку при изменении ширины; на mobile (<640px) логика отключена (burger drawer).
+- Группа Client engagement при overflow разворачивается в Contests / Rebate внутри More.
+
+#### Contests (`index.html`)
+- Тот же overflow-паттерн в React `AppHeader` через `useAppHeaderMenuOverflow`.
+
+### Файлы
+
+- `prototype/shared/ib-chrome.css`, `ib-chrome.js`
+- `prototype/rebate/shared/ib-chrome.css`, `ib-chrome.js`
+- `prototype/index.html`
+
+---
+
+## 2026-06-13 — Contests typography, status tags, tooltip toggle; rebate trend
+
+### Что изменилось
+
+#### Contests (`index.html`)
+- **Row card title/sub:** типографика как `client-name` / `client-sub` в rebate (14/20 + 10/12, отступ 4px).
+- **Desktop table name column:** те же стили через `.contest-name` / `.contest-sub`.
+- **Status tags:** новый `ContestStatusTag` — Active (green), Draft (warning), Completed (neutral/tertiary); 4px radius как в DS Tag.
+- **InfoTipButton (mobile):** повторный тап по иконке закрывает тултип; убран `onBlur`, outside-click через `pointerdown`.
+
+#### Rebate (`rebate/index.html`)
+- **Trend indicators:** убрана пунктирная линия снизу (`.trend`).
+
+### Файлы
+
+- `prototype/index.html`
+- `prototype/rebate/index.html`
+
+---
+
 ## 2026-06-13 — IB Dashboard mobile polish + mobile drawer UX
 
 ### Что изменилось

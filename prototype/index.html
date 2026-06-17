@@ -29,6 +29,7 @@
 </script>
 <title>IB Contest Platform — React Prototype</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://rsms.me/inter/inter.css" rel="stylesheet">
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/@babel/standalone@7.26.9/babel.min.js"></script>
@@ -49,6 +50,7 @@
     --ds-on-primary-container: #173398;/* Foundations: color/key/on-primary-container */
     --ds-primary-hover: #1537cc;
     --ds-primary-content: #eef1ff;
+    --ds-primary-container: rgba(25, 69, 255, 0.08);
     --ds-on-primary: #ffffff;          /* Foundations: color/key/on-primary */
     --ds-secondary: #fff6fa;
 
@@ -64,6 +66,7 @@
     --ib-chrome-offset: 100px;
     --ds-bg-hover: #fafafa;
     --ds-bg-selected: #eef1ff;
+    --ds-secondary-container: rgba(22, 22, 22, 0.08);
     --ds-row-hover: #F5F7FA;
 
     --ds-border: #e6e6e6;
@@ -165,6 +168,8 @@
     color: var(--ds-text-primary);
     font-size: 14px;
     line-height: 20px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Visibility utilities for responsive rendering. Default = desktop visible. */
@@ -216,8 +221,8 @@
   }
   .ds-btn--l  { padding: 0 var(--ds-dim-3xl); height: 48px; }
   .ds-btn--m  { padding: 0 var(--ds-dim-3xl); height: 40px; }
-  /* Button/S — per Figma "Button/S" (1:46977): h=32, radius 8 (button/s/radius) */
-  .ds-btn--s  { padding: 0 var(--ds-dim-2xl); height: 32px; border-radius: var(--ds-radius-md); }
+  /* Button/S — Figma Components 894:2280: h=32, px=16, gap=8, radius=8, Body 02 bold */
+  .ds-btn--s  { padding: 0 var(--ds-dim-3xl); height: 32px; border-radius: var(--ds-radius-md); }
 
   .ds-btn--primary { background: var(--ds-primary); color: var(--ds-on-primary); border-color: var(--ds-primary); }
   .ds-btn--primary:hover:not(:disabled) { background: var(--ds-primary-hover); border-color: var(--ds-primary-hover); }
@@ -345,6 +350,29 @@
   .ds-tag--brand { color: var(--ds-primary); background: var(--ds-primary-content); }
   .ds-tag--inactive { color: var(--ds-text-placeholder); background: #f5f5f5; }
   .ds-tag svg { width: 12px; height: 12px; }
+
+  /* Status tag — Components Tag (4px radius, rebate-aligned) */
+  .tag {
+    display: inline-flex; align-items: center;
+    height: 20px; padding: 0 8px;
+    border-radius: 4px;
+    font-family: var(--ds-font-body); font-weight: 500;
+    font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
+    white-space: nowrap;
+  }
+  .tag-setup { color: var(--ds-warning-text); background: var(--ds-warning-bg); }
+  .tag-active { color: var(--ds-positive-text); background: var(--ds-positive-bg); }
+  .tag-stopped { color: var(--ds-text-secondary); background: var(--ds-neutral-bg); }
+
+  .contest-name {
+    font-size: 14px; line-height: 20px;
+    color: var(--ds-text-primary);
+  }
+  .contest-sub {
+    font-size: 10px; line-height: 12px; letter-spacing: 0.15px;
+    color: var(--ds-text-tertiary);
+    margin-top: 4px;
+  }
 
   /* ── DS Chips ── (Components: Chips, default node 11732:8500, selected node 170:12728)
      Default (Selected=False):
@@ -914,6 +942,14 @@
     flex-shrink: 0;
   }
   .app-header__menu { display: flex; align-items: center; gap: var(--ds-dim-s); flex: 1; min-width: 0; }
+  .app-header__menu > * { flex-shrink: 0; }
+  .app-header__menu > .is-menu-overflow { display: none !important; }
+  .app-header__menu-more[hidden] { display: none !important; }
+  .app-header__menu-more--measure {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+  }
   .app-header__menu-item {
     height: 32px; padding: 0 var(--ds-dim-3xl);
     border-radius: var(--ds-dim-l);
@@ -1028,6 +1064,7 @@
   }
   .app-header__dropdown-item:hover { background: var(--ds-bg-page); }
   .app-header__dropdown-item--active { background: var(--ds-row-hover); font-weight: 600; }
+  .app-header__dropdown-item:disabled { opacity: 0.45; cursor: not-allowed; }
   .app-header__dropdown-item__label {
     display: inline-flex;
     align-items: center;
@@ -1065,46 +1102,47 @@
 
   /* Page layout */
   .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--ds-dim-6xl); gap: var(--ds-dim-3xl); }
-  .page-header__actions { display: flex; align-items: center; gap: var(--ds-dim-2xl); flex-shrink: 0; }
-  /* Expandable search — как Rebate (tabs-action → search-input) */
-  .search-wrap { position: relative; display: inline-flex; align-items: center; overflow: visible; }
+  .page-header__actions,
+  .page-header .tabs-right { display: flex; align-items: center; gap: var(--ds-dim-s); flex-shrink: 0; margin-left: auto; }
+  /* Expandable search — 1:1 Rebate (search-wrap-main / tabs-action) */
+  .search-wrap { position: relative; display: inline-flex; align-items: center; }
   .search-input {
-    display: none; align-items: center; gap: var(--ds-dim-l);
-    height: 32px; width: 320px; padding: 4px 12px;
+    display: none; align-items: center; gap: 8px;
+    height: 32px; width: 260px; padding: 4px 12px;
     background: var(--ds-bg); border: 1px solid var(--ds-border-input);
     border-radius: var(--ds-radius-md);
     transition: border-color 0.15s, box-shadow 0.15s;
     box-sizing: border-box;
   }
   .search-input.open { display: inline-flex; }
-  .search-input:hover { border-color: var(--ds-border-input-hover); }
-  .search-input:focus-within { border-color: var(--ds-border-focus); box-shadow: var(--ds-focus-ring); }
+  .search-input:hover { border-color: var(--ds-text-secondary); }
+  .search-input:focus-within { border-color: var(--ds-primary); box-shadow: 0 0 0 3px var(--ds-primary-content); }
   .search-input svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--ds-text-secondary); }
   .search-input input {
-    flex: 1 1 auto; min-width: 0; border: none; background: transparent; outline: none;
-    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px; color: var(--ds-text-primary);
+    flex: 1; min-width: 0; border: none; background: transparent; outline: none;
+    font-family: inherit; font-size: 14px; line-height: 20px; color: #161616;
   }
-  .search-input input::placeholder { color: var(--ds-text-placeholder); }
+  .search-input input::placeholder { color: var(--ds-text-tertiary); }
   .search-clear {
     flex-shrink: 0; width: 18px; height: 18px;
     display: inline-grid; place-items: center;
     border: none; background: transparent; cursor: pointer;
     color: var(--ds-text-secondary); padding: 0; border-radius: 4px;
   }
-  .search-clear:hover { color: var(--ds-text-primary); background: var(--ds-bg-hover); }
+  .search-clear:hover { color: #161616; background: var(--ds-secondary-container); }
   .search-wrap.is-open .tabs-action { display: none; }
   .page-header-search { display: none; }
+  /* Rebate .tabs-action — Body 02 / 600, #161616, 18px search stroke icon */
   .tabs-action {
-    display: inline-flex; align-items: center; justify-content: center; gap: var(--ds-dim-l);
-    height: 32px; padding: 0 16px; border-radius: var(--ds-radius-md);
-    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px; font-weight: 600;
-    color: var(--ds-text-primary); background: transparent; cursor: pointer; white-space: nowrap;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    height: 32px; padding: 0 16px; border-radius: 8px;
+    font-family: inherit; font-size: 14px; line-height: 20px; font-weight: 600;
+    color: #161616; background: transparent; cursor: pointer; white-space: nowrap;
     transition: background 0.15s;
   }
-  .tabs-action:hover { background: var(--ds-bg-hover); }
-  .tabs-action:active { background: var(--ds-bg-page); }
-  .tabs-action svg { width: 18px; height: 18px; flex-shrink: 0; }
-  .tabs-action__label { font-size: 14px; line-height: 20px; }
+  .tabs-action:hover { background: var(--ds-secondary-container); }
+  .tabs-action:active { background: var(--ds-border); }
+  .tabs-action svg { width: 18px; height: 18px; flex-shrink: 0; color: currentColor; }
   /* DS Breadcrumb — semantic <nav><ol>, Body 02 (14/20) */
   .breadcrumb { margin-bottom: var(--ds-dim-3xl); }
   .breadcrumb__list {
@@ -1143,12 +1181,61 @@
     gap: var(--ds-dim-5xl);
   }
 
+  .contest-detail-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-dim-3xl);
+    margin-bottom: var(--ds-dim-5xl);
+  }
+  /* Title row, then meta always on the next line. */
+  .contest-detail-header-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--ds-dim-2xl);
+    width: 100%;
+  }
+  .contest-detail-header-row > .contest-detail-header {
+    flex: 0 0 auto;
+    min-width: 0;
+    width: 100%;
+  }
+  .contest-detail-header-row > .contest-detail-meta {
+    flex: 0 0 auto;
+    width: 100%;
+  }
   .contest-detail-meta {
     display: flex;
     align-items: center;
     gap: var(--ds-dim-3xl);
     flex-wrap: wrap;
-    margin-bottom: var(--ds-dim-2xl);
+    margin: 0;
+  }
+  .contest-detail-meta__primary {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ds-dim-3xl);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+  /* IB contest detail — title / meta / description vertical rhythm */
+  .contest-detail-header.page-header {
+    display: block;
+    margin: 0;
+    min-height: 0;
+    gap: 0;
+  }
+  .contest-detail-header__title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--ds-dim-2xl);
+    flex-wrap: wrap;
+  }
+  .contest-detail-header__title-row .rig-title-02 { margin: 0; }
+  .contest-detail-desc {
+    color: var(--ds-text-secondary);
+    margin: 0;
   }
   .contest-detail-actions {
     display: flex;
@@ -1396,17 +1483,43 @@
   /* Toolbar: search + filter chips above a data table.
      Used in IBMyContests to slice the contest list by name and status. */
   .table-toolbar {
-    display: flex; align-items: center; gap: var(--ds-dim-3xl);
-    margin-bottom: var(--ds-dim-3xl); flex-wrap: wrap;
+    display: flex; align-items: center; gap: var(--ds-dim-l);
+    margin-bottom: var(--ds-dim-3xl);
+    flex-wrap: wrap;
+    row-gap: var(--ds-dim-2xl);
+    container-type: inline-size;
+    container-name: table-toolbar;
   }
-  .table-toolbar__period { flex: 0 0 auto; min-width: 320px; }
-  /* 4px inset so DS focus ring (box-shadow) is not clipped by overflow:hidden ancestors */
+  .table-toolbar__period { flex: 0 0 auto; min-width: 0; overflow: visible; }
+  /* Inset for DS focus ring (4px box-shadow) — no negative margin (breaks under overflow:hidden). */
   .date-range-wrap {
     position: relative;
     padding: 4px;
-    margin: -4px;
     overflow: visible;
     box-sizing: border-box;
+  }
+  /* Toolbar trigger — no wrap inset (Rebate parity); min-width for long period labels. */
+  .date-range-wrap--toolbar {
+    display: inline-block;
+    max-width: 100%;
+    padding: 0;
+  }
+  .date-range-wrap--toolbar .date-range {
+    min-width: 360px;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .date-range-wrap--toolbar .date-range .dr-text {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow: visible;
+    white-space: nowrap;
+  }
+  .date-range-wrap--toolbar .date-range .dr-label,
+  .date-range-wrap--toolbar .date-range .dr-value {
+    flex: 0 0 auto;
+    overflow: visible;
+    text-overflow: clip;
   }
   .date-range {
     display: inline-flex; align-items: center; gap: 8px;
@@ -1436,8 +1549,73 @@
   }
   .date-range .dr-label { color: var(--ds-text-secondary); font-weight: 400; flex-shrink: 0; }
   .date-range .dr-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-  .table-toolbar__period .date-range { width: 100%; max-width: 100%; }
-  .table-toolbar__chips { flex: 0 1 auto; margin-left: auto; }
+  /* Wide: chips share the row with period, right-aligned in remaining space. */
+  .table-toolbar__chips {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .table-toolbar__chips .ds-chips-group {
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+  .table-toolbar__chips .ds-chip { flex-shrink: 0; }
+  /* Narrow toolbar: chips drop to the row below period, left-aligned + horizontal scroll. */
+  @container table-toolbar (max-width: 1010px) {
+    .table-toolbar__period {
+      flex: 1 1 100%;
+      min-width: 0;
+      width: 100%;
+    }
+    .date-range-wrap--toolbar .date-range {
+      width: fit-content;
+      max-width: 100%;
+    }
+    .table-toolbar__chips {
+      flex: 1 1 100%;
+      width: 100%;
+      max-width: 100%;
+      margin-left: 0;
+      justify-content: flex-start;
+    }
+    .table-toolbar__chips .ds-chips-group {
+      width: 100%;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .table-toolbar__chips .ds-chips-group::-webkit-scrollbar { display: none; }
+    .table-toolbar__chips .ds-chip {
+      flex: 0 0 auto;
+      touch-action: manipulation;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .table-toolbar__chips .ds-chips-group.is-chips-scrollable { cursor: grab; }
+    .table-toolbar__chips .ds-chips-group.is-chips-dragging { cursor: grabbing; }
+  }
+  /* Tablet: period trigger hugs content (not full row width). Mobile override below @639px. */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .date-range-wrap--toolbar {
+      display: inline-block;
+      width: auto;
+      max-width: 100%;
+    }
+    .date-range-wrap--toolbar .date-range {
+      width: fit-content;
+      min-width: 0;
+      max-width: 100%;
+    }
+  }
   /* Empty state inside table-wrap when filters yield no rows */
   .table-empty {
     padding: var(--ds-dim-7xl) var(--ds-dim-5xl);
@@ -1446,6 +1624,51 @@
   }
   .table-empty__title { font-family: var(--ds-font-body); font-weight: 600; font-size: 14px; line-height: 20px; color: var(--ds-text-primary); }
   .table-empty__hint { font-family: var(--ds-font-body); font-size: 12px; line-height: 16px; letter-spacing: 0.15px; color: var(--ds-text-muted); }
+
+  /* Filter/search empty — Rebate .empty pattern */
+  .empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 48px 24px; gap: 24px; min-height: 320px; height: 100%;
+  }
+  .empty .empty-illu {
+    width: 120px; height: 120px; flex-shrink: 0;
+    display: grid; place-items: center; overflow: hidden;
+  }
+  .empty .empty-illu img { width: 100px; height: 79px; display: block; }
+  .empty .empty-text {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 440px;
+  }
+  .empty h3 {
+    font-family: var(--ds-font-body); font-size: 18px; line-height: 24px; font-weight: 600;
+    color: var(--ds-text-primary); margin: 0;
+  }
+  .empty p {
+    font-family: var(--ds-font-body); font-size: 14px; line-height: 20px;
+    color: var(--ds-text-secondary); margin: 0; white-space: pre-line;
+  }
+  .empty .empty-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .empty .btn-secondary {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 40px; padding: 0 24px;
+    border: 1px solid var(--ds-border-input); border-radius: var(--ds-radius-md);
+    background: var(--ds-bg); color: var(--ds-text-primary);
+    font-family: inherit; font-size: 14px; font-weight: 600; line-height: 20px;
+    cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .empty .btn-secondary:hover {
+    background: var(--ds-bg-hover); border-color: var(--ds-text-secondary);
+  }
+  .contests-layout__content > .table-wrap--empty {
+    flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column;
+  }
+  .contests-layout__content > .table-wrap--empty .empty { flex: 1 1 auto; min-height: 280px; }
+  @media (max-width: 639px) {
+    .empty { padding: 48px 16px; gap: 20px; min-height: 240px; }
+    .empty .empty-illu { width: 88px; height: 88px; }
+    .empty .empty-illu img { width: 72px; height: 56px; }
+    .empty .btn-secondary { width: 100%; height: 44px; }
+    .empty .empty-actions { flex-direction: column; width: 100%; }
+  }
 
   .table-wrap { border: 1px solid var(--ds-border); border-radius: var(--ds-radius-lg); overflow: hidden; background: var(--ds-bg); }
   /* border-collapse: separate нужен для корректной работы sticky-колонок
@@ -1491,6 +1714,10 @@
   .table-wrap--sticky-last tbody tr.highlight td:last-child { background: var(--ds-bg-selected); }
   .table-cell-period { white-space: nowrap; }
   .table-cell-period__label { white-space: nowrap; }
+  /* Desktop table only — slimmer period progress (mobile cards keep 4px). */
+  .table-wrap .table-cell-period .ds-progress {
+    height: 2px;
+  }
   /* th uses Utility 01 from DS Foundations (12/16, regular, 0.15 tracking) */
   th {
     text-align: left; padding: var(--ds-dim-3xl);
@@ -1567,9 +1794,27 @@
     position: sticky; top: 0; z-index: 2; box-shadow: inset 0 -1px 0 var(--ds-border);
   }
   .leaderboard-scroll tbody td {
+    font-family: var(--ds-font-body);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+    color: var(--ds-text-primary);
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1;
   }
+  .leaderboard-scroll tbody td.lb-col-place { font-weight: 400; }
+  .leaderboard-scroll td.lb-col-score,
+  .leaderboard-scroll td.lb-col-prize { font-weight: 400; color: inherit; }
+  .leaderboard-scroll td.lb-col-score .rig-body-02,
+  .leaderboard-scroll td.lb-col-prize .rig-body-02 {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+  .leaderboard-scroll td.lb-col-prize.is-muted .rig-body-02 { color: var(--ds-text-muted); }
+  .leaderboard-scroll tr.highlight td:first-child { font-weight: 400; }
+  .leaderboard-scroll tr.highlight td.lb-col-name { font-weight: 600; }
   /* Full-width leaderboard with evenly distributed columns. All columns are
      left-aligned (including numerical metric/prize) so values sit immediately
      next to the participant name instead of being right-anchored across a
@@ -1616,8 +1861,15 @@
   tr.leaderboard-flash td { animation: leaderboard-flash 1.6s ease-in-out 0s 2; }
   .lb-card--flash { animation: leaderboard-flash 1.6s ease-in-out 0s 2; }
 
-  /* Medal */
-  .medal { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; font-size: 14px; line-height: 20px; font-weight: 600; background: transparent; color: var(--ds-text-secondary); border: 1px solid var(--ds-border); }
+  /* Medal — Body 02 Bold in 32×32 circle */
+  .medal {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 50%;
+    font-family: var(--ds-font-body); font-weight: 600;
+    font-size: 14px; line-height: 20px; letter-spacing: 0;
+    background: transparent; color: var(--ds-text-secondary);
+    border: 1px solid var(--ds-border);
+  }
   /* Award medals: gold / silver / bronze — DS-adjacent tints */
   .medal--1 { background: var(--ds-warning-bg);  color: var(--ds-warning-text); border-color: transparent; }
   .medal--2 { background: var(--ds-neutral-bg);  color: var(--ds-text-secondary); border-color: transparent; }
@@ -1826,6 +2078,15 @@
   .ds-progress--l,
   .ds-progress--xl { height: 4px; }
   .ds-progress__bar { height: 100%; background: #161616; border-radius: 100px; transition: width 0.5s ease; }
+  /* Soft primary — IB dashboard segmented-bar (primary-container track + primary fill) */
+  .ds-progress--primary { background: var(--ds-primary-container); }
+  .ds-progress--primary .ds-progress__bar { background: var(--ds-primary); }
+  /* Muted — stat-banner track/fill; neutral in dense table UI */
+  .ds-progress--muted { background: var(--ds-bg-page); }
+  .ds-progress--muted .ds-progress__bar { background: var(--ds-text-tertiary); }
+  /* Neutral — table period: soft track + readable mid-gray fill */
+  .ds-progress--neutral { background: var(--ds-neutral-bg); }
+  .ds-progress--neutral .ds-progress__bar { background: var(--ds-text-muted); }
   .ds-progress--on-brand { background: rgba(255,255,255,0.22); }
   .ds-progress--on-brand .ds-progress__bar { background: #fff; }
 
@@ -2340,6 +2601,8 @@
     flex: 1 1 auto; min-height: 0;
     overflow-y: auto;
     padding: var(--ds-dim-3xl) var(--ds-dim-3xl) var(--ds-dim-2xl);
+    display: flex;
+    flex-direction: column;
   }
   .dr-panel__title { font-family: var(--ds-font-body); font-weight: 600; font-size: 16px; line-height: 24px; color: var(--ds-text-primary); }
   .dr-panel__close {
@@ -2349,7 +2612,10 @@
   }
   .dr-panel__close:hover { background: var(--ds-bg-hover); color: var(--ds-text-primary); }
   .dr-panel__close svg { width: 16px; height: 16px; }
-  .dr-panel__inputs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ds-dim-2xl); margin-bottom: var(--ds-dim-2xl); }
+  .dr-panel__inputs {
+    flex: 0 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--ds-dim-2xl); margin-bottom: var(--ds-dim-2xl);
+  }
   .dr-panel__inputs .ds-input-wrap { margin-bottom: 0; min-width: 0; }
   /* Подсветка активного поля, пока пользователь выбирает вторую дату в календаре. */
   .dr-panel__input--active .ds-input-shell { border-color: var(--ds-border-focus); box-shadow: var(--ds-focus-ring); }
@@ -2365,20 +2631,38 @@
   .dr-panel__month { font-family: var(--ds-font-body); font-size: 14px; line-height: 20px; font-weight: 600; color: var(--ds-text-primary); }
 
   /* Range calendar — логика и стили как Rebate (#cal-main) */
-  .dr-panel .cal { user-select: none; }
+  .dr-panel .cal {
+    user-select: none;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
   .dr-panel .cal-nav {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: var(--ds-dim-l);
+    flex: 0 0 auto;
   }
   .dr-panel .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0; gap: 0; }
+  .dr-panel #cal-wd-main,
+  .dr-panel .cal-grid:first-of-type {
+    flex: 0 0 auto;
+  }
+  .dr-panel #cal-grid-main,
+  .dr-panel .cal-grid:last-of-type {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-rows: repeat(6, 1fr);
+    align-content: stretch;
+  }
   .dr-panel .cal-wd {
     height: 28px; display: flex; align-items: center; justify-content: center;
     font-size: 12px; line-height: 16px; letter-spacing: 0.15px;
     color: var(--ds-text-secondary); font-weight: 500;
   }
   .dr-panel .cal-cell {
-    position: relative; height: 36px;
-    display: flex; align-items: center; justify-content: center;
+    position: relative; min-height: 0; height: auto;
+    display: flex; align-items: stretch; justify-content: stretch;
   }
   .dr-panel .cal-cell.in-range::before,
   .dr-panel .cal-cell.is-start::before,
@@ -2392,7 +2676,7 @@
   .dr-panel .cal-cell.is-start.is-end::before { display: none; }
   .dr-panel .cal-day {
     position: relative; z-index: 1;
-    width: 32px; height: 32px;
+    width: 100%; height: 100%; min-height: 32px;
     display: flex; align-items: center; justify-content: center;
     border-radius: var(--ds-radius-md); border: none; background: transparent;
     font-family: inherit; font-size: 13px; line-height: 20px;
@@ -2447,6 +2731,72 @@
   }
   .dr-panel__foot.ds-modal__foot--stack .ds-btn { width: 100%; }
   .dr-panel__foot.ds-modal__foot--stack .ds-btn--text { justify-content: center; }
+
+  /* Date panel period chips — Rebate m-chips / DS Chips S (32px). */
+  .dr-panel--drawer .m-chips,
+  .dr-panel--sheet .m-chips,
+  .contests-date-drawer .m-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-dim-l);
+  }
+  .dr-panel--drawer .m-chip,
+  .dr-panel--sheet .m-chip,
+  .contests-date-drawer .m-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 var(--ds-dim-3xl);
+    border: 1px solid var(--ds-border-input);
+    border-radius: var(--ds-radius-md);
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ds-text-primary);
+    background: var(--ds-bg);
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+  }
+  .dr-panel--drawer .m-chip:hover,
+  .dr-panel--sheet .m-chip:hover,
+  .contests-date-drawer .m-chip:hover {
+    background: var(--ds-bg-hover);
+  }
+  .dr-panel--drawer .m-chip:focus-visible,
+  .dr-panel--sheet .m-chip:focus-visible,
+  .contests-date-drawer .m-chip:focus-visible {
+    outline: 2px solid var(--ds-primary);
+    outline-offset: 2px;
+  }
+  .dr-panel--drawer .m-chip.sel,
+  .dr-panel--sheet .m-chip.sel,
+  .contests-date-drawer .m-chip.sel {
+    background: var(--ds-primary-content);
+    border-color: transparent;
+    color: var(--ds-on-primary-container);
+  }
+  .dr-panel--drawer .m-chip.sel:hover,
+  .dr-panel--sheet .m-chip.sel:hover,
+  .contests-date-drawer .m-chip.sel:hover {
+    background: var(--ds-primary-content);
+    border-color: transparent;
+  }
+  .dr-panel--drawer .filter-panel-section .modal-label,
+  .dr-panel--sheet .filter-panel-section .modal-label,
+  .contests-date-drawer .filter-panel-section .modal-label {
+    font-size: 12px;
+    color: var(--ds-text-secondary);
+    font-weight: 500;
+    margin-bottom: var(--ds-dim-l);
+  }
+  .dr-panel--sheet .filter-panel-section {
+    margin-bottom: var(--ds-dim-3xl);
+  }
 
   /* Date panel backdrop — mobile bottom sheet (rebate date-panel pattern) */
   body.sheet-scroll-lock {
@@ -2516,7 +2866,100 @@
     flex: 1 1 auto; min-width: 0; min-height: 0;
     display: flex; flex-direction: column;
   }
-  .contests-layout__stats { flex: 0 0 auto; min-width: 0; }
+  .contests-layout__stats {
+    flex: 0 0 auto; min-width: 0;
+    container-type: inline-size;
+    container-name: contest-stats;
+  }
+  /* Narrow stats column (e.g. desktop date panel open) — tablet-like swipe strip. */
+  @container contest-stats (max-width: 999px) {
+    .stat-banners {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: var(--ds-dim-2xl);
+      padding: 0 0 var(--ds-dim-3xl);
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .stat-banners::-webkit-scrollbar { display: none; }
+    .stat-banners .stat-banner {
+      flex: 0 0 min(42%, 280px);
+      max-width: min(42%, 280px);
+      scroll-snap-align: start;
+    }
+    .stat-banner__value-row { min-height: 24px; margin-top: var(--ds-dim-2xl); }
+    .stat-banner__value {
+      font-size: 20px;
+      line-height: 24px;
+      letter-spacing: -0.2px;
+    }
+    .stat-banner__delta { font-size: 13px; line-height: 18px; }
+  }
+  .stat-banners-wrap {
+    position: relative;
+    min-width: 0;
+  }
+  .stat-banners-nav {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .stat-banners.is-stat-banners-scrollable { cursor: grab; }
+    .stat-banners.is-stat-banners-dragging { cursor: grabbing; }
+    .stat-banners-wrap--scrollable {
+      display: flex;
+      align-items: center;
+      gap: var(--ds-dim-l);
+    }
+    .stat-banners-strip {
+      position: relative;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    /* Fade into page bg at the scroll edge when a nav arrow is shown. */
+    .stat-banners-wrap--fade-next .stat-banners-strip::after,
+    .stat-banners-wrap--fade-prev .stat-banners-strip::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: var(--ds-dim-3xl);
+      width: 56px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .stat-banners-wrap--fade-next .stat-banners-strip::after {
+      right: 0;
+      background: linear-gradient(to left, var(--ds-bg) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+    .stat-banners-wrap--fade-prev .stat-banners-strip::before {
+      left: 0;
+      background: linear-gradient(to right, var(--ds-bg) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+    .stat-banners-wrap--scrollable .stat-banners {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .stat-banners-wrap--scrollable .stat-banners-nav {
+      display: inline-flex;
+      flex: 0 0 auto;
+      z-index: 1;
+    }
+    /* Figma IconButton Variant=Text, Size=S (60338:57039) — 32×32, no border, 24px icon. */
+    .stat-banners-nav svg {
+      width: 24px;
+      height: 24px;
+    }
+    .stat-banners-nav:focus-visible {
+      outline: 2px solid var(--ds-focus-ring, rgba(11, 11, 22, 0.35));
+      outline-offset: 2px;
+    }
+  }
   .contests-layout__stats > .ds-notification { margin-bottom: var(--ds-dim-3xl); }
   .contests-layout__body {
     flex: 1 1 auto; min-height: 0; min-width: 0;
@@ -2554,7 +2997,6 @@
     }
     .contests-layout__panel > .dr-panel { flex: 0 0 auto; min-width: 0; width: 100%; height: auto; overflow: visible; }
     .dr-panel__body { overflow: visible; padding-bottom: 0; }
-    .ds-container:has(.contests-layout) { max-height: none; }
   }
 
   /* Toast / Snackbar — Figma Components Snackbar (60132:14999).
@@ -2804,7 +3246,7 @@
     overflow: visible;
   }
   .screen-enter:has(> .contests-layout) > .table-toolbar {
-    padding-top: 4px; padding-bottom: 4px;
+    padding: 4px;
     overflow: visible;
   }
 
@@ -2819,19 +3261,317 @@
       padding-left: var(--ds-dim-5xl);
       padding-right: var(--ds-dim-5xl);
       padding-bottom: var(--ds-dim-5xl);
+      min-height: 100vh;
     }
     .ds-container {
       margin: 0 auto;
       padding: var(--ds-dim-5xl);
-      min-height: calc(100vh - var(--ib-chrome-offset) - 2 * var(--ds-dim-5xl) - var(--ds-dim-3xl));
+      flex: 1 1 auto;
+      min-height: calc(100vh - var(--ib-chrome-offset) - var(--ds-dim-3xl) - var(--ds-dim-5xl));
     }
     .ds-container:has(.contests-layout) {
-      max-height: calc(100vh - var(--ib-chrome-offset) - 2 * var(--ds-dim-5xl) - var(--ds-dim-3xl));
+      max-height: calc(100vh - var(--ib-chrome-offset) - var(--ds-dim-3xl) - var(--ds-dim-5xl));
     }
     .wizard-layout { grid-template-columns: 1fr; }
     .contest-grid { grid-template-columns: 1fr; }
     .stats { flex-wrap: wrap; padding: var(--ds-dim-3xl); }
     .stat-card { flex: 1 1 40%; min-width: 120px; }
+
+    /* Stat banners — horizontal swipe strip (same as mobile). */
+    .stat-banners {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      gap: var(--ds-dim-2xl);
+      padding: 0 0 var(--ds-dim-3xl);
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .stat-banners::-webkit-scrollbar { display: none; }
+    .stat-banners.is-stat-banners-scrollable { cursor: grab; }
+    .stat-banners.is-stat-banners-dragging { cursor: grabbing; }
+    .stat-banners .stat-banner {
+      scroll-snap-align: start;
+    }
+    .stat-banner__value-row { min-height: 24px; margin-top: var(--ds-dim-2xl); }
+    .stat-banner__value {
+      font-size: 20px;
+      line-height: 24px;
+      letter-spacing: -0.2px;
+    }
+    .stat-banner__delta { font-size: 13px; line-height: 18px; }
+
+    /* Tablet: no hover — row actions always visible; meta stays hidden. */
+    .td-actions { opacity: 1; }
+    .row-action-stack .row-meta { opacity: 0; pointer-events: none; }
+  }
+
+  /* Tablet — date panel as left drawer (Rebate #date-panel-main pattern). */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .dr-panel-backdrop {
+      display: block;
+      top: var(--ib-chrome-offset, 100px);
+    }
+    .contests-date-drawer {
+      position: fixed;
+      top: var(--ib-chrome-offset, 100px);
+      left: 0;
+      bottom: 0;
+      width: min(360px, 90vw);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      background: var(--ds-bg);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+    .contests-date-drawer > .dr-panel {
+      flex: 1 1 auto;
+      min-height: 0;
+      height: 100%;
+      width: 100%;
+      min-width: 0;
+      border-radius: 0;
+      border: none;
+      border-right: 1px solid var(--ds-border);
+    }
+    .contests-date-drawer .filter-panel-inner {
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .contests-date-drawer .filter-panel-header {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--ds-bg);
+      border-bottom: 1px solid var(--ds-border);
+      box-sizing: border-box;
+      min-height: 60px;
+      flex-shrink: 0;
+    }
+    .contests-date-drawer .filter-panel-title {
+      font-family: var(--ds-font-body);
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 600;
+      color: var(--ds-text-primary);
+    }
+    .contests-date-drawer .filter-panel-close {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--ds-text-primary);
+      border-radius: var(--ds-radius-md);
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+    .contests-date-drawer .filter-panel-close:hover {
+      background: var(--ds-bg-hover);
+    }
+    .contests-date-drawer .filter-panel-close svg {
+      width: 18px;
+      height: 18px;
+    }
+    .contests-date-drawer .filter-panel-scroll {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 16px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+    }
+    .contests-date-drawer .filter-panel-section {
+      margin-bottom: 16px;
+    }
+    .contests-date-drawer .filter-panel-section:last-child {
+      margin-bottom: 0;
+    }
+    .contests-date-drawer .date-panel-dates {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .contests-date-drawer .date-field {
+      display: flex;
+      flex-direction: column;
+    }
+    .contests-date-drawer .date-field .modal-label {
+      font-size: 12px;
+      color: var(--ds-text-secondary);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .contests-date-drawer .date-field .m-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 12px;
+      font-size: 14px;
+      line-height: 20px;
+      border: 1px solid var(--ds-border-input);
+      border-radius: var(--ds-radius-md);
+      background: var(--ds-bg);
+      color: var(--ds-text-primary);
+      font-family: inherit;
+    }
+    .contests-date-drawer .date-field--active .m-input {
+      border-color: var(--ds-border-focus);
+      box-shadow: var(--ds-focus-ring);
+    }
+    .contests-date-drawer .cal-nav {
+      margin-bottom: 8px;
+    }
+    .contests-date-drawer .cal-title {
+      font-family: var(--ds-font-body);
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 600;
+      color: var(--ds-text-primary);
+      font-variant-numeric: tabular-nums;
+    }
+    .contests-date-drawer .cal-nav-btn {
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      border-radius: var(--ds-radius-md);
+      cursor: pointer;
+      color: var(--ds-text-primary);
+      transition: background 0.12s ease;
+    }
+    .contests-date-drawer .cal-nav-btn:hover {
+      background: var(--ds-bg-hover);
+    }
+    .contests-date-drawer .cal-nav-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .contests-date-drawer .cal {
+      user-select: none;
+      flex: none;
+      min-height: 0;
+      display: block;
+    }
+    .contests-date-drawer .cal-grid:last-of-type {
+      flex: none;
+      grid-template-rows: none;
+      align-content: start;
+    }
+    .contests-date-drawer .cal-cell {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .contests-date-drawer .cal-day {
+      width: 32px;
+      height: 32px;
+      min-height: 32px;
+      border-radius: var(--ds-radius-md);
+    }
+    .contests-date-drawer .filter-panel-footer {
+      position: sticky;
+      bottom: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 20px 20px;
+      background: var(--ds-bg);
+      border-top: 1px solid var(--ds-border);
+      box-shadow: 0 -4px 8px -8px rgba(0, 0, 0, 0.12);
+      flex-shrink: 0;
+    }
+    .contests-date-drawer .fp-count {
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--ds-text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+    .contests-date-drawer .date-panel-footer__actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .contests-date-drawer .fp-reset {
+      border: 1px solid var(--ds-border-input);
+      background: var(--ds-bg);
+      color: var(--ds-text-primary);
+      height: 32px;
+      padding: 0 16px;
+      border-radius: var(--ds-radius-md);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+    .contests-date-drawer .fp-reset:hover:not(:disabled) {
+      background: var(--ds-bg-hover);
+    }
+    .contests-date-drawer .fp-reset:disabled {
+      color: var(--ds-text-placeholder);
+      cursor: not-allowed;
+    }
+    .contests-date-drawer .fp-apply {
+      height: 32px;
+      padding: 0 16px;
+      border: none;
+      border-radius: var(--ds-radius-md);
+      background: var(--ds-primary);
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+    .contests-date-drawer .fp-apply:hover:not(:disabled) {
+      background: var(--ds-primary-hover, #1538d0);
+    }
+    .contests-date-drawer .fp-apply:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Tablet only — narrower swipe cards + spacing before table. */
+  @media (min-width: 640px) and (max-width: 1023px) {
+    .stat-banners .stat-banner {
+      flex: 0 0 min(42%, 280px);
+      max-width: min(42%, 280px);
+    }
+    .contests-layout__stats {
+      margin-bottom: var(--ds-dim-3xl);
+    }
   }
 
   /* ── Mobile bottom-sheet & drawer baseline (always present in DOM,
@@ -2940,6 +3680,12 @@
     .app-header__balance:hover { background: var(--ds-bg-page); border-color: var(--ds-border-input-hover); }
     .app-header__balance:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); border-color: var(--ds-border-focus); }
     .app-header__right { margin-left: auto; gap: 16px; flex-shrink: 0; }
+    /* Contests AppHeader: keep IB profile avatar on mobile (ib-chrome hides .app-header__profile globally). */
+    .app-header__profile {
+      display: block !important;
+      position: relative;
+      flex-shrink: 0;
+    }
     .app-header__avatar:not(.is-desktop-only),
     .app-header__avatar--static {
       display: inline-flex !important;
@@ -3184,55 +3930,17 @@
       width: 20px;
       height: 20px;
     }
-    .page-header__actions .tabs-action__label {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
     .rig-title-02 { font-size: 24px; line-height: 28px; letter-spacing: -0.3px; }
 
-    /* === Stats — horizontal scroll strip (like rebate stat banners) === */
+    /* === Stats — horizontal scroll strip (inherits tablet @1023px rules) === */
     .contests-layout__right {
       gap: var(--ds-dim-4xl);
     }
-    .stat-banners {
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: stretch;
-      gap: var(--ds-dim-2xl);
-      padding: 0;
-      overflow-x: auto;
-      overflow-y: visible;
-      scroll-snap-type: x proximity;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-x: contain;
-      touch-action: pan-x;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-    .stat-banners::-webkit-scrollbar { display: none; }
-    .stat-banners.is-stat-banners-scrollable { cursor: grab; }
-    .stat-banners.is-stat-banners-dragging { cursor: grabbing; }
+    .contests-layout__stats > .ds-notification { margin-bottom: var(--ds-dim-2xl); }
     .stat-banners .stat-banner {
       flex: 0 0 88%;
       max-width: 88%;
-      scroll-snap-align: start;
     }
-    .contests-layout__stats > .ds-notification { margin-bottom: var(--ds-dim-2xl); }
-    .stat-banner { padding: var(--ds-dim-2xl) var(--ds-dim-3xl) var(--ds-dim-3xl); }
-    .stat-banner__value-row { min-height: 24px; margin-top: var(--ds-dim-2xl); }
-    .stat-banner__value {
-      font-size: 20px;
-      line-height: 24px;
-      letter-spacing: -0.2px;
-    }
-    .stat-banner__delta { font-size: 13px; line-height: 18px; }
     /* Stat row → static 2-col card grid (not horizontal scroll). */
     .stats {
       display: grid;
@@ -3285,7 +3993,8 @@
       margin-bottom: var(--ds-dim-5xl);
     }
     .table-toolbar__period { flex: 0 0 auto; min-width: 0; width: 100%; }
-    .table-toolbar__period .date-range { width: 100%; }
+    .date-range-wrap--toolbar { display: block; width: 100%; }
+    .date-range-wrap--toolbar .date-range { width: 100%; max-width: none; min-width: 0; }
     .table-toolbar__period .date-range .dr-text {
       min-width: 0; flex: 1 1 auto; gap: 8px;
       overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
@@ -3317,7 +4026,7 @@
     .table-toolbar__chips .ds-chips-group.is-chips-scrollable { cursor: grab; }
     .table-toolbar__chips .ds-chips-group.is-chips-dragging { cursor: grabbing; }
 
-    /* === Date panel bottom sheet (mobile) === */
+    /* === Date panel bottom sheet (mobile only) === */
     .dr-panel-backdrop { display: block; }
     .dr-panel.dr-panel--sheet {
       position: fixed !important;
@@ -3384,13 +4093,14 @@
     }
     .row-card__title-block { min-width: 0; flex: 1 1 auto; }
     .row-card__title {
-      font-family: var(--ds-font-body); font-weight: 600;
-      font-size: 16px; line-height: 22px;
+      font-family: var(--ds-font-body); font-weight: 400;
+      font-size: 14px; line-height: 20px;
       color: var(--ds-text-primary);
     }
     .row-card__sub {
-      font-size: 12px; line-height: 16px; color: var(--ds-text-muted);
-      margin-top: 2px;
+      font-size: 10px; line-height: 12px; letter-spacing: 0.15px;
+      color: var(--ds-text-tertiary);
+      margin-top: 4px;
     }
     .row-card__meta {
       display: flex; flex-wrap: wrap;
@@ -3481,9 +4191,26 @@
 
     /* === Detail page (IB / Client / Admin) === */
     .contest-detail-desc { white-space: normal !important; }
-    .contest-detail-meta {
+    .contest-detail-intro {
+      gap: var(--ds-dim-4xl);
+      margin-bottom: var(--ds-dim-6xl);
+    }
+    .contest-detail-header-row {
+      flex-direction: column;
+      align-items: flex-start;
       gap: var(--ds-dim-2xl);
-      margin-bottom: var(--ds-dim-l);
+    }
+    .contest-detail-header-row > .contest-detail-meta {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+    .contest-detail-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--ds-dim-l);
+    }
+    .contest-detail-meta__primary {
+      gap: var(--ds-dim-2xl);
     }
     .contest-detail-actions {
       margin-bottom: var(--ds-dim-6xl);
@@ -4128,6 +4855,8 @@ const useMediaQuery = (query) => {
   return matches;
 };
 const useIsMobile = () => useMediaQuery('(max-width: 639px)');
+const useIsTablet = () => useMediaQuery('(min-width: 640px) and (max-width: 1023px)');
+const useIsDesktop = () => useMediaQuery('(min-width: 1024px)');
 
 /* useIsHorizontallyScrollable — true когда у элемента scrollWidth > clientWidth.
    Используется для подсветки тени sticky-колонки только при реальном overflow.
@@ -4315,6 +5044,15 @@ const Tag = ({ label, variant = 'neutral', icon }) => (
   </span>
 );
 
+const CONTEST_STATUS_TAG_CLASS = {
+  Active: 'tag-active',
+  Draft: 'tag-setup',
+  Completed: 'tag-stopped',
+};
+const ContestStatusTag = ({ status }) => (
+  <span className={`tag ${CONTEST_STATUS_TAG_CLASS[status] || 'tag-stopped'}`}>{status}</span>
+);
+
 const Chips = ({ label, selected, onClick, size, count }) => (
   <button
     type="button"
@@ -4459,8 +5197,8 @@ const Select = ({ label, value, onChange, options = [], placeholder, description
 };
 
 /* DS ProgressBar */
-const ProgressBar = ({ value = 0, size = 'm', onBrand = false, className = '' }) => (
-  <div className={`ds-progress ds-progress--${size} ${onBrand ? 'ds-progress--on-brand' : ''} ${className}`}>
+const ProgressBar = ({ value = 0, size = 'm', onBrand = false, tone = 'default', className = '' }) => (
+  <div className={`ds-progress ds-progress--${size}${onBrand ? ' ds-progress--on-brand' : ''}${tone === 'primary' ? ' ds-progress--primary' : ''}${tone === 'muted' ? ' ds-progress--muted' : ''}${tone === 'neutral' ? ' ds-progress--neutral' : ''} ${className}`.trim()}>
     <div className="ds-progress__bar" style={{width: `${Math.max(0, Math.min(100, value))}%`}} />
   </div>
 );
@@ -5149,6 +5887,84 @@ const AppHeaderAvatarIcon = () => (
   </svg>
 );
 
+const AppHeaderMenuCaret = () => (
+  <svg className="app-header__menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
+const useAppHeaderMenuOverflow = (menu, deps) => {
+  const navRef = useRef(null);
+  const entryRefs = useRef([]);
+  const moreRef = useRef(null);
+  const [overflowStart, setOverflowStart] = useState(null);
+  const menuRef = useRef(menu);
+  menuRef.current = menu;
+
+  useLayoutEffect(() => {
+    setOverflowStart(null);
+  }, [menu, ...deps]);
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav || window.matchMedia('(max-width: 639px)').matches) return undefined;
+
+    const onResize = () => setOverflowStart(null);
+    const ro = window.ResizeObserver ? new ResizeObserver(onResize) : null;
+    if (ro) ro.observe(nav);
+    window.addEventListener('resize', onResize);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener('resize', onResize);
+    };
+  }, [menu, ...deps]);
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav || window.matchMedia('(max-width: 639px)').matches) {
+      return;
+    }
+    if (overflowStart !== null) return;
+
+    const items = menuRef.current;
+    const gap = parseFloat(getComputedStyle(nav).gap) || 4;
+    const available = nav.clientWidth;
+    const entryWidth = (i) => entryRefs.current[i]?.getBoundingClientRect().width || 0;
+
+    const moreEl = moreRef.current;
+    let moreWidth = 72;
+    if (moreEl) {
+      const wasHidden = moreEl.hidden;
+      moreEl.hidden = false;
+      moreWidth = moreEl.getBoundingClientRect().width || 72;
+      moreEl.hidden = wasHidden;
+    }
+
+    let totalAll = 0;
+    for (let i = 0; i < items.length; i++) {
+      totalAll += entryWidth(i) + (i > 0 ? gap : 0);
+    }
+    if (totalAll <= available) return;
+
+    let start = items.length;
+    for (let s = items.length - 1; s >= 0; s--) {
+      let width = 0;
+      for (let i = 0; i < s; i++) {
+        width += entryWidth(i) + (i > 0 ? gap : 0);
+      }
+      if (s < items.length) width += (s > 0 ? gap : 0) + moreWidth;
+      if (width <= available) {
+        start = s;
+        break;
+      }
+      start = s;
+    }
+    setOverflowStart(start < items.length ? start : 0);
+  }, [menu, overflowStart, ...deps]);
+
+  return { navRef, entryRefs, moreRef, overflowStart };
+};
+
 /* AppHeader — adaptive header per role.
    IB:    Logo + Menu + Wallet + Avatar
    Client: Logo + Menu (with badges & dropdowns) + Deposit + Avatar + Close
@@ -5160,6 +5976,10 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
   const [profileOpen, setProfileOpen] = useState(false);
   const activeKey = activeKeyProp || internalKey;
   const setActiveKey = setInternalKey;
+  const { navRef, entryRefs, moreRef, overflowStart } = useAppHeaderMenuOverflow(
+    menu,
+    [role, activeKey, clientNewContestsCount, clientContestsTotal]
+  );
 
   useEffect(() => { if (!activeKeyProp) setInternalKey(menu[0].key); }, [role, activeKeyProp]);
 
@@ -5170,58 +5990,67 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
     return false;
   };
 
+  const overflowItems = overflowStart != null ? menu.slice(overflowStart) : [];
+  const moreActive = overflowItems.some(isItemActive);
+
+  const renderMenuDropdownItem = (d, itemRole) => (
+    <button
+      key={d.key}
+      type="button"
+      role="menuitem"
+      className={`app-header__dropdown-item ${activeKey === d.key ? 'app-header__dropdown-item--active' : ''}`}
+      onClick={() => {
+        setActiveKey(d.key);
+        onMenuSelect?.(d);
+      }}
+    >
+      {d.key === 'contests' && itemRole === 'client' ? (
+        <>
+          <span className="app-header__dropdown-item__label">
+            <span>{d.label}</span>
+          </span>
+          <span className="app-header__dropdown-item__trail">
+            <Tag label={String(clientContestsTotal)} variant="brand" />
+            {clientNewContestsCount > 0 && (
+              <Tag label="New" variant="warning" />
+            )}
+          </span>
+        </>
+      ) : (
+        <>
+          <span>{d.label}</span>
+          {d.badge ? <Tag label={d.badge} variant="brand" /> : null}
+        </>
+      )}
+    </button>
+  );
+
   return (
     <header className="app-header" role="banner">
       <div className="app-header__brand">
         <div className="app-header__logo" aria-label="Logo" />
       </div>
-      <nav className="app-header__menu" aria-label="Main menu">
-        {menu.map(item => {
+      <nav ref={navRef} className="app-header__menu" aria-label="Main menu">
+        {menu.map((item, index) => {
+          const overflowHidden = overflowStart != null && index >= overflowStart;
           if (item.dropdown) {
             return (
-              <div key={item.key} className="app-header__menu-group">
+              <div
+                key={item.key}
+                ref={(el) => { entryRefs.current[index] = el; }}
+                className={`app-header__menu-group${overflowHidden ? ' is-menu-overflow' : ''}`}
+                aria-hidden={overflowHidden || undefined}
+              >
                 <button
                   className={`app-header__menu-item app-header__menu-item--has-dropdown ${isItemActive(item) ? 'app-header__menu-item--active' : ''}`}
                   type="button"
                   aria-haspopup="menu"
                 >
                   {item.label}
-                  <svg className="app-header__menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
+                  <AppHeaderMenuCaret />
                 </button>
                 <div className="app-header__dropdown" role="menu">
-                  {item.dropdown.map(d => (
-                    <button
-                      key={d.key}
-                      type="button"
-                      role="menuitem"
-                      className={`app-header__dropdown-item ${activeKey === d.key ? 'app-header__dropdown-item--active' : ''}`}
-                      onClick={() => {
-                        setActiveKey(d.key);
-                        onMenuSelect?.(d);
-                      }}
-                    >
-                      {d.key === 'contests' && role === 'client' ? (
-                        <>
-                          <span className="app-header__dropdown-item__label">
-                            <span>{d.label}</span>
-                          </span>
-                          <span className="app-header__dropdown-item__trail">
-                            <Tag label={String(clientContestsTotal)} variant="brand" />
-                            {clientNewContestsCount > 0 && (
-                              <Tag label="New" variant="warning" />
-                            )}
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <span>{d.label}</span>
-                          {d.badge ? <Tag label={d.badge} variant="brand" /> : null}
-                        </>
-                      )}
-                    </button>
-                  ))}
+                  {item.dropdown.map((d) => renderMenuDropdownItem(d, role))}
                 </div>
               </div>
             );
@@ -5229,10 +6058,12 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
           return (
             <button
               key={item.key}
+              ref={(el) => { entryRefs.current[index] = el; }}
               type="button"
-              className={`app-header__menu-item ${activeKey === item.key ? 'app-header__menu-item--active' : ''}`}
+              className={`app-header__menu-item ${activeKey === item.key ? 'app-header__menu-item--active' : ''}${overflowHidden ? ' is-menu-overflow' : ''}`}
               disabled={item.disabled}
               title={item.disabled ? 'Under maintenance' : undefined}
+              aria-hidden={overflowHidden || undefined}
               onClick={() => {
                 if (item.disabled) return;
                 setActiveKey(item.key);
@@ -5244,6 +6075,45 @@ const AppHeader = ({ role, activeKey: activeKeyProp, clientNewContestsCount = 0,
             </button>
           );
         })}
+        <div
+          ref={moreRef}
+          className="app-header__menu-group app-header__menu-more"
+          hidden={overflowStart == null}
+        >
+          <button
+            type="button"
+            className={`app-header__menu-item app-header__menu-item--has-dropdown ${moreActive ? 'app-header__menu-item--active' : ''}`}
+            aria-haspopup="menu"
+          >
+            More
+            <AppHeaderMenuCaret />
+          </button>
+          <div className="app-header__dropdown" role="menu">
+            {overflowItems.map((item) => {
+              if (item.dropdown) {
+                return item.dropdown.map((d) => renderMenuDropdownItem(d, role));
+              }
+              return (
+                <button
+                  key={item.key}
+                  type="button"
+                  role="menuitem"
+                  className={`app-header__dropdown-item ${activeKey === item.key ? 'app-header__dropdown-item--active' : ''}`}
+                  disabled={item.disabled}
+                  title={item.disabled ? 'Under maintenance' : undefined}
+                  onClick={() => {
+                    if (item.disabled) return;
+                    setActiveKey(item.key);
+                    onMenuSelect?.(item);
+                  }}
+                >
+                  {item.label}
+                  {item.badge && <span className="app-header__menu-badge">{item.badge}</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </nav>
       <div className="app-header__right">
         {role === 'client' ? (
@@ -5506,16 +6376,19 @@ const StatCard = ({ value, label, color, trend }) => (
 /* Компактные KPI-баннеры для списка контестов IB — «спортивная» мотивация + деловые метрики. */
 /* Синхронизирует delta layout: если хоть в одной карточке delta не влезает в строку с числом — во всех под числом. */
 const StatBannersLayout = ({ ariaLabel, children }) => {
-  const ref = useRef(null);
+  const scrollRef = useRef(null);
+  const wrapRef = useRef(null);
   const [deltaStacked, setDeltaStacked] = useState(false);
+  const [scrollState, setScrollState] = useState({ scrollable: false, canPrev: false, canNext: false });
+  const isDesktop = useIsDesktop();
 
-  useHorizontalDragScroll(ref, {
+  useHorizontalDragScroll(scrollRef, {
     scrollableClass: 'is-stat-banners-scrollable',
     draggingClass: 'is-stat-banners-dragging',
   });
 
   const syncDeltaLayout = useCallback(() => {
-    const root = ref.current;
+    const root = scrollRef.current;
     if (!root) return;
     let stacked = false;
     root.querySelectorAll('.stat-banner__value-row').forEach(row => {
@@ -5528,27 +6401,93 @@ const StatBannersLayout = ({ ariaLabel, children }) => {
     setDeltaStacked(stacked);
   }, []);
 
+  const syncScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const scrollable = el.scrollWidth > el.clientWidth + 1;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setScrollState({
+      scrollable,
+      canPrev: scrollable && el.scrollLeft > 1,
+      canNext: scrollable && el.scrollLeft < maxScroll - 1,
+    });
+  }, []);
+
+  const scrollByStep = useCallback((dir) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const step = Math.max(220, el.clientWidth * 0.85);
+    el.scrollBy({ left: dir * step, behavior: 'smooth' });
+  }, []);
+
   useLayoutEffect(() => {
     syncDeltaLayout();
-    const root = ref.current;
+    syncScrollState();
+    const root = scrollRef.current;
+    const wrap = wrapRef.current;
     if (!root) return undefined;
-    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(syncDeltaLayout) : null;
+    const onLayout = () => {
+      syncDeltaLayout();
+      syncScrollState();
+    };
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(onLayout) : null;
     ro?.observe(root);
+    wrap && ro?.observe(wrap);
     root.querySelectorAll('.stat-banner').forEach(el => ro?.observe(el));
-    window.addEventListener('resize', syncDeltaLayout);
+    root.addEventListener('scroll', syncScrollState, { passive: true });
+    window.addEventListener('resize', onLayout);
     return () => {
       ro?.disconnect();
-      window.removeEventListener('resize', syncDeltaLayout);
+      root.removeEventListener('scroll', syncScrollState);
+      window.removeEventListener('resize', onLayout);
     };
-  }, [syncDeltaLayout, children]);
+  }, [syncDeltaLayout, syncScrollState, children]);
+
+  const showNav = isDesktop && scrollState.scrollable;
+  const showNext = showNav && scrollState.canNext;
+  const showPrev = showNav && scrollState.canPrev && !scrollState.canNext;
 
   return (
     <div
-      ref={ref}
-      className={`stat-banners${deltaStacked ? ' stat-banners--delta-stacked' : ''}`}
-      aria-label={ariaLabel}
+      ref={wrapRef}
+      className={[
+        'stat-banners-wrap',
+        showNav ? ' stat-banners-wrap--scrollable' : '',
+        showNext ? ' stat-banners-wrap--fade-next' : '',
+        showPrev ? ' stat-banners-wrap--fade-prev' : '',
+      ].join('')}
     >
-      {children}
+      {showPrev && (
+        <button
+          type="button"
+          className="ds-icon-btn ds-icon-btn--s ds-icon-btn--text stat-banners-nav stat-banners-nav--prev"
+          aria-label="Previous metrics"
+          onMouseDown={e => e.stopPropagation()}
+          onClick={e => { e.stopPropagation(); scrollByStep(-1); }}
+        >
+          <svg aria-hidden="true"><use href={dsIc('chevron-left', 's')} /></svg>
+        </button>
+      )}
+      <div className="stat-banners-strip">
+        <div
+          ref={scrollRef}
+          className={`stat-banners${deltaStacked ? ' stat-banners--delta-stacked' : ''}${showNav ? ' is-stat-banners-scrollable' : ''}`}
+          aria-label={ariaLabel}
+        >
+          {children}
+        </div>
+      </div>
+      {showNext && (
+        <button
+          type="button"
+          className="ds-icon-btn ds-icon-btn--s ds-icon-btn--text stat-banners-nav stat-banners-nav--next"
+          aria-label="Next metrics"
+          onMouseDown={e => e.stopPropagation()}
+          onClick={e => { e.stopPropagation(); scrollByStep(1); }}
+        >
+          <svg aria-hidden="true"><use href={dsIc('chevron-right', 's')} /></svg>
+        </button>
+      )}
     </div>
   );
 };
@@ -5573,8 +6512,21 @@ const StatBannerHintSplit = ({ parts }) => {
 
 const InfoTipButton = ({ label, text, btnClassName, className = '', icon = 'stat', onPointerDown, onClick }) => {
   const [open, setOpen] = useState(false);
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDocPointerDown = (e) => {
+      if (btnRef.current?.contains(e.target)) return;
+      setOpen(false);
+    };
+    document.addEventListener('pointerdown', onDocPointerDown, true);
+    return () => document.removeEventListener('pointerdown', onDocPointerDown, true);
+  }, [open]);
+
   return (
     <button
+      ref={btnRef}
       type="button"
       className={`${btnClassName} info-tip info-tip--bottom${open ? ' is-open' : ''}${className ? ` ${className}` : ''}`}
       aria-label={`About metric “${label}”`}
@@ -5585,7 +6537,6 @@ const InfoTipButton = ({ label, text, btnClassName, className = '', icon = 'stat
         if (onClick) onClick(e);
         else setOpen(v => !v);
       }}
-      onBlur={() => setOpen(false)}
     >
       {icon === 'ds' ? (
         <svg><use href="#ic-info-24" /></svg>
@@ -5722,8 +6673,43 @@ const IBContestDraftLaunchPanel = ({ draftRows, allRows, onNavigate, onSelectCon
   );
 };
 
-const IBContestStatsBanners = ({ rows }) => {
+const IBContestStatsBanners = ({ rows, filtersActive = false }) => {
   if (!rows.length) {
+    if (filtersActive) {
+      return (
+        <StatBannersLayout ariaLabel="Contest metrics">
+          <StatBanner
+            variant="profit"
+            icon="trending-up"
+            label="IB profit"
+            value="$0"
+            hint="No contests match filters"
+            infoTip="Total IB profit from contests for the selected period and filters. Includes active and completed contests."
+          />
+          <StatBanner
+            variant="reach"
+            icon="users"
+            label="Clients trading"
+            value="0"
+            infoTip="Clients who traded during contest periods: returning and new participants."
+          />
+          <StatBanner
+            variant="engage"
+            icon="chart"
+            label="Participants per contest"
+            value="0"
+            infoTip="Average clients per active contest. Min and max are client counts across current contests."
+          />
+          <StatBanner
+            variant="prize"
+            icon="trophy"
+            label="Prize pool"
+            value="$0"
+            infoTip="Total prize pool of active contests and prizes already paid for completed ones."
+          />
+        </StatBannersLayout>
+      );
+    }
     return (
       <div className="stat-banners-placeholder" role="status">
         <Icon name="info" size="sm" />
@@ -5757,7 +6743,7 @@ const IBContestStatsBanners = ({ rows }) => {
       ].filter(Boolean)
     : null;
   const engageHintParts = avgReach && minReach && maxReach
-    ? [`min ${minReach}`, `max ${maxReach}`]
+    ? [`min ${minReach} clients`, `max ${maxReach} clients`]
     : null;
   return (
     <StatBannersLayout ariaLabel="Contest metrics">
@@ -5787,9 +6773,9 @@ const IBContestStatsBanners = ({ rows }) => {
         label="Participants per contest"
         value={String(avgReach)}
         delta={avgReach ? { dir: 'down', text: '4 vs prev wk' } : undefined}
-        hint={engageHintParts ? undefined : 'average across active contests'}
+        hint={engageHintParts ? undefined : 'average clients per active contest'}
         hintParts={engageHintParts || undefined}
-        infoTip="Average participants per active contest. Min and max are across current contests."
+        infoTip="Average clients per active contest. Min and max are client counts across current contests."
       />
       <StatBanner
         variant="prize"
@@ -5802,6 +6788,35 @@ const IBContestStatsBanners = ({ rows }) => {
         infoTip="Total prize pool of active contests and prizes already paid for completed ones."
       />
     </StatBannersLayout>
+  );
+};
+
+const ContestsListEmpty = ({ filtersActive, onClearFilters }) => {
+  if (filtersActive) {
+    return (
+      <div className="table-wrap table-wrap--empty">
+        <div className="empty" role="status">
+          <div className="empty-illu" aria-hidden="true">
+            <img src="rebate/assets/empty-clients.svg" alt="" />
+          </div>
+          <div className="empty-text">
+            <h3>Hmm, nothing matches</h3>
+            <p>Try a different name or clear filters to see all contests.</p>
+          </div>
+          <div className="empty-actions">
+            <button type="button" className="btn-secondary" onClick={onClearFilters}>Clear all</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="table-wrap">
+      <div className="table-empty" role="status">
+        <div className="table-empty__title">No results</div>
+        <div className="table-empty__hint">No contests yet. Create the first one.</div>
+      </div>
+    </div>
   );
 };
 
@@ -6232,6 +7247,18 @@ const TimeRangeInput = ({
    с `DateRangePanel`, который рендерится рядом с таблицей. */
 const fmtDay = d => d ? `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}/${d.getFullYear()}` : '';
 
+/* Calendar-day normalization — strip time, always local midnight (Rebate _dpSameDay pattern). */
+const normalizeCalendarDate = (d) => {
+  if (!d) return null;
+  const n = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  n.setHours(0, 0, 0, 0);
+  return n;
+};
+const normalizePeriodRange = (range) => ({
+  start: normalizeCalendarDate(range?.start),
+  end: normalizeCalendarDate(range?.end),
+});
+
 /* 6-недельная сетка от понедельника недели, содержащей 1-е число (как calRender в Rebate). */
 const buildMonthGridCells = (viewYear, viewMonth) => {
   const first = new Date(viewYear, viewMonth, 1);
@@ -6239,8 +7266,8 @@ const buildMonthGridCells = (viewYear, viewMonth) => {
   const gridStart = new Date(viewYear, viewMonth, 1 - dow);
   gridStart.setHours(0, 0, 0, 0);
   return Array.from({ length: 42 }, (_, i) => {
-    const date = new Date(gridStart);
-    date.setDate(gridStart.getDate() + i);
+    const date = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + i);
+    date.setHours(0, 0, 0, 0);
     return {
       date,
       label: date.getDate(),
@@ -6251,20 +7278,66 @@ const buildMonthGridCells = (viewYear, viewMonth) => {
 
 const dayDiffInclusive = (a, b) => {
   const ms = 86400000;
-  const s = new Date(a.getFullYear(), a.getMonth(), a.getDate());
-  const e = new Date(b.getFullYear(), b.getMonth(), b.getDate());
+  const s = normalizeCalendarDate(a);
+  const e = normalizeCalendarDate(b);
+  if (!s || !e) return 0;
   return Math.round((e - s) / ms) + 1;
 };
 
+const CONTEST_DATE_PERIOD_PRESETS = [
+  { id: '1', label: '1 day' },
+  { id: '7', label: '7 days' },
+  { id: '14', label: '14 days' },
+  { id: '30', label: '30 days' },
+  { id: '90', label: '90 days' },
+  { id: 'all', label: 'All time' },
+];
+
+const addCalendarDays = (d, n) => {
+  const base = normalizeCalendarDate(d);
+  if (!base) return null;
+  return normalizeCalendarDate(new Date(base.getFullYear(), base.getMonth(), base.getDate() + n));
+};
+
+const rangeForContestPeriodPreset = (presetId, defaultRange, today) => {
+  if (presetId === 'all') {
+    const bounds = normalizePeriodRange(defaultRange);
+    return bounds.start && bounds.end ? bounds : { start: null, end: null };
+  }
+  const days = parseInt(presetId, 10);
+  if (!Number.isFinite(days)) return { start: null, end: null };
+  return { start: addCalendarDays(today, -(days - 1)), end: today };
+};
+
+const inferContestPeriodPreset = (range, defaultRange, today) => {
+  const sd = normalizeCalendarDate(range?.start);
+  const ed = normalizeCalendarDate(range?.end);
+  const t = normalizeCalendarDate(today);
+  if (!sd || !ed || !t) return null;
+  const bounds = normalizePeriodRange(defaultRange);
+  if (bounds.start && bounds.end && sd.getTime() === bounds.start.getTime() && ed.getTime() === bounds.end.getTime()) return 'all';
+  if (ed.getTime() !== t.getTime()) return null;
+  const diff = dayDiffInclusive(sd, ed);
+  if (diff === 1) return '1';
+  if (diff === 7) return '7';
+  if (diff === 14) return '14';
+  if (diff === 30) return '30';
+  if (diff === 90) return '90';
+  return null;
+};
+
 const dateRangeButtonLabel = (range) => {
-  if (range?.start && range?.end) return `${fmtDay(range.start)} — ${fmtDay(range.end)}`;
-  if (range?.start) return `from ${fmtDay(range.start)}`;
+  const start = normalizeCalendarDate(range?.start);
+  const end = normalizeCalendarDate(range?.end);
+  if (start && end) return `${fmtDay(start)} — ${fmtDay(end)}`;
+  if (start) return `from ${fmtDay(start)}`;
   return '';
 };
 
 const SearchIcon18 = () => (
   <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
-    <circle cx="8" cy="8" r="5.25"/><path d="M12 12l3.5 3.5"/>
+    <circle cx="8" cy="8" r="5.25" />
+    <path d="M12 12l3.5 3.5" />
   </svg>
 );
 
@@ -6318,7 +7391,7 @@ const TableSearchToggle = ({ value, onChange, open, onOpenChange, triggerLabel =
         onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSearch(); } }}
       >
         <SearchIcon18 />
-        <span className="tabs-action__label">{triggerLabel}</span>
+        {' '}{triggerLabel}
       </div>
       {!isMobile && searchInput}
       {isMobile && open && slotEl && ReactDOM.createPortal(searchInput, slotEl)}
@@ -6336,7 +7409,7 @@ const DateRangeCalendarIcon = () => (
 const DateRangeTrigger = ({ range, isOpen, onClick, placeholder = 'All periods', fieldLabel = 'Contest period' }) => {
   const valueLabel = dateRangeButtonLabel(range) || placeholder;
   return (
-    <div className="date-range-wrap">
+    <div className="date-range-wrap date-range-wrap--toolbar">
       <button
         type="button"
         className="date-range"
@@ -6359,17 +7432,26 @@ const DateRangeTrigger = ({ range, isOpen, onClick, placeholder = 'All periods',
      • sd && !ed → второй клик ставит end (swap если раньше start)
      • полоса is-start/in-range/is-end только когда обе даты и они разные
      • out-дни соседних месяцев кликабельны и переключают видимый месяц */
-const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null, end: null }, sheet = false }) => {
+const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null, end: null }, sheet = false, drawer = false, isOpen = true }) => {
   const sheetRef = useRef(null);
-  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const today = normalizeCalendarDate(new Date());
   const initRef = range?.start || range?.end || today;
   const [viewYear, setViewYear] = useState(initRef.getFullYear());
   const [viewMonth, setViewMonth] = useState(initRef.getMonth());
 
   const gridCells = buildMonthGridCells(viewYear, viewMonth);
-  const sd = range?.start || null;
-  const ed = range?.end || null;
+  const sd = normalizeCalendarDate(range?.start);
+  const ed = normalizeCalendarDate(range?.end);
   const sameDay = sameCalendarDay;
+
+  /* Keep visible month aligned with the selected range (inputs + calendar highlights). */
+  useEffect(() => {
+    if (!isOpen) return;
+    const anchor = sd || ed;
+    if (!anchor) return;
+    setViewYear(anchor.getFullYear());
+    setViewMonth(anchor.getMonth());
+  }, [isOpen, sd?.getTime(), ed?.getTime()]);
 
   const navMonth = dir => {
     let m = viewMonth + dir, y = viewYear;
@@ -6378,21 +7460,22 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
   };
 
   const handlePickDate = (dt) => {
-    onChange(prev => {
-      const ps = prev?.start, pe = prev?.end;
-      if (ps && pe) return { start: dt, end: null };
-      if (ps && !pe) return dt < ps ? { start: dt, end: ps } : { start: ps, end: dt };
-      return { start: dt, end: null };
-    });
-    if (dt.getMonth() !== viewMonth || dt.getFullYear() !== viewYear) {
-      setViewMonth(dt.getMonth());
-      setViewYear(dt.getFullYear());
+    const picked = normalizeCalendarDate(dt);
+    let next;
+    if (sd && ed) next = { start: picked, end: null };
+    else if (sd && !ed) next = picked < sd ? { start: picked, end: sd } : { start: sd, end: picked };
+    else next = { start: picked, end: null };
+    onChange(next);
+    if (picked.getMonth() !== viewMonth || picked.getFullYear() !== viewYear) {
+      setViewMonth(picked.getMonth());
+      setViewYear(picked.getFullYear());
     }
   };
 
   const reset = () => {
-    onChange(defaultRange);
-    const ref = defaultRange?.start || defaultRange?.end || today;
+    const next = normalizePeriodRange(defaultRange);
+    onChange(next);
+    const ref = next.start || next.end || today;
     setViewYear(ref.getFullYear());
     setViewMonth(ref.getMonth());
   };
@@ -6402,6 +7485,33 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
 
   const activeBound = !sd ? 'start' : (!ed ? 'end' : null);
   const rangeSpan = sd && ed && !sameDay(sd, ed);
+  const showPeriodPresets = drawer || sheet;
+  const activePreset = showPeriodPresets ? inferContestPeriodPreset(range, defaultRange, today) : null;
+
+  const applyPreset = (presetId) => {
+    const next = rangeForContestPeriodPreset(presetId, defaultRange, today);
+    onChange(next);
+    const anchor = next.end || next.start || today;
+    setViewYear(anchor.getFullYear());
+    setViewMonth(anchor.getMonth());
+  };
+
+  const periodPresetsBlock = (
+    <div className="filter-panel-section">
+      <div className="modal-label">Period</div>
+      <div className="m-chips" role="group" aria-label="Period">
+        {CONTEST_DATE_PERIOD_PRESETS.map(p => (
+          <button
+            key={p.id}
+            type="button"
+            className={`m-chip${activePreset === p.id ? ' sel' : ''}`}
+            data-period={p.id}
+            onClick={() => applyPreset(p.id)}
+          >{p.label}</button>
+        ))}
+      </div>
+    </div>
+  );
 
   useLayoutEffect(() => {
     if (!sheet || !sheetRef.current) return undefined;
@@ -6409,6 +7519,99 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
     requestAnimationFrame(() => el.classList.add('open'));
     return () => el.classList.remove('open');
   }, [sheet]);
+
+  const countLabel = daysSelected > 0
+    ? `${daysSelected} ${daysWord(daysSelected)} selected`
+    : sd ? 'Select end date' : 'Select dates';
+
+  const calendarBlock = (
+    <div className="cal" id="cal-main">
+      <div className="cal-nav">
+        <button type="button" className={drawer ? 'cal-nav-btn' : 'dr-panel__navbtn'} onClick={() => navMonth(-1)} aria-label="Previous month">
+          {drawer ? (
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M10 3L5 8l5 5"/></svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          )}
+        </button>
+        <span className={drawer ? 'cal-title' : 'dr-panel__month'} id="cal-title-main">{MONTHS[viewMonth]} {viewYear}</span>
+        <button type="button" className={drawer ? 'cal-nav-btn' : 'dr-panel__navbtn'} onClick={() => navMonth(1)} aria-label="Next month">
+          {drawer ? (
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3l5 5-5 5"/></svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          )}
+        </button>
+      </div>
+      <div className="cal-grid" id="cal-wd-main">
+        {DOW.map(d => <div key={d} className="cal-wd">{d}</div>)}
+      </div>
+      <div className="cal-grid" id="cal-grid-main">
+        {gridCells.map((cell, i) => {
+          const dt = normalizeCalendarDate(cell.date);
+          const isStart = sd && sameDay(dt, sd);
+          const isEnd = ed && sameDay(dt, ed);
+          const inRange = sd && ed && dt > sd && dt < ed;
+          const cellCls = ['cal-cell'];
+          if (inRange) cellCls.push('in-range');
+          if (isStart && ed && rangeSpan) cellCls.push('is-start');
+          if (isEnd && sd && rangeSpan) cellCls.push('is-end');
+          const btnCls = ['cal-day'];
+          if (cell.out) btnCls.push('out');
+          if (sameDay(dt, today)) btnCls.push('today');
+          if (isStart) btnCls.push('is-start');
+          if (isEnd) btnCls.push('is-end');
+          return (
+            <div key={i} className={cellCls.join(' ')}>
+              <button
+                type="button"
+                className={btnCls.join(' ')}
+                onClick={() => handlePickDate(dt)}
+              >{cell.label}</button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  if (drawer) {
+    return (
+      <div className="dr-panel dr-panel--drawer" role="dialog" aria-label="Contest period">
+        <div className="filter-panel-inner">
+          <div className="filter-panel-header">
+            <span className="filter-panel-title">Contest period</span>
+            <button type="button" className="filter-panel-close" onClick={onClose} aria-label="Close">
+              <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M4 4l10 10M14 4L4 14"/></svg>
+            </button>
+          </div>
+          <div className="filter-panel-scroll">
+            {periodPresetsBlock}
+            <div className="filter-panel-section">
+              <div className="date-panel-dates">
+                <div className={`date-field${activeBound === 'start' ? ' date-field--active' : ''}`}>
+                  <div className="modal-label">Start date</div>
+                  <input className="m-input" readOnly value={sd ? fmtDay(sd) : ''} placeholder="mm/dd/yyyy" />
+                </div>
+                <div className={`date-field${activeBound === 'end' ? ' date-field--active' : ''}`}>
+                  <div className="modal-label">End date</div>
+                  <input className="m-input" readOnly value={ed ? fmtDay(ed) : ''} placeholder="mm/dd/yyyy" />
+                </div>
+              </div>
+            </div>
+            <div className="filter-panel-section">{calendarBlock}</div>
+          </div>
+          <div className="filter-panel-footer date-panel-footer">
+            <span className="fp-count">{countLabel}</span>
+            <div className="date-panel-footer__actions">
+              <button type="button" className="fp-reset" onClick={reset} disabled={isSamePeriodRange(range, defaultRange)}>Reset</button>
+              <button type="button" className="fp-apply" onClick={onClose} disabled={!sd || !ed}>Apply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -6424,11 +7627,12 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
         </button>
       </div>
       <div className="dr-panel__body">
+        {showPeriodPresets && periodPresetsBlock}
         <div className="dr-panel__inputs">
           <Input
             size="S"
             label="Start date"
-            value={range?.start ? fmtDay(range.start) : ''}
+            value={sd ? fmtDay(sd) : ''}
             placeholder="mm/dd/yyyy"
             readOnly
             className={activeBound === 'start' ? 'dr-panel__input--active' : ''}
@@ -6436,59 +7640,16 @@ const DateRangePanel = ({ range, onChange, onClose, defaultRange = { start: null
           <Input
             size="S"
             label="End date"
-            value={range?.end ? fmtDay(range.end) : ''}
+            value={ed ? fmtDay(ed) : ''}
             placeholder="mm/dd/yyyy"
             readOnly
             className={activeBound === 'end' ? 'dr-panel__input--active' : ''}
           />
         </div>
-        <div className="cal" id="cal-main">
-          <div className="cal-nav">
-            <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(-1)} aria-label="Previous month">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <span className="dr-panel__month" id="cal-title-main">{MONTHS[viewMonth]} {viewYear}</span>
-            <button type="button" className="dr-panel__navbtn" onClick={() => navMonth(1)} aria-label="Next month">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
-          </div>
-          <div className="cal-grid" id="cal-wd-main">
-            {DOW.map(d => <div key={d} className="cal-wd">{d}</div>)}
-          </div>
-          <div className="cal-grid" id="cal-grid-main">
-            {gridCells.map((cell, i) => {
-              const dt = cell.date;
-              const isStart = sd && sameDay(dt, sd);
-              const isEnd = ed && sameDay(dt, ed);
-              const inRange = sd && ed && dt > sd && dt < ed;
-              const cellCls = ['cal-cell'];
-              if (inRange) cellCls.push('in-range');
-              if (isStart && ed && rangeSpan) cellCls.push('is-start');
-              if (isEnd && sd && rangeSpan) cellCls.push('is-end');
-              const btnCls = ['cal-day'];
-              if (cell.out) btnCls.push('out');
-              if (sameDay(dt, today)) btnCls.push('today');
-              if (isStart) btnCls.push('is-start');
-              if (isEnd) btnCls.push('is-end');
-              return (
-                <div key={i} className={cellCls.join(' ')}>
-                  <button
-                    type="button"
-                    className={btnCls.join(' ')}
-                    onClick={() => handlePickDate(dt)}
-                  >{cell.label}</button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {calendarBlock}
       </div>
       <div className="dr-panel__foot">
-        <span className="dr-panel__count">
-          {daysSelected > 0
-            ? `${daysSelected} ${daysWord(daysSelected)} selected`
-            : sd ? 'Select end date' : 'Select dates'}
-        </span>
+        <span className="dr-panel__count">{countLabel}</span>
         <div className="dr-panel__foot-actions">
           <button type="button" className="dr-panel__reset" onClick={reset} disabled={isSamePeriodRange(range, defaultRange)}>Reset</button>
           <Button variant="primary" size="s" onClick={onClose} disabled={!sd || !ed}>Apply</Button>
@@ -6610,9 +7771,9 @@ const IB_CONTEST_ROWS = [
   {name:'Volume Race', typeId:'volume', status:'Active', statusTag:'positive', count:47, ibProfit:420, prizePool:420, activationReturned:14, activationNew:18, period:'15 Mar — 30 Apr 2026', progress:33, action:'Statistics', actionIcon:'chart', share:true, nav:'detail'},
   {name:'Grow account', typeId:'grow', status:'Active', statusTag:'positive', count:18, ibProfit:180, prizePool:300, activationReturned:6, activationNew:8, period:'1 — 15 May 2026', progress:45, action:'Statistics', actionIcon:'chart', share:true, nav:'detail'},
   {name:'April Top Traders', typeId:'top', status:'Active', statusTag:'positive', count:24, ibProfit:95, prizePool:180, activationReturned:5, activationNew:9, period:'5 Apr — 20 May 2026', progress:52, action:'Statistics', actionIcon:'chart', share:true, nav:'detail'},
-  {name:'Trading Streak', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'1 — 31 May 2026', action:'Edit', actionIcon:'edit', nav:'wizard'},
-  {name:'Summer Volume Open', typeId:'volume', status:'Draft', statusTag:'neutral', count:'—', period:'15 Jun — 15 Jul 2026', action:'Edit', actionIcon:'edit', nav:'wizard'},
-  {name:'June Grow Push', typeId:'grow', status:'Draft', statusTag:'neutral', count:'—', period:'Not set', action:'Edit', actionIcon:'edit', nav:'wizard'},
+  {name:'Trading Streak', typeId:'streak', status:'Draft', statusTag:'neutral', count:'—', period:'1 — 31 May 2026', action:'Edit', actionIcon:'edit', nav:'wizard', savedAt: '2026-06-13T08:20:00.000Z'},
+  {name:'Summer Volume Open', typeId:'volume', status:'Draft', statusTag:'neutral', count:'—', period:'15 Jun — 15 Jul 2026', action:'Edit', actionIcon:'edit', nav:'wizard', savedAt: '2026-06-12T15:40:00.000Z'},
+  {name:'June Grow Push', typeId:'grow', status:'Draft', statusTag:'neutral', count:'—', period:'Not set', action:'Edit', actionIcon:'edit', nav:'wizard', savedAt: '2026-06-13T11:05:00.000Z'},
   {name:'Top Trader', typeId:'top', status:'Completed', statusTag:'neutral', count:32, ibProfit:240, prizePool:400, prizesGifted:400, period:'1 — 28 Feb 2026', action:'Results', actionIcon:'eye', share:true, nav:'detail'},
   {name:'March Volume Cup', typeId:'volume', status:'Completed', statusTag:'neutral', count:41, ibProfit:310, prizePool:500, prizesGifted:500, period:'10 — 31 Mar 2026', action:'Results', actionIcon:'eye', share:true, nav:'detail'},
   {name:'Winter Streak Challenge', typeId:'streak', status:'Completed', statusTag:'neutral', count:18, ibProfit:120, prizePool:300, prizesGifted:300, period:'1 — 31 Dec 2025', action:'Results', actionIcon:'eye', share:true, nav:'detail'},
@@ -6646,7 +7807,11 @@ const parseContestPeriod = (period) => {
   return null;
 };
 
-const sameCalendarDay = (a, b) => a && b && a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+const sameCalendarDay = (a, b) => {
+  const na = normalizeCalendarDate(a);
+  const nb = normalizeCalendarDate(b);
+  return na && nb && na.getTime() === nb.getTime();
+};
 const isSamePeriodRange = (a, b) => sameCalendarDay(a?.start, b?.start) && sameCalendarDay(a?.end, b?.end);
 
 /* Минимальный start и максимальный end среди контестов с заданным period. */
@@ -6655,8 +7820,8 @@ const getContestTablePeriodBounds = (rows) => {
   for (const r of rows) {
     const parsed = parseContestPeriod(r.period);
     if (!parsed) continue;
-    const s = new Date(parsed.start); s.setHours(0, 0, 0, 0);
-    const e = new Date(parsed.end); e.setHours(0, 0, 0, 0);
+    const s = normalizeCalendarDate(parsed.start);
+    const e = normalizeCalendarDate(parsed.end);
     if (!minStart || s < minStart) minStart = s;
     if (!maxEnd || e > maxEnd) maxEnd = e;
   }
@@ -6672,6 +7837,31 @@ const matchesPeriodRange = (contestRange, fStart, fEnd) => {
   if (fStart && contestRange.end < fStart) return false;
   if (fEnd && contestRange.start > fEnd) return false;
   return true;
+};
+
+const DRAFT_SAVED_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+const formatDraftSavedLabel = (savedAt) => {
+  if (!savedAt) return 'Saved today';
+  const then = new Date(savedAt);
+  if (Number.isNaN(then.getTime())) return 'Saved today';
+  const now = new Date();
+  const diffMin = Math.floor((now - then) / 60000);
+  if (diffMin < 1) return 'Saved just now';
+  if (diffMin < 60) return `Saved ${diffMin} min ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `Saved ${diffHr} hr${diffHr === 1 ? '' : 's'} ago`;
+  const today = normalizeCalendarDate(now);
+  const savedDay = normalizeCalendarDate(then);
+  if (!today || !savedDay) return 'Saved today';
+  const dayDiff = Math.round((today - savedDay) / 86400000);
+  if (dayDiff === 0) return 'Saved today';
+  if (dayDiff === 1) return 'Saved yesterday';
+  if (dayDiff < 7) return `Saved ${dayDiff} days ago`;
+  const datePart = `${then.getDate()} ${DRAFT_SAVED_MONTHS[then.getMonth()]}`;
+  return then.getFullYear() !== now.getFullYear()
+    ? `Saved ${datePart} ${then.getFullYear()}`
+    : `Saved ${datePart}`;
 };
 
 /* Вторая строка под названием — метрики, которых нет в других колонках. */
@@ -6769,6 +7959,8 @@ const SortableTh = ({ label, sortKey, sort, onSort, count }) => {
 const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   const showToast = useToast();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const isDatePickerOverlay = isMobile || isTablet;
   const [query, setQuery] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('all');
@@ -6776,6 +7968,9 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
      По умолчанию — от начала самого раннего контеста до конца самого позднего. */
   const defaultPeriodRange = useMemo(() => getContestTablePeriodBounds(rows), [rows]);
   const [periodRange, setPeriodRange] = useState(defaultPeriodRange);
+  const setPeriodRangeNormalized = useCallback((next) => {
+    setPeriodRange(prev => normalizePeriodRange(typeof next === 'function' ? next(prev) : next));
+  }, []);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [sort, setSort] = useState({ key: null, dir: 'asc' });
   /* Sticky-колонка получает тень только когда таблица реально скролится. */
@@ -6784,9 +7979,9 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   const tableScrollable = useIsHorizontallyScrollable(tableWrapRef);
   useHorizontalChipScroll(chipsRef);
 
-  /* Mobile date sheet: lock page scroll while open (rebate pattern). */
+  /* Mobile sheet / tablet drawer: lock page scroll while open. */
   useEffect(() => {
-    if (!pickerOpen || !isMobile) return undefined;
+    if (!pickerOpen || !isDatePickerOverlay) return undefined;
     const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
     document.body.classList.add('sheet-scroll-lock');
     document.body.style.top = `-${scrollY}px`;
@@ -6795,18 +7990,22 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
       document.body.style.top = '';
       window.scrollTo(0, scrollY);
     };
-  }, [pickerOpen, isMobile]);
+  }, [pickerOpen, isDatePickerOverlay]);
 
-  /* Desktop: close picker on outside click. Mobile uses backdrop. */
+  /* Desktop: close picker on outside click. Overlay modes use backdrop. */
   useEffect(() => {
-    if (!pickerOpen || isMobile) return;
+    if (!pickerOpen || isDatePickerOverlay) return;
     const handler = e => {
-      if (e.target.closest('.date-range-wrap') || e.target.closest('.dr-panel')) return;
+      if (
+        e.target.closest('.date-range-wrap')
+        || e.target.closest('.dr-panel')
+        || e.target.closest('.stat-banners-wrap')
+      ) return;
       setPickerOpen(false);
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [pickerOpen, isMobile]);
+  }, [pickerOpen, isDatePickerOverlay]);
 
   useEffect(() => {
     if (!pickerOpen) return;
@@ -6868,7 +8067,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
     setQuery('');
     setSearchOpen(false);
     setStatusFilter('all');
-    setPeriodRange(defaultPeriodRange);
+    setPeriodRangeNormalized(defaultPeriodRange);
   };
 
   const deleteRow = (row) => {
@@ -6898,7 +8097,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
   <div className="screen-enter">
     <div className="page-header">
       <h1 className="rig-title-03">Client contests</h1>
-      <div className="page-header__actions">
+      <div className="page-header__actions tabs-right">
         <TableSearchToggle
           value={query}
           onChange={setQuery}
@@ -6934,21 +8133,38 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
 
       <div className="contests-layout">
         <div className="contests-layout__main">
-          {!isMobile && (
+          {!isDatePickerOverlay && (
           <aside
             className={`contests-layout__panel${pickerOpen ? ' contests-layout__panel--open' : ''}`}
             aria-hidden={!pickerOpen}
           >
-            <DateRangePanel range={periodRange} onChange={setPeriodRange} onClose={() => setPickerOpen(false)} defaultRange={defaultPeriodRange} />
+            <DateRangePanel range={periodRange} onChange={setPeriodRangeNormalized} onClose={() => setPickerOpen(false)} defaultRange={defaultPeriodRange} isOpen={pickerOpen} />
           </aside>
+          )}
+          {isTablet && pickerOpen && ReactDOM.createPortal(
+            <>
+              <div className="dr-panel-backdrop open" onClick={() => setPickerOpen(false)} aria-hidden="true" />
+              <aside className="contests-date-drawer" role="dialog" aria-label="Contest period">
+                <DateRangePanel
+                  drawer
+                  isOpen={pickerOpen}
+                  range={periodRange}
+                  onChange={setPeriodRangeNormalized}
+                  onClose={() => setPickerOpen(false)}
+                  defaultRange={defaultPeriodRange}
+                />
+              </aside>
+            </>,
+            document.body
           )}
           {isMobile && pickerOpen && ReactDOM.createPortal(
             <>
               <div className="dr-panel-backdrop open" onClick={() => setPickerOpen(false)} aria-hidden="true" />
               <DateRangePanel
                 sheet
+                isOpen={pickerOpen}
                 range={periodRange}
-                onChange={setPeriodRange}
+                onChange={setPeriodRangeNormalized}
                 onClose={() => setPickerOpen(false)}
                 defaultRange={defaultPeriodRange}
               />
@@ -6965,25 +8181,13 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                 onSelectContest={onSelectContest}
               />
             ) : (
-              <IBContestStatsBanners rows={filteredRows} />
+              <IBContestStatsBanners rows={filteredRows} filtersActive={filterActive} />
             )}
           </div>
           <div className="contests-layout__body">
             <div className="contests-layout__content">
       {filteredRows.length === 0 ? (
-      <div className="table-wrap">
-          <div className="table-empty" role="status">
-            <div className="table-empty__title">No results</div>
-            <div className="table-empty__hint">
-              {filterActive
-                ? 'Clear filters or try a different search.'
-                : 'No contests yet. Create the first one.'}
-            </div>
-            {filterActive && (
-              <Button variant="outline" size="s" icon="close" onClick={resetFilters}>Clear filters</Button>
-            )}
-          </div>
-        </div>
+        <ContestsListEmpty filtersActive={filterActive} onClearFilters={resetFilters} />
       ) : isMobile ? (
         <div className="row-card-list">
           {sortedRows.map(r => {
@@ -7000,7 +8204,7 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                       <div className="row-card__sub">{getContestRowMeta(r) || t.title}</div>
                     </div>
                   </div>
-                  <Tag label={r.status} variant={r.statusTag} />
+                  <ContestStatusTag status={r.status} />
                 </div>
                 <div className="row-card__meta">
                   <span className="row-card__meta-item"><svg><use href="#ic-calendar-24"/></svg>{r.period}</span>
@@ -7043,21 +8247,16 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
               return (
                 <tr key={r.name} style={{cursor:'pointer'}} onClick={() => { onSelectContest && onSelectContest(r.name); onNavigate(r.nav); }}>
                   <td>
-                    <strong>{r.name}</strong>
-                    {rowMeta && (
-                      <div className="rig-utility-01" style={{color:'var(--ds-text-tertiary)', marginTop:'var(--ds-dim-xs)'}}>
-                        {rowMeta}
-                      </div>
-                    )}
+                    <div className="contest-name">{r.name}</div>
+                    {rowMeta && <div className="contest-sub">{rowMeta}</div>}
                   </td>
                   <td>
                     <div className="type-cell">
                       <span className={`type-icon type-icon--${t.typeIcon}`}><svg><use href={dsIc(t.icon)}/></svg></span>
                       <span>{t.title}</span>
-                      <ContestTypeInfo typeId={t.id} />
                     </div>
                   </td>
-                  <td><Tag label={r.status} variant={r.statusTag} /></td>
+                  <td><ContestStatusTag status={r.status} /></td>
                   <td>{r.count}</td>
                   <td className="table-cell-period">
                     <div className="table-cell-period__label">{r.period}</div>
@@ -7065,14 +8264,14 @@ const IBMyContests = ({ onNavigate, rows, setRows, onSelectContest }) => {
                   </td>
                   <td style={{textAlign:'right'}}>
                     <div className="row-action-stack">
-                      <div className="row-meta" aria-hidden="true">
+                      <div className="row-meta" aria-hidden={r.status !== 'Draft'}>
                         {r.status === 'Active' && (<>
                           <span style={{display:'inline-flex',alignItems:'center',gap:'var(--ds-dim-l)'}}>
                             <span style={{width:6,height:6,borderRadius:'50%',background:'var(--ds-positive)'}} />
                             Updated 2 min ago
                           </span>
                         </>)}
-                        {r.status === 'Draft' && <>Saved today</>}
+                        {r.status === 'Draft' && formatDraftSavedLabel(r.savedAt)}
                         {r.status === 'Completed' && (<>
                           <Icon name="trophy" size="xs" /> Winner: <strong>AB****</strong>
                         </>)}
@@ -7268,6 +8467,7 @@ const IBCreateContest = ({ onNavigate, onCreateContest }) => {
       actionIcon: isActive ? 'chart' : 'edit',
       share: isActive,
       nav: isActive ? 'detail' : 'wizard',
+      savedAt: isActive ? undefined : new Date().toISOString(),
     };
   };
 
@@ -7697,8 +8897,10 @@ const IBContestDetail = ({ onNavigate, contest }) => {
   return (
     <div className="screen-enter">
       <Breadcrumb items={[{label:'Client contests', onClick:() => onNavigate('list')}, {label:'Contest details'}]} />
-      <div className="page-header contest-detail-header" style={{marginTop:'var(--ds-dim-6xl)', marginBottom:'var(--ds-dim-s)'}}>
-        <div style={{display:'flex',alignItems:'center',gap:12,flexWrap:'wrap'}}>
+      <div className="contest-detail-intro">
+      <div className="contest-detail-header-row">
+      <div className="page-header contest-detail-header">
+        <div className="contest-detail-header__title-row">
           <span className={`type-icon type-icon--${ctype.typeIcon}`} style={{width:24,height:24,flexShrink:0}}>
             <svg width="14" height="14"><use href={dsIc(ctype.icon)}/></svg>
           </span>
@@ -7707,18 +8909,22 @@ const IBContestDetail = ({ onNavigate, contest }) => {
         </div>
       </div>
       <div className="contest-detail-meta">
-        <Tag label={statusLabel} variant={statusTag} />
+        <div className="contest-detail-meta__primary">
+          <ContestStatusTag status={statusLabel} />
+          {!isFresh && !isCompleted && (
+            <span className="contest-period-meta">
+              <Icon name="clock" size="sm" />
+              <span>20 days left</span>
+            </span>
+          )}
+        </div>
         <ContestPeriodMeta>{periodWithTime}</ContestPeriodMeta>
-        {!isFresh && !isCompleted && (
-          <span className="contest-period-meta">
-            <Icon name="clock" size="sm" />
-            <span>20 days left</span>
-          </span>
-        )}
       </div>
-      <p className="rig-body-02 contest-detail-desc" style={{color:'var(--ds-text-secondary)', marginBottom:'var(--ds-dim-5xl)'}}>
+      </div>
+      <p className="rig-body-02 contest-detail-desc">
         {ctype.clientDescTemplate ? ctype.clientDescTemplate(500) : ctype.desc}
       </p>
+      </div>
       <div className="contest-detail-actions contest-detail-action-bar">
         {isMobile ? (
           <>
@@ -7730,7 +8936,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
           </>
         ) : (
           <>
-            <Button variant="outline" size="s" icon="share" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
+            <Button variant="primary" size="s" icon="share" onClick={() => showToast('Link copied!', 'positive')}>Share</Button>
             {!isCompleted && (
               <Button variant="outline" size="s" icon="pause" onClick={() => showToast('Contest paused', 'negative', { label:'Undo', onClick:() => showToast('Contest resumed', 'positive') })}>Pause</Button>
             )}
@@ -7779,7 +8985,7 @@ const IBContestDetail = ({ onNavigate, contest }) => {
                   <div key={r.pos} className={`lb-card ${topClass}`}>
                     <Medal position={r.pos}/>
                     <div style={{minWidth:0}}>
-                      <div className="lb-card__name">{r.pos <= 3 ? <strong>{r.name}</strong> : r.name}</div>
+                      <div className="lb-card__name">{r.pos <= 3 ? <span className="rig-body-02-bold">{r.name}</span> : <span className="rig-body-02">{r.name}</span>}</div>
                       <div className="lb-card__sub">{r.vol} {ctype.metric.toLowerCase()}</div>
                     </div>
                     <div className={`lb-card__prize ${!r.prize ? 'lb-card__prize--empty' : ''}`}>{r.prize || '—'}</div>
@@ -7806,9 +9012,11 @@ const IBContestDetail = ({ onNavigate, contest }) => {
                   {rows.map(r => (
                     <tr key={r.pos}>
                       <td className="lb-col-place"><Medal position={r.pos} /></td>
-                      <td className="lb-col-name">{r.pos <= 3 ? <strong>{r.name}</strong> : r.name}</td>
-                      <td className="lb-col-score">{r.vol}</td>
-                      <td className="lb-col-prize" style={{color: r.prize ? undefined : 'var(--ds-text-muted)'}}>{r.prize || '—'}</td>
+                      <td className="lb-col-name">
+                        {r.pos <= 3 ? <span className="rig-body-02-bold">{r.name}</span> : <span className="rig-body-02">{r.name}</span>}
+                      </td>
+                      <td className="lb-col-score"><span className="rig-body-02">{r.vol}</span></td>
+                      <td className={`lb-col-prize${r.prize ? '' : ' is-muted'}`}><span className="rig-body-02">{r.prize || '—'}</span></td>
                     </tr>
                   ))}
                 </tbody>
@@ -8564,8 +9772,8 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                 <div style={{minWidth:0}}>
                   <div className="lb-card__name">
                     {r.isYou
-                      ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:4}} /> You</>)
-                      : (r.p <= 3 ? <strong>{r.n}</strong> : r.n)}
+                      ? (<span className="rig-body-02-bold"><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:4}} /> You</span>)
+                      : (r.p <= 3 ? <span className="rig-body-02-bold">{r.n}</span> : <span className="rig-body-02">{r.n}</span>)}
                   </div>
                   <div className="lb-card__sub">{r.v} {ctype.metric.toLowerCase()}</div>
                 </div>
@@ -8607,7 +9815,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                     <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{you.p}</span>
                   </td>
                   <td className="lb-col-name">
-                    <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You
+                    <span className="rig-body-02-bold"><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You</span>
                     <span
                       role="button"
                       tabIndex={0}
@@ -8616,8 +9824,8 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                       className="leaderboard-pin__link"
                     >Show in ranking</span>
                   </td>
-                  <td className="lb-col-score">{you.v}</td>
-                  <td className="lb-col-prize">{you.pr}</td>
+                  <td className="lb-col-score"><span className="rig-body-02">{you.v}</span></td>
+                  <td className="lb-col-prize"><span className="rig-body-02">{you.pr}</span></td>
                 </tr>
               );
             })()}
@@ -8632,11 +9840,11 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                   </td>
                   <td className="lb-col-name">
                     {r.isYou
-                      ? (<><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You</>)
-                      : (r.p <= 3 ? <strong>{r.n}</strong> : r.n)}
+                      ? (<span className="rig-body-02-bold"><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You</span>)
+                      : (r.p <= 3 ? <span className="rig-body-02-bold">{r.n}</span> : <span className="rig-body-02">{r.n}</span>)}
                   </td>
-                  <td className="lb-col-score">{r.v}</td>
-                  <td className="lb-col-prize" style={{color: r.pr === '—' ? 'var(--ds-text-muted)' : undefined}}>{r.pr}</td>
+                  <td className="lb-col-score"><span className="rig-body-02">{r.v}</span></td>
+                  <td className={`lb-col-prize${r.pr === '—' ? ' is-muted' : ''}`}><span className="rig-body-02">{r.pr}</span></td>
                 </tr>
               );
             })}
@@ -8654,7 +9862,7 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                     <span className="medal" style={{background:'var(--ds-primary-content)',color:'var(--ds-primary)'}}>{you.p}</span>
                   </td>
                   <td className="lb-col-name">
-                    <Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You
+                    <span className="rig-body-02-bold"><Icon name="star-solid" size="xs" style={{color:'var(--ds-primary)',marginRight:2}} /> You</span>
                     <span
                       role="button"
                       tabIndex={0}
@@ -8663,8 +9871,8 @@ const ClientLeaderboard = ({ onNavigate, contestTypeId = 'volume', onMarkContest
                       className="leaderboard-pin__link"
                     >Show in ranking</span>
                   </td>
-                  <td className="lb-col-score">{you.v}</td>
-                  <td className="lb-col-prize">{you.pr}</td>
+                  <td className="lb-col-score"><span className="rig-body-02">{you.v}</span></td>
+                  <td className="lb-col-prize"><span className="rig-body-02">{you.pr}</span></td>
                 </tr>
               );
             })()}
