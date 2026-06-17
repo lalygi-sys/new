@@ -544,7 +544,7 @@
     });
     clientRankings[tab].forEach(function (item) {
       var row = document.createElement('div');
-      row.className = 'clients-list__row';
+      row.className = 'ds-list-item clients-list__row';
       row.innerHTML =
         '<span class="clients-list__name">' + item.name + '</span>' +
         '<span class="clients-list__value">' + item.value + '</span>';
@@ -715,6 +715,66 @@
     });
 
     promoCarousel.addEventListener('mouseleave', startPromoAutoplay);
+
+    (function bindPromoSwipe(el) {
+      var mobileMq = window.matchMedia('(max-width: 760px)');
+      var pid = null;
+      var startX = 0;
+      var startY = 0;
+      var tracking = false;
+      var SWIPE_THRESHOLD = 48;
+
+      function isMobileSwipeEnabled() {
+        return mobileMq.matches;
+      }
+
+      el.addEventListener('pointerdown', function (e) {
+        if (!isMobileSwipeEnabled()) return;
+        if (e.button !== 0) return;
+        pid = e.pointerId;
+        startX = e.clientX;
+        startY = e.clientY;
+        tracking = true;
+      });
+
+      el.addEventListener('pointermove', function (e) {
+        if (!tracking || pid !== e.pointerId) return;
+        var dx = e.clientX - startX;
+        var dy = e.clientY - startY;
+        if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) {
+          if (promoTimer) clearInterval(promoTimer);
+          try { el.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+      }, { passive: true });
+
+      function finishSwipe(e) {
+        if (!tracking || pid !== e.pointerId) return;
+        var dx = e.clientX - startX;
+        var dy = e.clientY - startY;
+        tracking = false;
+        pid = null;
+        try { el.releasePointerCapture(e.pointerId); } catch (_) {}
+
+        if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) <= Math.abs(dy)) return;
+
+        if (dx < 0) setPromoSlide(promoIndex + 1);
+        else setPromoSlide(promoIndex - 1);
+        startPromoAutoplay();
+        el._suppressPromoSwipeClick = true;
+        window.setTimeout(function () {
+          el._suppressPromoSwipeClick = false;
+        }, 350);
+      }
+
+      el.addEventListener('pointerup', finishSwipe);
+      el.addEventListener('pointercancel', finishSwipe);
+
+      el.addEventListener('click', function (e) {
+        if (!el._suppressPromoSwipeClick) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }, true);
+    })(promoCarousel);
 
     startPromoAutoplay();
   }

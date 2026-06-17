@@ -3074,13 +3074,14 @@
     }
     .mobile-drawer__item-label { min-width: 0; }
     .mobile-drawer__chevron {
-      width: 24px;
-      height: 24px;
+      width: 16px;
+      height: 16px;
       flex-shrink: 0;
       color: var(--ds-text-primary);
+      transform: rotate(90deg);
       transition: transform 0.2s ease;
     }
-    .mobile-drawer__chevron--open { transform: rotate(180deg); }
+    .mobile-drawer__chevron--open { transform: rotate(-90deg); }
     /* Submenu — Common/Body 01 (Figma 1:37448) */
     .mobile-drawer__submenu {
       display: flex;
@@ -3088,6 +3089,7 @@
       gap: 16px;
       padding: 4px 0 20px;
     }
+    .mobile-drawer__submenu[hidden] { display: none !important; }
     .mobile-drawer__subitem {
       display: block;
       width: 100%;
@@ -3889,6 +3891,9 @@
   </symbol>
   <symbol id="ic-chevron-right-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:886 -->
     <path fill-rule="evenodd" clip-rule="evenodd" d="M9.70715 5.29291L9.00005 6.00001C8.60952 6.39054 8.60952 7.0237 9.00005 7.41423L13.5858 12L9.00005 16.5858C8.60952 16.9763 8.60952 17.6095 9.00005 18L9.70715 18.7071L16.4143 12L9.70715 5.29291Z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic-chevron-down-16" viewBox="0 0 16 16" fill="none"><!-- node 16084:882 size S -->
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.52861 5.80667L3.99969 5.33559C4.26004 5.07524 4.67083 5.07524 4.93118 5.33559L8.00005 8.40446L11.0689 5.33559C11.3293 5.07524 11.7401 5.07524 12.0004 5.33559L12.4715 5.80667L8.00005 10.2782L3.52861 5.80667Z" fill="currentColor"/>
   </symbol>
   <symbol id="ic-chevron-down-24" viewBox="0 0 24 24" fill="none"><!-- node 16084:882 -->
     <g transform="translate(5.29291 8.71)">
@@ -5335,7 +5340,7 @@ const MobileDrawer = ({
     document.addEventListener('keydown', onKey);
     const autoExpanded = new Set();
     items.forEach(item => {
-      if (item.dropdown?.some(d => d.key === activeKey)) autoExpanded.add(item.key);
+      if (item.dropdown?.length) autoExpanded.add(item.key);
     });
     setExpandedKeys(autoExpanded);
     return () => {
@@ -5401,14 +5406,14 @@ const MobileDrawer = ({
                 <div key={item.key} className="mobile-drawer__group">
                   <button
                     type="button"
-                    className="mobile-drawer__item"
+                    className="mobile-drawer__item mobile-drawer__toggle"
                     aria-expanded={isOpen}
                     onClick={() => toggleExpanded(item.key)}
                   >
                     <span className="mobile-drawer__item-row">
                       <span className="mobile-drawer__item-label">{item.label}</span>
-                      <svg className={`mobile-drawer__chevron ${isOpen ? 'mobile-drawer__chevron--open' : ''}`} viewBox="0 0 24 24" aria-hidden="true">
-                        <use href="#ic-chevron-down-24" />
+                      <svg className={`mobile-drawer__chevron ${isOpen ? 'mobile-drawer__chevron--open' : ''}`} viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M6.5 3.5L10.5 8L6.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </span>
                   </button>

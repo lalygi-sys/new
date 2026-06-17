@@ -146,15 +146,15 @@
           '<button type="button" class="mobile-drawer__item' + (activeKey === 'dashboard' ? ' mobile-drawer__item--active' : '') + '" data-nav="dashboard">IB Dashboard</button>' +
           '<button type="button" class="mobile-drawer__item" data-nav="revenue">Revenue statistics</button>' +
           '<div class="mobile-drawer__group">' +
-            '<button type="button" class="mobile-drawer__item mobile-drawer__toggle" aria-expanded="' + (growthActive ? 'true' : 'false') + '">' +
+            '<button type="button" class="mobile-drawer__item mobile-drawer__toggle" aria-expanded="true">' +
               '<span class="mobile-drawer__item-row">' +
-                'Client engagement' +
-                '<svg class="mobile-drawer__chevron' + (growthActive ? ' mobile-drawer__chevron--open' : '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-                  '<polyline points="6 9 12 15 18 9"></polyline>' +
+                '<span class="mobile-drawer__item-label">Client engagement</span>' +
+                '<svg class="mobile-drawer__chevron mobile-drawer__chevron--open" viewBox="0 0 16 16" fill="none" aria-hidden="true">' +
+                  '<path d="M6.5 3.5L10.5 8L6.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
                 '</svg>' +
               '</span>' +
             '</button>' +
-            '<div class="mobile-drawer__submenu"' + (growthActive ? '' : ' hidden') + '>' +
+            '<div class="mobile-drawer__submenu">' +
               '<button type="button" class="mobile-drawer__subitem' + (activeKey === 'contests' ? ' mobile-drawer__subitem--active' : '') + '" data-nav="contests">Contests</button>' +
               '<button type="button" class="mobile-drawer__subitem' + (activeKey === 'rebate' ? ' mobile-drawer__subitem--active' : '') + '" data-nav="rebate">Rebate</button>' +
             '</div>' +
@@ -222,11 +222,22 @@
   var burger = document.querySelector('.app-header__burger');
   var closeBtn = document.querySelector('.mobile-drawer__close');
 
+  function setDrawerGroupExpanded(toggle, isExpanded) {
+    if (!toggle) return;
+    var group = toggle.closest('.mobile-drawer__group');
+    var submenu = group && group.querySelector('.mobile-drawer__submenu');
+    var chevron = toggle.querySelector('.mobile-drawer__chevron');
+    toggle.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+    if (submenu) submenu.hidden = !isExpanded;
+    if (chevron) chevron.classList.toggle('mobile-drawer__chevron--open', isExpanded);
+  }
+
   function openDrawer() {
     if (!drawer) return;
     drawer.classList.add('mobile-drawer--open');
     drawer.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    setDrawerGroupExpanded(drawer.querySelector('.mobile-drawer__toggle'), true);
   }
 
   function closeDrawer() {
@@ -238,6 +249,17 @@
 
   if (burger) burger.addEventListener('click', openDrawer);
   if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+
+  if (drawer) {
+    drawer.addEventListener('click', function (event) {
+      var toggle = event.target.closest('.mobile-drawer__toggle');
+      if (!toggle) return;
+      event.preventDefault();
+      event.stopPropagation();
+      var isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+      setDrawerGroupExpanded(toggle, !isExpanded);
+    });
+  }
 
   var profileTrigger = document.getElementById('ib-profile-trigger');
   var profileMenu = document.getElementById('ib-profile-menu');
@@ -355,18 +377,6 @@
     if (identity) {
       closeProfileMenu();
       window.alert('Profile settings — not implemented in this prototype.');
-      return;
-    }
-
-    var toggle = event.target.closest('.mobile-drawer__toggle');
-    if (toggle) {
-      var group = toggle.closest('.mobile-drawer__group');
-      var submenu = group && group.querySelector('.mobile-drawer__submenu');
-      var chevron = toggle.querySelector('.mobile-drawer__chevron');
-      var expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-      if (submenu) submenu.hidden = expanded;
-      if (chevron) chevron.classList.toggle('mobile-drawer__chevron--open', !expanded);
       return;
     }
 

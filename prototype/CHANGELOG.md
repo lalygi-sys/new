@@ -6,6 +6,31 @@
 
 ---
 
+## 2026-06-13 — IB Dashboard mobile polish + mobile drawer UX
+
+### Что изменилось
+
+#### IB Dashboard (`ib-dashboard/`)
+- **Clients list → DS List S:** строки 48px / padding 12px / Body 02; разделители через `::before`; восстановлен `margin-top: 24px` между табами и списком.
+- **Commission card (mobile):** `padding-top` body 24px; rank star — `ic-star-solid-16` без button-like контейнера, центрирование по Figma inset.
+- **Promo carousel (mobile):** swipe left/right для смены слайдов; фон share-баннера сдвинут вниз, чтобы текст не наезжал на иллюстрацию.
+
+#### Shared chrome (`shared/ib-chrome` + `rebate/shared`)
+- **Mobile drawer — Client engagement:** toggle expand/collapse с `aria-expanded`; submenu по умолчанию раскрыт при открытии drawer; chevron как у `card-head` (stroke 16×16): свёрнуто ↓, раскрыто ↑.
+- **Chevron:** без бокового состояния; анимация `rotate(90deg)` / `rotate(-90deg)`.
+
+#### Contests (`index.html`)
+- **MobileDrawer:** тот же chevron и toggle-класс `mobile-drawer__toggle`; группы с dropdown раскрыты по умолчанию.
+
+### Файлы
+
+- `prototype/ib-dashboard/styles.css`, `index.html`, `app.js`, `assets/ic-star-solid-16.svg`
+- `prototype/shared/ib-chrome.css`, `ib-chrome.js`
+- `prototype/rebate/shared/ib-chrome.css`, `ib-chrome.js`
+- `prototype/index.html`
+
+---
+
 ## 2026-06-13 — sticky head/foot и аккуратная панель date-range
 
 ### Что изменилось
