@@ -1194,8 +1194,8 @@ body.has-ib-chrome.dashboard-body {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  margin-top: 8px;
-  padding-top: 8px;
+  margin-top: var(--ds-dim-3xl);
+  padding-top: var(--ds-dim-2xl);
 }
 
 .revenue-chart__frame {
@@ -2050,6 +2050,11 @@ body.has-ib-chrome.dashboard-body {
     column-gap: 8px;
     row-gap: 12px;
     align-items: center;
+  }
+
+  .revenue-card .revenue-chart {
+    margin-top: 8px;
+    padding-top: 8px;
   }
 
   .revenue-card .card-head__actions {
