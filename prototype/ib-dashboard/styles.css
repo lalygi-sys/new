@@ -1,6 +1,7 @@
 :root {
   --c-primary: #1945ff;
   --c-primary-container: rgba(25, 69, 255, 0.08);
+  --c-primary-container-pressed: #1945ff29;
   --c-primary-content: #eef1ff;
   --c-on-primary-container: #173398;
   --c-on-primary: #ffffff;
@@ -177,7 +178,7 @@ body.has-ib-chrome.dashboard-body {
 
 .icon-btn-ghost:hover { background: rgba(22, 22, 22, 0.06); }
 
-/* IconButton Text / Size XS (Figma 60322:32851) — 24×24, icon 16 */
+/* IconButton Text / Size XS (Figma 60338:57040 / 60322:32851) — 24×24, icon 16, radius 6 */
 .icon-btn-ghost--xs {
   width: 24px;
   height: 24px;
@@ -409,7 +410,7 @@ body.has-ib-chrome.dashboard-body {
     url('assets/commission-card-bg.png');
   background-repeat: no-repeat;
   background-size: 100% 100%, 100% auto;
-  background-position: 0 0, right top;
+  background-position: 0 0, right -28px;
   pointer-events: none;
   z-index: 0;
 }
@@ -602,6 +603,7 @@ body.has-ib-chrome.dashboard-body {
 
 .commission-card .rank-callout__title {
   color: var(--c-text-primary);
+  font-weight: 600;
 }
 
 .commission-card .rank-callout__metric-label {
@@ -610,6 +612,7 @@ body.has-ib-chrome.dashboard-body {
 
 .commission-card .rank-callout__metric-value {
   color: var(--c-text-primary);
+  font-weight: 600;
 }
 
 .rank-callout__row {
@@ -1313,7 +1316,7 @@ body.has-ib-chrome.dashboard-body {
 }
 
 .promo-card:has(.promo-card__inner[data-promo-theme="platinum"]) {
-  background: #452e82;
+  background: #1a3f8f;
 }
 
 .promo-card:has(.promo-card__inner[data-promo-theme="share"]) {
@@ -1343,13 +1346,14 @@ body.has-ib-chrome.dashboard-body {
 
 .promo-card__inner[data-promo-theme="manager"] {
   background-color: #2a4f7a;
-  background-image: url('assets/promo-manager-bg.png');
+  background-image: url('assets/promo-manager-bg.jpg');
   background-position: right bottom;
+  background-size: cover;
 }
 
 .promo-card__inner[data-promo-theme="platinum"] {
-  background-color: #452e82;
-  background-image: url('assets/promo-platinum-bg.png');
+  background-color: #1a3f8f;
+  background-image: url('assets/promo-platinum-bg.jpg');
   background-position: right bottom;
   background-size: cover;
 }
@@ -1358,11 +1362,12 @@ body.has-ib-chrome.dashboard-body {
   background-color: #1945ff;
   background-image: url('assets/promo-card-bg.png');
   background-position: center bottom;
+  background-size: cover;
 }
 
 .promo-card__inner[data-promo-theme="share"] {
   background-color: #4da8ff;
-  background-image: url('assets/promo-share-bg.png');
+  background-image: url('assets/promo-share-bg.jpg');
   background-position: right bottom;
   background-size: cover;
 }
@@ -1799,8 +1804,16 @@ body.has-ib-chrome.dashboard-body {
     min-height: 392px;
   }
 
-  .promo-card__inner[data-promo-theme="share"] {
-    background-position: right calc(100% + 24px);
+  .promo-card__inner[data-promo-theme="share"],
+  .promo-card__inner[data-promo-theme="manager"],
+  .promo-card__inner[data-promo-theme="platinum"] {
+    background-position: right bottom;
+    background-size: cover;
+  }
+
+  .promo-card__inner[data-promo-theme="network"] {
+    background-position: center bottom;
+    background-size: cover;
   }
 
   .promo-card__inner,
@@ -1832,7 +1845,7 @@ body.has-ib-chrome.dashboard-body {
       ),
       url('assets/commission-card-bg.png');
     background-size: 100% 100%, cover;
-    background-position: 0 0, center top;
+    background-position: 0 0, center -28px;
   }
 
   .commission-card--basic .commission-card__cap {
