@@ -10,7 +10,7 @@
 
 Одна ссылка — открывается IB Dashboard; переключение экранов через меню в шапке (Contests / Rebate / Dashboard) или hash:
 
-**https://lalygi-sys.github.io/new/?v=c0230db**
+**https://lalygi-sys.github.io/new/?v=38d7f2c**
 
 | Hash | Экран |
 |------|-------|
@@ -18,9 +18,9 @@
 | `#contests` | Contests |
 | `#rebate` | Rebate |
 
-Пример: `https://lalygi-sys.github.io/new/?v=c0230db#contests`
+Пример: `https://lalygi-sys.github.io/new/?v=38d7f2c#contests`
 
-> После каждого деплоя обновляется параметр `?v=` — так браузер подтягивает свежую версию без ручного сброса кэша.
+> После каждого деплоя обновляется параметр `?v=38d7f2c` — так браузер подтягивает свежую версию без ручного сброса кэша.
 
 ---
 
