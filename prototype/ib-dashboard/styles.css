@@ -74,6 +74,10 @@ body.has-ib-chrome.dashboard-body {
 }
 
 /* Compact KPI row — value + delta on one baseline row. */
+.revenue-card .stat-banner {
+  gap: var(--ds-dim-3xl);
+}
+
 .revenue-card .stat-banner__value-row {
   flex-direction: row;
   flex-wrap: nowrap;
@@ -612,6 +616,10 @@ body.has-ib-chrome.dashboard-body {
 
 .commission-card .rank-callout__metric-value {
   color: var(--c-text-primary);
+  font-weight: 400;
+}
+
+.commission-card .rank-callout__metric-num {
   font-weight: 600;
 }
 
@@ -672,9 +680,18 @@ body.has-ib-chrome.dashboard-body {
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.15px;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--c-on-secondary);
   font-variant-numeric: tabular-nums;
+}
+
+/* DS Utility 01 Bold — digits in progress values. */
+.rank-callout__metric-num {
+  font-weight: 600;
+}
+
+.rank-callout__metric-sep {
+  font-weight: 400;
 }
 
 .commission-card__note {
@@ -1066,7 +1083,7 @@ body.has-ib-chrome.dashboard-body {
 }
 
 .stat-banner__head .ds-radio {
-  flex: 0 0 20px;
+  flex: 0 0 auto;
   align-self: flex-start;
   margin-left: auto;
 }
@@ -1084,7 +1101,7 @@ body.has-ib-chrome.dashboard-body {
   font-size: 12px;
   line-height: 16px;
   letter-spacing: 0.15px;
-  font-weight: 500;
+  font-weight: 400;
   color: var(--c-text-secondary);
 }
 
@@ -1104,10 +1121,25 @@ body.has-ib-chrome.dashboard-body {
 
 .ds-radio--s svg {
   position: absolute;
-  top: 8.33%;
-  left: 8.33%;
-  width: 83.34%;
-  height: 83.34%;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+/* Radiobutton Size=XS — 16×16 (compact stat banners). */
+.ds-radio--xs {
+  width: 16px;
+  height: 16px;
+}
+
+.ds-radio--xs svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
   display: block;
 }
 
@@ -1787,6 +1819,42 @@ body.has-ib-chrome.dashboard-body {
 
 }
 
+/* Tablet — lift commission hero background so trophy reads higher in the card. */
+@media (min-width: 761px) and (max-width: 1100px) {
+  .commission-card--basic::before {
+    background-position: 0 0, right -48px;
+  }
+}
+
+@media (min-width: 761px) {
+  /* Revenue KPI head — Utility 01 + Radiobutton Size=XS (16×16). */
+  .revenue-card .stat-banner__head {
+    align-items: center;
+    min-height: 16px;
+  }
+
+  .revenue-card .stat-banner__head .ds-radio {
+    flex: 0 0 16px;
+    width: 16px;
+    height: 16px;
+    align-self: center;
+  }
+
+  .revenue-card .stat-banner__head-main {
+    align-items: center;
+  }
+
+  .revenue-card .stat-banner__label {
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.15px;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 760px) {
   .dashboard-page { padding: calc(var(--ib-chrome-offset, 96px) + 16px) 16px 32px; }
 
@@ -2036,6 +2104,10 @@ body.has-ib-chrome.dashboard-body {
     font-size: 14px;
     line-height: 20px;
     letter-spacing: 0;
+    font-weight: 400;
+  }
+
+  .rank-callout__metric-num {
     font-weight: 600;
   }
 
